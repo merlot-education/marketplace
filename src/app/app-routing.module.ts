@@ -41,6 +41,11 @@ const routes: Routes = [
           import('./views/users/users.module').then((m) => m.UsersModule)
       },
       {
+        path: 'service-offerings',
+        loadChildren: () =>
+          import('./views/serviceofferings/serviceofferings.module').then((m) => m.ServiceofferingsModule)
+      },
+      {
         path: 'theme',
         loadChildren: () =>
           import('./views/theme/theme.module').then((m) => m.ThemeModule)

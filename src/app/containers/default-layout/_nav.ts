@@ -103,12 +103,12 @@ export const navItems: IRoleNavData[] = [
     children: [
       {
         name: 'Edit Service Offering',
-        url: '/',
+        url: '/service-offerings/edit',
         allowedRoles: ["principal", "admin"],
       },
       {
         name: 'Explore Service Offerings',
-        url: '/',
+        url: '/service-offerings/explore',
         allowedRoles: ["visitor", "user", "principal", "admin"],
       },
     ]
