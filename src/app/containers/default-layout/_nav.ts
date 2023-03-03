@@ -90,7 +90,7 @@ export const navItems: IRoleNavData[] = [
       },
       {
         name: 'Explore User',
-        url: '/',
+        url: '/users/explore',
         allowedRoles: ["user", "principal", "admin"],
       },
     ]
