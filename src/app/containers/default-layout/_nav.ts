@@ -34,12 +34,12 @@ export const navItems: IRoleNavData[] = [
       },
       {
         name: 'Consortium Members',
-        url: '/',
+        url: '/about/consortium',
         allowedRoles: ["visitor", "user", "principal", "admin"],
       },
       {
         name: 'Standard T&Cs',
-        url: '/',
+        url: '/about/terms',
         allowedRoles: ["visitor", "user", "principal", "admin"],
       },
     ]
@@ -57,12 +57,12 @@ export const navItems: IRoleNavData[] = [
     children: [
       {
         name: 'Register Organization',
-        url: '/',
+        url: '/organization/register',
         allowedRoles: ["principal", "admin"],
       },
       {
         name: 'Edit Organization',
-        url: '/',
+        url: '/organization/edit',
         allowedRoles: ["principal", "admin"],
       },
       {
@@ -80,12 +80,12 @@ export const navItems: IRoleNavData[] = [
     children: [
       {
         name: 'Register as Principal',
-        url: '/',
+        url: '/users/register',
         allowedRoles: ["user", "principal", "admin"],
       },
       {
         name: 'Edit User',
-        url: '/',
+        url: '/users/edit',
         allowedRoles: ["user", "principal", "admin"],
       },
       {

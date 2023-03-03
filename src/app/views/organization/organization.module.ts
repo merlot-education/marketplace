@@ -53,6 +53,7 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 
 // Components Routing
 import { OrganizationRoutingModule } from './organization-routing.module';
+import { EditComponent } from './edit/edit.component';
 
 @NgModule({
   imports: [
@@ -86,7 +87,8 @@ import { OrganizationRoutingModule } from './organization-routing.module';
     DocsComponentsModule,
   ],
   declarations: [
-    ExploreComponent
+    ExploreComponent,
+    EditComponent
   ],
 })
 export class OrganizationModule {}

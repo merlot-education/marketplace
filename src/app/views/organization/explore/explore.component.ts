@@ -41,9 +41,7 @@ export class ExploreComponent implements OnInit {
     }
   ];
 
-  constructor(
-    protected authService: AuthService
-  ) {
+  constructor() {
   }
 
   ngOnInit(): void {

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { EditComponent } from './edit/edit.component';
 import { ExploreComponent } from './explore/explore.component';
 
 
@@ -20,6 +21,13 @@ const routes: Routes = [
         component: ExploreComponent,
         data: {
           title: 'Explore Organizations',
+        },
+      },
+      {
+        path: 'edit',
+        component: EditComponent,
+        data: {
+          title: 'Edit Organization',
         },
       },
     ],

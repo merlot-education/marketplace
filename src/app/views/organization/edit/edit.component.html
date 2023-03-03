@@ -1,0 +1,63 @@
+<c-row>
+  <c-col xs>
+    <c-card class="mb-4">
+      <c-card-header>Enrolled Organizations</c-card-header>
+      <c-card-body>
+        <table
+          [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          align="middle"
+          cTable
+          class="mb-0 border"
+        >
+          <thead cTableColor="light">
+            <tr>
+              <th scope="col">Merlot ID</th>
+              <th scope="col">Registration Number</th>
+              <th scope="col">Registration Type</th>
+              <th scope="col">Organization Name</th>
+              <th scope="col">Country Code</th>
+              <th scope="col">Postal Code</th>
+              <th scope="col">Street</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">000001</th>
+              <td>0762747721</td>
+              <td>local</td>
+              <td>Gaia-X European Association for Data and Cloud AISBL</td>
+              <td>BE</td>
+              <td>1210 BRU</td>
+              <td>Avenue des Arts 6-9</td>
+            </tr>
+            <tr>
+              <th scope="row">000002</th>
+              <td></td>
+              <td>local</td>
+              <td>Dataport AöR</td>
+              <td>D</td>
+              <td>24161 Altenholz</td>
+              <td>Altenholzer Straße 10-14</td>
+            </tr>
+            <tr>
+              <th scope="row">...</th>
+              <td>...</td>
+              <td>...</td>
+              <td>...</td>
+              <td>...</td>
+              <td>...</td>
+              <td>...</td>
+            </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+
+<!--div *ngIf="authService.user.value.roles.includes('visitor')">I am a visitor</div>
+<div *ngIf="authService.user.value.roles.includes('user')">I am a user</div>
+<div *ngIf="authService.user.value.roles.includes('principal')">I am a principal</div>
+<div *ngIf="authService.user.value.roles.includes('admin')">I am an admin</div-->
