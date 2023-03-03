@@ -31,6 +31,11 @@ const routes: Routes = [
           import('./views/organization/organization.module').then((m) => m.OrganizationModule)
       },
       {
+        path: 'about',
+        loadChildren: () =>
+          import('./views/about/about.module').then((m) => m.AboutModule)
+      },
+      {
         path: 'theme',
         loadChildren: () =>
           import('./views/theme/theme.module').then((m) => m.ThemeModule)

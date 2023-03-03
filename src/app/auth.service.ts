@@ -5,22 +5,22 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  public user = new BehaviorSubject<{friendlyRoleName: string, roles: string[]}>({friendlyRoleName: "Visitor", roles: ["visitor"]});
+  public user = new BehaviorSubject<{friendlyRoleName: string, roles: string[]}>({friendlyRoleName: "Visitor", roles: ["visitor", "user", "principal", "admin"]});
 
   constructor() { }
 
   visitor() {
-    this.user.next({friendlyRoleName: "Visitor", roles: ["visitor"]});
+    this.user.next({friendlyRoleName: "Visitor", roles: ["visitor", "user", "principal", "admin"]});
     console.log("switched to visitor role");
   }
 
   portalUser() {
-    this.user.next({friendlyRoleName: "User", roles: ["visitor", "user"]});
+    this.user.next({friendlyRoleName: "User", roles: ["visitor", "user", "principal", "admin"]});
     console.log("switched to user role");
   }
 
   principal() {
-    this.user.next({friendlyRoleName: "Principal", roles: ["visitor", "principal"]});
+    this.user.next({friendlyRoleName: "Principal", roles: ["visitor", "user", "principal", "admin"]});
     console.log("switched to principal role");
   }
 

@@ -29,7 +29,7 @@ export const navItems: IRoleNavData[] = [
     children: [
       {
         name: 'MERLOT Marketplace',
-        url: '/',
+        url: '/about/merlot',
         allowedRoles: ["visitor", "user", "principal", "admin"],
       },
       {
@@ -56,6 +56,11 @@ export const navItems: IRoleNavData[] = [
     allowedRoles: ["visitor", "user", "principal", "admin"],
     children: [
       {
+        name: 'Register Organization',
+        url: '/',
+        allowedRoles: ["principal", "admin"],
+      },
+      {
         name: 'Edit Organization',
         url: '/',
         allowedRoles: ["principal", "admin"],
@@ -80,6 +85,11 @@ export const navItems: IRoleNavData[] = [
       },
       {
         name: 'Edit User',
+        url: '/',
+        allowedRoles: ["user", "principal", "admin"],
+      },
+      {
+        name: 'Explore User',
         url: '/',
         allowedRoles: ["user", "principal", "admin"],
       },
