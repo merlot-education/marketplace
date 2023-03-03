@@ -23,39 +23,15 @@
               <th scope="col"></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody *ngFor="let organization of organizations">
             <tr>
-              <th scope="row">000001</th>
-              <td>0762747721</td>
-              <td>local</td>
-              <td>Gaia-X European Association for Data and Cloud AISBL</td>
-              <td>BE</td>
-              <td>1210 BRU</td>
-              <td>Avenue des Arts 6-9</td>
-              <td>
-                <button style="margin: 5px;" type="button" class="btn btn-primary">Edit</button>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">000002</th>
-              <td></td>
-              <td>local</td>
-              <td>Dataport AöR</td>
-              <td>D</td>
-              <td>24161 Altenholz</td>
-              <td>Altenholzer Straße 10-14</td>
-              <td>
-                <button style="margin: 5px;" type="button" class="btn btn-primary">Edit</button>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">...</th>
-              <td>...</td>
-              <td>...</td>
-              <td>...</td>
-              <td>...</td>
-              <td>...</td>
-              <td>...</td>
+              <th scope="row">{{ organization.merlotId }}</th>
+              <td>{{ organization.registrationNumber }}</td>
+              <td>{{ organization.registrationType }}</td>
+              <td>{{ organization.name }}</td>
+              <td>{{ organization.countryCode }}</td>
+              <td>{{ organization.street }}</td>
+              <td>{{ organization.postalCode }}</td>
               <td>
                 <button style="margin: 5px;" type="button" class="btn btn-primary">Edit</button>
               </td>
@@ -66,8 +42,3 @@
     </c-card>
   </c-col>
 </c-row>
-
-<!--div *ngIf="authService.user.value.roles.includes('visitor')">I am a visitor</div>
-<div *ngIf="authService.user.value.roles.includes('user')">I am a user</div>
-<div *ngIf="authService.user.value.roles.includes('principal')">I am a principal</div>
-<div *ngIf="authService.user.value.roles.includes('admin')">I am an admin</div-->
