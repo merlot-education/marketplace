@@ -1,25 +1,76 @@
+<style>
+  strong {
+    display: inline-block;
+    width: 180px;
+    text-align: left;
+  }
+</style>
+
 <c-row>
   <c-col xs *ngFor="let organization of organizations">
     <c-card class="mb-4">
-      <c-card-header>{{organization.name}}</c-card-header>
+      <c-card-header>{{ organization.name }}</c-card-header>
       <c-card-body>
-        
         <c-row>
           <c-col>
-            <div>
-              <b>Merlot ID:</b> {{ organization.merlotId }} <br/>
-              <b>Registration Number:</b> {{ organization.registrationNumber }} <br/>
-              <b>Registration Type:</b> {{ organization.registrationType }} <br/>
-              <b>Country Code:</b> {{ organization.countryCode }} <br/>
-              <b>Postal Code:</b> {{ organization.postalCode }} <br/>
-              <b>Street:</b> {{ organization.street }}
-            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" style="border: none">
+                <strong>Merlot ID:</strong>
+                {{ organization.merlotId }} <br />
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Registration Number:</strong>
+                {{ organization.registrationNumber }} <br />
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Registration Type:</strong>
+                {{ organization.registrationType }} <br />
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Country Code:</strong>
+                {{ organization.countryCode }} <br />
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Postal Code:</strong>
+                {{ organization.postalCode }} <br />
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Street:</strong>
+                {{ organization.street }} <br />
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Description:</strong> <br />
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                aliquyam erat, sed diam voluptua. At vero eos et accusam et
+                justo duo dolores et ea rebum.
+              </li>
+            </ul>
           </c-col>
-          <c-col>
-            <svg style="font-size: 10rem;" class="float-end" cIcon name="{{ organization.iconName }}" size="9xl"></svg>
+          <c-col md="auto">
+            <div class="row">
+              <svg
+                class=""
+                cIcon
+                name="{{ organization.iconName }}"
+                size="9xl"
+              ></svg>
+            </div>
+            <div class="row" style="padding: 10px">
+              <button type="button" class="btn btn-primary">More Info</button>
+            </div>
+            <div class="row" style="padding: 10px">
+              <button type="button" class="btn btn-primary">Contact</button>
+            </div>
+            <div class="row" style="padding: 10px">
+              <button type="button" class="btn btn-primary">Services</button>
+            </div>
+            <div class="row" style="padding: 10px">
+              <button type="button" class="btn btn-primary">Users</button>
+            </div>  
+            
           </c-col>
         </c-row>
-        
       </c-card-body>
     </c-card>
   </c-col>
