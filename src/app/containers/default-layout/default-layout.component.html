@@ -1,0 +1,66 @@
+<!--sidebar-->
+<c-sidebar
+  #sidebar="cSidebar"
+  class="d-print-none sidebar sidebar-fixed"
+  id="sidebar"
+  visible
+>
+<!--src: 'assets/img/brand/merlot-mono-cropped.png',-->
+<!--src: 'assets/img/brand/MERLOT_Logo_RGB.png',-->
+  <c-sidebar-brand style="padding-top: 10px; padding-bottom: 10px;"
+    [brandFull]="{
+      src: 'assets/img/brand/MERLOT_Logo_RGB.png',
+      width: 200,
+      height: 66,
+      alt: 'Merlot Logo'
+    }"
+    [brandNarrow]="{
+      src: 'assets/img/brand/MERLOT_Logo_RGB.nurLogo.png',
+      width: 46,
+      height: 46,
+      alt: 'Merlot Logo'
+    }"
+    routerLink="./"
+  >
+  </c-sidebar-brand>
+  <!--c-card color="secondary" class="text-center mb-4">
+    <c-card-body>
+      <h5 cCardTitle>Willkommen, Besucher!</h5>
+      <button cButton color="primary">Go somewhere</button>
+    </c-card-body>
+  </c-card-->
+  <c-sidebar-header>
+    <div style="padding: 10px;">Welcome, {{ authService.user.value.friendlyRoleName }}!</div>
+    <button *ngIf="authService.user.value.friendlyRoleName === 'Visitor'; else loggedIn" cButton color="primary">Login</button>
+    <ng-template #loggedIn>
+      <button cButton color="primary">Logout</button>
+    </ng-template>
+  </c-sidebar-header>
+    <perfect-scrollbar [config]="perfectScrollbarConfig">
+  <!--  [perfectScrollbar]="perfectScrollbarConfig"-->
+  <c-sidebar-nav
+    [navItems]="navItems"
+    dropdownMode="close"
+  >
+  </c-sidebar-nav>
+    </perfect-scrollbar>
+  <c-sidebar-toggler
+    *ngIf="!sidebar.narrow"
+    toggle="unfoldable"
+    cSidebarToggle="sidebar"
+  ></c-sidebar-toggler>
+</c-sidebar>
+
+<!--main-->
+<div class="wrapper d-flex flex-column min-vh-100 bg-light dark:bg-transparent">
+  <!--app-header-->
+  <app-default-header class="mb-4 d-print-none header header-sticky" position="sticky" sidebarId="sidebar"></app-default-header>
+  <!--app-body-->
+  <div class="body flex-grow-1 px-3">
+    <c-container breakpoint="lg" class="h-auto">
+      <router-outlet></router-outlet>
+    </c-container>
+  </div>
+  <!--app footer-->
+  <app-default-footer></app-default-footer>
+</div>
