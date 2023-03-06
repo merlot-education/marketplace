@@ -5,6 +5,7 @@ import { ExploreComponent } from './explore/explore.component';
 
 // CoreUI Modules
 import {
+  AvatarModule,
   AccordionModule,
   BadgeModule,
   BreadcrumbModule,
@@ -83,6 +84,7 @@ import { UsersRoutingModule } from './users-routing.module';
     PaginationModule,
     PopoverModule,
     TableModule,
+    AvatarModule,
     DocsComponentsModule,
   ],
   declarations: [
