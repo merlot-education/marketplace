@@ -1,2 +1,53 @@
+<style>
+  strong {
+    display: inline-block;
+    width: 150px;
+    text-align: left;
+  }
+</style>
 
-<h1>Hello World!</h1>
+<c-row>
+  <c-col xs *ngFor="let offering of offerings">
+    <c-card class="mb-4">
+      <c-card-header>{{ offering.name }}</c-card-header>
+      <c-card-body>
+        <c-row>
+          <c-col>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" style="border: none">
+                <strong>Provider:</strong>
+                {{ offering.provider }}
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Country:</strong>
+                <svg
+                  cIcon
+                  id="{{ offering.country + offering.name }}"
+                  name="cif{{ offering.country }}"
+                  size="xl"
+                  title="{{ offering.country }}"
+                  style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))"
+                ></svg>
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Available since:</strong>
+                {{ offering.availablesince }}
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Description:</strong> <br />
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                aliquyam erat, sed diam voluptua.
+              </li>
+            </ul>
+            <div class="row" style="padding: 10px">
+              <button type="button" class="btn btn-primary">
+                Claim Service
+              </button>
+            </div>
+          </c-col>
+        </c-row>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
