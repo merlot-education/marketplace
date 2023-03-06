@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ExploreComponent } from './explore/explore.component';
+import { EditComponent } from './edit/edit.component';
 
 // CoreUI Modules
 import {
@@ -86,7 +87,8 @@ import { ServiceofferingsRoutingModule } from './serviceofferings-routing.module
     DocsComponentsModule,
   ],
   declarations: [
-    ExploreComponent
+    ExploreComponent,
+    EditComponent
   ],
 })
 export class ServiceofferingsModule {}
