@@ -3,6 +3,8 @@ import { BehaviorSubject } from 'rxjs';
 
 interface IUserAuth {
   username: string,
+  userFirstName?: string,
+  userLastName?: string,
   companyRoles: ICompanyRole[] 
   loggedIn: boolean
 }
@@ -60,6 +62,8 @@ let visitorUser: IUserAuth = {
 
 let dDueseUser: IUserAuth = {
   username: "DDüse",
+  userFirstName: "Daniel",
+  userLastName: "Düsentrieb",
   companyRoles: [
     {company: dataportComp, role: orgLegRepRole}
   ],
@@ -83,7 +87,7 @@ export class AuthService {
     this.user.next(visitorUser);
   }
 
-  loggedIn() {
+  logIn() {
     this.user.next(dDueseUser);
   }
 
