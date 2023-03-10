@@ -7,7 +7,7 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      title: 'About MERLOT',
+      title: 'What is the MERLOT Marketplace',
     },
     children: [
       {
@@ -19,7 +19,7 @@ const routes: Routes = [
         path: 'merlot',
         component: MerlotComponent,
         data: {
-          title: 'MERLOT Marketplace',
+          title: 'About MERLOT',
         },
       },
     ],

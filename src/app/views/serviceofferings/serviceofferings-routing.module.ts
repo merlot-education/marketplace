@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      title: 'Users',
+      title: 'Manage Service Offerings',
     },
     children: [
       {
@@ -20,14 +20,14 @@ const routes: Routes = [
         path: 'explore',
         component: ExploreComponent,
         data: {
-          title: 'Explore Users',
+          title: 'Explore Service Offerings',
         },
       },
       {
         path: 'edit',
         component: EditComponent,
         data: {
-          title: 'Edit User',
+          title: 'Edit Service Offerings',
         },
       },
     ],
