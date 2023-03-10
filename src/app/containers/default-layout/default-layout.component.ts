@@ -52,12 +52,14 @@ export class DefaultLayoutComponent {
   }
 
   private checkNavItemRoleAllowed(navItem: IRoleNavData) {
+    return true;
+    // TODO readd this once roles are properly implemented
     // if no roles are defined, allow for everyone
-    if (navItem.allowedRoles === undefined) {
+    /*if (navItem.allowedRoles === undefined) {
       return true
     }
     // otherwise ask the auth service if the current user has any of the allowed roles
-    return navItem.allowedRoles.some(r => this.authService.user.value.roles.includes(r));
+    return navItem.allowedRoles.some(r => this.authService.user.value.roles.includes(r));*/
   }
 
 

@@ -7,6 +7,7 @@
 >
 <!--src: 'assets/img/brand/merlot-mono-cropped.png',-->
 <!--src: 'assets/img/brand/MERLOT_Logo_RGB.png',-->
+<!-- height: 93 if we want to align with the bottom bar of the header -->
   <c-sidebar-brand style="padding-top: 10px; padding-bottom: 10px;"
     [brandFull]="{
       src: 'assets/img/brand/MERLOT_Logo_RGB.png',
@@ -30,8 +31,8 @@
     </c-card-body>
   </c-card-->
   <c-sidebar-header>
-    <div style="padding: 10px;">Welcome, {{ authService.user.value.friendlyRoleName }}!</div>
-    <button *ngIf="authService.user.value.friendlyRoleName === 'Visitor'; else loggedIn" cButton color="primary">Login</button>
+    <div style="padding: 10px;">Welcome, {{ authService.user.value.username }}!</div>
+    <button *ngIf="authService.user.value.loggedIn === false; else loggedIn" cButton color="primary">Login</button>
     <ng-template #loggedIn>
       <button cButton color="primary">Logout</button>
     </ng-template>

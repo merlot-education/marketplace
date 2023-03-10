@@ -6,7 +6,7 @@ export interface IRoleNavData extends INavData {
 }
 
 export const navItems: IRoleNavData[] = [
-  {
+  /*{
     name: 'Dashboard',
     url: '/dashboard',
     iconComponent: { name: 'cil-speedometer' },
@@ -15,7 +15,7 @@ export const navItems: IRoleNavData[] = [
       text: 'NEW'
     },
     allowedRoles: ["visitor", "user", "principal", "admin"],
-  },
+  },*/
 
   {
     name: 'What is the MERLOT Marketplace',
