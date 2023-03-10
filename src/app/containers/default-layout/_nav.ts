@@ -16,55 +16,48 @@ export const navItems: IRoleNavData[] = [
     },
     allowedRoles: ["visitor", "user", "principal", "admin"],
   },
+
   {
-    title: true,
-    name: 'Information',
-    allowedRoles: ["visitor", "user", "principal", "admin"],
-  },
-  {
-    name: 'About MERLOT',
+    name: 'What is the MERLOT Marketplace',
     url: '/about',
     iconComponent: { name: 'cil-pen' },
     allowedRoles: ["visitor", "user", "principal", "admin"],
     children: [
       {
-        name: 'MERLOT Marketplace',
+        name: 'About MERLOT',
         url: '/about/merlot',
         allowedRoles: ["visitor", "user", "principal", "admin"],
       },
-      {
+      // TODO readd this once needed
+      /*{
         name: 'Consortium Members',
         url: '/about/consortium',
         allowedRoles: ["visitor", "user", "principal", "admin"],
       },
       {
-        name: 'Standard T&Cs',
+        name: 'Standard Conditions & Terms',
         url: '/about/terms',
         allowedRoles: ["visitor", "user", "principal", "admin"],
-      },
+      },*/
     ]
   },
   {
-    title: true,
-    name: 'Management',
-    allowedRoles: ["visitor", "user", "principal", "admin"],
-  },
-  {
-    name: 'Organization',
+    name: 'Manage Organization',
     url: '/organization',
     iconComponent: { name: 'cil-notes' },
     allowedRoles: ["visitor", "user", "principal", "admin"],
     children: [
-      {
-        name: 'Register Organization',
+      // TODO readd this once needed
+      /*{
+        name: 'Register My Organization',
         url: '/organization/register',
         allowedRoles: ["principal", "admin"],
       },
       {
-        name: 'Edit Organization',
-        url: '/organization/edit',
+        name: 'Edit My Organization',
+        url: '/organization/edits',
         allowedRoles: ["principal", "admin"],
-      },
+      },*/
       {
         name: 'Explore Organizations',
         url: '/organization/explore',
@@ -73,12 +66,13 @@ export const navItems: IRoleNavData[] = [
     ]
   },
   {
-    name: 'Users',
+    name: 'Manage Users',
     url: '/users',
     iconComponent: { name: 'cil-user' },
     allowedRoles: ["user", "principal", "admin"],
     children: [
-      {
+      // TODO readd this once needed
+      /*{
         name: 'Register as Principal',
         url: '/users/register',
         allowedRoles: ["user", "principal", "admin"],
@@ -87,16 +81,16 @@ export const navItems: IRoleNavData[] = [
         name: 'Edit User',
         url: '/users/edit',
         allowedRoles: ["user", "principal", "admin"],
-      },
+      },*/
       {
-        name: 'Explore User',
+        name: 'Explore Users',
         url: '/users/explore',
         allowedRoles: ["user", "principal", "admin"],
       },
     ]
   },
   {
-    name: 'Service Offerings',
+    name: 'Manage Service Offerings',
     url: '/service-offerings',
     iconComponent: { name: 'cil-puzzle' },
     allowedRoles: ["visitor", "user", "principal", "admin"],
