@@ -7,7 +7,7 @@
 </style>
 
 <c-row>
-  <c-col xs *ngFor="let organization of organizations">
+  <c-col xs *ngFor="let organization of organizations" [sm]="6">
     <c-card class="mb-4">
       <c-card-header>{{ organization.name }}</c-card-header>
       <c-card-body>
@@ -15,7 +15,7 @@
           <c-col>
             <ul class="list-group list-group-flush">
               <li class="list-group-item" style="border: none">
-                <strong>Merlot ID:</strong>
+                <strong>MERLOT ID:</strong>
                 {{ organization.merlotId }} <br />
               </li>
               <li class="list-group-item" style="border: none">
@@ -56,16 +56,16 @@
               ></svg>
             </div>
             <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary">More Info</button>
+              <button type="button" class="btn btn-primary disabled">More Info</button>
             </div>
             <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary">Contact</button>
+              <button type="button" class="btn btn-primary disabled">Contact</button>
             </div>
             <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary">Services</button>
+              <button type="button" class="btn btn-primary disabled">Services</button>
             </div>
             <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary">Users</button>
+              <button type="button" class="btn btn-primary disabled">Users</button>
             </div>  
             
           </c-col>

@@ -61,4 +61,14 @@ export const orgaData : OrganizationData[] = [
         street: "",
         iconName: "cil-beaker"
       },
+      {
+        name: "imc",
+        merlotId: "000004",
+        registrationNumber: "",
+        registrationType: "",
+        countryCode: "",
+        postalCode: "",
+        street: "",
+        iconName: "cil-beaker"
+      },
 ]
