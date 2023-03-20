@@ -39,7 +39,7 @@ export const orgaData : OrganizationData[] = [
         countryCode: "De",
         postalCode: "",
         street: "",
-        iconName: "cil-bank"
+        iconName: "cil-storage"
       },
       {
         name: "Nachhilfeclub",
@@ -69,6 +69,6 @@ export const orgaData : OrganizationData[] = [
         countryCode: "",
         postalCode: "",
         street: "",
-        iconName: "cil-beaker"
+        iconName: "cil-school"
       },
 ]
