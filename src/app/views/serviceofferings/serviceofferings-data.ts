@@ -7,7 +7,7 @@ export interface IOfferings {
 }
 
 export let offerings: IOfferings[] = [
-  {
+  /*{
     id: "0001",
     name: 'DataOffering1',
     country: 'De',
@@ -27,5 +27,5 @@ export let offerings: IOfferings[] = [
     country: 'Be',
     provider: 'ProviderCorp',
     availablesince: 'Jan 1, 2021',
-  },
+  },*/
 ];

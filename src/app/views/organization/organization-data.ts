@@ -11,7 +11,7 @@ export interface OrganizationData {
 
 
 export const orgaData : OrganizationData[] = [
-    {
+    /*{
         name: "Gaia-X European Association for Data and Cloud AISBL",
         merlotId: "000001",
         registrationNumber: "0762747721",
@@ -30,5 +30,5 @@ export const orgaData : OrganizationData[] = [
         postalCode: "24161 Altenholz",
         street: "Altenholzer Straße 10-14",
         iconName: "cil-bank"
-      }
+      }*/
 ]

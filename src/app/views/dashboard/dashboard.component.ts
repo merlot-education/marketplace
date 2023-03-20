@@ -18,7 +18,7 @@ export interface IUser {
 }
 
 export let users: IUser[] = [
-  {
+  /*{
     name: 'Albert Einstein',
     state: 'New',
     registered: 'Jan 1, 2021',
@@ -69,7 +69,7 @@ export let users: IUser[] = [
     avatar: './assets/img/avatars/lovelace.jpg',
     status: 'light',
     color: 'danger'
-  },
+  },*/
 ];
 
 @Component({

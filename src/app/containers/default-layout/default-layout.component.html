@@ -34,7 +34,7 @@
   <c-sidebar-header>
     <div *ngIf="authService.user.value.loggedIn === false; else loggedIn">
       <div style="padding: 10px">
-        Welcome, {{ authService.user.value.username }}!
+        Willkommen, {{ authService.user.value.username }}!
       </div>
       <button
         cButton
@@ -47,10 +47,10 @@
 
     <ng-template #loggedIn>
       <div style="padding: 10px">
-        Welcome, {{ authService.user.value.userFirstName }} {{ authService.user.value.userLastName }}! <br/><br/>
-        <b>Active Role:</b>
+        Willkommen, {{ authService.user.value.userFirstName }} {{ authService.user.value.userLastName }}! <br/><br/>
+        <b>Aktive Rolle:</b>
         <select aria-label="Default select example" cSelect>
-          <option class="text-center">{{ authService.user.value.companyRoles[0].role.roleName }} for
+          <option class="text-center">{{ authService.user.value.companyRoles[0].role.roleName }} für
             {{ authService.user.value.companyRoles[0].company?.companyName }}</option>
         </select>
       </div>

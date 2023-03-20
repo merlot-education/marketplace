@@ -28,14 +28,20 @@ interface ICompanyRole {
 
 let visitorRole: IRole = {
   id: 0,
-  roleName: "Visitor",
-  roleLongName: "Visitor"
+  roleName: "Besucher",
+  roleLongName: "Besucher"
 }
 
 let orgLegRepRole: IRole = {
   id: 1,
-  roleName: "OrgLegRep",
-  roleLongName: "Organizational Legal Representative"
+  roleName: "Prokurist",
+  roleLongName: "Prokurist"
+}
+
+let orgRepRole: IRole = {
+  id: 1,
+  roleName: "Repräsentant",
+  roleLongName: "Repräsentant"
 }
 
 let gaiaXComp: ICompany =  {
@@ -53,7 +59,7 @@ let dataportComp: ICompany = {
 
 
 let visitorUser: IUserAuth = {
-  username: "Visitor",
+  username: "Besucher",
   companyRoles: [
     {role: visitorRole}
   ],
