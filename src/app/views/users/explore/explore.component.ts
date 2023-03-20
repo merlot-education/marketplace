@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DashboardComponent, IUser, users } from '../../dashboard/dashboard.component';
+import { IUserAuth, IUserData, users } from '../user-data';
 
 @Component({
   templateUrl: './explore.component.html',
@@ -7,7 +7,7 @@ import { DashboardComponent, IUser, users } from '../../dashboard/dashboard.comp
 })
 export class ExploreComponent implements OnInit {
 
-  users: IUser[] = users;
+  users: (IUserAuth & IUserData)[] = users;
 
   constructor() {
   }

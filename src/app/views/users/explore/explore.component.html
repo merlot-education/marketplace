@@ -9,7 +9,7 @@
 <c-row>
   <c-col xs *ngFor="let user of users">
     <c-card class="mb-4">
-      <c-card-header>{{ user.name }}</c-card-header>
+      <c-card-header>{{ user.userFirstName }} {{ user.userLastName }}</c-card-header>
       <c-card-body>
         <c-row>
           <c-col>
@@ -25,10 +25,10 @@
             <hr class="hr hr-blurry" />
             <ul class="list-group list-group-flush">
               <li class="list-group-item" style="border: none">
-                <strong>Country:</strong>
+                <strong>Country:</strong> <br/>
                 <svg
                   cIcon
-                  id="{{ user.country + user.name }}"
+                  id="{{ user.country + user.username }}"
                   name="cif{{ user.country }}"
                   size="xl"
                   title="{{ user.country }}"

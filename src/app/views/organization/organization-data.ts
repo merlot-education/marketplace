@@ -31,4 +31,34 @@ export const orgaData : OrganizationData[] = [
         street: "Altenholzer Straße 10-14",
         iconName: "cil-bank"
       }*/
+      {
+        name: "Dataport",
+        merlotId: "000001",
+        registrationNumber: "",
+        registrationType: "",
+        countryCode: "De",
+        postalCode: "",
+        street: "",
+        iconName: "cil-bank"
+      },
+      {
+        name: "Nachhilfeclub",
+        merlotId: "000002",
+        registrationNumber: "",
+        registrationType: "",
+        countryCode: "De",
+        postalCode: "",
+        street: "",
+        iconName: "cil-school"
+      },
+      {
+        name: "ChemPoint",
+        merlotId: "000003",
+        registrationNumber: "",
+        registrationType: "",
+        countryCode: "",
+        postalCode: "",
+        street: "",
+        iconName: "cil-beaker"
+      },
 ]

@@ -3,7 +3,7 @@ import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
 
-export interface IUser {
+/*export interface IUser {
   name: string;
   state: string;
   registered: string;
@@ -15,10 +15,10 @@ export interface IUser {
   avatar: string;
   status: string;
   color: string;
-}
+}*/
 
-export let users: IUser[] = [
-  /*{
+/*export let users: IUser[] = [
+  {
     name: 'Albert Einstein',
     state: 'New',
     registered: 'Jan 1, 2021',
@@ -69,8 +69,8 @@ export let users: IUser[] = [
     avatar: './assets/img/avatars/lovelace.jpg',
     status: 'light',
     color: 'danger'
-  },*/
-];
+  },
+];*/
 
 @Component({
   templateUrl: 'dashboard.component.html',
@@ -79,7 +79,7 @@ export let users: IUser[] = [
 export class DashboardComponent implements OnInit {
   constructor(private chartsData: DashboardChartsData) {
   }
-  users = users;
+  //users = users;
 
   
   public mainChart: IChartProps = {};

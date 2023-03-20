@@ -50,8 +50,8 @@
         Willkommen, {{ authService.user.value.userFirstName }} {{ authService.user.value.userLastName }}! <br/><br/>
         <b>Aktive Rolle:</b>
         <select aria-label="Default select example" cSelect>
-          <option class="text-center">{{ authService.user.value.companyRoles[0].role.roleName }} für
-            {{ authService.user.value.companyRoles[0].company?.companyName }}</option>
+            <option class="text-center" *ngFor="let compRole of authService.user.value.companyRoles">{{ compRole.role.roleName }} für
+              {{ compRole.company?.companyName }}</option>
         </select>
       </div>
       <button cButton color="primary" (click)="authService.visitor()">

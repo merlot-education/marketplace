@@ -19,16 +19,15 @@
                 {{ organization.merlotId }} <br />
               </li>
               <li class="list-group-item" style="border: none">
-                <strong>Registration Number:</strong>
-                {{ organization.registrationNumber }} <br />
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Registration Type:</strong>
-                {{ organization.registrationType }} <br />
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Country Code:</strong>
-                {{ organization.countryCode }} <br />
+                <strong>Country:</strong>
+                <svg
+                  cIcon
+                  id="{{ organization.merlotId + organization.countryCode }}"
+                  name="cif{{ organization.countryCode }}"
+                  size="xl"
+                  title="{{ organization.countryCode }}"
+                  style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));"
+                ></svg><br />
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Postal Code:</strong>
@@ -42,8 +41,7 @@
                 <strong>Description:</strong> <br />
                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
                 diam nonumy eirmod tempor invidunt ut labore et dolore magna
-                aliquyam erat, sed diam voluptua. At vero eos et accusam et
-                justo duo dolores et ea rebum.
+                aliquyam erat, sed diam voluptua.
               </li>
             </ul>
           </c-col>
