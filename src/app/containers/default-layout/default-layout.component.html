@@ -37,6 +37,7 @@
         Willkommen, {{ authService.user.value.username }}!
       </div>
       <button
+        id="login-button"
         cButton
         color="primary"
         (click)="authService.logIn()"
@@ -49,12 +50,12 @@
       <div style="padding: 10px">
         Willkommen, {{ authService.user.value.userFirstName }} {{ authService.user.value.userLastName }}! <br/><br/>
         <b>Aktive Rolle:</b>
-        <select aria-label="Default select example" cSelect>
+        <select id="role-select" aria-label="Default select example" cSelect>
             <option class="text-center" *ngFor="let compRole of authService.user.value.companyRoles">{{ compRole.role.roleName }} für
               {{ compRole.company?.companyName }}</option>
         </select>
       </div>
-      <button cButton color="primary" (click)="authService.visitor()">
+      <button id="logout-button" cButton color="primary" (click)="authService.visitor()">
         Logout
       </button>
     </ng-template>
