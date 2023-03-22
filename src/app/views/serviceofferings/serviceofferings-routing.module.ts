@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      title: 'Manage Service Offerings',
+      title: 'Service Angebote',
     },
     children: [
       {
@@ -20,14 +20,14 @@ const routes: Routes = [
         path: 'explore',
         component: ExploreComponent,
         data: {
-          title: 'Explore Service Offerings',
+          title: 'Service Angebote erkunden',
         },
       },
       {
         path: 'edit',
         component: EditComponent,
         data: {
-          title: 'Edit Service Offerings',
+          title: 'Service Angebot erstellen',
         },
       },
     ],

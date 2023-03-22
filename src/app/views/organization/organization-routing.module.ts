@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      title: 'Manage Organization',
+      title: 'Organisationsverwaltung',
     },
     children: [
       {
@@ -20,14 +20,14 @@ const routes: Routes = [
         path: 'explore',
         component: ExploreComponent,
         data: {
-          title: 'Explore Organizations',
+          title: 'Organisationen erkunden',
         },
       },
       {
         path: 'edit',
         component: EditComponent,
         data: {
-          title: 'Edit Organization',
+          title: 'Meine Organisation bearbeiten',
         },
       },
     ],

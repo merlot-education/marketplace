@@ -7,7 +7,7 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      title: 'Manage Users',
+      title: 'Benutzerverwaltung',
     },
     children: [
       {
@@ -19,7 +19,7 @@ const routes: Routes = [
         path: 'explore',
         component: ExploreComponent,
         data: {
-          title: 'Explore Users',
+          title: 'Benutzer erkunden',
         },
       },
     ],
