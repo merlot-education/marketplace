@@ -18,90 +18,90 @@ export const navItems: IRoleNavData[] = [
   },*/
 
   {
-    name: 'What is the MERLOT Marketplace',
+    name: 'Was ist der MERLOT Marktplatz? ',
     url: '/about',
     iconComponent: { name: 'cil-pen' },
     allowedRoles: ["visitor", "user", "principal", "admin"],
     children: [
       {
-        name: 'About MERLOT',
+        name: 'Über MERLOT',
         url: '/about/merlot',
         allowedRoles: ["visitor", "user", "principal", "admin"],
       },
       // TODO readd this once needed
       /*{
-        name: 'Consortium Members',
+        name: 'Konsortialpartner',
         url: '/about/consortium',
         allowedRoles: ["visitor", "user", "principal", "admin"],
       },
       {
-        name: 'Standard Conditions & Terms',
+        name: 'Allgemeine Geschäftsbedingungen',
         url: '/about/terms',
         allowedRoles: ["visitor", "user", "principal", "admin"],
       },*/
     ]
   },
   {
-    name: 'Manage Organization',
+    name: 'Organisationsverwaltung',
     url: '/organization',
     iconComponent: { name: 'cil-notes' },
     allowedRoles: ["visitor", "user", "principal", "admin"],
     children: [
       // TODO readd this once needed
       /*{
-        name: 'Register My Organization',
+        name: 'Meine Organisation registrieren',
         url: '/organization/register',
         allowedRoles: ["principal", "admin"],
       },
       {
-        name: 'Edit My Organization',
+        name: 'Meine Organisation bearbeiten',
         url: '/organization/edits',
         allowedRoles: ["principal", "admin"],
       },*/
       {
-        name: 'Explore Organizations',
+        name: 'Organisationen erkunden',
         url: '/organization/explore',
         allowedRoles: ["visitor", "user", "principal", "admin"],
       },
     ]
   },
   {
-    name: 'Manage Users',
+    name: 'Benutzerverwaltung',
     url: '/users',
     iconComponent: { name: 'cil-user' },
     allowedRoles: ["user", "principal", "admin"],
     children: [
       // TODO readd this once needed
       /*{
-        name: 'Register as Principal',
+        name: 'Als Benutzer registrieren',
         url: '/users/register',
         allowedRoles: ["user", "principal", "admin"],
       },
       {
-        name: 'Edit User',
+        name: 'Benutzer bearbeiten',
         url: '/users/edit',
         allowedRoles: ["user", "principal", "admin"],
       },*/
       {
-        name: 'Explore Users',
+        name: 'Benutzer erkunden',
         url: '/users/explore',
         allowedRoles: ["user", "principal", "admin"],
       },
     ]
   },
   {
-    name: 'Manage Service Offerings',
+    name: 'Service Angebote',
     url: '/service-offerings',
     iconComponent: { name: 'cil-puzzle' },
     allowedRoles: ["visitor", "user", "principal", "admin"],
     children: [
       {
-        name: 'Edit Service Offering',
+        name: 'Service Angebot erstellen',
         url: '/service-offerings/edit',
         allowedRoles: ["principal", "admin"],
       },
       {
-        name: 'Explore Service Offerings',
+        name: 'Service Angebote erkunden',
         url: '/service-offerings/explore',
         allowedRoles: ["visitor", "user", "principal", "admin"],
       },
