@@ -1,4 +1,4 @@
-name: CI
+name: Continuous Integration
 
 on:
   push:
@@ -45,3 +45,9 @@ jobs:
         with:
           push: true
           tags: ghcr.io/${{ env.repository }}:${{ env.tag }},ghcr.io/${{ env.repository }}:latest
+      
+      - name: Checkout git-ops repository
+        uses: actions/checkout@v3
+        with:
+          repository: merlot-education/git-ops
+          token: ${{ secrets.GIT_OPS_TOKEN }}
