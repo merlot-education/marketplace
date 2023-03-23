@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-push:
+  gateway:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -23,5 +23,9 @@ jobs:
       
       - run: npm ci
 
-      - run: npm test
+      - name: Run full test suite
+        uses: cypress-io/github-action@v5.5.1
+        with:
+          build: npm run build
+          start: npm run qa
       
