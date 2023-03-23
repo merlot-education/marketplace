@@ -19,18 +19,24 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Generate tag
+      - name: Demo image tag
+        if: startsWith(github.ref, 'refs/tags/')
         shell: bash {0}
         run: |
           tag=$(git describe --tags HEAD)
-          if [ $? -ne 0 ]; then
-            tag="$(awk -F'"' '/"version": ".+"/{ print $4; exit; }' package.json)-$(git rev-parse --short HEAD)"
-            echo "environment=dev" >> $GITHUB_ENV
-          else
-            echo "environment=demo" >> $GITHUB_ENV
-          fi
           echo "tag=$tag" >> $GITHUB_ENV
-          echo "repository=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+          echo "environment=demo" >> $GITHUB_ENV
+
+      - name: Dev image tag
+        if: startsWith(github.ref, 'refs/heads/')
+        shell: bash {0}
+        run: |
+          tag="$(awk -F'"' '/"version": ".+"/{ print $4; exit; }' package.json)-$(git rev-parse --short HEAD)"
+          echo "tag=$tag" >> $GITHUB_ENV
+          echo "environment=dev" >> $GITHUB_ENV
+
+      - name: Repo environment variable
+        run: echo "repository=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2

@@ -1,18 +1,9 @@
-<<<<<<< HEAD
-name: Continuous Integration
-
-on:
-  push:
-    branches:
-      - 'main'
-=======
 name: Quality Gateway
 
 on:
   pull_request:
     branches:
       - main
->>>>>>> add pull request workflow
 
 jobs:
   build-and-push:
