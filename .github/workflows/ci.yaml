@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - 'main'
+    tags:
+      - '*'
 
 jobs:
   build-and-push:
@@ -17,15 +19,24 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Generate tag
+      - name: Demo image tag
+        if: startsWith(github.ref, 'refs/tags/')
         shell: bash {0}
         run: |
           tag=$(git describe --tags HEAD)
-          if [ $? -ne 0 ]; then
-            tag="$(awk -F'"' '/"version": ".+"/{ print $4; exit; }' package.json)-$(git rev-parse --short HEAD)"
-          fi
           echo "tag=$tag" >> $GITHUB_ENV
-          echo "repository=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+          echo "environment=demo" >> $GITHUB_ENV
+
+      - name: Dev image tag
+        if: startsWith(github.ref, 'refs/heads/')
+        shell: bash {0}
+        run: |
+          tag="$(awk -F'"' '/"version": ".+"/{ print $4; exit; }' package.json)-$(git rev-parse --short HEAD)"
+          echo "tag=$tag" >> $GITHUB_ENV
+          echo "environment=dev" >> $GITHUB_ENV
+
+      - name: Repo environment variable
+        run: echo "repository=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -45,9 +56,10 @@ jobs:
         with:
           push: true
           tags: ghcr.io/${{ env.repository }}:${{ env.tag }},ghcr.io/${{ env.repository }}:latest
-      
-      - name: Checkout git-ops repository
-        uses: actions/checkout@v3
-        with:
-          repository: merlot-education/git-ops
-          token: ${{ secrets.GIT_OPS_TOKEN }}
+
+      - name: Dispatch update
+        run: |
+            curl -H "Accept: application/vnd.github+json" \
+            -H "Authorization: token ${{ secrets.GIT_OPS_TOKEN }}" \
+            --request POST \
+            --data '{"event_type": "image_update", "client_payload": { "environment": "${{ env.environment }}", "tag": "${{ env.tag }}", "key": ".image.tag", "app": "marketplace" }}' https://api.github.com/repos/merlot-education/app-config/dispatches
