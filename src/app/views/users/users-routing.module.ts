@@ -19,7 +19,7 @@ const routes: Routes = [
         path: 'explore',
         component: ExploreComponent,
         data: {
-          title: 'Benutzer erkunden',
+          title: 'Nutzer meiner Organisation anzeigen',
         },
       },
     ],

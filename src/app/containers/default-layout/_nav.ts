@@ -73,17 +73,17 @@ export const navItems: IRoleNavData[] = [
     children: [
       // TODO readd this once needed
       /*{
-        name: 'Als Benutzer registrieren',
+        name: 'Als Nutzer registrieren',
         url: '/users/register',
         allowedRoles: ["user", "principal", "admin"],
       },
       {
-        name: 'Benutzer bearbeiten',
+        name: 'Nutzer meiner Organisation bearbeiten',
         url: '/users/edit',
         allowedRoles: ["user", "principal", "admin"],
       },*/
       {
-        name: 'Benutzer erkunden',
+        name: 'Nutzer meiner Organisation anzeigen',
         url: '/users/explore',
         allowedRoles: ["user", "principal", "admin"],
       },
