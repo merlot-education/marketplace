@@ -7,6 +7,7 @@ import { Page500Component } from './views/pages/page500/page500.component';
 import { LoginComponent } from './views/pages/login/login.component';
 import { RegisterComponent } from './views/pages/register/register.component';
 import { KeycloakGuard } from './keycloak.guard'
+import { KeycloakAuthGuard } from 'keycloak-angular';
 
 const routes: Routes = [
   {
@@ -28,9 +29,9 @@ const routes: Routes = [
       },
       {
         path: 'organization',
-        canActivate: [KeycloakGuard],
         loadChildren: () =>
-          import('./views/organization/organization.module').then((m) => m.OrganizationModule)
+          import('./views/organization/organization.module').then((m) => m.OrganizationModule),
+        canActivate: [KeycloakGuard],
       },
       {
         path: 'about',
@@ -52,7 +53,7 @@ const routes: Routes = [
         loadChildren: () =>
           import('./views/pages/pages.module').then((m) => m.PagesModule)
       },
-    ]
+    ],
   },
   {
     path: '404',
@@ -82,7 +83,7 @@ const routes: Routes = [
       title: 'Register Page'
     }
   },
-  {path: '**', redirectTo: 'dashboard'}
+  {path: '**', redirectTo: 'start'}
 ];
 
 @NgModule({

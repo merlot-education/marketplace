@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { INavData } from '@coreui/angular';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 import { AuthService } from 'src/app/auth.service';
 
 import { IRoleNavData, navItems } from './_nav';
@@ -12,15 +14,32 @@ export class DefaultLayoutComponent {
 
   public navItems: IRoleNavData[]; 
 
+  protected isLoggedIn: boolean = false;
+  protected userProfile: KeycloakProfile = {};
+  protected userRoles: string[] = [];
+
+
   public perfectScrollbarConfig = {
     suppressScrollX: true,
   };
 
   constructor(
-    protected authService: AuthService
+    protected authService: AuthService,
+    protected keycloakService: KeycloakService
   ) {
     let globalNavItems = structuredClone(navItems);
     this.navItems = this.buildAllowedNavItems(globalNavItems);
+
+    this.keycloakService.isLoggedIn().then(result => {
+      this.isLoggedIn = result
+      if (this.isLoggedIn) {
+        this.keycloakService.loadUserProfile().then(result =>  {
+          this.userProfile = result;
+        });
+        this.userRoles = this.keycloakService.getUserRoles();
+      }
+    });
+
   }
 
   public ngOnInit(): void {
