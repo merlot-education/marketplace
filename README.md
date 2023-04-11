@@ -6,3 +6,5 @@
 
 ## Run
 * `ng serve`
+
+http://localhost:4200/#/start 
