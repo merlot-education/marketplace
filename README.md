@@ -5,4 +5,4 @@
 * `ng update`
 
 ## Run
-* `npm install`
+* `ng serve`
