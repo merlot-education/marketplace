@@ -3,6 +3,10 @@ import { BehaviorSubject } from 'rxjs';
 import { visitorUser, dDueseUser, IUserAuth } from './views/users/user-data';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
+import { HttpClient } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, retry } from 'rxjs/operators';
+import { HttpBackend } from '@angular/common/http';
 
 
 @Injectable({
@@ -30,8 +34,11 @@ export class AuthService {
   };
 
   constructor(
-    private keycloakService: KeycloakService
+    private keycloakService: KeycloakService,
+    private http: HttpClient,
+    private httpBackend: HttpBackend
   ) {
+    //this.http = new HttpClient(httpBackend);  // this is for testing in order to skip the HTTPInterceptor of the keycloak library
     this.keycloakService.isLoggedIn().then(result => {
       this.isLoggedIn = result;
       if (this.isLoggedIn) {
@@ -62,6 +69,10 @@ export class AuthService {
       let role_arr = r.split("_");
       if (["OrgRep", "OrgLegRep"].includes(role_arr[0])) {
         // TODO we need to fetch the company name from the organization orchestrator for this id
+        this.http.get("http://localhost:8081/api/test/anonymous").subscribe(val => console.log(val));
+        this.http.get("http://localhost:8081/api/test/admin").subscribe(val => console.log(val));
+        this.http.get("http://localhost:8081/api/test/missingrole").subscribe(val => console.log(val));
+
         this.companyRoles.push({
           roleName: this.roleFriendlyNameMapper[role_arr[0]], 
           companyId: this.companyIdMapper[role_arr[1]]
