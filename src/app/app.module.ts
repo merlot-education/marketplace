@@ -62,8 +62,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
     keycloak.init({
       config: {
         url: 'http://localhost:8080/',
-        realm: 'merlot',
-        clientId: 'merlot-login'
+        realm: 'POC1',
+        clientId: 'MARKETPLACE'
       },
       initOptions: {
         onLoad: 'check-sso',

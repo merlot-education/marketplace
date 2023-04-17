@@ -32,10 +32,7 @@
     </c-card-body>
   </c-card-->
   <c-sidebar-header>
-    <div *ngIf="authService.user.value.loggedIn === false; else loggedIn">
-      <div style="padding: 10px">
-        Keycloak: isLoggedIn: {{ this.isLoggedIn }} profile: {{ this.userProfile | json}} roles: [{{ this.userRoles }}]
-      </div>
+    <div *ngIf="authService.isLoggedIn === false; else loggedIn">
       <div style="padding: 10px">
         Willkommen, {{ authService.user.value.username }}!
       </div>
@@ -51,14 +48,14 @@
 
     <ng-template #loggedIn>
       <div style="padding: 10px">
-        Willkommen, {{ authService.user.value.userFirstName }} {{ authService.user.value.userLastName }}! <br/><br/>
+        Willkommen, {{ authService.userProfile["firstName"] }} {{ authService.userProfile["lastName"] }}! <br/><br/>
         <b>Aktive Rolle:</b>
         <select id="role-select" aria-label="Default select example" cSelect>
-            <option class="text-center" *ngFor="let compRole of authService.user.value.companyRoles">{{ compRole.role.roleName }} für
-              {{ compRole.company?.companyName }}</option>
+            <option class="text-center" *ngFor="let compRole of authService.companyRoles">{{ compRole.roleName }} für
+              {{ compRole.companyId }}</option>
         </select>
       </div>
-      <button id="logout-button" cButton color="primary" (click)="authService.visitor()">
+      <button id="logout-button" cButton color="primary" (click)="authService.logOut()">
         Logout
       </button>
     </ng-template>

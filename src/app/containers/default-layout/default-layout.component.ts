@@ -14,10 +14,6 @@ export class DefaultLayoutComponent {
 
   public navItems: IRoleNavData[]; 
 
-  protected isLoggedIn: boolean = false;
-  protected userProfile: KeycloakProfile = {};
-  protected userRoles: string[] = [];
-
 
   public perfectScrollbarConfig = {
     suppressScrollX: true,
@@ -29,17 +25,6 @@ export class DefaultLayoutComponent {
   ) {
     let globalNavItems = structuredClone(navItems);
     this.navItems = this.buildAllowedNavItems(globalNavItems);
-
-    this.keycloakService.isLoggedIn().then(result => {
-      this.isLoggedIn = result
-      if (this.isLoggedIn) {
-        this.keycloakService.loadUserProfile().then(result =>  {
-          this.userProfile = result;
-        });
-        this.userRoles = this.keycloakService.getUserRoles();
-      }
-    });
-
   }
 
   public ngOnInit(): void {
