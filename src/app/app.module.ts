@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 import {
   PERFECT_SCROLLBAR_CONFIG,
@@ -106,6 +107,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     CardModule,
     KeycloakAngularModule,
     HttpClientModule,
+    FormsModule,
   ],
   providers: [
     {

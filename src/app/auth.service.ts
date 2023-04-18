@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { visitorUser, dDueseUser, IUserAuth } from './views/users/user-data';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { HttpClient } from '@angular/common/http';
@@ -17,11 +16,27 @@ export class AuthService {
 
   private token: string = "";
 
-  public user = new BehaviorSubject<IUserAuth>(visitorUser);
   public isLoggedIn: boolean = false;
   public userProfile: KeycloakProfile = {};
   public userRoles: string[] = [];
-  public companyRoles: { roleName: string, companyId: string }[] = [];
+  /*public organizationRoles: {
+    role: string,
+    roleData: {
+      roleName: string,
+      roleFriendlyName: string, 
+      companyId: string, 
+      companyFriendlyName: string
+    }
+  }[] = [];*/
+  public organizationRoles: {[key: string]: {
+    roleName: string,
+    roleFriendlyName: string, 
+    companyId: string, 
+    companyFriendlyName: string
+  }} = {};
+
+
+  public activeOrganizationRole: BehaviorSubject<string> = new BehaviorSubject<string>("");
 
   private roleFriendlyNameMapper: {[key: string]: string} = {
     "OrgRep": "Repräsentant", 
@@ -30,7 +45,8 @@ export class AuthService {
 
   // TODO this needs to be replaced by the organization orchestrator data
   private companyIdMapper: {[key: string]: string} = {
-    "1": "Dataport"
+    "1": "Dataport",
+    "2": "Schülerkarriere"
   };
 
   constructor(
@@ -69,15 +85,17 @@ export class AuthService {
       let role_arr = r.split("_");
       if (["OrgRep", "OrgLegRep"].includes(role_arr[0])) {
         // TODO we need to fetch the company name from the organization orchestrator for this id
-        this.http.get("http://localhost:8081/api/test/anonymous").subscribe(val => console.log(val));
-        this.http.get("http://localhost:8081/api/test/admin").subscribe(val => console.log(val));
-        this.http.get("http://localhost:8081/api/test/missingrole").subscribe(val => console.log(val));
-
-        this.companyRoles.push({
-          roleName: this.roleFriendlyNameMapper[role_arr[0]], 
-          companyId: this.companyIdMapper[role_arr[1]]
-        });  
+        this.organizationRoles[r] = {
+            roleName: role_arr[0],
+            roleFriendlyName: this.roleFriendlyNameMapper[role_arr[0]], 
+            companyId: role_arr[1],
+            companyFriendlyName: this.companyIdMapper[role_arr[1]],
+        };
+        if (this.activeOrganizationRole.getValue() === "") {
+          this.activeOrganizationRole.next(r);
+        }  
       }
     }
+
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthService} from "src/app/auth.service"
 import { OrganizationData, orgaData } from "../organization-data";
+
 
 @Component({
   templateUrl: './explore.component.html',
@@ -9,9 +9,11 @@ import { OrganizationData, orgaData } from "../organization-data";
 export class ExploreComponent implements OnInit {
   public organizations: OrganizationData[] = orgaData;
 
-  constructor() {
+  constructor(
+  ) {
   }
 
   ngOnInit(): void {
+    
   }
 }
