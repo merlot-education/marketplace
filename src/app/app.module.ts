@@ -63,7 +63,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
     keycloak.init({
       config: {
-        url: 'http://localhost:8080/',
+        url: 'https://sso.common.merlot-education.eu/',
         realm: 'POC1',
         clientId: 'MARKETPLACE'
       },
