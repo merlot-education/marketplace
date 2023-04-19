@@ -46,6 +46,7 @@ export class AuthService {
   // TODO this needs to be replaced by the organization orchestrator data
   private companyIdMapper: {[key: string]: string} = {
     "1": "TestOrga",
+    "2": "Capgemini",
     "10": "Gaia-X AISBL",
     "20": "Dataport",
     "30": "Hochschule Karlsruhe",
