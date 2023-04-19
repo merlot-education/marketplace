@@ -66,11 +66,11 @@ export class AuthService {
         this.buildCompanyRoles(this.userRoles);
         this.keycloakService.loadUserProfile().then(result =>  {
           this.userProfile = result;
-          console.log(this.isLoggedIn, this.userProfile, this.userRoles);
+          //console.log(this.isLoggedIn, this.userProfile, this.userRoles);
         });
         this.keycloakService.getToken().then(result => {
           this.token = result;
-          console.log(this.token);
+          //console.log(this.token);
         })
       }
     });
