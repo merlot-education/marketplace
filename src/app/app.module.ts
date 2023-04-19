@@ -1,8 +1,11 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 import {
   PERFECT_SCROLLBAR_CONFIG,
@@ -56,6 +59,23 @@ const APP_CONTAINERS = [
   DefaultLayoutComponent,
 ];
 
+function initializeKeycloak(keycloak: KeycloakService) {
+  return () =>
+    keycloak.init({
+      config: {
+        url: 'https://sso.common.merlot-education.eu/',
+        realm: 'POC1',
+        clientId: 'MARKETPLACE'
+      },
+      initOptions: {
+        onLoad: 'check-sso',
+        silentCheckSsoRedirectUri:
+        window.location.origin + '/assets/silent-check-sso.html'
+      }
+    });
+}
+
+
 @NgModule({
   declarations: [AppComponent, ...APP_CONTAINERS],
   imports: [
@@ -85,6 +105,9 @@ const APP_CONTAINERS = [
     BadgeModule,
     ListGroupModule,
     CardModule,
+    KeycloakAngularModule,
+    HttpClientModule,
+    FormsModule,
   ],
   providers: [
     {
@@ -94,6 +117,12 @@ const APP_CONTAINERS = [
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeKeycloak,
+      multi: true,
+      deps: [KeycloakService]
     },
     IconSetService,
     Title

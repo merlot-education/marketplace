@@ -9,7 +9,7 @@
 <c-row>
   <c-col xs *ngFor="let user of users">
     <c-card class="mb-4">
-      <c-card-header>{{ user.userFirstName }} {{ user.userLastName }}</c-card-header>
+      <c-card-header>{{ user.firstName }} {{ user.lastName }}</c-card-header>
       <c-card-body>
         <c-row>
           <c-col>
@@ -17,41 +17,28 @@
             justify-content: center;">
               <c-avatar
                 size="xl"
-                src="{{ user.avatar }}"
-                status="{{ user.status }}"
+                src="./assets/img/avatars/default-user.png"
+                status="success"
                 style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));"
               ></c-avatar>
             </div>
             <hr class="hr hr-blurry" />
             <ul class="list-group list-group-flush">
               <li class="list-group-item" style="border: none">
-                <strong>Land:</strong> <br/>
-                <svg
-                  cIcon
-                  id="{{ user.country + user.username }}"
-                  name="cif{{ user.country }}"
-                  size="xl"
-                  title="{{ user.country }}"
-                  style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));"
-                ></svg>
-              </li>
-              <li class="list-group-item" style="border: none">
                 <strong>Registriert seit:</strong> <br />
-                {{ user.registered }}
+                {{ user.createdTimestamp | date: 'dd.MM.yyyy' }}
               </li>
               <li class="list-group-item" style="border: none">
-                <strong>Letzte Aktivität:</strong>  <br />
-                {{ user.activity }}
+                <strong>Rolle:</strong> <br />
+                {{ user.orgaRole }}
               </li>
               <li class="list-group-item" style="border: none">
-                <strong>Beschreibung:</strong> <br />
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                diam nonumy eirmod tempor invidunt ut labore et dolore magna
-                aliquyam erat, sed diam voluptua.
+                <strong>E-Mail:</strong> <br />
+                {{ user.email }}
               </li>
             </ul>
             <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary disabled">Weitere Infos</button>
+              <a type="button" class="btn btn-primary" href="mailto:{{user.email}}">Kontaktieren</a>
             </div>
           </c-col>
         </c-row>

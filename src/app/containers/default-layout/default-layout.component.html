@@ -32,9 +32,9 @@
     </c-card-body>
   </c-card-->
   <c-sidebar-header>
-    <div *ngIf="authService.user.value.loggedIn === false; else loggedIn">
+    <div *ngIf="authService.isLoggedIn === false; else loggedIn">
       <div style="padding: 10px">
-        Willkommen, {{ authService.user.value.username }}!
+        Willkommen, Besucher!
       </div>
       <button
         id="login-button"
@@ -48,14 +48,14 @@
 
     <ng-template #loggedIn>
       <div style="padding: 10px">
-        Willkommen, {{ authService.user.value.userFirstName }} {{ authService.user.value.userLastName }}! <br/><br/>
+        Willkommen, {{ authService.userProfile["firstName"] }} {{ authService.userProfile["lastName"] }}! <br/><br/>
         <b>Aktive Rolle:</b>
-        <select id="role-select" aria-label="Default select example" cSelect>
-            <option class="text-center" *ngFor="let compRole of authService.user.value.companyRoles">{{ compRole.role.roleName }} für
-              {{ compRole.company?.companyName }}</option>
+        <select  (change)="selectedRoleChanged($event.target)" id="role-select" aria-label="Default select example" cSelect>
+            <option class="text-center" *ngFor="let orgaRole of objectKeys(authService.organizationRoles)" value="{{orgaRole}}">{{ authService.organizationRoles[orgaRole].roleFriendlyName }} für
+              {{ authService.organizationRoles[orgaRole].companyFriendlyName }}</option>
         </select>
       </div>
-      <button id="logout-button" cButton color="primary" (click)="authService.visitor()">
+      <button id="logout-button" cButton color="primary" (click)="authService.logOut()">
         Logout
       </button>
     </ng-template>

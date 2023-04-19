@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { INavData } from '@coreui/angular';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 import { AuthService } from 'src/app/auth.service';
+import { AaamApiService } from 'src/app/aaam-api.service';
 
 import { IRoleNavData, navItems } from './_nav';
 
@@ -9,29 +12,35 @@ import { IRoleNavData, navItems } from './_nav';
   templateUrl: './default-layout.component.html',
 })
 export class DefaultLayoutComponent {
+  public navItems: IRoleNavData[];
 
-  public navItems: IRoleNavData[]; 
+  public selectedRoleOption: string = '';
+
+  objectKeys = Object.keys;
 
   public perfectScrollbarConfig = {
     suppressScrollX: true,
   };
 
   constructor(
-    protected authService: AuthService
+    protected authService: AuthService,
+    protected keycloakService: KeycloakService,
+    private aaamApiService: AaamApiService
   ) {
     let globalNavItems = structuredClone(navItems);
     this.navItems = this.buildAllowedNavItems(globalNavItems);
   }
 
   public ngOnInit(): void {
-    this.authService.user.subscribe(x => {
-      let globalNavItems = structuredClone(navItems);
-      this.navItems = this.buildAllowedNavItems(globalNavItems)
-    });
+    //this.authService.user.subscribe(x => {
+    let globalNavItems = structuredClone(navItems);
+    this.navItems = this.buildAllowedNavItems(globalNavItems);
+    //});
+    this.selectedRoleOption = this.authService.activeOrganizationRole.getValue();
   }
 
   private buildAllowedNavItems(navItems: IRoleNavData[]) {
-    let outNavItems : IRoleNavData[] = []
+    let outNavItems: IRoleNavData[] = [];
     // iterate over navItems, check if they are allowed for this role
     for (let navItem of navItems) {
       // check if entry itself is allowed
@@ -39,14 +48,14 @@ export class DefaultLayoutComponent {
         // if not allowed, don't waste time with checking children
         continue;
       }
-      
+
       // checking for children and their roles
       if (navItem.children !== undefined) {
         navItem.children = this.buildAllowedNavItems(navItem.children);
       }
 
       // at this point we have an allowed item with allowed children, push it back to the list
-      outNavItems.push(navItem)
+      outNavItems.push(navItem);
     }
     return outNavItems;
   }
@@ -62,5 +71,8 @@ export class DefaultLayoutComponent {
     return navItem.allowedRoles.some(r => this.authService.user.value.roles.includes(r));*/
   }
 
-
+  selectedRoleChanged(event: any) {
+    this.selectedRoleOption = event.value;
+    this.authService.activeOrganizationRole.next(this.selectedRoleOption);
+  }
 }
