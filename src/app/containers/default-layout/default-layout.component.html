@@ -33,9 +33,7 @@
   </c-card-->
   <c-sidebar-header>
     <div *ngIf="authService.isLoggedIn === false; else loggedIn">
-      <div style="padding: 10px">
-        Willkommen, Besucher!
-      </div>
+      <div style="padding: 10px" id="welcome-text">Willkommen, Besucher!</div>
       <button
         id="login-button"
         cButton
@@ -47,15 +45,32 @@
     </div>
 
     <ng-template #loggedIn>
-      <div style="padding: 10px">
-        Willkommen, {{ authService.userProfile["firstName"] }} {{ authService.userProfile["lastName"] }}! <br/><br/>
+      <div style="padding: 10px" id="welcome-text">
+        Willkommen, {{ authService.userProfile["firstName"] }}
+        {{ authService.userProfile["lastName"] }}!<br /><br />
         <b>Aktive Rolle:</b>
-        <select  (change)="selectedRoleChanged($event.target)" id="role-select" aria-label="Default select example" cSelect>
-            <option class="text-center" *ngFor="let orgaRole of objectKeys(authService.organizationRoles)" value="{{orgaRole}}">{{ authService.organizationRoles[orgaRole].roleFriendlyName }} für
-              {{ authService.organizationRoles[orgaRole].companyFriendlyName }}</option>
+        <select
+          (change)="selectedRoleChanged($event.target)"
+          id="role-select"
+          aria-label="Default select example"
+          cSelect
+        >
+          <option
+            class="text-center"
+            *ngFor="let orgaRole of objectKeys(authService.organizationRoles)"
+            value="{{ orgaRole }}"
+          >
+            {{ authService.organizationRoles[orgaRole].roleFriendlyName }} für
+            {{ authService.organizationRoles[orgaRole].companyFriendlyName }}
+          </option>
         </select>
       </div>
-      <button id="logout-button" cButton color="primary" (click)="authService.logOut()">
+      <button
+        id="logout-button"
+        cButton
+        color="primary"
+        (click)="authService.logOut()"
+      >
         Logout
       </button>
     </ng-template>
