@@ -9,39 +9,36 @@
 <c-row>
   <c-col xs *ngFor="let organization of organizations" [sm]="6">
     <c-card class="mb-4">
-      <c-card-header>{{ organization.name }}</c-card-header>
+      <c-card-header>{{ organization.organizationName }}
+          {{ checkRepresentant(organization) }}
+    </c-card-header>
       <c-card-body>
         <c-row>
           <c-col>
             <ul class="list-group list-group-flush">
               <li class="list-group-item" style="border: none">
-                <strong>MERLOT ID:</strong>
+                <strong>Voller Name:</strong><br/>
+                {{ organization.organizationLegalName }} <br />
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>MERLOT ID:</strong><br/>
                 {{ organization.merlotId }} <br />
               </li>
               <li class="list-group-item" style="border: none">
-                <strong>Land:</strong>
-                <svg
-                  cIcon
-                  id="{{ organization.merlotId + organization.countryCode }}"
-                  name="cif{{ organization.countryCode }}"
-                  size="xl"
-                  title="{{ organization.countryCode }}"
-                  style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));"
-                ></svg><br />
+                <strong>Link zu den AGB:</strong><br/>
+                {{ organization.termsAndConditionsLink }} <br />
               </li>
               <li class="list-group-item" style="border: none">
-                <strong>Postleitzahl:</strong>
-                {{ organization.postalCode }} <br />
+                <strong>Land:</strong><br />
+                {{ organization.legalAddress.countryCode }} <br />
               </li>
               <li class="list-group-item" style="border: none">
-                <strong>Straße:</strong>
-                {{ organization.street }} <br />
+                <strong>Straße:</strong><br/>
+                {{ organization.legalAddress.street }} <br />
               </li>
               <li class="list-group-item" style="border: none">
-                <strong>Beschreibung:</strong> <br />
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                diam nonumy eirmod tempor invidunt ut labore et dolore magna
-                aliquyam erat, sed diam voluptua.
+                <strong>Stadt:</strong><br/>
+                {{ organization.legalAddress.postalCode }} {{ organization.legalAddress.city }} <br />
               </li>
             </ul>
           </c-col>
@@ -50,7 +47,7 @@
               <svg
                 class=""
                 cIcon
-                name="{{ organization.iconName }}"
+                name="cil-aperture"
                 size="9xl"
                 style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));"
               ></svg>
