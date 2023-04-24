@@ -7,7 +7,7 @@
 </style>
 
 <c-row>
-  <c-col xs *ngFor="let user of users">
+  <c-col xs *ngFor="let user of users"  [sm]="4">
     <c-card class="mb-4">
       <c-card-header>{{ user.firstName }} {{ user.lastName }}</c-card-header>
       <c-card-body>
