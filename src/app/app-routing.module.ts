@@ -31,7 +31,6 @@ const routes: Routes = [
         path: 'organization',
         loadChildren: () =>
           import('./views/organization/organization.module').then((m) => m.OrganizationModule),
-        canActivate: [KeycloakGuard],
       },
       {
         path: 'about',
@@ -41,7 +40,8 @@ const routes: Routes = [
       {
         path: 'users',
         loadChildren: () =>
-          import('./views/users/users.module').then((m) => m.UsersModule)
+          import('./views/users/users.module').then((m) => m.UsersModule),
+          canActivate: [KeycloakGuard]
       },
       {
         path: 'service-offerings',

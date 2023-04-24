@@ -18,14 +18,7 @@ export class ExploreComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.organizationsApiService.getOrganizations().then(result => this.organizations = result);
-    this.authService.activeOrganizationRole.subscribe((value) => {
-      for (let orga of this.organizations) {
-        if(orga.merlotId == value.split("_")[1]) {  // TODO change this
-          orga.activeRepresentant = true;
-        }
-      }
-    })
+    this.organizationsApiService.organizations.subscribe((value) => this.organizations = value);
   }
 
   checkRepresentant(organization: OrganizationData): string {
