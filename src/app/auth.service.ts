@@ -69,7 +69,7 @@ export class AuthService {
       roleName: roleName,
       roleFriendlyName: this.roleFriendlyNameMapper[roleName],
       orgaId: orgaId,
-      orgaFriendlyName: "Organisation " + orgaId, // this is properly fetched once the organizationsApiService is loaded
+      orgaFriendlyName: 'Organisation ' + orgaId, // this is properly fetched once the organizationsApiService is loaded
     };
   }
 
@@ -77,11 +77,10 @@ export class AuthService {
     for (let r of userRoles) {
       if (r.startsWith('OrgRep_') || r.startsWith('OrgLegRep_')) {
         this.organizationRoles[r] = this.getOrganizationRole(r);
-      }
-
-      // if the active Role is not set, set its initial value to the first role we see
-      if (this.activeOrganizationRole.getValue() === '') {
-        this.activeOrganizationRole.next(r);
+        // if the active Role is not set, set its initial value to the first role we see
+        if (this.activeOrganizationRole.getValue() === '') {
+          this.activeOrganizationRole.next(r);
+        }
       }
     }
   }

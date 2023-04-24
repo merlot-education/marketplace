@@ -12,7 +12,7 @@ export class ExploreComponent implements OnInit {
   users: IUserData[] = [];
 
   constructor(
-    private authService: AuthService,
+    protected authService: AuthService,
     private aaamApiService: AaamApiService
   ) {}
 
@@ -23,9 +23,10 @@ export class ExploreComponent implements OnInit {
   }
 
   private updateUserList(activeOrganizationRole: string) {
+    this.users = [];
     this.aaamApiService
       .getUsersFromOrganization(
-        activeOrganizationRole.split('_').slice(1).join()
+        this.authService.getOrganizationRole(activeOrganizationRole).orgaId
       )
       .then((result) => {
         this.users = result;
