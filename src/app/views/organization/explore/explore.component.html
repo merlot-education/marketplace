@@ -1,13 +1,7 @@
-<style>
-  strong {
-    display: inline-block;
-    width: 180px;
-    text-align: left;
-  }
-</style>
+
 
 <c-row>
-  <c-col xs *ngFor="let organization of organizations" [sm]="6">
+  <c-col xs *ngFor="let organization of organizations" [sm]="4">
     <c-card
       class="mb-4"
       [cBorder]="
@@ -20,68 +14,39 @@
     >
       <c-card-header>{{ organization.organizationName }} </c-card-header>
       <c-card-body>
-        <c-row>
-          <c-col>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item" style="border: none">
-                <strong>Voller Name:</strong><br />
-                {{ organization.organizationLegalName }} <br />
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>MERLOT ID:</strong><br />
-                {{ organization.merlotId }} <br />
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Link zu den AGB:</strong><br />
-                {{ organization.termsAndConditionsLink }} <br />
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Land:</strong><br />
-                {{ organization.legalAddress.countryCode }} <br />
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Straße:</strong><br />
-                {{ organization.legalAddress.street }} <br />
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Stadt:</strong><br />
-                {{ organization.legalAddress.postalCode }}
-                {{ organization.legalAddress.city }} <br />
-              </li>
-            </ul>
-          </c-col>
-          <c-col md="auto">
-            <div class="row">
-              <svg
-                class=""
-                cIcon
-                name="cil-aperture"
-                size="9xl"
-                style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))"
-              ></svg>
-            </div>
-            <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary disabled">
-                Weitere Infos
-              </button>
-            </div>
-            <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary disabled">
-                Kontakt
-              </button>
-            </div>
-            <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary disabled">
-                Services
-              </button>
-            </div>
-            <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary disabled">
-                Benutzer
-              </button>
-            </div>
-          </c-col>
-        </c-row>
+        <div class="center" style="display: flex;
+        justify-content: center;">
+          <svg
+            class=""
+            cIcon
+            name="cil-building"
+            size="5xl"
+            style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.25))"
+          ></svg>
+        </div>
+        <hr class="hr hr-blurry" />
+        <div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" style="border: none">
+              <strong>Merlot ID:</strong><br />
+              {{ organization.merlotId }} <br />
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Registrierungsnummer:</strong><br />
+              {{ organization.registrationNumber }} <br />
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Name der Organisation:</strong><br />
+              {{ organization.organizationLegalName }} <br />
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Adresse:</strong><br />
+              {{ organization.legalAddress.street }} <br />
+              {{ organization.legalAddress.postalCode }} {{ organization.legalAddress.city }} <br />
+              {{ organization.legalAddress.countryCode }} <br />
+            </li>
+          </ul>
+        </div>
       </c-card-body>
       <c-card-footer
         *ngIf="
