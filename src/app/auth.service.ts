@@ -3,8 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
 import { HttpBackend } from '@angular/common/http';
 
 interface OrganizationRole {
@@ -18,8 +16,6 @@ interface OrganizationRole {
   providedIn: 'root',
 })
 export class AuthService {
-  //public user = new BehaviorSubject<{friendlyRoleName: string, roles: string[]}>({friendlyRoleName: "Visitor", roles: ["visitor", "user", "principal", "admin"]});
-
   private token: string = '';
 
   public isLoggedIn: boolean = false;
@@ -36,17 +32,6 @@ export class AuthService {
     OrgLegRep: 'Prokurist',
   };
 
-  // TODO this needs to be replaced by the organization orchestrator data
-  private companyIdMapper: { [key: string]: string } = {
-    '1': 'TestOrga',
-    '2': 'Capgemini',
-    '10': 'Gaia-X AISBL',
-    '20': 'Dataport',
-    '30': 'Hochschule Karlsruhe',
-    '40': 'imc AG',
-    '50': 'Schülerkarriere',
-  };
-
   constructor(
     private keycloakService: KeycloakService,
     private http: HttpClient,
@@ -58,7 +43,6 @@ export class AuthService {
       if (this.isLoggedIn) {
         // if logged in, update the roles of the user, load the profile and get the token
         this.buildOrganizationRoles(this.keycloakService.getUserRoles());
-        console.log(this.organizationRoles);
         this.keycloakService.loadUserProfile().then((result) => {
           this.userProfile = result;
         });
@@ -85,7 +69,7 @@ export class AuthService {
       roleName: roleName,
       roleFriendlyName: this.roleFriendlyNameMapper[roleName],
       orgaId: orgaId,
-      orgaFriendlyName: this.companyIdMapper[orgaId], // TODO we need to fetch the company name from the organization orchestrator for this id
+      orgaFriendlyName: "Organisation " + orgaId, // this is properly fetched once the organizationsApiService is loaded
     };
   }
 

@@ -15,6 +15,17 @@ export class OrganizationsApiService {
     this.fetchOrganizations().then((result) => {
       // fetch the organization data from the organization orchestrator and store it
       this.organizations.next(result);
+
+      // update the user roles with the organization names obtained from the api
+      for (let roleKey in this.authService.organizationRoles) {
+        // try finding the organization of this role
+        let orga = this.getOrgaById(this.authService.organizationRoles[roleKey].orgaId);
+        if (orga) {
+          // if successful, update the orgaFriendlyName field of the respective role
+          this.authService.organizationRoles[roleKey].orgaFriendlyName = orga.organizationName;
+        }
+      }
+
       // update the active and passive fields of each organization according to the user selected role
       // and make sure further updates are also applied
       authService.activeOrganizationRole.subscribe((value) =>
@@ -54,8 +65,9 @@ export class OrganizationsApiService {
   }
 
   public getOrgaById(id: string): OrganizationData | undefined {
+    // TODO consider using a dictionary based on the merlotId instead of a list for faster access
     for (let orga of this.organizations.getValue()) {
-      if (orga.id === id) {
+      if (orga.merlotId === id) {
         return orga;
       }
     }
