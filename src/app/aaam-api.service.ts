@@ -18,7 +18,7 @@ export class AaamApiService {
   public async getUsersFromOrganization(organizationId: String) {
     // TODO input sanetization
     if (this.authService.isLoggedIn) {
-      return await lastValueFrom(this.http.get("http://localhost:8081/api/users/fromOrganization/" + organizationId)) as IUserData[];
+      return await lastValueFrom(this.http.get("https://api.dev.merlot-education.eu/aaam/users/fromOrganization/" + organizationId)) as IUserData[];
     } else {
       console.log("Error: Not logged in.");
       return []

@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/auth.service';
 import { AaamApiService } from 'src/app/aaam-api.service';
 
 import { IRoleNavData, navItems } from './_nav';
+import { OrganizationsApiService } from 'src/app/organizations-api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,7 +26,8 @@ export class DefaultLayoutComponent {
   constructor(
     protected authService: AuthService,
     protected keycloakService: KeycloakService,
-    private aaamApiService: AaamApiService
+    private aaamApiService: AaamApiService,
+    private organizationsApiService: OrganizationsApiService
   ) {
     let globalNavItems = structuredClone(navItems);
     this.navItems = this.buildAllowedNavItems(globalNavItems);

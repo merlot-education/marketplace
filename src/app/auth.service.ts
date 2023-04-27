@@ -3,55 +3,33 @@ import { BehaviorSubject } from 'rxjs';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
 import { HttpBackend } from '@angular/common/http';
 
+interface OrganizationRole {
+  roleName: string;
+  roleFriendlyName: string;
+  orgaId: string;
+  orgaFriendlyName: string;
+}
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  //public user = new BehaviorSubject<{friendlyRoleName: string, roles: string[]}>({friendlyRoleName: "Visitor", roles: ["visitor", "user", "principal", "admin"]});
-
-  private token: string = "";
+  private token: string = '';
 
   public isLoggedIn: boolean = false;
   public userProfile: KeycloakProfile = {};
-  public userRoles: string[] = [];
-  /*public organizationRoles: {
-    role: string,
-    roleData: {
-      roleName: string,
-      roleFriendlyName: string, 
-      companyId: string, 
-      companyFriendlyName: string
-    }
-  }[] = [];*/
-  public organizationRoles: {[key: string]: {
-    roleName: string,
-    roleFriendlyName: string, 
-    companyId: string, 
-    companyFriendlyName: string
-  }} = {};
+  public organizationRoles: {
+    [key: string]: OrganizationRole;
+  } = {};
 
+  public activeOrganizationRole: BehaviorSubject<string> =
+    new BehaviorSubject<string>('');
 
-  public activeOrganizationRole: BehaviorSubject<string> = new BehaviorSubject<string>("");
-
-  private roleFriendlyNameMapper: {[key: string]: string} = {
-    "OrgRep": "Repräsentant", 
-    "OrgLegRep": "Prokurist"
-  };
-
-  // TODO this needs to be replaced by the organization orchestrator data
-  private companyIdMapper: {[key: string]: string} = {
-    "1": "TestOrga",
-    "2": "Capgemini",
-    "10": "Gaia-X AISBL",
-    "20": "Dataport",
-    "30": "Hochschule Karlsruhe",
-    "40": "imc AG",
-    "50": "Schülerkarriere"
+  private roleFriendlyNameMapper: { [key: string]: string } = {
+    OrgRep: 'Repräsentant',
+    OrgLegRep: 'Prokurist',
   };
 
   constructor(
@@ -59,23 +37,21 @@ export class AuthService {
     private http: HttpClient,
     private httpBackend: HttpBackend
   ) {
-    //this.http = new HttpClient(httpBackend);  // this is for testing in order to skip the HTTPInterceptor of the keycloak library
-    this.keycloakService.isLoggedIn().then(result => {
+    this.keycloakService.isLoggedIn().then((result) => {
       this.isLoggedIn = result;
+      // check if user is logged in, otherwise we do not set anything
       if (this.isLoggedIn) {
-        this.userRoles = this.keycloakService.getUserRoles();
-        this.buildCompanyRoles(this.userRoles);
-        this.keycloakService.loadUserProfile().then(result =>  {
+        // if logged in, update the roles of the user, load the profile and get the token
+        this.buildOrganizationRoles(this.keycloakService.getUserRoles());
+        this.keycloakService.loadUserProfile().then((result) => {
           this.userProfile = result;
-          //console.log(this.isLoggedIn, this.userProfile, this.userRoles);
         });
-        this.keycloakService.getToken().then(result => {
+        this.keycloakService.getToken().then((result) => {
           this.token = result;
-          //console.log(this.token);
-        })
+        });
       }
     });
-   }
+  }
 
   logOut() {
     this.keycloakService.logout();
@@ -85,22 +61,27 @@ export class AuthService {
     this.keycloakService.login();
   }
 
-  private buildCompanyRoles(userRoles: string[]) {
+  getOrganizationRole(orgaRoleString: string): OrganizationRole {
+    let role_arr: string[] = orgaRoleString.split('_');
+    let roleName: string = role_arr[0]; // first part is the role name
+    let orgaId: string = role_arr.slice(1).join('_'); // everything else is the organization ID (which may include underscores again)
+    return {
+      roleName: roleName,
+      roleFriendlyName: this.roleFriendlyNameMapper[roleName],
+      orgaId: orgaId,
+      orgaFriendlyName: 'Organisation ' + orgaId, // this is properly fetched once the organizationsApiService is loaded
+    };
+  }
+
+  private buildOrganizationRoles(userRoles: string[]) {
     for (let r of userRoles) {
-      let role_arr = r.split("_");
-      if (["OrgRep", "OrgLegRep"].includes(role_arr[0])) {
-        // TODO we need to fetch the company name from the organization orchestrator for this id
-        this.organizationRoles[r] = {
-            roleName: role_arr[0],
-            roleFriendlyName: this.roleFriendlyNameMapper[role_arr[0]], 
-            companyId: role_arr[1],
-            companyFriendlyName: this.companyIdMapper[role_arr[1]],
-        };
-        if (this.activeOrganizationRole.getValue() === "") {
+      if (r.startsWith('OrgRep_') || r.startsWith('OrgLegRep_')) {
+        this.organizationRoles[r] = this.getOrganizationRole(r);
+        // if the active Role is not set, set its initial value to the first role we see
+        if (this.activeOrganizationRole.getValue() === '') {
           this.activeOrganizationRole.next(r);
-        }  
+        }
       }
     }
-
   }
 }

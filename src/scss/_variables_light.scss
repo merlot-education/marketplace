@@ -76,7 +76,7 @@ $primary-dark:  shift-color($primary, +70);
 $primary-50:    shift-color($primary, -70);
 $primary-25:    shift-color($primary, -80);
 
-$secondary:       $merlot-dark-gray;//#9da5b1;
+$secondary:       $gray-400;//#9da5b1;
 $secondary-dark:  shift-color($secondary, +70);//#212233;
 $secondary-50:    shift-color($secondary, -70);//#9da5b1;
 $secondary-25:    shift-color($secondary, -80);//#ced2d8;

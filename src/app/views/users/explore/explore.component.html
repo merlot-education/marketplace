@@ -7,22 +7,21 @@
 </style>
 
 <c-row>
-  <c-col xs *ngFor="let user of users">
+  <c-col xs *ngFor="let user of users"  [sm]="4">
     <c-card class="mb-4">
       <c-card-header>{{ user.firstName }} {{ user.lastName }}</c-card-header>
       <c-card-body>
         <c-row>
           <c-col>
-            <div class="center" style="display: flex;
+            <!--div class="center" style="display: flex;
             justify-content: center;">
               <c-avatar
                 size="xl"
                 src="./assets/img/avatars/default-user.png"
-                status="success"
                 style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));"
               ></c-avatar>
             </div>
-            <hr class="hr hr-blurry" />
+            <hr class="hr hr-blurry" /--> <!-- TODO readd this once user images are implemented -->
             <ul class="list-group list-group-flush">
               <li class="list-group-item" style="border: none">
                 <strong>Registriert seit:</strong> <br />
