@@ -58,7 +58,9 @@ export class AuthService {
   }
 
   logIn() {
-    this.keycloakService.login();
+    this.keycloakService.login({
+      redirectUri: window.location.origin
+    });
   }
 
   getOrganizationRole(orgaRoleString: string): OrganizationRole {
