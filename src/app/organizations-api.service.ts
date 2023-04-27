@@ -35,9 +35,10 @@ export class OrganizationsApiService {
   }
 
   public async fetchOrganizations() {
+    console.log("fetching organizations");
     // fetch data and cast it into interface
     let orgaData = (await lastValueFrom(
-      this.http.get('http://localhost:8082/api/organizations')
+      this.http.get('https://api.dev.merlot-education.eu/organisations/organizations')
     )) as OrganizationData[];
     return orgaData;
   }
