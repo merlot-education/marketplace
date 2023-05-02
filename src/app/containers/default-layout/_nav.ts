@@ -20,7 +20,7 @@ export const navItems: IRoleNavData[] = [
   {
     name: 'Was ist der MERLOT Marktplatz? ',
     url: '/about',
-    iconComponent: { name: 'cil-pen' },
+    iconComponent: { name: 'cil-home' },
     allowedRoles: ["visitor", "user", "principal", "admin"],
     children: [
       {

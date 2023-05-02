@@ -1,5 +1,9 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import { HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import {
+  HashLocationStrategy,
+  LocationStrategy,
+  PathLocationStrategy,
+} from '@angular/common';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -60,21 +64,25 @@ const APP_CONTAINERS = [
 ];
 
 function initializeKeycloak(keycloak: KeycloakService) {
-  return () =>
-    keycloak.init({
-      config: {
-        url: 'https://sso.common.merlot-education.eu/',
-        realm: 'POC1',
-        clientId: 'MARKETPLACE'
-      },
-      initOptions: {
-        onLoad: 'check-sso',
-        silentCheckSsoRedirectUri:
-        window.location.origin + '/assets/silent-check-sso.html'
-      }
-    });
+  return async () => {
+    try {
+      await keycloak.init({
+        config: {
+          url: 'https://sso.common.merlot-education.eu/',
+          realm: 'POC1',
+          clientId: 'MARKETPLACE',
+        },
+        initOptions: {
+          onLoad: 'check-sso',
+          silentCheckSsoRedirectUri:
+            window.location.origin + '/assets/silent-check-sso.html',
+        },
+      });
+    } catch (error) {
+      console.log("failed to reach SSO server");
+    }
+  };
 }
-
 
 @NgModule({
   declarations: [AppComponent, ...APP_CONTAINERS],
@@ -122,12 +130,11 @@ function initializeKeycloak(keycloak: KeycloakService) {
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,
       multi: true,
-      deps: [KeycloakService]
+      deps: [KeycloakService],
     },
     IconSetService,
-    Title
+    Title,
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}
