@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, lastValueFrom } from 'rxjs';
 import { OrganizationData } from './views/organization/organization-data';
 import { AuthService } from './auth.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +39,7 @@ export class OrganizationsApiService {
     console.log("fetching organizations");
     // fetch data and cast it into interface
     let orgaData = (await lastValueFrom(
-      this.http.get('https://api.dev.merlot-education.eu/organisations/organizations')
+      this.http.get(environment.organizations_api_url + '/organizations')
     )) as OrganizationData[];
     return orgaData;
   }

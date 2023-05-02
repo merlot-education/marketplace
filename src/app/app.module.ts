@@ -52,6 +52,7 @@ import {
 } from '@coreui/angular';
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
+import { environment } from 'src/environments/environment';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -68,7 +69,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     try {
       await keycloak.init({
         config: {
-          url: 'https://sso.common.merlot-education.eu/',
+          url: environment.sso_url,
           realm: 'POC1',
           clientId: 'MARKETPLACE',
         },
