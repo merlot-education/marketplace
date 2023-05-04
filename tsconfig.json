@@ -4,12 +4,27 @@
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@docs-components/*": ["./src/components/*"],
+      "@components/*": [
+        "./src/app/sdwizard/core/dynamic-form/components/*"
+      ],
+      "@services/*": [
+        "./src/app/sdwizard/core/dynamic-form/services/*"
+      ],
+      "@models/*": [
+        "./src/app/sdwizard/core/dynamic-form/models/*"
+      ],
+      "@validations/*": [
+        "./src/app/sdwizard/core/dynamic-form/validations/*"
+      ],
+      "@directives/*": [
+        "./src/app/sdwizard/core/dynamic-form/directives/*"
+      ],
+      "@shared/*": [
+        "./src/app/sdwizard/shared/*"
+      ]
+    },
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
@@ -18,7 +33,6 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
-    "useDefineForClassFields": false,
     "lib": [
       "ES2022",
       "dom"
@@ -27,8 +41,6 @@
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
   },
   "files": [],
   "references": [
