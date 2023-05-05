@@ -16,7 +16,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 
@@ -45,7 +45,7 @@ import {
       MatSelectModule,
       MatDialogModule,
       MatCheckboxModule,
-      BrowserAnimationsModule,
+      CommonModule,
       MatTooltipModule,
       MatExpansionModule,
       NgxMatDatetimePickerModule,
@@ -68,7 +68,7 @@ import {
     MatSelectModule,
     MatDialogModule,
     MatCheckboxModule,
-    BrowserAnimationsModule,
+    CommonModule,
     MatTooltipModule,
     MatExpansionModule,
     NgxMatDatetimePickerModule,

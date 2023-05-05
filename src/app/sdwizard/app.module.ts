@@ -1,4 +1,4 @@
-import {BrowserModule} from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import {APP_INITIALIZER, NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -8,7 +8,6 @@ import {
   DynamicFormInputComponent
 } from './core/dynamic-form/components/dynamic-form-input/dynamic-form-input.component';
 import {ShowErrorsComponent} from './core/dynamic-form/components/show-errors/show-errors.component';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from './material.module';
 import {
   DynamicFormArrayComponent
@@ -72,9 +71,8 @@ export function filesProviderFactory(provider: FilesProvider) {
     SelectLanguageComponent,
   ],
   imports: [
-    BrowserModule,
+    CommonModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
     FlexLayoutModule,
@@ -82,6 +80,10 @@ export function filesProviderFactory(provider: FilesProvider) {
     I18nModule,
     NgxRerenderModule
    
+  ],
+  exports: [
+    DynamicFormComponent,
+    StartingPageComponent
   ],
   providers: [FormfieldControlService, ValidationControlService, ApiService, DatePipe, {
     provide: HTTP_INTERCEPTORS,

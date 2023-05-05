@@ -26,24 +26,24 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         if (error.error instanceof Error) {
           // A client-side or network error occurred. Handle it accordingly.
           console.error('An error occurred:', error.error.message);
-          Swal.fire({
+          /*Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: 'Something went wrong!',
             footer: 'Please check your network connection!'+error.error.message
-          })
+          })*/
        
           throw Error("The app component has thrown an error!");
 
         } else {
           // The backend returned an unsuccessful response code.
           // The response body may contain clues as to what went wrong,
-          Swal.fire({
+          /*Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: 'Something went wrong!',
             footer: 'Uanble to communicate with the server please try agian later!'+error.error.message+''
-          })
+          })*/
           console.error(`Backend returned code ${error.status}, body was: ${error.error}`);
           throw Error("The app component has thrown an error!");
 
