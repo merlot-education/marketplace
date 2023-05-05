@@ -55,7 +55,7 @@ export class SelectFileComponent implements OnInit {
         this.shaclFile = this.formFieldService.readShaclFile(res);
         this.filteredShapes = this.formFieldService.updateFilteredShapes(this.shaclFile);
         if (this.filteredShapes.length > 1) {
-          this.router.navigate(['/select-shape'], { state: { file: this.shaclFile } });
+          this.router.navigate(['/service-offerings/edit'], { state: { file: this.shaclFile } });
         }
         else {
           console.log("this here"+this.shaclFile);
@@ -63,7 +63,7 @@ export class SelectFileComponent implements OnInit {
           //set description.input value depending on language
           this.updateSelectedShape();
           this.closeModal('upload-modal');
-          this.router.navigate(['/form'], { state: { file: this.shaclFile } });
+          this.router.navigate(['/service-offerings/edit/form'], { state: { file: this.shaclFile } });
         }
       },
       err => this.requestError = true

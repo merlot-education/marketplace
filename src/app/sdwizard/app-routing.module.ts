@@ -9,31 +9,31 @@ import { StartingPageComponent } from './core/starting-page/starting-page.compon
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'sdwizard',
     component: StartingPageComponent
   },
   {
-      path: 'upload',
+      path: 'sdwizard/upload',
       component: FileUploadComponent
   },
   {
-    path: 'form',
+    path: 'sdwizard/form',
     component: DynamicFormComponent,
   
   },
   {
-    path: 'select-shape',
+    path: 'sdwizard/select-shape',
     component: SelectShapeComponent
   },
   {
-    path: 'select-file',
+    path: 'sdwizard/select-file',
     component: SelectFileComponent,
     data: {
       shouldDetach: true
     }
   },
   {
-    path: 'index',
+    path: 'sdwizard/index',
     component: HomepageComponent
   },
 

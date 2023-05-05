@@ -46,6 +46,34 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { HttpErrorInterceptor } from './http-error.interceptor';
 
+
+// CoreUI Modules
+import {
+  AccordionModule,
+  BadgeModule,
+  BreadcrumbModule,
+  ButtonModule,
+  CardModule,
+  CarouselModule,
+  CollapseModule,
+  DropdownModule,
+  FormModule,
+  GridModule,
+  ListGroupModule,
+  NavModule,
+  PaginationModule,
+  PlaceholderModule,
+  PopoverModule,
+  ProgressModule,
+  SharedModule,
+  SpinnerModule,
+  TableModule,
+  TabsModule,
+  TooltipModule,
+  UtilitiesModule
+} from '@coreui/angular';
+
+
 export function filesProviderFactory(provider: FilesProvider) {
   return () => provider.load();
 }
@@ -78,12 +106,35 @@ export function filesProviderFactory(provider: FilesProvider) {
     FlexLayoutModule,
     ModalModule,
     I18nModule,
-    NgxRerenderModule
-   
+    NgxRerenderModule,
+    AccordionModule,
+    BadgeModule,
+    BreadcrumbModule,
+    ButtonModule,
+    CardModule,
+    CollapseModule,
+    GridModule,
+    UtilitiesModule,
+    SharedModule,
+    ListGroupModule,
+    ListGroupModule,
+    PlaceholderModule,
+    ProgressModule,
+    SpinnerModule,
+    TabsModule,
+    NavModule,
+    TooltipModule,
+    CarouselModule,
+    FormModule,
+    DropdownModule,
+    PaginationModule,
+    PopoverModule,
+    TableModule,
   ],
   exports: [
     DynamicFormComponent,
-    StartingPageComponent
+    StartingPageComponent,
+    SelectFileComponent
   ],
   providers: [FormfieldControlService, ValidationControlService, ApiService, DatePipe, {
     provide: HTTP_INTERCEPTORS,
