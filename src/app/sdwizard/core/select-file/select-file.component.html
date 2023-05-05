@@ -1,26 +1,5 @@
 <div>
-    <mat-card class="info-message">
-
-        <p>  {{'select-file.selectEco' | translate}}</p>
-            <div class="dropdown">
-                <button id="dropbtn"class="dropbtn">Gaia-X Trust Framework</button>
-                <div class="dropdown-content">
-                    <a (click)="reload('Gaia-X Trust Framework')">Gaia-X Trust Framework</a>
-                    <a (click)="reload('Merlot')">Merlot</a>
-                </div>
-            </div>
-
-       <hr>
-       <p>  {{'select-file.select' | translate}}<b><u><a (click)="openModal('upload-modal')" style="cursor: pointer;">{{'select-file.upload' | translate}}</a></u></b></p>
-
-    </mat-card>
-
-
-
     <div class="mainbody" *mcRerender="trigger">
-        <div class="bodyheader">
-            <button class ="uploadbutton" (click)="openModal('upload-modal')">{{'select-file.uploadButton' | translate}}  <img src="../../../assets/images/upload.svg" alt="upload shape"></button>
-        </div>
         <div class="participant">
             <span class="text">{{'select-file.participant' | translate}}</span>
             <hr>
@@ -41,13 +20,13 @@
         <div fxLayout="row wrap"  fxLayoutGap="16px grid" class="row-files">
 
 
-            <div fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="20%" *ngFor="let file of serviceFiles">
+            <div fxFlex="32%" *ngFor="let file of serviceFiles">
                 <button class="file" mat-stroked-button color="primary" (click)="select(file)">
                     {{getFileName(file)}}
                 </button>
             </div>
         </div>
-        <div class="participant">
+        <div *ngIf="defaultFiles?.length > 0" class="participant">
             <span class="text">{{'select-file.default' | translate}}</span>
             <hr>
         </div>

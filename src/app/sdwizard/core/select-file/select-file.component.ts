@@ -28,7 +28,7 @@ export class SelectFileComponent implements OnInit {
   filteredShapes: Shape[];
   requestError: boolean;
   public trigger: number = 0;
-  ecoSystem: string= "gax-trust-framework";// pass this to getFiles Api
+  ecoSystem: string= "merlot";// pass this to getFiles Api
   
 
   constructor(private renderer:Renderer2,private element:ElementRef,private apiService: ApiService, private formFieldService: FormfieldControlService, private router: Router,private modalService: ModalService, private http: HttpClient) {

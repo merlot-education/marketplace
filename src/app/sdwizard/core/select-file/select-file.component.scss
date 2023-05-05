@@ -39,12 +39,7 @@
   background-color: rgb(103 58 183 / 100%)
 }
 .mainbody{
-  margin: 2em 8em 0 8em !important;
-  background-color: rgb(113 112 112 / 15%);
-  border-radius: 3em;
-  box-shadow: 0px 4px 4px 1px rgb(0 0 0 / 25%)!important;
-  overflow: auto;
-  height: 78vh;
+
   
   /* custom scrollbar */
 
@@ -53,7 +48,7 @@
     flex-direction: row;
     align-items: center;
     .text{
-      margin-left: 5em;
+      margin-left: 0.5em;
       font-weight: 600;
       font-size: 1em;
       padding:0;
@@ -109,7 +104,7 @@
   opacity: 1; /* Firefox */
 }
 .row-files {
- margin: 1.5em 9em 1.5em 9em!important;
+ margin: 1em 1em 1em 1em!important;
 
 
 
