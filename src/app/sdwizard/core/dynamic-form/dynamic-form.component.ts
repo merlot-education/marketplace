@@ -11,6 +11,10 @@ import {DateHelper} from '@shared/date-helper';
 import {FilesProvider} from '@shared/files-provider';
 import {DownloadFormat} from '@shared/download-format.enum';
 import { throwError } from 'rxjs';
+
+import { IconSetService } from '@coreui/icons-angular';
+import { brandSet, flagSet, freeSet } from '@coreui/icons';
+
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: './dynamic-form.component.html',
@@ -35,13 +39,16 @@ export class DynamicFormComponent implements OnInit {
     private formfieldService: FormfieldControlService,
     private router: Router,
     private exportService: ExportService,
-    filesProvider: FilesProvider
+    filesProvider: FilesProvider, 
+    private iconSetService: IconSetService
   ) {
     this.readObjectDataFromRoute();
     if (this.requestSuccess) {
       this.getFormFields();
     }
     this.hasStaticFiles = filesProvider.gethasStaticFiles();
+    // iconSet singleton
+    iconSetService.icons = { ...freeSet, ...flagSet, ...brandSet };
   }
 
   ngOnInit(): void {

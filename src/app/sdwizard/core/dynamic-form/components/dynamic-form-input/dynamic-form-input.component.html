@@ -1,57 +1,63 @@
 <form [formGroup]="form">
   <div [ngSwitch]="input.controlTypes[0]">
     <div *ngSwitchCase="'textbox'">
-      <mat-form-field class="full-width-input">
-        <mat-label>{{input.name}}  <span *ngIf="input.required" aria-required="true" class="required"> * </span>
-        </mat-label>
-        <input [formControlName]="input.id" [matTooltip]="input.description[this.translate.currentLang]" placeholder="{{input.description[this.translate.currentLang]}}" [type]="input.datatype" matInput>
-      </mat-form-field>
+
+      <div class="mb-3">
+        <label class="form-label">{{input.name}}  <span *ngIf="input.required" aria-required="true" class="required"> * </span>
+        </label>
+        <input [type]="input.datatype" class="form-control" [formControlName]="input.id" placeholder="{{input.description[this.translate.currentLang]}}">
+      </div>
+
       <mat-error>
         <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
       </mat-error>
     </div>
 
     <div *ngSwitchCase="'textbox_integer'">
-      <mat-form-field class="full-width-input">
-        <mat-label>{{input.name}}  <span *ngIf="input.required" aria-required="true" class="required"> * </span>
-        </mat-label>
-        <input [formControlName]="input.id" [matTooltip]="input.description[this.translate.currentLang]" placeholder="{{input.description[this.translate.currentLang]}}" appNumeric matInput type="number">
-      </mat-form-field>
+
+      <div class="mb-3">
+        <label class="form-label">{{input.name}}  <span *ngIf="input.required" aria-required="true" class="required"> * </span>
+        </label>
+        <input type="number" class="form-control" [formControlName]="input.id" placeholder="{{input.description[this.translate.currentLang]}}">
+      </div>
+
       <mat-error>
         <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
       </mat-error>
     </div>
     <div *ngSwitchCase="'textbox_decimal'">
-      <mat-form-field class="full-width-input">
-        <mat-label>{{input.name}}  <span *ngIf="input.required" aria-required="true" class="required"> * </span>
-        </mat-label>
-        <input [formControlName]="input.id" [matTooltip]="input.description[this.translate.currentLang]" placeholder="{{input.description[this.translate.currentLang]}}" appNumeric decimals="2" matInput
-               type="number">
-      </mat-form-field>
+
+      <div class="mb-3">
+        <label class="form-label">{{input.name}}  <span *ngIf="input.required" aria-required="true" class="required"> * </span>
+        </label>
+        <input type="number" class="form-control" [formControlName]="input.id" placeholder="{{input.description[this.translate.currentLang]}}">
+      </div>
+
       <mat-error>
         <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
       </mat-error>
     </div>
     <div *ngSwitchCase="'textbox_uri'">
-      <mat-form-field class="full-width-input">
-        <mat-label>{{input.name}}  <span *ngIf="input.required" aria-required="true" class="required"> * </span>
-        </mat-label>
-        <input [formControlName]="input.id" [matTooltip]="input.description[this.translate.currentLang]" placeholder="{{input.description[this.translate.currentLang]}}" matInput>
-      </mat-form-field>
+
+      <div class="mb-3">
+        <label class="form-label">{{input.name}}  <span *ngIf="input.required" aria-required="true" class="required"> * </span>
+        </label>
+        <input class="form-control" [formControlName]="input.id" placeholder="{{input.description[this.translate.currentLang]}}">
+      </div>
+
       <mat-error>
         <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
       </mat-error>
     </div>
     <div *ngSwitchCase="'dropdown'">
-      <mat-form-field class="full-width-input">
-        <mat-label>{{input.name}}  <span *ngIf="input.required" aria-required="true" class="required"> * </span>
-        </mat-label>
-        <mat-select [formControlName]="input.id">
-          <mat-option *ngFor="let option of input.in" [value]="option.value">
-            {{option.value}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <div class="mb-3">
+
+        <label class="form-label">{{input.name}}  <span *ngIf="input.required" aria-required="true" class="required"> * </span> </label>
+        <select class="form-select" [formControlName]="input.id">
+          <option *ngFor="let option of input.in" [value]="option.value">{{option.value}}</option>
+        </select>
+        
+      </div>
       <mat-error>
         <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
       </mat-error>

@@ -46,6 +46,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { HttpErrorInterceptor } from './http-error.interceptor';
 
+import { IconModule, IconSetService } from '@coreui/icons-angular';
+
 
 // CoreUI Modules
 import {
@@ -130,6 +132,7 @@ export function filesProviderFactory(provider: FilesProvider) {
     PaginationModule,
     PopoverModule,
     TableModule,
+    IconModule,
   ],
   exports: [
     DynamicFormComponent,
@@ -145,7 +148,8 @@ export function filesProviderFactory(provider: FilesProvider) {
     {
       provide: RouteReuseStrategy,
       useClass: CustomRouteReuseStrategy
-    }
+    },
+    IconSetService,
   ],
   bootstrap: [AppComponent]
 })

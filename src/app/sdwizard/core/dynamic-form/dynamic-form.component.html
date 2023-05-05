@@ -22,10 +22,6 @@
            <div class="field">
              <div class="textField">
                -->
-              <mat-form-field class="full-width-input" >
-                <mat-label>Credential subject (DID)</mat-label>
-                <input matTooltip="did:example:123456789abcdefghi" formControlName="user_prefix" matInput placeholder="did:example:123456789abcdefghi">
-              </mat-form-field>
               <!--
             </div>
 
@@ -35,7 +31,14 @@
               </div>
           </div>
         -->
+
             <mat-card-content>
+
+              <div class="mb-3">
+                <label class="form-label">Credential subject (DID)</label>
+                <input type="text" class="form-control" formControlName="user_prefix" placeholder="did:example:123456789abcdefghi">
+              </div>
+
               <div *ngFor="let formField of group; let j=index" class="form-group">
                 <span *ngIf="j==0">{{formField.group}}</span>
                 <!--
@@ -66,15 +69,6 @@
             </mat-card-content>
             <br>
             <div *ngIf="i==0" class="form-group">
-              <div class="download-format">
-                <small> {{'form.export'|translate}}</small> <br>
-                <mat-radio-group formControlName="download_format">
-                  <mat-radio-button *ngFor="let option of downloadFormatKeys; let i = index"
-                                    [value]="DownloadFormat[option]"
-                                    class="format-label"> {{DownloadFormat[option]}}
-                  </mat-radio-button>
-                </mat-radio-group>
-              </div>
               <button [disabled]="form.invalid" color="primary" mat-raised-button>{{'form.save'|translate}}</button>
             </div>
             <div class="all-errors">

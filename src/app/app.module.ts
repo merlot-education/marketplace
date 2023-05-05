@@ -119,7 +119,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
     KeycloakAngularModule,
     HttpClientModule,
     FormsModule,
-    WizardAppModule
+    WizardAppModule,
+    
   ],
   providers: [
     {
