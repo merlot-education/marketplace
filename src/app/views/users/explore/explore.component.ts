@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IUserData } from '../user-data';
-import { AaamApiService } from 'src/app/aaam-api.service';
-import { AuthService } from 'src/app/auth.service';
+import { AaamApiService } from 'src/app/services/aaam-api.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({

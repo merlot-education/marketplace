@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrganizationData } from "../organization-data";
-import { OrganizationsApiService } from 'src/app/organizations-api.service';
-import { AuthService } from 'src/app/auth.service';
+import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 
 @Component({
