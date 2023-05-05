@@ -5,6 +5,7 @@ import {saveAs} from 'file-saver';
 import {Prefix, ShaclFile} from '@models/shacl-file';
 import {Utils} from '@shared/utils';
 import {FormfieldControlService} from './form-field.service';
+import { ServiceofferingApiService } from '../../../../services/serviceoffering-api.service';
 import {DownloadFormat} from '@shared/download-format.enum';
 
 @Injectable({
@@ -12,7 +13,7 @@ import {DownloadFormat} from '@shared/download-format.enum';
 })
 export class ExportService {
 
-  constructor(private formFieldService: FormfieldControlService) {
+  constructor(private formFieldService: FormfieldControlService, private serviceOfferingApiService: ServiceofferingApiService) {
   }
 
   createRDFStream(file: ShaclFile) {
@@ -32,6 +33,7 @@ export class ExportService {
       namedNode(subject)
     );
     selectedShape.fields.forEach(field => {
+      console.log(field);
       // Add quads for main shape
       if (field.childrenSchema === '') {
         field.values.forEach(val => {
@@ -149,8 +151,7 @@ export class ExportService {
 
   getFieldDataTypePrefix(formField: FormField) {
     let datatypePrefix = '';
-    // In case of dropdown we do not have a specified datatype
-    if (formField.in.length === 0 && formField.datatype.prefix !== undefined) {
+    if (formField.datatype.prefix !== undefined) {
       datatypePrefix = formField.datatype.prefix.concat(':').concat(formField.datatype.value);
     }
     return datatypePrefix;
@@ -190,9 +191,10 @@ export class ExportService {
       //blob = new Blob([rdfStream], {type: 'turtle'});
       //fileName = selectedShape.name.concat('-instance.ttl');
     } else if (selectedShape.downloadFormat === DownloadFormat.jsonld) {
-      console.log(this.convertTurtleToJsonLd(`${rdfStream}`));
+      let jsonSd = this.convertTurtleToJsonLd(`${rdfStream}`);
+      this.serviceOfferingApiService.createServiceOffering(jsonSd).then(result => console.log(result));
       // TODO send this stream to the service offering api
-      
+
       //blob = new Blob([this.convertTurtleToJsonLd(`${rdfStream}`)], {type: 'application/json'});
       //fileName = selectedShape.name.concat('-instance.json');
     }
@@ -201,6 +203,7 @@ export class ExportService {
   }
 
   convertTurtleToJsonLd(ttl: string) {
+    console.log(ttl);
     const ttl2jsonld = require('@frogcat/ttl2jsonld').parse;
     const jsonld = JSON.stringify(ttl2jsonld(ttl), null, 2);
     return jsonld;
