@@ -1,10 +1,15 @@
 <div class="expanded">
   <form [formGroup]="form">
     <div *ngIf="!input.required && formGroups.length == 0" flex fxLayoutAlign="start center" layout="row">
-      <button (click)="addInitialShape()" [disabled]="!enableButton" color="primary" mat-icon-button>
-        <mat-icon>add</mat-icon>
-        {{input.name}}
-      </button>
+
+      <button cButton color="primary" variant="ghost" (click)="addInitialShape()" [disabled]="!enableButton" size="sm">
+        <svg
+        class=""
+        cIcon
+        name="cib-addthis"
+        size="xl"
+      ></svg><span>{{input.name}}</span></button>
+
     </div>
     <mat-accordion *ngFor="let nestedShapeForm of formGroups; let i = index">
       <mat-expansion-panel (closed)="panelOpenState = false" (opened)="panelOpenState = true">
@@ -43,14 +48,22 @@
         </mat-error>
       </div>
       <div fxLayout="row" fxLayoutAlign="space-between center">
-        <button (click)="addInput()" *ngIf="i==0 && displayAddButton" [disabled]="!enableButton" color="primary"
-                mat-icon-button>
-          <mat-icon>add</mat-icon>
-          {{input.name}}
-        </button>
-        <button (click)="deleteInput(i)" *ngIf="displayDeleteButton(i)" color="warn" mat-icon-button type="button">
-          <mat-icon>delete icon</mat-icon>
-        </button>
+
+        <button cButton color="primary" variant="ghost" (click)="addInput()" *ngIf="i==0 && displayAddButton" [disabled]="!enableButton" size="sm">
+          <svg
+          class=""
+          cIcon
+          name="cib-addthis"
+          size="xl"
+        ></svg></button>
+
+        <button cButton variant="ghost" (click)="deleteInput(i)" *ngIf="displayDeleteButton(i)" color="primary" size="sm">
+          <svg
+          class=""
+          cIcon
+          name="cil-trash"
+          size="xl"
+        ></svg></button>
       </div>
     </mat-accordion>
   </form>

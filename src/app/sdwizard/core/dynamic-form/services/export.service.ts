@@ -186,14 +186,18 @@ export class ExportService {
     let blob: Blob;
     let fileName: string;
     if (selectedShape.downloadFormat === DownloadFormat.turtle) {
-      blob = new Blob([rdfStream], {type: 'turtle'});
-      fileName = selectedShape.name.concat('-instance.ttl');
+      console.log(rdfStream);
+      //blob = new Blob([rdfStream], {type: 'turtle'});
+      //fileName = selectedShape.name.concat('-instance.ttl');
     } else if (selectedShape.downloadFormat === DownloadFormat.jsonld) {
-      blob = new Blob([this.convertTurtleToJsonLd(`${rdfStream}`)], {type: 'application/json'});
-      fileName = selectedShape.name.concat('-instance.json');
+      console.log(this.convertTurtleToJsonLd(`${rdfStream}`));
+      // TODO send this stream to the service offering api
+      
+      //blob = new Blob([this.convertTurtleToJsonLd(`${rdfStream}`)], {type: 'application/json'});
+      //fileName = selectedShape.name.concat('-instance.json');
     }
 
-    saveAs(blob, fileName);
+    //saveAs(blob, fileName);
   }
 
   convertTurtleToJsonLd(ttl: string) {

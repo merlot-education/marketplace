@@ -35,7 +35,7 @@
             <mat-card-content>
 
               <div class="mb-3">
-                <label class="form-label">Credential subject (DID)</label>
+                <label class="form-label">Credential subject (DID) *</label>
                 <input type="text" class="form-control" formControlName="user_prefix" placeholder="did:example:123456789abcdefghi">
               </div>
 
@@ -71,12 +71,12 @@
             <div *ngIf="i==0" class="form-group">
               <button [disabled]="form.invalid" color="primary" mat-raised-button>{{'form.save'|translate}}</button>
             </div>
-            <div class="all-errors">
+            <!--div class="all-errors"> 
               <div *ngFor="let formField of group" class="alert alert-danger ">
                 <app-show-errors [displayAll]="true" [formField]="formField" [form]="form" [label]="formField.name">
                 </app-show-errors>
               </div>
-            </div>
+            </div--> <!-- TODO re-add error messages -->
             <div *ngIf="hasStaticFiles">
               <button (click)="goToFiles()" class="back-button" color="primary" mat-stroked-button>
                 <mat-icon>arrow_back</mat-icon>

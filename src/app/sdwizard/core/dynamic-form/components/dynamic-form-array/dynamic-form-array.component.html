@@ -32,55 +32,87 @@
         </div>
       </span>
       <div *ngSwitchCase="'textbox_integer'">
-        <mat-form-field [ngClass]="{'full-width-input': addFullWidthClass(i), 'width-input': addNonFullWidthClass(i)}">
-          <mat-label>{{input.name}}  <span *ngIf="hasRequiredValidator(control)" aria-required="true" class="required"> * </span>
-          </mat-label>
-          <input [formControl]="inputs.controls[i]" [matTooltip]="input.description[this.translate.currentLang]" placeholder="{{input.description[this.translate.currentLang]}}" appNumeric matInput type="number">
-        </mat-form-field>
-        <button (click)="addInput()" *ngIf="i==0 && displayAddButton" [disabled]="!enableButton" color="primary"
-                mat-icon-button>
-          <mat-icon>add</mat-icon>
-        </button>
-        <button (click)="deleteInput(i)" *ngIf="i!=0 && i>=input.minCount" color="warn" mat-icon-button type="button">
-          <mat-icon>delete icon</mat-icon>
-        </button>
+
+        <div [ngClass]="{'full-width-input': addFullWidthClass(i), 'width-input': addNonFullWidthClass(i)}">
+          <label class="form-label">{{input.name}}  <span *ngIf="hasRequiredValidator(control)" aria-required="true" class="required"> * </span>
+          </label>
+          <input class="form-control" [formControl]="inputs.controls[i]" placeholder="{{input.description[this.translate.currentLang]}}" type="number">
+        </div>
+        
+        <button cButton color="primary" variant="ghost" (click)="addInput()" *ngIf="i==0 && displayAddButton" [disabled]="!enableButton" size="sm">
+          <svg
+          class=""
+          cIcon
+          name="cib-addthis"
+          size="xl"
+        ></svg></button>
+
+        <button cButton variant="ghost" (click)="deleteInput(i)" *ngIf="i!=0 && i>=input.minCount" color="primary" size="sm">
+          <svg
+          class=""
+          cIcon
+          name="cil-trash"
+          size="xl"
+        ></svg></button>
+
         <mat-error>
           <app-show-errors [ctrl]="inputs.controls[i]" [label]="input.name"></app-show-errors>
         </mat-error>
       </div>
 
       <div *ngSwitchCase="'textbox_decimal'">
-        <mat-form-field [ngClass]="{'full-width-input': addFullWidthClass(i), 'width-input': addNonFullWidthClass(i)}">
-          <mat-label>{{input.name}}  <span *ngIf="hasRequiredValidator(control)" aria-required="true" class="required"> * </span>
-          </mat-label>
-          <input [formControl]="inputs.controls[i]" [matTooltip]="input.description[this.translate.currentLang]" placeholder="{{input.description[this.translate.currentLang]}}" appNumeric decimals="2" matInput
-                 type="number">
-        </mat-form-field>
-        <button (click)="addInput()" *ngIf="i==0 && displayAddButton" [disabled]="!enableButton" color="primary"
-                mat-icon-button>
-          <mat-icon>add</mat-icon>
-        </button>
-        <button (click)="deleteInput(i)" *ngIf="i!=0 && i>=input.minCount" color="warn" mat-icon-button type="button">
-          <mat-icon>delete icon</mat-icon>
-        </button>
+
+        <div [ngClass]="{'full-width-input': addFullWidthClass(i), 'width-input': addNonFullWidthClass(i)}">
+          <label class="form-label">{{input.name}}  <span *ngIf="hasRequiredValidator(control)" aria-required="true" class="required"> * </span>
+          </label>
+          <input class="form-control" [formControl]="inputs.controls[i]" placeholder="{{input.description[this.translate.currentLang]}}" type="number">
+        </div>
+        
+        <button cButton color="primary" variant="ghost" (click)="addInput()" *ngIf="i==0 && displayAddButton" [disabled]="!enableButton" size="sm">
+          <svg
+          class=""
+          cIcon
+          name="cib-addthis"
+          size="xl"
+        ></svg></button>
+
+        <button cButton variant="ghost" (click)="deleteInput(i)" *ngIf="i!=0 && i>=input.minCount" color="primary" size="sm">
+          <svg
+          class=""
+          cIcon
+          name="cil-trash"
+          size="xl"
+        ></svg></button>
+
         <mat-error>
           <app-show-errors [ctrl]="inputs.controls[i]" [label]="input.name"></app-show-errors>
         </mat-error>
       </div>
 
       <div *ngSwitchCase="'textbox_uri'">
-        <mat-form-field [ngClass]="{'full-width-input': addFullWidthClass(i), 'width-input': addNonFullWidthClass(i)}">
-          <mat-label>{{input.name}}  <span *ngIf="hasRequiredValidator(control)" aria-required="true" class="required"> * </span>
-          </mat-label>
-          <input [formControl]="inputs.controls[i]" [matTooltip]="input.description[this.translate.currentLang]" placeholder="{{input.description[this.translate.currentLang]}}" matInput>
-        </mat-form-field>
-        <button (click)="addInput()" *ngIf="i==0 && displayAddButton" [disabled]="!enableButton" color="primary"
-                mat-icon-button>
-          <mat-icon>add</mat-icon>
-        </button>
-        <button (click)="deleteInput(i)" *ngIf="i!=0 && i>=input.minCount" color="warn" mat-icon-button type="button">
-          <mat-icon>delete icon</mat-icon>
-        </button>
+
+        <div [ngClass]="{'full-width-input': addFullWidthClass(i), 'width-input': addNonFullWidthClass(i)}">
+          <label class="form-label">{{input.name}}  <span *ngIf="hasRequiredValidator(control)" aria-required="true" class="required"> * </span>
+          </label>
+          <input class="form-control" [formControl]="inputs.controls[i]" placeholder="{{input.description[this.translate.currentLang]}}">
+        </div>
+        
+        <button cButton color="primary" variant="ghost" (click)="addInput()" *ngIf="i==0 && displayAddButton" [disabled]="!enableButton" size="sm">
+          <svg
+          class=""
+          cIcon
+          name="cib-addthis"
+          size="xl"
+        ></svg></button>
+
+        <button cButton variant="ghost" (click)="deleteInput(i)" *ngIf="i!=0 && i>=input.minCount" color="primary" size="sm">
+          <svg
+          class=""
+          cIcon
+          name="cil-trash"
+          size="xl"
+        ></svg></button>
+
         <mat-error>
           <app-show-errors [ctrl]="inputs.controls[i]" [label]="input.name"></app-show-errors>
         </mat-error>
@@ -127,22 +159,32 @@
       </div>
 
       <div *ngSwitchCase="'dropdown'">
-        <mat-form-field [ngClass]="{'full-width-input': addFullWidthClass(i), 'width-input': addNonFullWidthClass(i)}">
-          <mat-label>{{input.name}}  <span *ngIf="hasRequiredValidator(control)" aria-required="true" class="required"> * </span>
-          </mat-label>
-          <mat-select [formControl]="inputs.controls[i]" [multiple]="false">
-            <mat-option *ngFor="let option of input.in" [value]="option.value">
-              {{option.value}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <button (click)="addInput()" *ngIf="i==0 && displayAddButton" [disabled]="!enableButton" color="primary"
-                mat-icon-button>
-          <mat-icon>add</mat-icon>
-        </button>
-        <button (click)="deleteInput(i)" *ngIf="i!=0 && i>=input.minCount" color="warn" mat-icon-button type="button">
-          <mat-icon>delete icon</mat-icon>
-        </button>
+
+        <div class="mb-3">
+
+          <label class="form-label">{{input.name}}  <span *ngIf="hasRequiredValidator(control)" aria-required="true" class="required"> * </span> </label>
+          <select class="form-select" [formControl]="inputs.controls[i]" [multiple]="false">
+            <option *ngFor="let option of input.in" [value]="option.value">{{option.value}}</option>
+          </select>
+          
+        </div>
+
+        <button cButton color="primary" variant="ghost" (click)="addInput()" *ngIf="i==0 && displayAddButton" [disabled]="!enableButton" size="sm">
+          <svg
+          class=""
+          cIcon
+          name="cib-addthis"
+          size="xl"
+        ></svg></button>
+
+        <button cButton variant="ghost" (click)="deleteInput(i)" *ngIf="i!=0 && i>=input.minCount" color="primary" size="sm">
+          <svg
+          class=""
+          cIcon
+          name="cil-trash"
+          size="xl"
+        ></svg></button>
+
         <mat-error>
           <app-show-errors [ctrl]="inputs.controls[i]" [label]="input.name"></app-show-errors>
         </mat-error>
