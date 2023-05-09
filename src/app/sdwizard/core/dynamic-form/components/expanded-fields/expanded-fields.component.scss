@@ -6,3 +6,13 @@
 .delete-button {
   margin-right: 150px;
 }
+
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-item-grow {
+  flex-grow: 1;
+}

@@ -1,6 +1,10 @@
 <div class="expanded">
   <form [formGroup]="form">
     <div *ngIf="!input.required && formGroups.length == 0" flex fxLayoutAlign="start center" layout="row">
+      
+      <div class="flex-container">
+
+      <span>{{input.name}} hinzufügen</span>
 
       <button cButton color="primary" variant="ghost" (click)="addInitialShape()" [disabled]="!enableButton" size="sm">
         <svg
@@ -8,20 +12,22 @@
         cIcon
         name="cib-addthis"
         size="xl"
-      ></svg><span>{{input.name}}</span></button>
+      ></svg></button>
+      </div>
 
     </div>
     <mat-accordion *ngFor="let nestedShapeForm of formGroups; let i = index">
-      <mat-expansion-panel (closed)="panelOpenState = false" (opened)="panelOpenState = true">
+      <div class="flex-container">
+      <mat-expansion-panel (closed)="panelOpenState = false" (opened)="panelOpenState = true" class="flex-item-grow">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            {{inputs[i].name}} - {{inputs[i].childrenSchema}} <span *ngIf="input.required" aria-required="true"
+            {{inputs[i].name}}<span *ngIf="input.required" aria-required="true"
                                                                     class="required"> * </span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <div [formGroup]="nestedShapeForm">
           <mat-error *ngIf="inputs[i].childrenFields.length==0">
-            The shape does not exist in the file.
+            Das Schema konnte in der Datei nicht gefunden werden.
           </mat-error>
           <div *ngFor="let child of inputs[i].childrenFields">
             <app-dynamic-form-input *ngIf="child.componentType == 'dynamicFormInput'" [form]="nestedShapeForm"
@@ -42,13 +48,6 @@
         </div>
       </mat-expansion-panel>
 
-      <div flex fxLayoutAlign="start center" layout="row">
-        <mat-error>
-          <app-show-errors [ctrl]="nestedShapeForm" [label]="input.name"></app-show-errors>
-        </mat-error>
-      </div>
-      <div fxLayout="row" fxLayoutAlign="space-between center">
-
         <button cButton color="primary" variant="ghost" (click)="addInput()" *ngIf="i==0 && displayAddButton" [disabled]="!enableButton" size="sm">
           <svg
           class=""
@@ -64,6 +63,12 @@
           name="cil-trash"
           size="xl"
         ></svg></button>
+    </div>
+
+      <div flex fxLayoutAlign="start center" layout="row">
+        <mat-error>
+          <app-show-errors [ctrl]="nestedShapeForm" [label]="input.name"></app-show-errors>
+        </mat-error>
       </div>
     </mat-accordion>
   </form>

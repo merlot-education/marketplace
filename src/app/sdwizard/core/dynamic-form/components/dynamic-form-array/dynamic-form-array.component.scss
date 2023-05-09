@@ -18,3 +18,13 @@
  
  text-align: initial!important;
 }
+
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-item-grow {
+  flex-grow: 1;
+}
