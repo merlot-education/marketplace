@@ -58,7 +58,8 @@ export class FormfieldControlService {
             or: field.or !== undefined ? field.or : [],
             validations: field.validations,
             childrenSchema: field.children,
-            description: field.description
+            description: field.description,
+            example: field.example
           });
           // Get control type
           formField.controlTypes = this.getControlTypes(formField);

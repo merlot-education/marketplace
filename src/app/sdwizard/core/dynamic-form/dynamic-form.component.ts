@@ -66,6 +66,7 @@ export class DynamicFormComponent implements OnInit {
   groupFormFields(): void {
     this.groupedFormFields = Utils.groupBy(this.formFields, (formField) => formField.group);
     this.groupsNumber = this.groupedFormFields.length;
+    console.log(this.groupedFormFields);
   }
 
   readObjectDataFromRoute(): void {

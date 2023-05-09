@@ -19,16 +19,16 @@ export class ShowErrorsComponent implements OnInit {
   allErrors: string[] = [];
 
   ERROR_MESSAGE = {
-    required: () => `${this.label} is required.`,
-    minlength: (par) => `${this.label} must be minimum ${par.requiredLength} characters.`,
-    maxlength: (par) => `${this.label} must be maximum ${par.requiredLength} characters.`,
-    min: (par) => `The minimum value of ${this.label} must be ${par.min}.`,
-    max: (par) => `The maximum value of ${this.label} must be ${par.max}.`,
-    pattern: (par) => `The pattern allowed ${par.requiredPattern}`,
-    lessthan: (par) => `The value must be less than ${par}.`,
-    uriPattern: () => `The value must be a URI.`,
-    urlPattern: () => `The value must be a URL.`,
-    childrenValid: () => `${this.label} is required.`
+    required: () => `${this.label} ist erforderlich.`,
+    minlength: (par) => `${this.label} darf minimal ${par.requiredLength} Zeichen beinhalten.`,
+    maxlength: (par) => `${this.label} darf maximal ${par.requiredLength} Zeichen beinhalten.`,
+    min: (par) => `${this.label} muss mindestens ${par.min} sein.`,
+    max: (par) => `${this.label} darf maximal ${par.max} sein.`,
+    pattern: (par) => `Zulässiges Muster ${par.requiredPattern}`,
+    lessthan: (par) => `Der Wert muss niedriger als ${par} sein.`,
+    uriPattern: () => `Der Wert muss eine URI sein.`,
+    urlPattern: () => `Der Wert muss eine URL sein.`,
+    childrenValid: () => `${this.label} ist erforderlich.`
   };
 
   constructor() {

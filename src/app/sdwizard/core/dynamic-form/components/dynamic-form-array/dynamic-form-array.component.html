@@ -3,28 +3,37 @@
     <div [ngSwitch]="input.controlTypes[0]">
         <span class="addDelete">
         <div *ngSwitchCase="'textbox'">
-
-          <div [ngClass]="{'full-width-input': addFullWidthClass(i), 'width-input': addNonFullWidthClass(i)}">
-            <label class="form-label">{{input.name}}  <span *ngIf="hasRequiredValidator(control)" aria-required="true" class="required"> * </span>
+          
+          <div class="full-width-input">
+            <label class="form-label" *ngIf="i==0">{{input.name}}  <span *ngIf="hasRequiredValidator(control)" aria-required="true" class="required"> * </span>
             </label>
-            <input class="form-control" [formControl]="inputs.controls[i]" placeholder="{{input.description[this.translate.currentLang]}}">
+
+            <div style="display:flex">
+            <input class="form-control" [formControl]="inputs.controls[i]" placeholder="{{input.example}}">
+
+            <button cButton variant="ghost" color="primary" (click)="addInput()" *ngIf="i==0 && displayAddButton" [disabled]="!enableButton" size="sm">
+              <svg
+              class=""
+              cIcon
+              name="cib-addthis"
+              size="xl"
+            ></svg></button>
+
+            <button cButton variant="ghost" (click)="deleteInput(i)" *ngIf="i!=0 && i>=input.minCount" color="primary" size="sm">
+              <svg
+              class=""
+              cIcon
+              name="cil-trash"
+              size="xl"
+            ></svg></button>
+
+            </div>
+            <div cFormText *ngIf="i==(inputs.controls.length-1)">
+              {{input.description[this.translate.currentLang]}}
+            </div>
           </div>
           
-          <button cButton color="primary" variant="ghost" (click)="addInput()" *ngIf="i==0 && displayAddButton" [disabled]="!enableButton" size="sm">
-            <svg
-            class=""
-            cIcon
-            name="cib-addthis"
-            size="xl"
-          ></svg></button>
 
-          <button cButton variant="ghost" (click)="deleteInput(i)" *ngIf="i!=0 && i>=input.minCount" color="primary" size="sm">
-            <svg
-            class=""
-            cIcon
-            name="cil-trash"
-            size="xl"
-          ></svg></button>
 
           <mat-error>
             <app-show-errors [ctrl]="inputs.controls[i]" [label]="input.name"></app-show-errors>

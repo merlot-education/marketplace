@@ -5,7 +5,10 @@
       <div class="mb-3">
         <label class="form-label">{{input.name}}  <span *ngIf="input.required" aria-required="true" class="required"> * </span>
         </label>
-        <input [type]="input.datatype" class="form-control" [formControlName]="input.id" placeholder="{{input.description[this.translate.currentLang]}}">
+        <input [type]="input.datatype" class="form-control" [formControlName]="input.id" placeholder="{{input.example}}">
+        <div cFormText>
+          {{input.description[this.translate.currentLang]}}
+        </div>
       </div>
 
       <mat-error>
@@ -18,7 +21,10 @@
       <div class="mb-3">
         <label class="form-label">{{input.name}}  <span *ngIf="input.required" aria-required="true" class="required"> * </span>
         </label>
-        <input type="number" class="form-control" [formControlName]="input.id" placeholder="{{input.description[this.translate.currentLang]}}">
+        <input type="number" class="form-control" [formControlName]="input.id" placeholder="{{input.example}}">
+        <div cFormText>
+          {{input.description[this.translate.currentLang]}}
+        </div>
       </div>
 
       <mat-error>
@@ -30,7 +36,10 @@
       <div class="mb-3">
         <label class="form-label">{{input.name}}  <span *ngIf="input.required" aria-required="true" class="required"> * </span>
         </label>
-        <input type="number" class="form-control" [formControlName]="input.id" placeholder="{{input.description[this.translate.currentLang]}}">
+        <input type="number" class="form-control" [formControlName]="input.id" placeholder="{{input.example}}">
+        <div cFormText>
+          {{input.description[this.translate.currentLang]}}
+        </div>
       </div>
 
       <mat-error>
@@ -42,7 +51,10 @@
       <div class="mb-3">
         <label class="form-label">{{input.name}}  <span *ngIf="input.required" aria-required="true" class="required"> * </span>
         </label>
-        <input class="form-control" [formControlName]="input.id" placeholder="{{input.description[this.translate.currentLang]}}">
+        <input class="form-control" [formControlName]="input.id" placeholder="{{input.example}}">
+        <div cFormText>
+          {{input.description[this.translate.currentLang]}}
+        </div>
       </div>
 
       <mat-error>
