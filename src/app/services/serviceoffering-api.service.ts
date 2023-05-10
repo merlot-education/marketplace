@@ -11,7 +11,7 @@ import { AuthService } from './auth.service';
 })
 export class ServiceofferingApiService {
 
-  constructor(private http: HttpClient, private authService: AuthService) { 
+  constructor(private http: HttpClient, private authService: AuthService, private organizationsApiService: OrganizationsApiService) { 
 
   }
 

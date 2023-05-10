@@ -1,10 +1,4 @@
-<style>
-  strong {
-    display: inline-block;
-    width: 150px;
-    text-align: left;
-  }
-</style>
+<h1 *ngIf="orgaOfferings.length > 0">Service Angebote meiner Organisation</h1>
 
 <c-row>
   <c-col xs *ngFor="let offering of orgaOfferings">
@@ -15,20 +9,20 @@
           <c-col>
             <ul class="list-group list-group-flush">
               <li class="list-group-item" style="border: none">
-                <strong>Anbieter:</strong>
+                <strong>Beschreibung:</strong> <br />
+                {{ offering.description }}
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Anbieter:</strong><br />
                 {{ offering.offeredBy }}
               </li>
               <li class="list-group-item" style="border: none">
-                <strong>Status:</strong>
-                {{ offering.merlotStatus }}
+                <strong>Status:</strong><br />
+                {{ offering.merlotState }}
               </li>
               <li class="list-group-item" style="border: none">
-                <strong>Verfügbar seit:</strong>
+                <strong>Verfügbar seit:</strong><br />
                 {{ offering.statusTime }}
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Beschreibung:</strong> <br />
-                {{ offering.description }}
               </li>
             </ul>
             <div class="flex-container" style="padding: 10px">
@@ -46,6 +40,7 @@
   </c-col>
 </c-row>
 
+<h1 *ngIf="offerings.length > 0">Öffentliche Service Angebote</h1>
 
 <c-row>
   <c-col xs *ngFor="let offering of offerings">
@@ -56,16 +51,16 @@
           <c-col>
             <ul class="list-group list-group-flush">
               <li class="list-group-item" style="border: none">
-                <strong>Anbieter:</strong>
+                <strong>Beschreibung:</strong> <br />
+                {{ offering.description }}
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Anbieter:</strong> <br />
                 {{ offering.offeredBy }}
               </li>
               <li class="list-group-item" style="border: none">
-                <strong>Verfügbar seit:</strong>
+                <strong>Verfügbar seit:</strong> <br />
                 {{ offering.statusTime }}
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Beschreibung:</strong> <br />
-                {{ offering.description }}
               </li>
             </ul>
             <div class="row" style="padding: 10px">
