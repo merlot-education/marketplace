@@ -1,31 +1,15 @@
 export interface IOfferings {
+  description?: string,
   id: string;
+  issuer: string;
+  merlotState: string;
   name: string;
-  country: string;
-  provider: string;
-  availablesince: string;
+  offeredBy: string;
+  providedBy: string;
+  sdHash: string;
+  status: string;
+  statusTime: string;
+  type: string;
+  uploadTime: string;
 }
 
-export let offerings: IOfferings[] = [
-  /*{
-    id: "0001",
-    name: 'DataOffering1',
-    country: 'De',
-    provider: 'ProviderCorp',
-    availablesince: 'Jan 1, 2021',
-  },
-  {
-    id: "0002",
-    name: 'DataOffering2',
-    country: 'Fr',
-    provider: 'ProviderCorp',
-    availablesince: 'Jan 1, 2021',
-  },
-  {
-    id: "0003",
-    name: 'SmartServiceOffering1',
-    country: 'Be',
-    provider: 'ProviderCorp',
-    availablesince: 'Jan 1, 2021',
-  },*/
-];

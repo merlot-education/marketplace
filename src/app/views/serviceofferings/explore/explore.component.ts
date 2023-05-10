@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {IOfferings, offerings} from '../serviceofferings-data'
-
+import {IOfferings} from '../serviceofferings-data'
+import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 
 
 @Component({
@@ -9,10 +9,19 @@ import {IOfferings, offerings} from '../serviceofferings-data'
 })
 export class ExploreComponent implements OnInit {
 
-  offerings: IOfferings[] = offerings;
-  constructor() {
+  offerings: IOfferings[] = [];
+  orgaOfferings: IOfferings[] = [];
+  constructor(protected serviceOfferingApiService : ServiceofferingApiService) {
   }
 
   ngOnInit(): void {
+    this.serviceOfferingApiService.fetchPublicServiceOfferings().then(result => {
+      console.log(result)
+      this.offerings = result;
+    });
+    this.serviceOfferingApiService.fetchOrganizationServiceOfferings().then(result => {
+      console.log(result)
+      this.orgaOfferings = result;
+    });
   }
 }

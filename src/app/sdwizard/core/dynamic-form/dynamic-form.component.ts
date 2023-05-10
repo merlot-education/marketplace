@@ -14,6 +14,7 @@ import { throwError } from 'rxjs';
 
 import { IconSetService } from '@coreui/icons-angular';
 import { brandSet, flagSet, freeSet } from '@coreui/icons';
+import { off } from 'process';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -60,13 +61,38 @@ export class DynamicFormComponent implements OnInit {
     this.form = this.formfieldService.toFormGroup(this.formFields);
     this.form.addControl('user_prefix', new FormControl());
     this.form.addControl('download_format', new FormControl(DownloadFormat.jsonld));
+    console.log("formFields", this.formFields);
+    console.log("form", this.form);
+
     this.groupFormFields();
   }
 
   groupFormFields(): void {
     this.groupedFormFields = Utils.groupBy(this.formFields, (formField) => formField.group);
+
+    // TODO hide not needed fields (or remove them completely) and automatically insert values for required fields
+    /*let hiddenOptionalFields = ["aggregationOf", "dependsOn", "dataProtectionRegime", "keyword", "provisionType", "endpoint", "ServiceOfferingLocations"];
+    let hiddenRequiredFields = ["policy", "dataAccountExport", "providedBy" ];
+    let autofillFields = ["offeredBy", "creationDate"];
+
+    let hiddenFields = hiddenOptionalFields.concat(hiddenRequiredFields);
+    for (let gid = 0; gid < this.groupedFormFields.length; gid++) {
+      let g = this.groupedFormFields[gid];
+      this.groupedFormFields[gid] = g.filter((element) => !hiddenFields.includes(element.key));
+
+      //let offeredBy = g.find((element) => element.key === "offeredBy");
+      //offeredBy.value = "asdf";
+      let offeredById = (g.find((element) => element.key === "offeredBy")).id;
+      
+      this.form.patchValue({offeredById : "asdf"});
+    }
+
+    console.log(this.formFields);*/
+
+
+
     this.groupsNumber = this.groupedFormFields.length;
-    console.log(this.groupedFormFields);
+    //console.log(this.groupedFormFields);
   }
 
   readObjectDataFromRoute(): void {

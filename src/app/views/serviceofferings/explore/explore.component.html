@@ -7,6 +7,47 @@
 </style>
 
 <c-row>
+  <c-col xs *ngFor="let offering of orgaOfferings">
+    <c-card class="mb-4">
+      <c-card-header>{{ offering.name }}</c-card-header>
+      <c-card-body>
+        <c-row>
+          <c-col>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" style="border: none">
+                <strong>Anbieter:</strong>
+                {{ offering.offeredBy }}
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Status:</strong>
+                {{ offering.merlotStatus }}
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Verfügbar seit:</strong>
+                {{ offering.statusTime }}
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Beschreibung:</strong> <br />
+                {{ offering.description }}
+              </li>
+            </ul>
+            <div class="flex-container" style="padding: 10px">
+              <button type="button" class="btn btn-primary disabled flex-item-grow">
+                Details
+              </button>
+              <button type="button" class="btn btn-primary disabled flex-item-grow">
+                Bearbeiten
+              </button>
+            </div>
+          </c-col>
+        </c-row>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+
+
+<c-row>
   <c-col xs *ngFor="let offering of offerings">
     <c-card class="mb-4">
       <c-card-header>{{ offering.name }}</c-card-header>
@@ -16,33 +57,20 @@
             <ul class="list-group list-group-flush">
               <li class="list-group-item" style="border: none">
                 <strong>Anbieter:</strong>
-                {{ offering.provider }}
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Land:</strong>
-                <svg
-                  cIcon
-                  id="{{ offering.country + offering.name }}"
-                  name="cif{{ offering.country }}"
-                  size="xl"
-                  title="{{ offering.country }}"
-                  style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))"
-                ></svg>
+                {{ offering.offeredBy }}
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Verfügbar seit:</strong>
-                {{ offering.availablesince }}
+                {{ offering.statusTime }}
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Beschreibung:</strong> <br />
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                diam nonumy eirmod tempor invidunt ut labore et dolore magna
-                aliquyam erat, sed diam voluptua.
+                {{ offering.description }}
               </li>
             </ul>
             <div class="row" style="padding: 10px">
               <button type="button" class="btn btn-primary disabled">
-                Service anfordern
+                Details
               </button>
             </div>
           </c-col>
