@@ -14,11 +14,11 @@
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Anbieter:</strong><br />
-                {{ offering.offeredBy }}
+                {{ resolveOrganizationLegalName(offering.offeredBy) }}
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Status:</strong><br />
-                {{ offering.merlotState }}
+                {{ resolveMerlotStatusFriendlyName(offering.merlotState) }}
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Verfügbar seit:</strong><br />
@@ -31,6 +31,30 @@
               </button>
               <button type="button" class="btn btn-primary disabled flex-item-grow">
                 Bearbeiten
+              </button>
+              <button type="button" class="btn btn-primary flex-item-grow" 
+              *ngIf="offering.merlotState === 'REVOKED'"
+              (click)="inDraftOffering(offering.id)"
+              >
+                Entwurf 
+              </button>
+              <button type="button" class="btn btn-primary flex-item-grow" 
+              *ngIf="(offering.merlotState === 'IN_DRAFT') || (offering.merlotState === 'REVOKED')"
+              (click)="releaseOffering(offering.id)"
+              >
+                Veröffentlichen
+              </button>
+              <button type="button" class="btn btn-primary flex-item-grow" 
+              *ngIf="offering.merlotState === 'RELEASED'"
+              (click)="revokeOffering(offering.id)"
+              >
+                Widerrufen
+              </button>
+              <button type="button" class="btn btn-primary flex-item-grow" 
+              *ngIf="(offering.merlotState === 'IN_DRAFT') || (offering.merlotState === 'REVOKED')"
+              (click)="deleteOffering(offering.id)"
+              >
+                Löschen
               </button>
             </div>
           </c-col>
@@ -56,7 +80,7 @@
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Anbieter:</strong> <br />
-                {{ offering.offeredBy }}
+                {{ resolveOrganizationLegalName(offering.offeredBy) }}
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Verfügbar seit:</strong> <br />

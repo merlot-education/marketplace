@@ -16,6 +16,7 @@ import { IconSetService } from '@coreui/icons-angular';
 import { brandSet, flagSet, freeSet } from '@coreui/icons';
 import { off } from 'process';
 import { AuthService } from 'src/app/services/auth.service';
+import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -45,7 +46,8 @@ export class DynamicFormComponent implements OnInit {
     private exportService: ExportService,
     filesProvider: FilesProvider, 
     private iconSetService: IconSetService,
-    private authService: AuthService
+    private authService: AuthService,
+    private organizationsApiService: OrganizationsApiService
   ) {
     this.readObjectDataFromRoute();
     if (this.requestSuccess) {
@@ -86,7 +88,7 @@ export class DynamicFormComponent implements OnInit {
         if (field.key === "offeredBy" || field.key === "providedBy" ) {
           let formField = this.form.get(field.id);
           this.authService.activeOrganizationRole.subscribe((value) => {
-            formField.patchValue(value.orgaFriendlyName);
+            formField.patchValue(this.organizationsApiService.getOrgaById(value.orgaId).organizationLegalName);
           });
           formField.disable();
         } else if (field.key === "creationDate") {
@@ -116,6 +118,18 @@ export class DynamicFormComponent implements OnInit {
     let didField = this.form.get("user_prefix");
     didField.patchValue("ServiceOffering:TBR");
     didField.disable();
+  }
+
+  private patchFieldsForSubmit(groupedFormFields: FormField[][]) {
+    // replace the fields containing the Organization name with their id
+    for (let group of groupedFormFields) {
+      for (let field of group) {
+        if (field.key === "offeredBy" || field.key === "providedBy" ) {
+          let formField = this.form.get(field.id);
+          formField.patchValue("Participant:" + this.authService.activeOrganizationRole.value.orgaId);
+        }
+      }
+    }
   }
 
   readObjectDataFromRoute(): void {
@@ -149,6 +163,7 @@ export class DynamicFormComponent implements OnInit {
    return result;
 }
   onSubmit(): void {
+    this.patchFieldsForSubmit(this.groupedFormFields);
     console.log("its here"+this.form.get('user_prefix').value)
     if(typeof (this.form.get('user_prefix').value) == undefined || this.form.get('user_prefix').value == null || this.form.get('user_prefix').value == ""){
       this.shape.userPrefix ="did:web:registry.gaia-x.eu:"+this.shape.name+":"+this.makeId(36);

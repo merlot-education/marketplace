@@ -45,19 +45,19 @@ export class ServiceofferingApiService {
 
   // State machine
   public async releaseServiceOffering(id: String) {
-
+    return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/api/serviceofferings/serviceoffering/release/" + id));
   }
 
   public async revokeServiceOffering(id: String) {
-
+    return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/api/serviceofferings/serviceoffering/revoke/" + id));
   }
 
   public async deleteServiceOffering(id: String) {
-
+    return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/api/serviceofferings/serviceoffering/delete/" + id));
   }
 
   public async inDraftServiceOffering(id: String) {
-
+    return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/api/serviceofferings/serviceoffering/inDraft/" + id));
   }
 
 }
