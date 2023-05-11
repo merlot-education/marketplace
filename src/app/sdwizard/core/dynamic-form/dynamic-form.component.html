@@ -40,7 +40,7 @@
           </div>
         -->
 
-                  <div class="mb-3">
+                  <div class="mb-3" [hidden]="true">
                     <label class="form-label">Credential subject (DID)*</label>
                     <input
                       type="text"
@@ -64,6 +64,7 @@
                       [form]="form"
                       [input]="formField"
                       [shapes]="file.shapes"
+                      [hidden]="hiddenFormFields.includes(formField.key)"
                     ></app-dynamic-form-input>
                     <!--
                   </div>
@@ -78,30 +79,35 @@
                       [form]="form"
                       [input]="formField"
                       [shapes]="file.shapes"
+                      [hidden]="hiddenFormFields.includes(formField.key)"
                     ></app-dynamic-form-array>
                     <app-dynamic-form-or
                       *ngIf="formField.componentType == 'dynamicFormOr'"
                       [form]="form"
                       [input]="formField"
                       [shapes]="file.shapes"
+                      [hidden]="hiddenFormFields.includes(formField.key)"
                     ></app-dynamic-form-or>
                     <app-dynamic-form-or-array
                       *ngIf="formField.componentType == 'dynamicFormOrArray'"
                       [form]="form"
                       [input]="formField"
                       [shapes]="file.shapes"
+                      [hidden]="hiddenFormFields.includes(formField.key)"
                     ></app-dynamic-form-or-array>
                     <app-expanded-fields
                       *ngIf="formField.componentType == 'dynamicExpanded'"
                       [form]="form"
                       [input]="formField"
                       [shapes]="file.shapes"
+                      [hidden]="hiddenFormFields.includes(formField.key)"
                     ></app-expanded-fields>
                     <app-dynamic-self-loops
                       *ngIf="formField.componentType == 'dynamicSelfLoop'"
                       [form]="form"
                       [input]="formField"
                       [shapes]="file.shapes"
+                      [hidden]="hiddenFormFields.includes(formField.key)"
                     ></app-dynamic-self-loops>
                   </div>
                   <br />

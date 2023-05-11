@@ -15,6 +15,7 @@ import { throwError } from 'rxjs';
 import { IconSetService } from '@coreui/icons-angular';
 import { brandSet, flagSet, freeSet } from '@coreui/icons';
 import { off } from 'process';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -36,12 +37,15 @@ export class DynamicFormComponent implements OnInit {
   DownloadFormat = DownloadFormat;
   downloadFormatKeys = Object.keys(DownloadFormat).filter(e => typeof (e) === 'string');
 
+  protected hiddenFormFields = ["policy", "dataAccountExport", "aggregationOf", "dependsOn", "dataProtectionRegime", "keyword", "provisionType", "endpoint", "ServiceOfferingLocations"];
+
   constructor(
     private formfieldService: FormfieldControlService,
     private router: Router,
     private exportService: ExportService,
     filesProvider: FilesProvider, 
-    private iconSetService: IconSetService
+    private iconSetService: IconSetService,
+    private authService: AuthService
   ) {
     this.readObjectDataFromRoute();
     if (this.requestSuccess) {
@@ -61,38 +65,57 @@ export class DynamicFormComponent implements OnInit {
     this.form = this.formfieldService.toFormGroup(this.formFields);
     this.form.addControl('user_prefix', new FormControl());
     this.form.addControl('download_format', new FormControl(DownloadFormat.jsonld));
-    console.log("formFields", this.formFields);
-    console.log("form", this.form);
 
     this.groupFormFields();
   }
 
   groupFormFields(): void {
     this.groupedFormFields = Utils.groupBy(this.formFields, (formField) => formField.group);
-
-    // TODO hide not needed fields (or remove them completely) and automatically insert values for required fields
-    /*let hiddenOptionalFields = ["aggregationOf", "dependsOn", "dataProtectionRegime", "keyword", "provisionType", "endpoint", "ServiceOfferingLocations"];
-    let hiddenRequiredFields = ["policy", "dataAccountExport", "providedBy" ];
-    let autofillFields = ["offeredBy", "creationDate"];
-
-    let hiddenFields = hiddenOptionalFields.concat(hiddenRequiredFields);
-    for (let gid = 0; gid < this.groupedFormFields.length; gid++) {
-      let g = this.groupedFormFields[gid];
-      this.groupedFormFields[gid] = g.filter((element) => !hiddenFields.includes(element.key));
-
-      //let offeredBy = g.find((element) => element.key === "offeredBy");
-      //offeredBy.value = "asdf";
-      let offeredById = (g.find((element) => element.key === "offeredBy")).id;
-      
-      this.form.patchValue({offeredById : "asdf"});
-    }
-
-    console.log(this.formFields);*/
-
-
-
+    this.patchRequiredFields(this.groupedFormFields);
     this.groupsNumber = this.groupedFormFields.length;
-    //console.log(this.groupedFormFields);
+  }
+
+  private updateDateField(formInput: FormControl) {
+    formInput.patchValue(new Date().toLocaleString("de-DE", {timeZone: "Europe/Berlin", timeStyle: "short", dateStyle: "medium"}));
+  }
+
+  private patchRequiredFields(groupedFormFields: FormField[][]) {
+    // Automatically fill fields depending on selected Organization and time, also set required fields of gax-trust-framework that are hidden
+    for (let group of groupedFormFields) {
+      for (let field of group) {
+        if (field.key === "offeredBy" || field.key === "providedBy" ) {
+          let formField = this.form.get(field.id);
+          this.authService.activeOrganizationRole.subscribe((value) => {
+            formField.patchValue(value.orgaFriendlyName);
+          });
+          formField.disable();
+        } else if (field.key === "creationDate") {
+          let formField = this.form.get(field.id);
+          this.updateDateField(formField as FormControl); // initial update
+          setInterval(() => this.updateDateField(formField as FormControl), 1000); // set timer to refresh date field
+          formField.disable();
+        }
+        else if (field.key === "policy") {
+          let formField = this.form.get(field.id);
+          formField.patchValue(["dummyPolicy"]);
+          formField.disable();
+        }
+        else if (field.key === "dataAccountExport") {
+          let formField = this.form.get(field.id) as FormGroup;
+          console.log(formField);
+          for (let childKey in formField.controls) {
+            let child = formField.controls[childKey];
+            child.patchValue("dummyValue");
+            child.disable();
+          }
+        }
+      }
+    }
+    
+    // set did to a dummy value that gets replaced by the orchestrator
+    let didField = this.form.get("user_prefix");
+    didField.patchValue("ServiceOffering:TBR");
+    didField.disable();
   }
 
   readObjectDataFromRoute(): void {
