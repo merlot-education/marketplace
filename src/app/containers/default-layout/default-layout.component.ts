@@ -38,7 +38,7 @@ export class DefaultLayoutComponent {
     let globalNavItems = structuredClone(navItems);
     this.navItems = this.buildAllowedNavItems(globalNavItems);
     //});
-    this.selectedRoleOption = this.authService.activeOrganizationRole.getValue();
+    this.selectedRoleOption = this.authService.activeOrganizationRole.getValue().orgaRoleString;
   }
 
   private buildAllowedNavItems(navItems: IRoleNavData[]) {
@@ -75,6 +75,6 @@ export class DefaultLayoutComponent {
 
   selectedRoleChanged(event: any) {
     this.selectedRoleOption = event.value;
-    this.authService.activeOrganizationRole.next(this.selectedRoleOption);
+    this.authService.changeActiveOrgaRole(this.selectedRoleOption);
   }
 }

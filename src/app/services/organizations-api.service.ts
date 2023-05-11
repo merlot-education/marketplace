@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, lastValueFrom } from 'rxjs';
 import { OrganizationData } from '../views/organization/organization-data';
-import { AuthService } from './auth.service';
+import { AuthService, OrganizationRole } from './auth.service';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -44,7 +44,7 @@ export class OrganizationsApiService {
     return orgaData;
   }
 
-  public updateOrganizationRepresentation(activeRoleKey: string) {
+  public updateOrganizationRepresentation(activeRole: OrganizationRole) {
     // extract the ids of organizations that the user represents
     let userOrgaIds = [];
     for (let orga in this.authService.organizationRoles) {
@@ -57,8 +57,7 @@ export class OrganizationsApiService {
     // iterate over organization data, update the active and passive field according to the currently selected role
     for (let orga of orgas) {
       orga.activeRepresentant =
-        orga.merlotId ===
-        this.authService.getOrganizationRole(activeRoleKey).orgaId;
+        orga.merlotId === activeRole.orgaId;
       orga.passiveRepresentant = userOrgaIds.includes(orga.merlotId);
     }
 
@@ -68,11 +67,6 @@ export class OrganizationsApiService {
 
   public getOrgaById(id: string): OrganizationData | undefined {
     // TODO consider using a dictionary based on the merlotId instead of a list for faster access
-    for (let orga of this.organizations.getValue()) {
-      if (orga.merlotId === id) {
-        return orga;
-      }
-    }
-    return undefined;
+    return this.organizations.getValue().find((orga) => orga.merlotId === id);
   }
 }

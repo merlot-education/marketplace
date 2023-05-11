@@ -5,7 +5,8 @@ import { KeycloakProfile } from 'keycloak-js';
 import { HttpClient } from '@angular/common/http';
 import { HttpBackend } from '@angular/common/http';
 
-interface OrganizationRole {
+export interface OrganizationRole {
+  orgaRoleString: string;
   roleName: string;
   roleFriendlyName: string;
   orgaId: string;
@@ -24,8 +25,16 @@ export class AuthService {
     [key: string]: OrganizationRole;
   } = {};
 
-  public activeOrganizationRole: BehaviorSubject<string> =
-    new BehaviorSubject<string>('');
+  //public activeOrganizationRole: BehaviorSubject<string> =
+  //  new BehaviorSubject<string>('');
+
+  public activeOrganizationRole: BehaviorSubject<OrganizationRole> = new BehaviorSubject<OrganizationRole>({
+    orgaRoleString: '',
+    orgaId: '',
+    orgaFriendlyName: '',
+    roleName: '',
+    roleFriendlyName: ''
+  });
 
   private roleFriendlyNameMapper: { [key: string]: string } = {
     OrgRep: 'Repräsentant',
@@ -63,11 +72,12 @@ export class AuthService {
     });
   }
 
-  getOrganizationRole(orgaRoleString: string): OrganizationRole {
+  private getOrganizationRole(orgaRoleString: string): OrganizationRole {
     let role_arr: string[] = orgaRoleString.split('_');
     let roleName: string = role_arr[0]; // first part is the role name
     let orgaId: string = role_arr.slice(1).join('_'); // everything else is the organization ID (which may include underscores again)
     return {
+      orgaRoleString: orgaRoleString,
       roleName: roleName,
       roleFriendlyName: this.roleFriendlyNameMapper[roleName],
       orgaId: orgaId,
@@ -75,13 +85,17 @@ export class AuthService {
     };
   }
 
+  public changeActiveOrgaRole(orgaRoleString: string) {
+    this.activeOrganizationRole.next(this.organizationRoles[orgaRoleString]);
+  }
+
   private buildOrganizationRoles(userRoles: string[]) {
     for (let r of userRoles) {
       if (r.startsWith('OrgRep_') || r.startsWith('OrgLegRep_')) {
         this.organizationRoles[r] = this.getOrganizationRole(r);
         // if the active Role is not set, set its initial value to the first role we see
-        if (this.activeOrganizationRole.getValue() === '') {
-          this.activeOrganizationRole.next(r);
+        if (this.activeOrganizationRole.getValue().orgaRoleString === '') {
+          this.activeOrganizationRole.next(this.organizationRoles[r]);
         }
       }
     }

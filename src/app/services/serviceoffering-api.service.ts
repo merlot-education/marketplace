@@ -23,7 +23,7 @@ export class ServiceofferingApiService {
   // get all service offerings for the active organization
   public async fetchOrganizationServiceOfferings() {
     if (this.authService.isLoggedIn) {
-      let activeOrgaId = this.authService.getOrganizationRole(this.authService.activeOrganizationRole.value).orgaId;
+      let activeOrgaId = this.authService.activeOrganizationRole.value.orgaId;
       return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/api/serviceofferings/organization/" + activeOrgaId)) as IOfferings[];
     }
       
