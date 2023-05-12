@@ -1,5 +1,14 @@
 export interface IOfferings {
-  description?: string,
+  id: string;
+  sdHash: string;
+  creationDate: string;
+  serviceId: string;
+  offeredBy: string;
+  merlotState: string;
+  type: string;
+  name: string;
+
+  /*description?: string,
   id: string;
   issuer: string;
   merlotState: string;
@@ -10,6 +19,6 @@ export interface IOfferings {
   status: string;
   statusTime: string;
   type: string;
-  uploadTime: string;
+  uploadTime: string;*/
 }
 

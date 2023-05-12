@@ -3,14 +3,18 @@
 <c-row>
   <c-col xs *ngFor="let offering of orgaOfferings">
     <c-card class="mb-4">
-      <c-card-header>{{ offering.name }}</c-card-header>
+      <c-card-header>{{ offering.type.replace("merlot:", "") }} : {{ offering.name }}</c-card-header>
       <c-card-body>
         <c-row>
           <c-col>
             <ul class="list-group list-group-flush">
               <li class="list-group-item" style="border: none">
-                <strong>Beschreibung:</strong> <br />
-                {{ offering.description }}
+                <strong>Service ID:</strong> <br />
+                {{ offering.serviceId }}
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Erstelldatum:</strong><br />
+                {{ offering.creationDate }}
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Anbieter:</strong><br />
@@ -19,10 +23,6 @@
               <li class="list-group-item" style="border: none">
                 <strong>Status:</strong><br />
                 {{ resolveMerlotStatusFriendlyName(offering.merlotState) }}
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Verfügbar seit:</strong><br />
-                {{ offering.statusTime }}
               </li>
             </ul>
             <div class="flex-container" style="padding: 10px">
@@ -75,16 +75,16 @@
           <c-col>
             <ul class="list-group list-group-flush">
               <li class="list-group-item" style="border: none">
-                <strong>Beschreibung:</strong> <br />
-                {{ offering.description }}
+                <strong>Service ID:</strong> <br />
+                {{ offering.serviceId }}
               </li>
               <li class="list-group-item" style="border: none">
-                <strong>Anbieter:</strong> <br />
+                <strong>Erstelldatum:</strong><br />
+                {{ offering.creationDate }}
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Anbieter:</strong><br />
                 {{ resolveOrganizationLegalName(offering.offeredBy) }}
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Verfügbar seit:</strong> <br />
-                {{ offering.statusTime }}
               </li>
             </ul>
             <div class="row" style="padding: 10px">
