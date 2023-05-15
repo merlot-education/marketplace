@@ -6,18 +6,31 @@ export interface IOfferings {
   merlotState: string;
   type: string;
   name: string;
+}
 
-  /*description?: string,
-  id: string;
-  issuer: string;
-  merlotState: string;
-  name: string;
-  offeredBy: string;
-  providedBy: string;
-  sdHash: string;
-  status: string;
-  statusTime: string;
-  type: string;
-  uploadTime: string;*/
+export interface IOfferingsDetailed extends IOfferings {
+  description: string;
+  modifiedDate: string;
+  dataAccessType: string;
+  exampleCosts: string;
+  attachments: string;
+  termsAndConditions: {
+    url: string;
+    hash: string;
+  };
+  runtime: {
+    runtimeCount?: number;
+    runtimeMeasurement?: string;
+    runtimeUnlimited?: boolean;
+  };
+  hardwareRequirements?: string;
+  allowedUserCount?: {
+    userCountUpTo?: number;
+    userCountUnlimited?: boolean;
+  };
+  dataExchangeCount?: {
+    exchangeCountUpTo?: number;
+    exchangeCountUnlimited?: boolean;
+  }
 }
 

@@ -181,6 +181,7 @@ export class DynamicFormComponent implements OnInit {
     this.shape.fields = this.updateFormFieldsValues(this.formFields, this.form);
     this.shape.fields = this.emptyChildrenFields(this.shape.fields);
     this.exportService.saveFile(this.file);
+    this.patchRequiredFields(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
   }
 
   emptyFormFieldValues(formFields: FormField[]): void {

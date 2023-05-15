@@ -13,6 +13,9 @@ export class ExploreComponent implements OnInit {
 
   offerings: IOfferings[] = [];
   orgaOfferings: IOfferings[] = [];
+
+  modalBody: string = "";
+
   constructor(
     protected serviceOfferingApiService : ServiceofferingApiService,
     private organizationsApiService: OrganizationsApiService,
@@ -48,6 +51,13 @@ export class ExploreComponent implements OnInit {
       "ARCHIVED": "Archiviert"
     }
     return friendlyNames[merlotStatusString] ? friendlyNames[merlotStatusString] : "Unbekannt";
+  }
+
+  protected requestDetails(id: string) {
+    this.modalBody = "";
+    this.serviceOfferingApiService.fetchServiceOfferingDetails(id).then(result => {
+      this.modalBody = JSON.stringify(result);
+    });
   }
 
   releaseOffering(id: string) {

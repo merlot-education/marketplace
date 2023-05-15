@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, lastValueFrom } from 'rxjs';
-import { IOfferings } from '../views/serviceofferings/serviceofferings-data';
+import { IOfferings, IOfferingsDetailed } from '../views/serviceofferings/serviceofferings-data';
 import { OrganizationsApiService } from './organizations-api.service';
 import { AuthService } from './auth.service';
 
@@ -31,8 +31,13 @@ export class ServiceofferingApiService {
   }
 
   // get details to a specific service offering (authenticated)
-  public async fetchServiceOfferingDetails(id: String) {
-
+  public async fetchServiceOfferingDetails(id: String): Promise<IOfferingsDetailed> {
+    if (this.authService.isLoggedIn) {
+      let activeOrgaId = this.authService.activeOrganizationRole.value.orgaId;
+      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/api/serviceofferings/serviceoffering/" + id)) as IOfferingsDetailed;
+    }
+      
+    return undefined;
   }
 
   // publish a new service offering with the specified self description and set it to "in draft"

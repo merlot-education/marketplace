@@ -26,7 +26,7 @@
               </li>
             </ul>
             <div class="flex-container" style="padding: 10px">
-              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalXl.id">
+              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalXl.id" (click)="requestDetails(offering.id)">
                 Details
               </button>
               <button type="button" class="btn btn-primary disabled flex-item-grow">
@@ -88,7 +88,7 @@
               </li>
             </ul>
             <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary" [cModalToggle]="modalXl.id">
+              <button type="button" class="btn btn-primary" [cModalToggle]="modalXl.id" (click)="requestDetails(offering.id)">
                 Details
               </button>
             </div>
@@ -101,9 +101,12 @@
 
 <h1 *ngIf="orgaOfferings.length === 0 && offerings.length === 0">Es konnten keine Service Angebote gefunden werden.</h1>
 
-<c-modal #modalXl id="modalXl" size="xl">
+<c-modal #modalXl id="modalXl" size="xl" alignment="center">
   <c-modal-header>
-    <h5 cModalTitle>Extra large modal</h5>
+    <h5 cModalTitle>Details zum Service Angebot</h5>
   </c-modal-header>
-  <c-modal-body>...</c-modal-body>
+  <c-modal-body>{{ modalBody }}</c-modal-body>
+  <c-modal-footer>
+    <button cButton color="secondary" [cModalToggle]="modalXl.id">Schließen</button>
+  </c-modal-footer>
 </c-modal>
