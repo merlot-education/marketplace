@@ -36,10 +36,11 @@ export class ServiceofferingApiService {
   }
 
   // publish a new service offering with the specified self description and set it to "in draft"
-  public async createServiceOffering(sdJson: String) {
+  public async createServiceOffering(sdJson: String, type: String) {
     console.log(sdJson); 
+    console.log(type);
     const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
-    return await lastValueFrom(this.http.post(environment.serviceoffering_api_url + "/api/serviceofferings/serviceoffering", sdJson, {headers: headers}));
+    return await lastValueFrom(this.http.post(environment.serviceoffering_api_url + "/api/serviceofferings/serviceoffering/" + type, sdJson, {headers: headers}));
   }
 
 

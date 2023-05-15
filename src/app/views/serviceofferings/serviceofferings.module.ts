@@ -27,7 +27,8 @@ import {
   TableModule,
   TabsModule,
   TooltipModule,
-  UtilitiesModule
+  UtilitiesModule,
+  ModalModule
 } from '@coreui/angular';
 
 import { IconModule } from '@coreui/icons-angular';
@@ -90,7 +91,8 @@ import { WizardAppModule } from "../../sdwizard/app.module";
         PopoverModule,
         TableModule,
         DocsComponentsModule,
-        WizardAppModule
+        WizardAppModule,
+        ModalModule
     ]
 })
 export class ServiceofferingsModule {}

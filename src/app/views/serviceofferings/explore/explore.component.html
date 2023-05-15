@@ -10,7 +10,7 @@
             <ul class="list-group list-group-flush">
               <li class="list-group-item" style="border: none">
                 <strong>Service ID:</strong> <br />
-                {{ offering.serviceId }}
+                {{ offering.id }}
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Erstelldatum:</strong><br />
@@ -26,7 +26,7 @@
               </li>
             </ul>
             <div class="flex-container" style="padding: 10px">
-              <button type="button" class="btn btn-primary disabled flex-item-grow">
+              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalXl.id">
                 Details
               </button>
               <button type="button" class="btn btn-primary disabled flex-item-grow">
@@ -76,7 +76,7 @@
             <ul class="list-group list-group-flush">
               <li class="list-group-item" style="border: none">
                 <strong>Service ID:</strong> <br />
-                {{ offering.serviceId }}
+                {{ offering.id }}
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Erstelldatum:</strong><br />
@@ -88,7 +88,7 @@
               </li>
             </ul>
             <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary disabled">
+              <button type="button" class="btn btn-primary" [cModalToggle]="modalXl.id">
                 Details
               </button>
             </div>
@@ -100,3 +100,10 @@
 </c-row>
 
 <h1 *ngIf="orgaOfferings.length === 0 && offerings.length === 0">Es konnten keine Service Angebote gefunden werden.</h1>
+
+<c-modal #modalXl id="modalXl" size="xl">
+  <c-modal-header>
+    <h5 cModalTitle>Extra large modal</h5>
+  </c-modal-header>
+  <c-modal-body>...</c-modal-body>
+</c-modal>

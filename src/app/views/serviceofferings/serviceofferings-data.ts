@@ -2,7 +2,6 @@ export interface IOfferings {
   id: string;
   sdHash: string;
   creationDate: string;
-  serviceId: string;
   offeredBy: string;
   merlotState: string;
   type: string;

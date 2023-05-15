@@ -192,7 +192,8 @@ export class ExportService {
       //fileName = selectedShape.name.concat('-instance.ttl');
     } else if (selectedShape.downloadFormat === DownloadFormat.jsonld) {
       let jsonSd = this.convertTurtleToJsonLd(`${rdfStream}`);
-      this.serviceOfferingApiService.createServiceOffering(jsonSd).then(result => console.log(result));
+      const jsonSdString = JSON.stringify(jsonSd, null, 2);
+      this.serviceOfferingApiService.createServiceOffering(jsonSdString, jsonSd["@type"]).then(result => console.log(result));
       // TODO send this stream to the service offering api
 
       //blob = new Blob([this.convertTurtleToJsonLd(`${rdfStream}`)], {type: 'application/json'});
@@ -205,8 +206,7 @@ export class ExportService {
   convertTurtleToJsonLd(ttl: string) {
     console.log(ttl);
     const ttl2jsonld = require('@frogcat/ttl2jsonld').parse;
-    const jsonld = JSON.stringify(ttl2jsonld(ttl), null, 2);
-    return jsonld;
+    return ttl2jsonld(ttl);
   }
 }
 
