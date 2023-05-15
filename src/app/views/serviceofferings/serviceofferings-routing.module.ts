@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ExploreComponent } from './explore/explore.component';
 import { EditComponent } from './edit/edit.component';
 import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
+import { KeycloakGuard } from 'src/app/keycloak.guard';
 
 
 const routes: Routes = [
@@ -30,6 +31,7 @@ const routes: Routes = [
         data: {
           title: 'Service Angebot erstellen',
         },
+        canActivate: [KeycloakGuard]
       },
     ],
   },

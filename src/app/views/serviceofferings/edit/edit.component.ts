@@ -46,6 +46,7 @@ export class EditComponent implements OnInit {
         }
       }
       this.serviceFiles=res?.Service;
+      this.select(this.serviceFiles[0]);
     });
   }
 
