@@ -3,7 +3,24 @@
       <c-card class="mb-4">
         <c-card-header>Service Angebot erstellen</c-card-header>
         <c-card-body>
-          <app-select-file></app-select-file>
+        <div fxLayout="row wrap" fxLayoutGap="16px grid">
+
+          
+          <div class="mb-3" fxFlex="70%"
+          fxFlex.sm="100%"
+          fxFlex.xs="100%">
+
+            <label class="form-label"><b>Art des Service Angebots</b></label>
+            <select class="form-select" [formControlName]="'offeringType'" (change)="select($event.target.value)">
+              <option *ngFor="let option of serviceFiles" [value]="option">{{serviceFileNameDict[option]}}</option>
+            </select>
+            
+          </div>
+        </div>
+          
+          <hr class="hr hr-blurry" />
+
+          <app-dynamic-form [file]="shaclFile"></app-dynamic-form>
         </c-card-body>
       </c-card>
     </c-col>

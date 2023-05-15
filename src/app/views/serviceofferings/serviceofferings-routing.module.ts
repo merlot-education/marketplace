@@ -31,13 +31,6 @@ const routes: Routes = [
           title: 'Service Angebot erstellen',
         },
       },
-      {
-        path: 'edit/form',
-        component: DynamicFormComponent,
-        data: {
-          title: 'Service Angebot erstellen',
-        },
-      },
     ],
   },
 ];

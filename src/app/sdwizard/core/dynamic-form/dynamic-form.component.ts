@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FormField} from '@models/form-field.model';
 import {FormfieldControlService} from '@services/form-field.service';
@@ -26,7 +26,7 @@ import { OrganizationsApiService } from 'src/app/services/organizations-api.serv
 export class DynamicFormComponent implements OnInit {
 
   formFields: FormField[] = [];
-  file: ShaclFile = new ShaclFile();
+  @Input() file: ShaclFile = new ShaclFile();
   shape: Shape;
   form: FormGroup = new FormGroup({});
   routeState: any;
@@ -44,7 +44,7 @@ export class DynamicFormComponent implements OnInit {
     private formfieldService: FormfieldControlService,
     private router: Router,
     private exportService: ExportService,
-    filesProvider: FilesProvider, 
+    private filesProvider: FilesProvider, 
     private iconSetService: IconSetService,
     private authService: AuthService,
     private organizationsApiService: OrganizationsApiService
@@ -57,6 +57,13 @@ export class DynamicFormComponent implements OnInit {
     // iconSet singleton
     iconSetService.icons = { ...freeSet, ...flagSet, ...brandSet };
   }
+
+  ngOnChanges() {
+    if (this.requestSuccess) {
+      this.getFormFields();
+    }
+    this.hasStaticFiles = this.filesProvider.gethasStaticFiles();
+  } 
 
   ngOnInit(): void {
   }
