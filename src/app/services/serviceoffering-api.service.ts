@@ -44,8 +44,15 @@ export class ServiceofferingApiService {
   public async createServiceOffering(sdJson: String, type: String) {
     console.log(sdJson); 
     console.log(type);
-    const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
-    return await lastValueFrom(this.http.post(environment.serviceoffering_api_url + "/api/serviceofferings/serviceoffering/" + type, sdJson, {headers: headers}));
+
+    try {
+      const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
+      let result = await lastValueFrom(this.http.post(environment.serviceoffering_api_url + "/api/serviceofferings/serviceoffering/" + type, sdJson, {headers: headers}));
+      return result;
+    } catch (e) {
+      console.log(e);
+      return undefined;
+    }
   }
 
 

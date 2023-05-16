@@ -8,35 +8,6 @@ import { SelectShapeComponent } from './core/select-shape/select-shape.component
 import { StartingPageComponent } from './core/starting-page/starting-page.component';
 
 const routes: Routes = [
-  {
-    path: 'sdwizard',
-    component: StartingPageComponent
-  },
-  {
-      path: 'sdwizard/upload',
-      component: FileUploadComponent
-  },
-  {
-    path: 'sdwizard/form',
-    component: DynamicFormComponent,
-  
-  },
-  {
-    path: 'sdwizard/select-shape',
-    component: SelectShapeComponent
-  },
-  {
-    path: 'sdwizard/select-file',
-    component: SelectFileComponent,
-    data: {
-      shouldDetach: true
-    }
-  },
-  {
-    path: 'sdwizard/index',
-    component: HomepageComponent
-  },
-
 
 ];
 

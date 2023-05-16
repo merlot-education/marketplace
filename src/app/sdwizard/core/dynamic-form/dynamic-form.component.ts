@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FormField} from '@models/form-field.model';
 import {FormfieldControlService} from '@services/form-field.service';
@@ -10,20 +10,21 @@ import {ShaclFile} from '@models/shacl-file';
 import {DateHelper} from '@shared/date-helper';
 import {FilesProvider} from '@shared/files-provider';
 import {DownloadFormat} from '@shared/download-format.enum';
-import { throwError } from 'rxjs';
+import { Subscription, throwError } from 'rxjs';
 
 import { IconSetService } from '@coreui/icons-angular';
 import { brandSet, flagSet, freeSet } from '@coreui/icons';
 import { off } from 'process';
 import { AuthService } from 'src/app/services/auth.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
+import {timer} from 'rxjs';
 
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['./dynamic-form.component.scss']
 })
-export class DynamicFormComponent implements OnInit {
+export class DynamicFormComponent implements OnInit, OnDestroy {
 
   formFields: FormField[] = [];
   @Input() file: ShaclFile = new ShaclFile();
@@ -37,6 +38,14 @@ export class DynamicFormComponent implements OnInit {
   groupsNumber = 1;
   DownloadFormat = DownloadFormat;
   downloadFormatKeys = Object.keys(DownloadFormat).filter(e => typeof (e) === 'string');
+
+  showSuccessMessage: boolean = false;
+  showErrorMessage: boolean = false;
+  createdServiceOfferingId: string = "";
+
+  createDateTimer: NodeJS.Timer = undefined;
+  orgaSubscription: Subscription = undefined;
+
 
   protected hiddenFormFields = ["policy", "dataAccountExport", "aggregationOf", "dependsOn", "dataProtectionRegime", "keyword", "provisionType", "endpoint", "ServiceOfferingLocations"];
 
@@ -94,14 +103,19 @@ export class DynamicFormComponent implements OnInit {
       for (let field of group) {
         if (field.key === "offeredBy" || field.key === "providedBy" ) {
           let formField = this.form.get(field.id);
-          this.authService.activeOrganizationRole.subscribe((value) => {
-            formField.patchValue(this.organizationsApiService.getOrgaById(value.orgaId).organizationLegalName);
-          });
+          if (this.orgaSubscription === undefined) {
+            this.orgaSubscription = this.authService.activeOrganizationRole.subscribe((value) => {
+              formField.patchValue(this.organizationsApiService.getOrgaById(value.orgaId).organizationLegalName);
+            });
+          }
+          
           formField.disable();
         } else if (field.key === "creationDate") {
           let formField = this.form.get(field.id);
-          this.updateDateField(formField as FormControl); // initial update
-          setInterval(() => this.updateDateField(formField as FormControl), 1000); // set timer to refresh date field
+          if (this.createDateTimer === undefined) {
+            this.updateDateField(formField as FormControl); // initial update
+            this.createDateTimer = setInterval(() => this.updateDateField(formField as FormControl), 1000); // set timer to refresh date field
+          }
           formField.disable();
         }
         else if (field.key === "policy") {
@@ -170,6 +184,10 @@ export class DynamicFormComponent implements OnInit {
    return result;
 }
   onSubmit(): void {
+    this.showSuccessMessage = false;
+    this.showErrorMessage = false;
+    this.createdServiceOfferingId = "";
+
     this.patchFieldsForSubmit(this.groupedFormFields);
     console.log("its here"+this.form.get('user_prefix').value)
     if(typeof (this.form.get('user_prefix').value) == undefined || this.form.get('user_prefix').value == null || this.form.get('user_prefix').value == ""){
@@ -180,9 +198,32 @@ export class DynamicFormComponent implements OnInit {
     this.shape.downloadFormat = this.form.get('download_format').value;
     this.shape.fields = this.updateFormFieldsValues(this.formFields, this.form);
     this.shape.fields = this.emptyChildrenFields(this.shape.fields);
-    this.exportService.saveFile(this.file);
+    this.exportService.saveFile(this.file).then(result => {
+      console.log(result);
+      if (result === undefined) {
+        this.showErrorMessage = true;
+      } else {
+        this.showSuccessMessage = true;
+        this.createdServiceOfferingId = result["id"];
+        //this.navigateToOverview();
+        /*timer(1500)
+        .subscribe(i => { 
+          this.router.navigate(['/service-offerings/explore']); 
+        })*/
+      }
+    });
     this.patchRequiredFields(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
   }
+
+  navigateToOverview() {
+    this.router.navigate(['service-offerings/explore']); 
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.createDateTimer);
+    this.orgaSubscription.unsubscribe();
+  }
+
 
   emptyFormFieldValues(formFields: FormField[]): void {
     formFields.forEach(formField => {

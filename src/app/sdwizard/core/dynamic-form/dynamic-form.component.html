@@ -116,6 +116,15 @@
               {{ "form.save" | translate }}
             </button>
           </div>
+
+          <div *ngIf="i == 0" class="form-group">
+            <strong *ngIf="showErrorMessage" style="color:red">Fehler bei der Verarbeitung des Service Angebots.</strong>
+            <strong *ngIf="showSuccessMessage" style="color:green">Service Angebot wurde erfolgreich erstellt! <br/> 
+              ID: {{ createdServiceOfferingId }} <br/>
+              Weiterleitung zu Übersicht...</strong>
+          </div>
+
+          <button (click)="navigateToOverview()">Übersicht</button>
           <!--div class="all-errors"> 
       <div *ngFor="let formField of group" class="alert alert-danger ">
         <app-show-errors [displayAll]="true" [formField]="formField" [form]="form" [label]="formField.name">

@@ -180,7 +180,7 @@ export class ExportService {
     return valid;
   }
 
-  saveFile(file: ShaclFile) {
+  async saveFile(file: ShaclFile) {
     const rdfStream = this.createRDFStream(file);
     const selectedShape = file.shapes.find(shape => shape.selected);
     // check for download format
@@ -193,8 +193,7 @@ export class ExportService {
     } else if (selectedShape.downloadFormat === DownloadFormat.jsonld) {
       let jsonSd = this.convertTurtleToJsonLd(`${rdfStream}`);
       const jsonSdString = JSON.stringify(jsonSd, null, 2);
-      this.serviceOfferingApiService.createServiceOffering(jsonSdString, jsonSd["@type"]).then(result => console.log(result));
-      // TODO send this stream to the service offering api
+      return await this.serviceOfferingApiService.createServiceOffering(jsonSdString, jsonSd["@type"]);
 
       //blob = new Blob([this.convertTurtleToJsonLd(`${rdfStream}`)], {type: 'application/json'});
       //fileName = selectedShape.name.concat('-instance.json');

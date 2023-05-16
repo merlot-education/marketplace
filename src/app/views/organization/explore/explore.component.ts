@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { OrganizationData } from "../organization-data";
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -13,7 +14,7 @@ export class ExploreComponent implements OnInit {
 
   constructor(
     private organizationsApiService: OrganizationsApiService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {
   }
 
