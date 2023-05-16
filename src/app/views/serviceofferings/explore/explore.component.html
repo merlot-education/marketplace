@@ -158,7 +158,7 @@
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Laufzeitoptionen:</strong><br />
-        <ul *ngFor="let rt of selectedOfferingDetails.runtimes">
+        <ul *ngFor="let rt of selectedOfferingDetails.runtimeOption">
           <li>
           <div *ngIf="rt.runtimeUnlimited">Unbegrenzt</div>
           <div *ngIf="!rt.runtimeUnlimited">
@@ -173,9 +173,9 @@
           <strong>Hardware-Anforderungen:</strong><br />
           {{ selectedOfferingDetails.hardwareRequirements }}
         </li>
-        <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.allowedUserCount !== null">
+        <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.userCountOption !== null">
           <strong>Optionen für Anzahl erlaubter Benutzer:</strong><br />
-          <ul *ngFor="let auc of selectedOfferingDetails.allowedUserCounts">
+          <ul *ngFor="let auc of selectedOfferingDetails.userCountOption">
             <li>
             <div *ngIf="auc.userCountUnlimited">Unbegrenzt</div>
             <div *ngIf="!auc.userCountUnlimited">
@@ -186,9 +186,9 @@
         </li>
       </div>
       <div *ngIf="selectedOfferingDetails.type === 'merlot:MerlotServiceOfferingDataDelivery'">
-        <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.dataExchangeCount !== null">
+        <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.exchangeCountOption !== null">
           <strong>Optionen für Anzahl erlaubter Datenaustausche:</strong><br />
-          <ul *ngFor="let dec of selectedOfferingDetails.dataExchangeCounts">
+          <ul *ngFor="let dec of selectedOfferingDetails.exchangeCountOption">
             <li>
             <div *ngIf="dec.exchangeCountUnlimited">Unbegrenzt</div>
             <div *ngIf="!dec.exchangeCountUnlimited">

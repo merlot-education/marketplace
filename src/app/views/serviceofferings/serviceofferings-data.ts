@@ -18,17 +18,17 @@ export interface IOfferingsDetailed extends IOfferings {
     url: string;
     hash: string;
   }[];
-  runtimes: {
+  runtimeOption: {
     runtimeCount?: number;
     runtimeMeasurement?: string;
     runtimeUnlimited?: boolean;
   }[];
   hardwareRequirements?: string;
-  allowedUserCounts?: {
+  userCountOption?: {
     userCountUpTo?: number;
     userCountUnlimited?: boolean;
   }[];
-  dataExchangeCounts?: {
+  exchangeCountOption?: {
     exchangeCountUpTo?: number;
     exchangeCountUnlimited?: boolean;
   }[]

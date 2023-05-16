@@ -13,6 +13,7 @@ import { serviceFileNameDict } from '../serviceofferings-data';
 })
 export class EditComponent implements OnInit {
 
+  serviceFileNameDict = serviceFileNameDict;
 
   serviceFiles: string[];
   ecoSystem: string= "merlot";// pass this to getFiles Api
