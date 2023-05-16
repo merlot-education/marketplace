@@ -3,6 +3,11 @@ import {IOfferings, IOfferingsDetailed} from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ShaclFile } from '@models/shacl-file';
+import { ApiService } from '@services/api.service';
+import { FormfieldControlService } from '@services/form-field.service';
+import { Shape } from '@models/shape';
+import { serviceFileNameDict } from '../serviceofferings-data';
 
 
 @Component({
@@ -13,6 +18,8 @@ export class ExploreComponent implements OnInit {
 
   offerings: IOfferings[] = [];
   orgaOfferings: IOfferings[] = [];
+  shaclFile: ShaclFile;
+  filteredShapes: Shape[];
 
   selectedOfferingDetails: IOfferingsDetailed = {
     description: '',
@@ -34,7 +41,9 @@ export class ExploreComponent implements OnInit {
   constructor(
     protected serviceOfferingApiService : ServiceofferingApiService,
     private organizationsApiService: OrganizationsApiService,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private apiService: ApiService, 
+    private formFieldService: FormfieldControlService) {
   }
 
   ngOnInit(): void {
@@ -68,7 +77,7 @@ export class ExploreComponent implements OnInit {
     return friendlyNames[merlotStatusString] ? friendlyNames[merlotStatusString] : "Unbekannt";
   }
 
-  protected requestDetails(id: string) {
+  protected async requestDetails(id: string) {
     this.selectedOfferingDetails = {
       description: '',
       modifiedDate: '',
@@ -85,7 +94,7 @@ export class ExploreComponent implements OnInit {
       type: '',
       name: ''
     };
-    this.serviceOfferingApiService.fetchServiceOfferingDetails(id).then(result => {
+    await this.serviceOfferingApiService.fetchServiceOfferingDetails(id).then(result => {
       this.selectedOfferingDetails = result;
     });
   }
@@ -116,5 +125,46 @@ export class ExploreComponent implements OnInit {
       console.log(result);
       this.refreshOfferings();
     });
+  }
+  findFilenameByShapeType(shapeType: string): string {
+    for (let file in serviceFileNameDict) {
+      if (serviceFileNameDict[file].type === shapeType) {
+        return file;
+      }
+    }
+    return undefined;
+  }
+
+  updateServiceOfferingEdit(offering: IOfferings) {
+    this.requestDetails(offering.id).then(() => {
+      this.select(this.findFilenameByShapeType(offering.type));
+    });
+    
+  }
+
+  select(name: string): void {
+    this.apiService.getJSON(name).subscribe(
+      res => {
+        this.shaclFile = this.formFieldService.readShaclFile(res);
+        this.filteredShapes = this.formFieldService.updateFilteredShapes(this.shaclFile);
+        if (this.filteredShapes.length > 1) {
+          console.log("too many shapes selected");
+        }
+        else {
+          console.log("this here"+this.shaclFile);
+          console.table(this.shaclFile);
+          //set description.input value depending on language
+          this.updateSelectedShape();
+          //this.router.navigate(['/service-offerings/edit/form'], { state: { file: this.shaclFile } });
+        }
+      }
+    );
+  }
+
+  updateSelectedShape(): void {
+    const shape = this.filteredShapes[0];
+    if (shape !== undefined) {
+      this.shaclFile.shapes.find(x => x.name === shape.name).selected = true;
+    }
   }
 }

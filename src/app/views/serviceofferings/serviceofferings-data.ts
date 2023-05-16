@@ -34,3 +34,16 @@ export interface IOfferingsDetailed extends IOfferings {
   }[]
 }
 
+export let serviceFileNameDict: { [key: string]: {
+  name: string;
+  type: string;
+}} = {
+    'Merlot Saas.json': {
+      name: 'Software as a Service',
+      type: "merlot:MerlotServiceOfferingSaaS"
+    },
+    'Merlot DataDelivery.json': {
+      name: 'Data Delivery',
+      type: "merlot:MerlotServiceOfferingDataDelivery"
+  },
+};

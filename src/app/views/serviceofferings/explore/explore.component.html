@@ -25,11 +25,11 @@
                 {{ resolveMerlotStatusFriendlyName(offering.merlotState) }}
               </li>
             </ul>
-            <div class="flex-container" style="padding: 10px">
-              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalXl.id" (click)="requestDetails(offering.id)">
+            <div style="padding: 10px">
+              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalViewDetails.id" (click)="requestDetails(offering.id)">
                 Details
               </button>
-              <button type="button" class="btn btn-primary disabled flex-item-grow">
+              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalEditServiceOffering.id" (click)="updateServiceOfferingEdit(offering)">
                 Bearbeiten
               </button>
               <button type="button" class="btn btn-primary flex-item-grow" 
@@ -88,7 +88,7 @@
               </li>
             </ul>
             <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary" [cModalToggle]="modalXl.id" (click)="requestDetails(offering.id)">
+              <button type="button" class="btn btn-primary" [cModalToggle]="modalViewDetails.id" (click)="requestDetails(offering.id)">
                 Details
               </button>
             </div>
@@ -101,7 +101,7 @@
 
 <h1 *ngIf="orgaOfferings.length === 0 && offerings.length === 0">Es konnten keine Service Angebote gefunden werden.</h1>
 
-<c-modal #modalXl id="modalXl" size="xl" alignment="center">
+<c-modal #modalViewDetails id="modalViewDetails" size="xl" alignment="center">
   <c-modal-header>
     <h5 cModalTitle>Details zum Service Angebot "{{ selectedOfferingDetails.name }}"</h5>
   </c-modal-header>
@@ -202,6 +202,19 @@
     </ul>
   </c-modal-body>
   <c-modal-footer>
-    <button cButton color="secondary" [cModalToggle]="modalXl.id">Schließen</button>
+    <button cButton color="secondary" [cModalToggle]="modalViewDetails.id">Schließen</button>
   </c-modal-footer>
 </c-modal>
+
+<c-modal #modalEditServiceOffering id="modalEditServiceOffering" size="xl" alignment="center">
+  <c-modal-header>
+    <h5 cModalTitle>Service Angebot "{{ selectedOfferingDetails.name }}" bearbeiten</h5>
+  </c-modal-header>
+  <c-modal-body>
+    <app-dynamic-form [file]="shaclFile"></app-dynamic-form>
+  </c-modal-body>
+  <c-modal-footer>
+    <button cButton color="secondary" [cModalToggle]="modalEditServiceOffering.id">Schließen</button>
+  </c-modal-footer>
+</c-modal>
+

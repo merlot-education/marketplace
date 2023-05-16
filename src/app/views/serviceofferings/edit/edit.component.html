@@ -12,7 +12,7 @@
 
             <label class="form-label"><b>Art des Service Angebots</b></label>
             <select class="form-select" (change)="select($event.target.value)">
-              <option *ngFor="let option of serviceFiles" [value]="option">{{serviceFileNameDict[option]}}</option>
+              <option *ngFor="let option of serviceFiles" [value]="option">{{serviceFileNameDict[option].name}}</option>
             </select>
             
           </div>

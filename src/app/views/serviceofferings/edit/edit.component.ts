@@ -5,6 +5,7 @@ import { ApiService } from '@services/api.service';
 import { ShaclFile } from '@models/shacl-file';
 import { Shape } from '@models/shape';
 import { FormfieldControlService } from '@services/form-field.service';
+import { serviceFileNameDict } from '../serviceofferings-data';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -18,10 +19,6 @@ export class EditComponent implements OnInit {
   shaclFile: ShaclFile;
   filteredShapes: Shape[];
   file: ShaclFile = new ShaclFile();
-  protected serviceFileNameDict: { [key: string]: string } = {
-    'Merlot Saas.json': 'Software as a Service',
-    'Merlot DataDelivery.json': 'Data Delivery',
-  };
 
   private ignoredServiceFiles: string[] = ["Merlot ServiceOffering.json"];
 
