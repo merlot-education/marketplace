@@ -13,24 +13,24 @@ export interface IOfferingsDetailed extends IOfferings {
   modifiedDate: string;
   dataAccessType: string;
   exampleCosts: string;
-  attachments: string;
+  attachments: string[];
   termsAndConditions: {
     url: string;
     hash: string;
-  };
-  runtime: {
+  }[];
+  runtimes: {
     runtimeCount?: number;
     runtimeMeasurement?: string;
     runtimeUnlimited?: boolean;
-  };
+  }[];
   hardwareRequirements?: string;
-  allowedUserCount?: {
+  allowedUserCounts?: {
     userCountUpTo?: number;
     userCountUnlimited?: boolean;
-  };
-  dataExchangeCount?: {
+  }[];
+  dataExchangeCounts?: {
     exchangeCountUpTo?: number;
     exchangeCountUnlimited?: boolean;
-  }
+  }[]
 }
 

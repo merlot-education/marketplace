@@ -19,16 +19,9 @@ export class ExploreComponent implements OnInit {
     modifiedDate: '',
     dataAccessType: '',
     exampleCosts: '',
-    attachments: '',
-    termsAndConditions: {
-      url: '',
-      hash: ''
-    },
-    runtime: {
-      runtimeCount: 0,
-      runtimeMeasurement: '',
-      runtimeUnlimited: false
-    },
+    attachments: [],
+    termsAndConditions: [],
+    runtimes: [],
     id: '',
     sdHash: '',
     creationDate: '',
@@ -81,16 +74,9 @@ export class ExploreComponent implements OnInit {
       modifiedDate: '',
       dataAccessType: '',
       exampleCosts: '',
-      attachments: '',
-      termsAndConditions: {
-        url: '',
-        hash: ''
-      },
-      runtime: {
-        runtimeCount: 0,
-        runtimeMeasurement: '',
-        runtimeUnlimited: false
-      },
+      attachments: [],
+      termsAndConditions: [],
+      runtimes: [],
       id: '',
       sdHash: '',
       creationDate: '',

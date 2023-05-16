@@ -141,19 +141,32 @@
       </li>
       <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.attachments !== null">
         <strong>Anhänge:</strong><br />
-        {{ selectedOfferingDetails.attachments }}
+        <ul *ngFor="let attachment of selectedOfferingDetails.attachments">
+          <li>
+            <a [href]="attachment">{{ attachment }}</a>
+          </li>
+        </ul>
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Allgemeine Geschäftsbedingungen:</strong><br />
-        URL: {{ selectedOfferingDetails.termsAndConditions.url }} <br/>
-        Hash: {{ selectedOfferingDetails.termsAndConditions.hash }}
+        <ul *ngFor="let tnc of selectedOfferingDetails.termsAndConditions">
+          <li>
+            <a [href]="tnc.url">{{ tnc.url }}</a> (Hash: {{ tnc.hash }})
+          </li>
+        </ul>
+        
       </li>
       <li class="list-group-item" style="border: none">
-        <strong>Laufzeit:</strong><br />
-        <div *ngIf="selectedOfferingDetails.runtime.runtimeUnlimited">Unbegrenzt</div>
-        <div *ngIf="!selectedOfferingDetails.runtime.runtimeUnlimited">
-          {{ selectedOfferingDetails.runtime.runtimeCount }} {{ selectedOfferingDetails.runtime.runtimeMeasurement }}
-        </div>
+        <strong>Laufzeitoptionen:</strong><br />
+        <ul *ngFor="let rt of selectedOfferingDetails.runtimes">
+          <li>
+          <div *ngIf="rt.runtimeUnlimited">Unbegrenzt</div>
+          <div *ngIf="!rt.runtimeUnlimited">
+            {{ rt.runtimeCount }} {{ rt.runtimeMeasurement }}
+          </div>
+          </li>
+        </ul>
+        
       </li>
       <div *ngIf="selectedOfferingDetails.type === 'merlot:MerlotServiceOfferingSaaS'">
         <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.hardwareRequirements !== null">
@@ -161,20 +174,28 @@
           {{ selectedOfferingDetails.hardwareRequirements }}
         </li>
         <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.allowedUserCount !== null">
-          <strong>Anzahl erlaubter Benutzer:</strong><br />
-          <div *ngIf="selectedOfferingDetails.allowedUserCount.userCountUnlimited">Unbegrenzt</div>
-          <div *ngIf="!selectedOfferingDetails.allowedUserCount.userCountUnlimited">
-            Bis zu {{ selectedOfferingDetails.allowedUserCount.userCountUpTo }} Benutzer
-          </div>
+          <strong>Optionen für Anzahl erlaubter Benutzer:</strong><br />
+          <ul *ngFor="let auc of selectedOfferingDetails.allowedUserCounts">
+            <li>
+            <div *ngIf="auc.userCountUnlimited">Unbegrenzt</div>
+            <div *ngIf="!auc.userCountUnlimited">
+              Bis zu {{ auc.userCountUpTo }} Benutzer
+            </div>
+            </li>
+          </ul>
         </li>
       </div>
       <div *ngIf="selectedOfferingDetails.type === 'merlot:MerlotServiceOfferingDataDelivery'">
         <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.dataExchangeCount !== null">
-          <strong>Anzahl erlaubter Datenaustausche:</strong><br />
-          <div *ngIf="selectedOfferingDetails.dataExchangeCount.exchangeCountUnlimited">Unbegrenzt</div>
-          <div *ngIf="!selectedOfferingDetails.dataExchangeCount.exchangeCountUnlimited">
-            Bis zu {{ selectedOfferingDetails.dataExchangeCount.exchangeCountUpTo }} Datenaustausche
-          </div>
+          <strong>Optionen für Anzahl erlaubter Datenaustausche:</strong><br />
+          <ul *ngFor="let dec of selectedOfferingDetails.dataExchangeCounts">
+            <li>
+            <div *ngIf="dec.exchangeCountUnlimited">Unbegrenzt</div>
+            <div *ngIf="!dec.exchangeCountUnlimited">
+              Bis zu {{ dec.exchangeCountUpTo }} Datenaustausche
+            </div>
+            </li>
+          </ul>
         </li>
       </div>
       
