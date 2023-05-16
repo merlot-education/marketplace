@@ -103,9 +103,83 @@
 
 <c-modal #modalXl id="modalXl" size="xl" alignment="center">
   <c-modal-header>
-    <h5 cModalTitle>Details zum Service Angebot</h5>
+    <h5 cModalTitle>Details zum Service Angebot "{{ selectedOfferingDetails.name }}"</h5>
   </c-modal-header>
-  <c-modal-body>{{ modalBody }}</c-modal-body>
+  <c-modal-body>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item" style="border: none">
+        <strong>Service ID:</strong> <br />
+        {{ selectedOfferingDetails.id }}
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Erstelldatum:</strong><br />
+        {{ selectedOfferingDetails.creationDate }}
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Anbieter:</strong><br />
+        {{ resolveOrganizationLegalName(selectedOfferingDetails.offeredBy) }}
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Status:</strong><br />
+        {{ resolveMerlotStatusFriendlyName(selectedOfferingDetails.merlotState) }}
+      </li>
+      <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.description !== null">
+        <strong>Beschreibung:</strong><br />
+        {{ selectedOfferingDetails.description }}
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Letzte Änderung:</strong><br />
+        {{ selectedOfferingDetails.modifiedDate }}
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Datenzugriffsart:</strong><br />
+        {{ selectedOfferingDetails.dataAccessType }}
+      </li>
+      <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.exampleCosts !== null">
+        <strong>Beispielkosten:</strong><br />
+        {{ selectedOfferingDetails.exampleCosts }}
+      </li>
+      <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.attachments !== null">
+        <strong>Anhänge:</strong><br />
+        {{ selectedOfferingDetails.attachments }}
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Allgemeine Geschäftsbedingungen:</strong><br />
+        URL: {{ selectedOfferingDetails.termsAndConditions.url }} <br/>
+        Hash: {{ selectedOfferingDetails.termsAndConditions.hash }}
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Laufzeit:</strong><br />
+        <div *ngIf="selectedOfferingDetails.runtime.runtimeUnlimited">Unbegrenzt</div>
+        <div *ngIf="!selectedOfferingDetails.runtime.runtimeUnlimited">
+          {{ selectedOfferingDetails.runtime.runtimeCount }} {{ selectedOfferingDetails.runtime.runtimeMeasurement }}
+        </div>
+      </li>
+      <div *ngIf="selectedOfferingDetails.type === 'merlot:MerlotServiceOfferingSaaS'">
+        <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.hardwareRequirements !== null">
+          <strong>Hardware-Anforderungen:</strong><br />
+          {{ selectedOfferingDetails.hardwareRequirements }}
+        </li>
+        <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.allowedUserCount !== null">
+          <strong>Anzahl erlaubter Benutzer:</strong><br />
+          <div *ngIf="selectedOfferingDetails.allowedUserCount.userCountUnlimited">Unbegrenzt</div>
+          <div *ngIf="!selectedOfferingDetails.allowedUserCount.userCountUnlimited">
+            Bis zu {{ selectedOfferingDetails.allowedUserCount.userCountUpTo }} Benutzer
+          </div>
+        </li>
+      </div>
+      <div *ngIf="selectedOfferingDetails.type === 'merlot:MerlotServiceOfferingDataDelivery'">
+        <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.dataExchangeCount !== null">
+          <strong>Anzahl erlaubter Datenaustausche:</strong><br />
+          <div *ngIf="selectedOfferingDetails.dataExchangeCount.exchangeCountUnlimited">Unbegrenzt</div>
+          <div *ngIf="!selectedOfferingDetails.dataExchangeCount.exchangeCountUnlimited">
+            Bis zu {{ selectedOfferingDetails.dataExchangeCount.exchangeCountUpTo }} Datenaustausche
+          </div>
+        </li>
+      </div>
+      
+    </ul>
+  </c-modal-body>
   <c-modal-footer>
     <button cButton color="secondary" [cModalToggle]="modalXl.id">Schließen</button>
   </c-modal-footer>

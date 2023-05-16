@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {IOfferings} from '../serviceofferings-data'
+import {IOfferings, IOfferingsDetailed} from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -14,7 +14,29 @@ export class ExploreComponent implements OnInit {
   offerings: IOfferings[] = [];
   orgaOfferings: IOfferings[] = [];
 
-  modalBody: string = "";
+  selectedOfferingDetails: IOfferingsDetailed = {
+    description: '',
+    modifiedDate: '',
+    dataAccessType: '',
+    exampleCosts: '',
+    attachments: '',
+    termsAndConditions: {
+      url: '',
+      hash: ''
+    },
+    runtime: {
+      runtimeCount: 0,
+      runtimeMeasurement: '',
+      runtimeUnlimited: false
+    },
+    id: '',
+    sdHash: '',
+    creationDate: '',
+    offeredBy: '',
+    merlotState: '',
+    type: '',
+    name: ''
+  };
 
   constructor(
     protected serviceOfferingApiService : ServiceofferingApiService,
@@ -54,9 +76,31 @@ export class ExploreComponent implements OnInit {
   }
 
   protected requestDetails(id: string) {
-    this.modalBody = "";
+    this.selectedOfferingDetails = {
+      description: '',
+      modifiedDate: '',
+      dataAccessType: '',
+      exampleCosts: '',
+      attachments: '',
+      termsAndConditions: {
+        url: '',
+        hash: ''
+      },
+      runtime: {
+        runtimeCount: 0,
+        runtimeMeasurement: '',
+        runtimeUnlimited: false
+      },
+      id: '',
+      sdHash: '',
+      creationDate: '',
+      offeredBy: '',
+      merlotState: '',
+      type: '',
+      name: ''
+    };
     this.serviceOfferingApiService.fetchServiceOfferingDetails(id).then(result => {
-      this.modalBody = JSON.stringify(result);
+      this.selectedOfferingDetails = result;
     });
   }
 
