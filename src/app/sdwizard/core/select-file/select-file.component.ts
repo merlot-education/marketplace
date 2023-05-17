@@ -8,6 +8,7 @@ import { FormfieldControlService } from '@services/form-field.service';
 import { Utils } from '@shared/utils';
 import { ModalService } from '../_modal';
 import Swal from 'sweetalert2';
+import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 
 @Component({
   selector: 'app-select-file',
@@ -31,14 +32,14 @@ export class SelectFileComponent implements OnInit {
   ecoSystem: string= "merlot";// pass this to getFiles Api
   
 
-  constructor(private renderer:Renderer2,private element:ElementRef,private apiService: ApiService, private formFieldService: FormfieldControlService, private router: Router,private modalService: ModalService, private http: HttpClient) {
+  constructor(private renderer:Renderer2,private element:ElementRef,private serviceofferingApiService: ServiceofferingApiService, private formFieldService: FormfieldControlService, private router: Router,private modalService: ModalService, private http: HttpClient) {
     this.requestShapes(this.ecoSystem);
   }
 
   ngOnInit(): void { }
   requestShapes(system:string){
     //pass the system string down here
-    this.apiService.getFilesCategorized(system).subscribe(res => {
+    this.serviceofferingApiService.fetchAvailableShapes(system).subscribe(res => {
       //this.files = res;
       this.defaultFiles=res?.Resource;
       this.serviceFiles=res?.Service;
@@ -50,7 +51,7 @@ export class SelectFileComponent implements OnInit {
     });
   }
   select(name: string): void {
-    this.apiService.getJSON(name).subscribe(
+    this.serviceofferingApiService.fetchShape(name).subscribe(
       res => {
         this.shaclFile = this.formFieldService.readShaclFile(res);
         this.filteredShapes = this.formFieldService.updateFilteredShapes(this.shaclFile);

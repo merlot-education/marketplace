@@ -6,6 +6,7 @@ import { ShaclFile } from '@models/shacl-file';
 import { Shape } from '@models/shape';
 import { FormfieldControlService } from '@services/form-field.service';
 import { serviceFileNameDict } from '../serviceofferings-data';
+import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -23,7 +24,7 @@ export class EditComponent implements OnInit {
 
   private ignoredServiceFiles: string[] = ["Merlot ServiceOffering.json"];
 
-  constructor(private apiService: ApiService, protected authService : AuthService, private formFieldService: FormfieldControlService) {
+  constructor(private serviceofferingsApiService: ServiceofferingApiService, protected authService : AuthService, private formFieldService: FormfieldControlService) {
     this.requestShapes(this.ecoSystem);
   }
 
@@ -35,7 +36,7 @@ export class EditComponent implements OnInit {
 
   requestShapes(system:string){
     //pass the system string down here
-    this.apiService.getFilesCategorized(system).subscribe(res => {
+    this.serviceofferingsApiService.fetchAvailableShapes(system).subscribe(res => {
       for (let i = 0; i < res?.Service.length;) {
         if (this.ignoredServiceFiles.includes(res?.Service[i])) {
           res?.Service.splice(i, 1);
@@ -49,7 +50,7 @@ export class EditComponent implements OnInit {
   }
 
   select(name: string): void {
-    this.apiService.getJSON(name).subscribe(
+    this.serviceofferingsApiService.fetchShape(name).subscribe(
       res => {
         this.shaclFile = this.formFieldService.readShaclFile(res);
         this.filteredShapes = this.formFieldService.updateFilteredShapes(this.shaclFile);

@@ -5,14 +5,13 @@ import {Observable} from 'rxjs';
 import {environment} from 'src/environments/environment';
 import Data from '../mock/form.mock.json';
 import { TranslateService } from '@ngx-translate/core';
-import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class ApiService {
-  constructor(private httpClient: HttpClient, public translate: TranslateService, private serviceofferingsApiService: ServiceofferingApiService) {
+  constructor(public translate: TranslateService) {
   }
 
   getFieldContraints(acceptType: string = 'application/json'): Observable<any> {
@@ -22,7 +21,8 @@ export class ApiService {
         'Content-Type': acceptType
       })
     };
-    return this.httpClient.get<any>(`${environment.wizard_api_url}/demo`);
+    return undefined;
+    //return this.httpClient.get<any>(`${environment.wizard_api_url}/demo`);
   }
 
   // Can be used for development
@@ -34,17 +34,20 @@ export class ApiService {
     const apiUrl = Utils.controlUrl(environment.wizard_api_url);
     const data = new FormData();
     data.append('file', file);
-    return this.httpClient.post(`${apiUrl}/convertFile`, data);
+    return undefined;
+    //return this.httpClient.post(`${apiUrl}/convertFile`, data);
   }
 
   getFiles(): Observable<any> {
     const apiUrl = Utils.controlUrl(environment.wizard_api_url);
-    return this.httpClient.get(`${apiUrl}/getAvailableShapes`);
+    return undefined;
+    //return this.httpClient.get(`${apiUrl}/getAvailableShapes`);
   }
   getFilesCategorized(system): Observable<any> {
     //const apiUrl = Utils.controlUrl(environment.wizard_api_url);
     //return this.httpClient.get(`${apiUrl}/getAvailableShapesCategorized?ecoSystem=`+system);
-    return this.serviceofferingsApiService.fetchAvailableShapes(system);
+    return undefined;
+    //return this.serviceofferingsApiService.fetchAvailableShapes(system);
   }
 
   getJSON(name: string): Observable<any> {
@@ -53,6 +56,7 @@ export class ApiService {
     //incase of choosing language through the link .set('lan',this.translate.currentLang)
    
     //return this.httpClient.get(`${apiUrl}/getJSON`, {params});
-    return this.serviceofferingsApiService.fetchShape(name);
+    return undefined;
+    //return this.serviceofferingsApiService.fetchShape(name);
   }
 }

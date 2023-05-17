@@ -139,7 +139,7 @@ export function filesProviderFactory(provider: FilesProvider) {
     StartingPageComponent,
     SelectFileComponent
   ],
-  providers: [FormfieldControlService, ValidationControlService, ApiService, DatePipe, {
+  providers: [FormfieldControlService, ValidationControlService, DatePipe, {
     provide: HTTP_INTERCEPTORS,
     useClass: HttpErrorInterceptor,
     multi: true,

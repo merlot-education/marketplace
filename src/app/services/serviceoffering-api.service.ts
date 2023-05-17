@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, lastValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, lastValueFrom } from 'rxjs';
 import { IOfferings, IOfferingsDetailed } from '../views/serviceofferings/serviceofferings-data';
 import { OrganizationsApiService } from './organizations-api.service';
 import { AuthService } from './auth.service';
@@ -73,11 +73,11 @@ export class ServiceofferingApiService {
     return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/api/serviceofferings/serviceoffering/inDraft/" + id));
   }
 
-  public fetchAvailableShapes(system: string) {
+  public fetchAvailableShapes(system: string): Observable<any> {
     return this.http.get(`${environment.wizard_api_url}/getAvailableShapesCategorized?ecoSystem=`+system);
   }
 
-  public fetchShape(filename: string) {
+  public fetchShape(filename: string): Observable<any> {
     const params = new HttpParams().set('name', filename);
     return this.http.get(`${environment.wizard_api_url}/getJSON`, {params});
   }
