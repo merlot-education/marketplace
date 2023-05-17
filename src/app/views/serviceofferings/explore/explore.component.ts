@@ -84,6 +84,15 @@ export class ExploreComponent implements OnInit {
     return this.friendlyStatusNames[merlotStatusString] ? this.friendlyStatusNames[merlotStatusString] : "Unbekannt";
   }
 
+  protected resolveTypeFriendlyName(merlotType: string) : string {
+    for (let key in serviceFileNameDict) {
+      if (serviceFileNameDict[key].type === merlotType) {
+        return serviceFileNameDict[key].name;
+      }
+    }
+    return undefined;
+  }
+
   protected async requestDetails(id: string) {
     this.selectedOfferingDetails = {
       description: '',

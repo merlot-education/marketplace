@@ -15,7 +15,7 @@
 <c-row [sm]="4">
   <c-col xs *ngFor="let offering of orgaOfferings">
     <c-card class="mb-4" *ngIf="!applyStatusFilter || (applyStatusFilter && offering.merlotState === selectedStatusFilter)">
-      <c-card-header>{{ offering.type.replace("merlot:", "") }} : {{ offering.name }}</c-card-header>
+      <c-card-header><b>{{ resolveTypeFriendlyName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
       <c-card-body>
         <c-row>
           <c-col>
@@ -85,7 +85,7 @@
 <c-row [sm]="4">
   <c-col xs *ngFor="let offering of offerings">
     <c-card class="mb-4">
-      <c-card-header>{{ offering.name }}</c-card-header>
+      <c-card-header><b>{{ resolveTypeFriendlyName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
       <c-card-body>
         <c-row>
           <c-col>
