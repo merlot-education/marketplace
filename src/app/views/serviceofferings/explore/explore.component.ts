@@ -51,6 +51,7 @@ export class ExploreComponent implements OnInit {
   };
 
   selectedOfferingDetails: IOfferingsDetailed = this.emptyOfferingDetails;
+  selectedOfferingPublic: boolean = false;
 
   constructor(
     protected serviceOfferingApiService : ServiceofferingApiService,

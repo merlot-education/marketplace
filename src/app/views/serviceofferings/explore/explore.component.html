@@ -38,7 +38,7 @@
               </li>
             </ul>
             <div style="padding: 10px">
-              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalViewDetails.id" (click)="requestDetails(offering.id)">
+              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = false; requestDetails(offering.id)">
                 Details
               </button>
               <button type="button" class="btn btn-primary flex-item-grow disabled" [cModalToggle]="modalEditServiceOffering.id" (click)="updateServiceOfferingEdit(offering)">
@@ -80,7 +80,7 @@
               </li>
             </ul>
             <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary" [cModalToggle]="modalViewDetails.id" (click)="requestDetails(offering.id)">
+              <button type="button" class="btn btn-primary" [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = true; requestDetails(offering.id)">
                 Details
               </button>
             </div>
@@ -198,25 +198,25 @@
   <c-modal-footer>
     <button cButton color="secondary" [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingDetails = emptyOfferingDetails">Schließen</button>
     <button type="button" class="btn btn-primary flex-item-grow" 
-    *ngIf="selectedOfferingDetails.merlotState === 'REVOKED'"
+    *ngIf="!selectedOfferingPublic && selectedOfferingDetails.merlotState === 'REVOKED'"
     (click)="inDraftOffering(selectedOfferingDetails.id)"
     >
       Entwurf 
     </button>
     <button type="button" class="btn btn-primary flex-item-grow" 
-    *ngIf="(selectedOfferingDetails.merlotState === 'IN_DRAFT') || (selectedOfferingDetails.merlotState === 'REVOKED')"
+    *ngIf="!selectedOfferingPublic && (selectedOfferingDetails.merlotState === 'IN_DRAFT') || (selectedOfferingDetails.merlotState === 'REVOKED')"
     (click)="releaseOffering(selectedOfferingDetails.id)"
     >
       Veröffentlichen
     </button>
     <button type="button" class="btn btn-primary flex-item-grow" 
-    *ngIf="selectedOfferingDetails.merlotState === 'RELEASED'"
+    *ngIf="!selectedOfferingPublic && selectedOfferingDetails.merlotState === 'RELEASED'"
     (click)="revokeOffering(selectedOfferingDetails.id)"
     >
       Widerrufen
     </button>
     <button type="button" class="btn btn-primary flex-item-grow" 
-    *ngIf="(selectedOfferingDetails.merlotState === 'IN_DRAFT') || (selectedOfferingDetails.merlotState === 'REVOKED')"
+    *ngIf="!selectedOfferingPublic && (selectedOfferingDetails.merlotState === 'IN_DRAFT') || (selectedOfferingDetails.merlotState === 'REVOKED')"
     (click)="deleteOffering(selectedOfferingDetails.id)"
     >
       Löschen
