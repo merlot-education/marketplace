@@ -80,11 +80,45 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   getFormFields(): void {
     this.shape = this.file?.shapes.find(shape => shape.selected);
     this.formFields = this.shape?.fields;
+    this.reorderFormFields();
     this.form = this.formfieldService.toFormGroup(this.formFields);
     this.form.addControl('user_prefix', new FormControl());
     this.form.addControl('download_format', new FormControl(DownloadFormat.jsonld));
 
     this.groupFormFields();
+  }
+
+  reorderFormFields(): void {
+    if (this.formFields === undefined) {
+      return;
+    }
+
+    let beforeFieldsNames = ["name", "offeredBy", "providedBy", "creationDate"];
+    let afterFieldsNames = ["merlotTermsAndConditionsAccepted"];
+
+    let formFieldCopy = this.formFields;
+    formFieldCopy.sort((a, b) => (a.key < b.key ? -1 : 1));
+
+    let beforeFields = [];
+    let afterFields = [];
+
+    for (let i = 0; i < formFieldCopy.length;) {
+      let f = formFieldCopy[i];
+      if (beforeFieldsNames.includes(f.key)) {
+        beforeFields.splice(beforeFields.indexOf(f.key), 0, f);
+        formFieldCopy.splice(i, 1);
+      } else if (afterFieldsNames.includes(f.key)) {
+        afterFields.splice(afterFields.indexOf(f.key), 0, f);
+        formFieldCopy.splice(i, 1);
+      } else {
+        i++;
+      }
+    }
+
+    this.formFields = beforeFields.concat(formFieldCopy.concat(afterFields));
+
+    console.log(this.formFields);
+
   }
 
   groupFormFields(): void {
