@@ -1,8 +1,20 @@
-<h1 *ngIf="orgaOfferings.length > 0">Service Angebote meiner Organisation</h1>
+<div *ngIf="orgaOfferings.length > 0">
 
-<c-row>
+<h1>Service Angebote meiner Organisation</h1>
+
+<div style="padding:10px">
+  <c-form-check [inline]="true" switch>
+    <input cFormCheckInput id="filterCheck" type="checkbox" [(ngModel)]="applyStatusFilter"/>
+    <label cFormCheckLabel for="filterCheck">Zeige nur Angebote mit Status: </label>
+  </c-form-check> <br/>
+  <select class="form-select" (change)="selectedStatusFilter = $event.target.value">
+    <option *ngFor="let option of objectKeys(friendlyStatusNames)" [value]="option">{{friendlyStatusNames[option]}}</option>
+  </select>
+</div>
+
+<c-row [sm]="4">
   <c-col xs *ngFor="let offering of orgaOfferings">
-    <c-card class="mb-4">
+    <c-card class="mb-4" *ngIf="!applyStatusFilter || (applyStatusFilter && offering.merlotState === selectedStatusFilter)">
       <c-card-header>{{ offering.type.replace("merlot:", "") }} : {{ offering.name }}</c-card-header>
       <c-card-body>
         <c-row>
@@ -64,9 +76,13 @@
   </c-col>
 </c-row>
 
-<h1 *ngIf="offerings.length > 0">Öffentliche Service Angebote</h1>
+</div>
 
-<c-row>
+
+<div *ngIf="offerings.length > 0">
+<h1>Öffentliche Service Angebote</h1>
+
+<c-row [sm]="4">
   <c-col xs *ngFor="let offering of offerings">
     <c-card class="mb-4">
       <c-card-header>{{ offering.name }}</c-card-header>
@@ -98,6 +114,8 @@
     </c-card>
   </c-col>
 </c-row>
+
+</div>
 
 <h1 *ngIf="orgaOfferings.length === 0 && offerings.length === 0">Es konnten keine Service Angebote gefunden werden.</h1>
 

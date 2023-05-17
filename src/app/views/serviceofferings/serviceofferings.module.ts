@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ExploreComponent } from './explore/explore.component';
 import { EditComponent } from './edit/edit.component';
 
@@ -85,6 +85,7 @@ import { WizardAppModule } from "../../sdwizard/app.module";
         TooltipModule,
         CarouselModule,
         FormModule,
+        FormsModule,
         ReactiveFormsModule,
         DropdownModule,
         PaginationModule,

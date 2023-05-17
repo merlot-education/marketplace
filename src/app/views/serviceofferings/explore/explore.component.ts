@@ -16,10 +16,23 @@ import { serviceFileNameDict } from '../serviceofferings-data';
 })
 export class ExploreComponent implements OnInit {
 
+  objectKeys = Object.keys;
+
   offerings: IOfferings[] = [];
   orgaOfferings: IOfferings[] = [];
   shaclFile: ShaclFile;
   filteredShapes: Shape[];
+
+  protected friendlyStatusNames = {
+    "IN_DRAFT": "In Bearbeitung",
+    "RELEASED": "Veröffentlicht",
+    "REVOKED": "Widerrufen",
+    "DELETED": "Gelöscht",
+    "ARCHIVED": "Archiviert"
+  }
+
+  selectedStatusFilter: string = Object.keys(this.friendlyStatusNames)[0];
+  applyStatusFilter: boolean = false;
 
   selectedOfferingDetails: IOfferingsDetailed = {
     description: '',
@@ -67,14 +80,8 @@ export class ExploreComponent implements OnInit {
   }
 
   protected resolveMerlotStatusFriendlyName(merlotStatusString: string): string {
-    let friendlyNames = {
-      "IN_DRAFT": "In Bearbeitung",
-      "RELEASED": "Veröffentlicht",
-      "REVOKED": "Widerrufen",
-      "DELETED": "Gelöscht",
-      "ARCHIVED": "Archiviert"
-    }
-    return friendlyNames[merlotStatusString] ? friendlyNames[merlotStatusString] : "Unbekannt";
+    
+    return this.friendlyStatusNames[merlotStatusString] ? this.friendlyStatusNames[merlotStatusString] : "Unbekannt";
   }
 
   protected async requestDetails(id: string) {
