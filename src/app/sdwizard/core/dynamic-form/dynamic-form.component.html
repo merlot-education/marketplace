@@ -110,7 +110,7 @@
           <div class="flex-container">
           <div *ngIf="i == 0" class="form-group flex-item-grow">
             <button
-              [disabled]="form.invalid"
+              [disabled]="form.invalid || submitButtonsDisabled"
               color="primary"
               mat-raised-button
               (click)="publishAfterSubmit=false;"
@@ -121,7 +121,7 @@
 
           <div *ngIf="i == 0" class="form-group flex-item-grow">
             <button
-              [disabled]="form.invalid"
+              [disabled]="form.invalid || submitButtonsDisabled"
               color="primary"
               mat-raised-button
               (click)="publishAfterSubmit=true;"

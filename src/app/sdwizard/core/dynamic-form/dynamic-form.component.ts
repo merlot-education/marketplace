@@ -48,6 +48,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   orgaSubscription: Subscription = undefined;
 
   publishAfterSubmit = false;
+  submitButtonsDisabled = false;
 
 
   protected hiddenFormFields = ["policy", "dataAccountExport", "aggregationOf", "dependsOn", "dataProtectionRegime", "keyword", "provisionType", "endpoint", "ServiceOfferingLocations"];
@@ -223,6 +224,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
    return result;
 }
   onSubmit(): void {
+    this.submitButtonsDisabled = true;
     this.showSuccessMessage = false;
     this.showErrorMessage = false;
     this.createdServiceOfferingId = "";
@@ -241,6 +243,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       console.log(result);
       if (result === undefined) {
         this.showErrorMessage = true;
+        this.submitButtonsDisabled = false;
       } else {
         this.showSuccessMessage = true;
         this.createdServiceOfferingId = result["id"];
