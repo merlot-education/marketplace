@@ -3,7 +3,7 @@
 <h1>Service Angebote meiner Organisation</h1>
 
 <div style="padding:10px">
-  <c-form-check [inline]="true" switch>
+  <c-form-check [inline]="true" switch sizing="xl">
     <input cFormCheckInput id="filterCheck" type="checkbox" [(ngModel)]="applyStatusFilter"/>
     <label cFormCheckLabel for="filterCheck">Zeige nur Angebote mit Status: </label>
   </c-form-check> <br/>
@@ -12,7 +12,7 @@
   </select>
 </div>
 
-<c-row [xl]="4">
+<c-row [xl]="3">
   <c-col xs *ngFor="let offering of orgaOfferings">
     <c-card class="mb-4" *ngIf="!applyStatusFilter || (applyStatusFilter && offering.merlotState === selectedStatusFilter)">
       <c-card-header><b>{{ resolveTypeFriendlyName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
@@ -58,7 +58,7 @@
 <div *ngIf="offerings.length > 0">
 <h1>Öffentliche Service Angebote</h1>
 
-<c-row [xl]="4">
+<c-row [xl]="3">
   <c-col xs *ngFor="let offering of offerings">
     <c-card class="mb-4">
       <c-card-header><b>{{ resolveTypeFriendlyName(offering.type) }}</b>: {{ offering.name }}</c-card-header>

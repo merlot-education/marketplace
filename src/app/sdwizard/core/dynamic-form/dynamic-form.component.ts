@@ -111,10 +111,12 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
           formField.disable();
         } else if (field.key === "creationDate") {
           let formField = this.form.get(field.id);
-          if (this.createDateTimer === undefined) {
-            this.updateDateField(formField as FormControl); // initial update
-            this.createDateTimer = setInterval(() => this.updateDateField(formField as FormControl), 1000); // set timer to refresh date field
+          if (this.createDateTimer !== undefined) {
+            clearInterval(this.createDateTimer);
           }
+          this.updateDateField(formField as FormControl); // initial update
+          this.createDateTimer = setInterval(() => this.updateDateField(formField as FormControl), 1000); // set timer to refresh date field
+
           formField.disable();
         }
         else if (field.key === "policy") {
