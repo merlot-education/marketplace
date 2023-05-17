@@ -46,8 +46,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   createDateTimer: NodeJS.Timer = undefined;
   orgaSubscription: Subscription = undefined;
-
-  publishAfterSubmit = false;
   submitButtonsDisabled = false;
 
 
@@ -223,7 +221,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
    }
    return result;
 }
-  onSubmit(): void {
+  onSubmit(publishAfterSave: boolean): void {
     this.submitButtonsDisabled = true;
     this.showSuccessMessage = false;
     this.showErrorMessage = false;
@@ -247,7 +245,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       } else {
         this.showSuccessMessage = true;
         this.createdServiceOfferingId = result["id"];
-        if (this.publishAfterSubmit) {
+        if (publishAfterSave) {
           this.serviceofferingApiService.releaseServiceOffering(result["id"]);
         }
         //this.navigateToOverview();

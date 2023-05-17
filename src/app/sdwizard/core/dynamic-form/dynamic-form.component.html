@@ -9,7 +9,7 @@
     </a>
   </div>
   <div *ngIf="requestSuccess">
-    <form (ngSubmit)="onSubmit()" [formGroup]="form">
+    <form [formGroup]="form">
       <div fxLayout="row wrap" fxLayoutGap="16px grid">
         <div
           *ngFor="let group of groupedFormFields; let i = index"
@@ -107,28 +107,29 @@
             ></app-dynamic-self-loops>
           </div>
           <br />
-          <div class="flex-container">
-          <div *ngIf="i == 0" class="form-group flex-item-grow">
-            <button
-              [disabled]="form.invalid || submitButtonsDisabled"
-              color="primary"
-              mat-raised-button
-              (click)="publishAfterSubmit=false;"
-            >
-              {{ "form.save" | translate }}
-            </button>
-          </div>
 
-          <div *ngIf="i == 0" class="form-group flex-item-grow">
-            <button
-              [disabled]="form.invalid || submitButtonsDisabled"
-              color="primary"
-              mat-raised-button
-              (click)="publishAfterSubmit=true;"
-            >
-              Veröffentlichen
-            </button>
-          </div>
+          <div class="flex-container">
+            <div *ngIf="i == 0" class="form-group flex-item-grow">
+              <button
+                [disabled]="form.invalid || submitButtonsDisabled"
+                color="primary"
+                mat-raised-button
+                (click)="onSubmit(false)"
+              >
+                {{ "form.save" | translate }}
+              </button>
+            </div>
+
+            <div *ngIf="i == 0" class="form-group flex-item-grow">
+              <button
+                [disabled]="form.invalid || submitButtonsDisabled"
+                color="primary"
+                mat-raised-button
+                (click)="onSubmit(true)"
+              >
+                Veröffentlichen
+              </button>
+            </div>
           </div>
 
           <div *ngIf="i == 0" class="form-group">
