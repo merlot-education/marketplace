@@ -103,11 +103,10 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       for (let field of group) {
         if (field.key === "offeredBy" || field.key === "providedBy" ) {
           let formField = this.form.get(field.id);
-          if (this.orgaSubscription === undefined) {
-            this.orgaSubscription = this.authService.activeOrganizationRole.subscribe((value) => {
-              formField.patchValue(this.organizationsApiService.getOrgaById(value.orgaId).organizationLegalName);
-            });
-          }
+          // TODO create subscription for each of the two fields
+          this.orgaSubscription = this.authService.activeOrganizationRole.subscribe((value) => {
+            formField.patchValue(this.organizationsApiService.getOrgaById(value.orgaId).organizationLegalName);
+          });
           
           formField.disable();
         } else if (field.key === "creationDate") {
@@ -222,8 +221,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.createDateTimer)
       clearInterval(this.createDateTimer);
-    if (this.orgaSubscription)
-      this.orgaSubscription.unsubscribe();
   }
 
 
