@@ -8,7 +8,7 @@ export const environment = {
   aaam_api_url: "http://localhost:8083/api",
   organizations_api_url: "http://localhost:8082/api",
   serviceoffering_api_url: "http://localhost:8084",
-  wizard_api_url: "http://localhost:8085"
+  wizard_api_url: "http://localhost:8084/api/serviceofferings/shapes"
 };
 
 /*

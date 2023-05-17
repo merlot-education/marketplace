@@ -21,7 +21,7 @@ export class FilesProvider {
   }
 
   load() {
-    return new Promise((resolve, reject) => {
+    /*return new Promise((resolve, reject) => {
 
       this.apiService.getFiles()
         .subscribe(response => {
@@ -35,6 +35,6 @@ export class FilesProvider {
             }
             resolve(false);
           });
-    });
+    });*/
   }
 }

@@ -220,8 +220,10 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    clearInterval(this.createDateTimer);
-    this.orgaSubscription.unsubscribe();
+    if (this.createDateTimer)
+      clearInterval(this.createDateTimer);
+    if (this.orgaSubscription)
+      this.orgaSubscription.unsubscribe();
   }
 
 

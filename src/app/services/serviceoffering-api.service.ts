@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, lastValueFrom } from 'rxjs';
 import { IOfferings, IOfferingsDetailed } from '../views/serviceofferings/serviceofferings-data';
@@ -31,7 +31,7 @@ export class ServiceofferingApiService {
   }
 
   // get details to a specific service offering (authenticated)
-  public async fetchServiceOfferingDetails(id: String): Promise<IOfferingsDetailed> {
+  public async fetchServiceOfferingDetails(id: string): Promise<IOfferingsDetailed> {
     if (this.authService.isLoggedIn) {
       let activeOrgaId = this.authService.activeOrganizationRole.value.orgaId;
       return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/api/serviceofferings/serviceoffering/" + id)) as IOfferingsDetailed;
@@ -41,7 +41,7 @@ export class ServiceofferingApiService {
   }
 
   // publish a new service offering with the specified self description and set it to "in draft"
-  public async createServiceOffering(sdJson: String, type: String) {
+  public async createServiceOffering(sdJson: string, type: string) {
     console.log(sdJson); 
     console.log(type);
 
@@ -57,20 +57,29 @@ export class ServiceofferingApiService {
 
 
   // State machine
-  public async releaseServiceOffering(id: String) {
+  public async releaseServiceOffering(id: string) {
     return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/api/serviceofferings/serviceoffering/release/" + id));
   }
 
-  public async revokeServiceOffering(id: String) {
+  public async revokeServiceOffering(id: string) {
     return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/api/serviceofferings/serviceoffering/revoke/" + id));
   }
 
-  public async deleteServiceOffering(id: String) {
+  public async deleteServiceOffering(id: string) {
     return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/api/serviceofferings/serviceoffering/delete/" + id));
   }
 
-  public async inDraftServiceOffering(id: String) {
+  public async inDraftServiceOffering(id: string) {
     return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/api/serviceofferings/serviceoffering/inDraft/" + id));
+  }
+
+  public fetchAvailableShapes(system: string) {
+    return this.http.get(`${environment.wizard_api_url}/getAvailableShapesCategorized?ecoSystem=`+system);
+  }
+
+  public fetchShape(filename: string) {
+    const params = new HttpParams().set('name', filename);
+    return this.http.get(`${environment.wizard_api_url}/getJSON`, {params});
   }
 
 }
