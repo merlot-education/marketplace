@@ -12,7 +12,7 @@
   </select>
 </div>
 
-<c-row [sm]="4">
+<c-row [xl]="4">
   <c-col xs *ngFor="let offering of orgaOfferings">
     <c-card class="mb-4" *ngIf="!applyStatusFilter || (applyStatusFilter && offering.merlotState === selectedStatusFilter)">
       <c-card-header><b>{{ resolveTypeFriendlyName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
@@ -44,30 +44,6 @@
               <button type="button" class="btn btn-primary flex-item-grow disabled" [cModalToggle]="modalEditServiceOffering.id" (click)="updateServiceOfferingEdit(offering)">
                 Bearbeiten
               </button>
-              <button type="button" class="btn btn-primary flex-item-grow" 
-              *ngIf="offering.merlotState === 'REVOKED'"
-              (click)="inDraftOffering(offering.id)"
-              >
-                Entwurf 
-              </button>
-              <button type="button" class="btn btn-primary flex-item-grow" 
-              *ngIf="(offering.merlotState === 'IN_DRAFT') || (offering.merlotState === 'REVOKED')"
-              (click)="releaseOffering(offering.id)"
-              >
-                Veröffentlichen
-              </button>
-              <button type="button" class="btn btn-primary flex-item-grow" 
-              *ngIf="offering.merlotState === 'RELEASED'"
-              (click)="revokeOffering(offering.id)"
-              >
-                Widerrufen
-              </button>
-              <button type="button" class="btn btn-primary flex-item-grow" 
-              *ngIf="(offering.merlotState === 'IN_DRAFT') || (offering.merlotState === 'REVOKED')"
-              (click)="deleteOffering(offering.id)"
-              >
-                Löschen
-              </button>
             </div>
           </c-col>
         </c-row>
@@ -82,7 +58,7 @@
 <div *ngIf="offerings.length > 0">
 <h1>Öffentliche Service Angebote</h1>
 
-<c-row [sm]="4">
+<c-row [xl]="4">
   <c-col xs *ngFor="let offering of offerings">
     <c-card class="mb-4">
       <c-card-header><b>{{ resolveTypeFriendlyName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
@@ -220,7 +196,31 @@
     </ul>
   </c-modal-body>
   <c-modal-footer>
-    <button cButton color="secondary" [cModalToggle]="modalViewDetails.id">Schließen</button>
+    <button cButton color="secondary" [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingDetails = emptyOfferingDetails">Schließen</button>
+    <button type="button" class="btn btn-primary flex-item-grow" 
+    *ngIf="selectedOfferingDetails.merlotState === 'REVOKED'"
+    (click)="inDraftOffering(selectedOfferingDetails.id)"
+    >
+      Entwurf 
+    </button>
+    <button type="button" class="btn btn-primary flex-item-grow" 
+    *ngIf="(selectedOfferingDetails.merlotState === 'IN_DRAFT') || (selectedOfferingDetails.merlotState === 'REVOKED')"
+    (click)="releaseOffering(selectedOfferingDetails.id)"
+    >
+      Veröffentlichen
+    </button>
+    <button type="button" class="btn btn-primary flex-item-grow" 
+    *ngIf="selectedOfferingDetails.merlotState === 'RELEASED'"
+    (click)="revokeOffering(selectedOfferingDetails.id)"
+    >
+      Widerrufen
+    </button>
+    <button type="button" class="btn btn-primary flex-item-grow" 
+    *ngIf="(selectedOfferingDetails.merlotState === 'IN_DRAFT') || (selectedOfferingDetails.merlotState === 'REVOKED')"
+    (click)="deleteOffering(selectedOfferingDetails.id)"
+    >
+      Löschen
+    </button>
   </c-modal-footer>
 </c-modal>
 

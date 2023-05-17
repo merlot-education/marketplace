@@ -33,8 +33,7 @@ export class ExploreComponent implements OnInit {
 
   selectedStatusFilter: string = Object.keys(this.friendlyStatusNames)[0];
   applyStatusFilter: boolean = false;
-
-  selectedOfferingDetails: IOfferingsDetailed = {
+  emptyOfferingDetails: IOfferingsDetailed = {
     description: '',
     modifiedDate: '',
     dataAccessType: '',
@@ -51,6 +50,8 @@ export class ExploreComponent implements OnInit {
     name: ''
   };
 
+  selectedOfferingDetails: IOfferingsDetailed = this.emptyOfferingDetails;
+
   constructor(
     protected serviceOfferingApiService : ServiceofferingApiService,
     private organizationsApiService: OrganizationsApiService,
@@ -64,6 +65,10 @@ export class ExploreComponent implements OnInit {
   }
 
   private refreshOfferings() {
+    if (this.selectedOfferingDetails !== this.emptyOfferingDetails) {
+      this.requestDetails(this.selectedOfferingDetails.id);
+    }
+
     this.serviceOfferingApiService.fetchPublicServiceOfferings().then(result => {
       console.log(result)
       this.offerings = result;
@@ -94,22 +99,7 @@ export class ExploreComponent implements OnInit {
   }
 
   protected async requestDetails(id: string) {
-    this.selectedOfferingDetails = {
-      description: '',
-      modifiedDate: '',
-      dataAccessType: '',
-      exampleCosts: '',
-      attachments: [],
-      termsAndConditions: [],
-      runtimeOption: [],
-      id: '',
-      sdHash: '',
-      creationDate: '',
-      offeredBy: '',
-      merlotState: '',
-      type: '',
-      name: ''
-    };
+    this.selectedOfferingDetails = this.emptyOfferingDetails;
     await this.serviceOfferingApiService.fetchServiceOfferingDetails(id).then(result => {
       this.selectedOfferingDetails = result;
     });
