@@ -18,6 +18,7 @@ import { off } from 'process';
 import { AuthService } from 'src/app/services/auth.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import {timer} from 'rxjs';
+import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -46,6 +47,8 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   createDateTimer: NodeJS.Timer = undefined;
   orgaSubscription: Subscription = undefined;
 
+  publishAfterSubmit = false;
+
 
   protected hiddenFormFields = ["policy", "dataAccountExport", "aggregationOf", "dependsOn", "dataProtectionRegime", "keyword", "provisionType", "endpoint", "ServiceOfferingLocations"];
 
@@ -56,7 +59,8 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     private filesProvider: FilesProvider, 
     private iconSetService: IconSetService,
     private authService: AuthService,
-    private organizationsApiService: OrganizationsApiService
+    private organizationsApiService: OrganizationsApiService,
+    private serviceofferingApiService: ServiceofferingApiService
   ) {
     this.readObjectDataFromRoute();
     if (this.requestSuccess) {
@@ -240,6 +244,9 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       } else {
         this.showSuccessMessage = true;
         this.createdServiceOfferingId = result["id"];
+        if (this.publishAfterSubmit) {
+          this.serviceofferingApiService.releaseServiceOffering(result["id"]);
+        }
         //this.navigateToOverview();
         /*timer(1500)
         .subscribe(i => { 

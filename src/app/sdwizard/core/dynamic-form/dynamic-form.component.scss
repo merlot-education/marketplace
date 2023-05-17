@@ -143,3 +143,15 @@ body{
 [data-tip]:hover:after {
 	display:block;
 }
+
+
+.flex-container {
+  display: flex;
+  justify-content: left;
+  align-items: left;
+}
+
+.flex-item-grow {
+  flex-grow: 1;
+  margin: 10px;
+}

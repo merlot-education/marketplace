@@ -107,14 +107,28 @@
             ></app-dynamic-self-loops>
           </div>
           <br />
-          <div *ngIf="i == 0" class="form-group">
+          <div class="flex-container">
+          <div *ngIf="i == 0" class="form-group flex-item-grow">
             <button
               [disabled]="form.invalid"
               color="primary"
               mat-raised-button
+              (click)="publishAfterSubmit=false;"
             >
               {{ "form.save" | translate }}
             </button>
+          </div>
+
+          <div *ngIf="i == 0" class="form-group flex-item-grow">
+            <button
+              [disabled]="form.invalid"
+              color="primary"
+              mat-raised-button
+              (click)="publishAfterSubmit=true;"
+            >
+              Veröffentlichen
+            </button>
+          </div>
           </div>
 
           <div *ngIf="i == 0" class="form-group">
