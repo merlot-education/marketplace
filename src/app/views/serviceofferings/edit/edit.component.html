@@ -3,37 +3,24 @@
       <c-card class="mb-4">
         <c-card-header>Service Angebot erstellen</c-card-header>
         <c-card-body>
-          <!--table
-            [hover]="true"
-            [responsive]="true"
-            [striped]="true"
-            align="middle"
-            cTable
-            class="mb-0 border"
-          >
-            <thead cTableColor="light">
-              <tr>
-                <th scope="col">Angebots-ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Anbieter</th>
-                <th scope="col">Land</th>
-                <th scope="col">Verfügbar seit</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody *ngFor="let offering of offerings">
-              <tr>
-                <th scope="row">{{ offering.id }}</th>
-                <td>{{ offering.name }}</td>
-                <td>{{ offering.provider }}</td>
-                <td>{{ offering.country }}</td>
-                <td>{{ offering.availablesince }}</td>
-                <td>
-                  <button style="margin: 5px;" type="button" class="btn btn-primary disabled">Edit</button>
-                </td>
-              </tr>
-            </tbody>
-          </table-->
+        <div fxLayout="row wrap" fxLayoutGap="16px grid">
+
+          
+          <div class="mb-3" fxFlex="70%"
+          fxFlex.sm="100%"
+          fxFlex.xs="100%">
+
+            <label class="form-label"><b>Art des Service Angebots</b></label>
+            <select class="form-select" (change)="select($event.target.value)">
+              <option *ngFor="let option of serviceFiles" [value]="option">{{serviceFileNameDict[option].name}}</option>
+            </select>
+            
+          </div>
+        </div>
+          
+          <hr class="hr hr-blurry" />
+
+          <app-dynamic-form [file]="shaclFile"></app-dynamic-form>
         </c-card-body>
       </c-card>
     </c-col>

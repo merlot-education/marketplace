@@ -27,7 +27,8 @@ import {
   TableModule,
   TabsModule,
   TooltipModule,
-  UtilitiesModule
+  UtilitiesModule,
+  ModalModule
 } from '@coreui/angular';
 
 import { IconModule } from '@coreui/icons-angular';
@@ -54,41 +55,44 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 
 // Components Routing
 import { ServiceofferingsRoutingModule } from './serviceofferings-routing.module';
+import { WizardAppModule } from "../../sdwizard/app.module";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ServiceofferingsRoutingModule,
-    AccordionModule,
-    BadgeModule,
-    BreadcrumbModule,
-    ButtonModule,
-    CardModule,
-    CollapseModule,
-    GridModule,
-    UtilitiesModule,
-    SharedModule,
-    ListGroupModule,
-    IconModule,
-    ListGroupModule,
-    PlaceholderModule,
-    ProgressModule,
-    SpinnerModule,
-    TabsModule,
-    NavModule,
-    TooltipModule,
-    CarouselModule,
-    FormModule,
-    ReactiveFormsModule,
-    DropdownModule,
-    PaginationModule,
-    PopoverModule,
-    TableModule,
-    DocsComponentsModule,
-  ],
-  declarations: [
-    ExploreComponent,
-    EditComponent
-  ],
+    declarations: [
+        ExploreComponent,
+        EditComponent
+    ],
+    imports: [
+        CommonModule,
+        ServiceofferingsRoutingModule,
+        AccordionModule,
+        BadgeModule,
+        BreadcrumbModule,
+        ButtonModule,
+        CardModule,
+        CollapseModule,
+        GridModule,
+        UtilitiesModule,
+        SharedModule,
+        ListGroupModule,
+        IconModule,
+        ListGroupModule,
+        PlaceholderModule,
+        ProgressModule,
+        SpinnerModule,
+        TabsModule,
+        NavModule,
+        TooltipModule,
+        CarouselModule,
+        FormModule,
+        ReactiveFormsModule,
+        DropdownModule,
+        PaginationModule,
+        PopoverModule,
+        TableModule,
+        DocsComponentsModule,
+        WizardAppModule,
+        ModalModule
+    ]
 })
 export class ServiceofferingsModule {}

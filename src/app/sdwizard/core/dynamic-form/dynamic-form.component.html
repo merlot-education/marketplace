@@ -1,0 +1,159 @@
+
+<div class="register-content">
+  <div *ngIf="!requestSuccess" class="error-message">
+    <mat-error>{{ "form.displayError" | translate }}</mat-error>
+    {{ reportError("form.displayError") }}
+    <br /><br />
+    <a [routerLink]="'/upload'" color="primary" mat-raised-button>
+      {{ "form.ttlError" | translate }}
+    </a>
+  </div>
+  <div *ngIf="requestSuccess">
+    <form (ngSubmit)="onSubmit()" [formGroup]="form">
+      <div fxLayout="row wrap" fxLayoutGap="16px grid">
+        <div
+          *ngFor="let group of groupedFormFields; let i = index"
+          [ngClass]="{ 'position-center': groupsNumber === 1 }"
+          fxFlex="70%"
+          fxFlex.sm="100%"
+          fxFlex.xs="100%"
+        >
+          <h2>
+            {{ "form.complete" | translate }} <b>{{ shape.name }} </b>
+            {{ "form.form" | translate }}
+          </h2>
+          <!--
+    <div class="field">
+      <div class="textField">
+        -->
+          <!--
+    </div>
+
+      <div class="iconField tooltip">
+        <img src="../../../assets/images/information.svg">
+        <span  class="tooltiptext">Tooltip text</span>
+      </div>
+  </div>
+-->
+
+          <div class="mb-3" [hidden]="true">
+            <label class="form-label">Credential subject (DID)*</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="user_prefix"
+              placeholder="did:example:123456789abcdefghi"
+            />
+          </div> <!-- TODO Auto generated in orchestrator -->
+
+          <div
+            *ngFor="let formField of group; let j = index"
+            class="form-group"
+          >
+            <span *ngIf="j == 0">{{ formField.group }}</span>
+            <!--
+        <div class="field">
+          <div class="textField">
+          -->
+            <app-dynamic-form-input
+              *ngIf="formField.componentType == 'dynamicFormInput'"
+              [form]="form"
+              [input]="formField"
+              [shapes]="file.shapes"
+              [hidden]="hiddenFormFields.includes(formField.key)"
+            ></app-dynamic-form-input>
+            <!--
+          </div>
+                <div class="iconField tooltip">
+                  <img src="../../../assets/images/information.svg">
+                  <span  class="tooltiptext">Tooltip text</span>
+                </div>
+        </div>
+        -->
+            <app-dynamic-form-array
+              *ngIf="formField.componentType == 'dynamicFormArray'"
+              [form]="form"
+              [input]="formField"
+              [shapes]="file.shapes"
+              [hidden]="hiddenFormFields.includes(formField.key)"
+            ></app-dynamic-form-array>
+            <app-dynamic-form-or
+              *ngIf="formField.componentType == 'dynamicFormOr'"
+              [form]="form"
+              [input]="formField"
+              [shapes]="file.shapes"
+              [hidden]="hiddenFormFields.includes(formField.key)"
+            ></app-dynamic-form-or>
+            <app-dynamic-form-or-array
+              *ngIf="formField.componentType == 'dynamicFormOrArray'"
+              [form]="form"
+              [input]="formField"
+              [shapes]="file.shapes"
+              [hidden]="hiddenFormFields.includes(formField.key)"
+            ></app-dynamic-form-or-array>
+            <app-expanded-fields
+              *ngIf="formField.componentType == 'dynamicExpanded'"
+              [form]="form"
+              [input]="formField"
+              [shapes]="file.shapes"
+              [hidden]="hiddenFormFields.includes(formField.key)"
+            ></app-expanded-fields>
+            <app-dynamic-self-loops
+              *ngIf="formField.componentType == 'dynamicSelfLoop'"
+              [form]="form"
+              [input]="formField"
+              [shapes]="file.shapes"
+              [hidden]="hiddenFormFields.includes(formField.key)"
+            ></app-dynamic-self-loops>
+          </div>
+          <br />
+          <div *ngIf="i == 0" class="form-group">
+            <button
+              [disabled]="form.invalid"
+              color="primary"
+              mat-raised-button
+            >
+              {{ "form.save" | translate }}
+            </button>
+          </div>
+
+          <div *ngIf="i == 0" class="form-group">
+            <strong *ngIf="showErrorMessage" style="color:red">Fehler bei der Verarbeitung des Service Angebots.</strong>
+            <strong *ngIf="showSuccessMessage" style="color:green">Service Angebot wurde erfolgreich erstellt! <br/> 
+              ID: {{ createdServiceOfferingId }}</strong>
+          </div>
+          <!--div class="all-errors"> 
+      <div *ngFor="let formField of group" class="alert alert-danger ">
+        <app-show-errors [displayAll]="true" [formField]="formField" [form]="form" [label]="formField.name">
+        </app-show-errors>
+      </div>
+    </div-->
+          <!-- TODO re-add error messages -->
+          <div *ngIf="hasStaticFiles">
+            <button
+              (click)="goToFiles()"
+              class="back-button"
+              color="primary"
+              mat-stroked-button
+            >
+              <mat-icon>arrow_back</mat-icon>
+              {{ "form.goBack" | translate }}
+            </button>
+          </div>
+
+          <div *ngIf="multipleShapes" fxLayout="row wrap">
+            <button
+              (click)="goToShapes()"
+              class="back-button"
+              color="primary"
+              mat-stroked-button
+            >
+              <mat-icon>arrow_back</mat-icon>
+              {{ "form.goBack" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

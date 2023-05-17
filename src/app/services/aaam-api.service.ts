@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { lastValueFrom } from 'rxjs';
-import { IUserData } from './views/users/user-data';
+import { IUserData } from '../views/users/user-data';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

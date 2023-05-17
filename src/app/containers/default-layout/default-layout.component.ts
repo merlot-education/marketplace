@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { INavData } from '@coreui/angular';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
-import { AuthService } from 'src/app/auth.service';
-import { AaamApiService } from 'src/app/aaam-api.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { AaamApiService } from 'src/app/services/aaam-api.service';
 
 import { IRoleNavData, navItems } from './_nav';
-import { OrganizationsApiService } from 'src/app/organizations-api.service';
+import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -38,7 +38,7 @@ export class DefaultLayoutComponent {
     let globalNavItems = structuredClone(navItems);
     this.navItems = this.buildAllowedNavItems(globalNavItems);
     //});
-    this.selectedRoleOption = this.authService.activeOrganizationRole.getValue();
+    this.selectedRoleOption = this.authService.activeOrganizationRole.getValue().orgaRoleString;
   }
 
   private buildAllowedNavItems(navItems: IRoleNavData[]) {
@@ -75,6 +75,6 @@ export class DefaultLayoutComponent {
 
   selectedRoleChanged(event: any) {
     this.selectedRoleOption = event.value;
-    this.authService.activeOrganizationRole.next(this.selectedRoleOption);
+    this.authService.changeActiveOrgaRole(this.selectedRoleOption);
   }
 }

@@ -1,10 +1,70 @@
-<style>
-  strong {
-    display: inline-block;
-    width: 150px;
-    text-align: left;
-  }
-</style>
+<h1 *ngIf="orgaOfferings.length > 0">Service Angebote meiner Organisation</h1>
+
+<c-row>
+  <c-col xs *ngFor="let offering of orgaOfferings">
+    <c-card class="mb-4">
+      <c-card-header>{{ offering.type.replace("merlot:", "") }} : {{ offering.name }}</c-card-header>
+      <c-card-body>
+        <c-row>
+          <c-col>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" style="border: none">
+                <strong>Service ID:</strong> <br />
+                {{ offering.id }}
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Erstelldatum:</strong><br />
+                {{ offering.creationDate }}
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Anbieter:</strong><br />
+                {{ resolveOrganizationLegalName(offering.offeredBy) }}
+              </li>
+              <li class="list-group-item" style="border: none">
+                <strong>Status:</strong><br />
+                {{ resolveMerlotStatusFriendlyName(offering.merlotState) }}
+              </li>
+            </ul>
+            <div style="padding: 10px">
+              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalViewDetails.id" (click)="requestDetails(offering.id)">
+                Details
+              </button>
+              <button type="button" class="btn btn-primary flex-item-grow disabled" [cModalToggle]="modalEditServiceOffering.id" (click)="updateServiceOfferingEdit(offering)">
+                Bearbeiten
+              </button>
+              <button type="button" class="btn btn-primary flex-item-grow" 
+              *ngIf="offering.merlotState === 'REVOKED'"
+              (click)="inDraftOffering(offering.id)"
+              >
+                Entwurf 
+              </button>
+              <button type="button" class="btn btn-primary flex-item-grow" 
+              *ngIf="(offering.merlotState === 'IN_DRAFT') || (offering.merlotState === 'REVOKED')"
+              (click)="releaseOffering(offering.id)"
+              >
+                Veröffentlichen
+              </button>
+              <button type="button" class="btn btn-primary flex-item-grow" 
+              *ngIf="offering.merlotState === 'RELEASED'"
+              (click)="revokeOffering(offering.id)"
+              >
+                Widerrufen
+              </button>
+              <button type="button" class="btn btn-primary flex-item-grow" 
+              *ngIf="(offering.merlotState === 'IN_DRAFT') || (offering.merlotState === 'REVOKED')"
+              (click)="deleteOffering(offering.id)"
+              >
+                Löschen
+              </button>
+            </div>
+          </c-col>
+        </c-row>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+
+<h1 *ngIf="offerings.length > 0">Öffentliche Service Angebote</h1>
 
 <c-row>
   <c-col xs *ngFor="let offering of offerings">
@@ -15,34 +75,21 @@
           <c-col>
             <ul class="list-group list-group-flush">
               <li class="list-group-item" style="border: none">
-                <strong>Anbieter:</strong>
-                {{ offering.provider }}
+                <strong>Service ID:</strong> <br />
+                {{ offering.id }}
               </li>
               <li class="list-group-item" style="border: none">
-                <strong>Land:</strong>
-                <svg
-                  cIcon
-                  id="{{ offering.country + offering.name }}"
-                  name="cif{{ offering.country }}"
-                  size="xl"
-                  title="{{ offering.country }}"
-                  style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))"
-                ></svg>
+                <strong>Erstelldatum:</strong><br />
+                {{ offering.creationDate }}
               </li>
               <li class="list-group-item" style="border: none">
-                <strong>Verfügbar seit:</strong>
-                {{ offering.availablesince }}
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Beschreibung:</strong> <br />
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                diam nonumy eirmod tempor invidunt ut labore et dolore magna
-                aliquyam erat, sed diam voluptua.
+                <strong>Anbieter:</strong><br />
+                {{ resolveOrganizationLegalName(offering.offeredBy) }}
               </li>
             </ul>
             <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary disabled">
-                Service anfordern
+              <button type="button" class="btn btn-primary" [cModalToggle]="modalViewDetails.id" (click)="requestDetails(offering.id)">
+                Details
               </button>
             </div>
           </c-col>
@@ -51,3 +98,123 @@
     </c-card>
   </c-col>
 </c-row>
+
+<h1 *ngIf="orgaOfferings.length === 0 && offerings.length === 0">Es konnten keine Service Angebote gefunden werden.</h1>
+
+<c-modal #modalViewDetails id="modalViewDetails" size="xl" alignment="center">
+  <c-modal-header>
+    <h5 cModalTitle>Details zum Service Angebot "{{ selectedOfferingDetails.name }}"</h5>
+  </c-modal-header>
+  <c-modal-body>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item" style="border: none">
+        <strong>Service ID:</strong> <br />
+        {{ selectedOfferingDetails.id }}
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Erstelldatum:</strong><br />
+        {{ selectedOfferingDetails.creationDate }}
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Anbieter:</strong><br />
+        {{ resolveOrganizationLegalName(selectedOfferingDetails.offeredBy) }}
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Status:</strong><br />
+        {{ resolveMerlotStatusFriendlyName(selectedOfferingDetails.merlotState) }}
+      </li>
+      <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.description !== null">
+        <strong>Beschreibung:</strong><br />
+        {{ selectedOfferingDetails.description }}
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Letzte Änderung:</strong><br />
+        {{ selectedOfferingDetails.modifiedDate }}
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Datenzugriffsart:</strong><br />
+        {{ selectedOfferingDetails.dataAccessType }}
+      </li>
+      <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.exampleCosts !== null">
+        <strong>Beispielkosten:</strong><br />
+        {{ selectedOfferingDetails.exampleCosts }}
+      </li>
+      <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.attachments !== null">
+        <strong>Anhänge:</strong><br />
+        <ul *ngFor="let attachment of selectedOfferingDetails.attachments">
+          <li>
+            <a [href]="attachment">{{ attachment }}</a>
+          </li>
+        </ul>
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Allgemeine Geschäftsbedingungen:</strong><br />
+        <ul *ngFor="let tnc of selectedOfferingDetails.termsAndConditions">
+          <li>
+            <a [href]="tnc.url">{{ tnc.url }}</a> (Hash: {{ tnc.hash }})
+          </li>
+        </ul>
+        
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Laufzeitoptionen:</strong><br />
+        <ul *ngFor="let rt of selectedOfferingDetails.runtimeOption">
+          <li>
+          <div *ngIf="rt.runtimeUnlimited">Unbegrenzt</div>
+          <div *ngIf="!rt.runtimeUnlimited">
+            {{ rt.runtimeCount }} {{ rt.runtimeMeasurement }}
+          </div>
+          </li>
+        </ul>
+        
+      </li>
+      <div *ngIf="selectedOfferingDetails.type === 'merlot:MerlotServiceOfferingSaaS'">
+        <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.hardwareRequirements !== null">
+          <strong>Hardware-Anforderungen:</strong><br />
+          {{ selectedOfferingDetails.hardwareRequirements }}
+        </li>
+        <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.userCountOption !== null">
+          <strong>Optionen für Anzahl erlaubter Benutzer:</strong><br />
+          <ul *ngFor="let auc of selectedOfferingDetails.userCountOption">
+            <li>
+            <div *ngIf="auc.userCountUnlimited">Unbegrenzt</div>
+            <div *ngIf="!auc.userCountUnlimited">
+              Bis zu {{ auc.userCountUpTo }} Benutzer
+            </div>
+            </li>
+          </ul>
+        </li>
+      </div>
+      <div *ngIf="selectedOfferingDetails.type === 'merlot:MerlotServiceOfferingDataDelivery'">
+        <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.exchangeCountOption !== null">
+          <strong>Optionen für Anzahl erlaubter Datenaustausche:</strong><br />
+          <ul *ngFor="let dec of selectedOfferingDetails.exchangeCountOption">
+            <li>
+            <div *ngIf="dec.exchangeCountUnlimited">Unbegrenzt</div>
+            <div *ngIf="!dec.exchangeCountUnlimited">
+              Bis zu {{ dec.exchangeCountUpTo }} Datenaustausche
+            </div>
+            </li>
+          </ul>
+        </li>
+      </div>
+      
+    </ul>
+  </c-modal-body>
+  <c-modal-footer>
+    <button cButton color="secondary" [cModalToggle]="modalViewDetails.id">Schließen</button>
+  </c-modal-footer>
+</c-modal>
+
+<c-modal #modalEditServiceOffering id="modalEditServiceOffering" size="xl" alignment="center">
+  <c-modal-header>
+    <h5 cModalTitle>Service Angebot "{{ selectedOfferingDetails.name }}" bearbeiten</h5>
+  </c-modal-header>
+  <c-modal-body>
+    <app-dynamic-form [file]="shaclFile"></app-dynamic-form>
+  </c-modal-body>
+  <c-modal-footer>
+    <button cButton color="secondary" [cModalToggle]="modalEditServiceOffering.id">Schließen</button>
+  </c-modal-footer>
+</c-modal>
+
