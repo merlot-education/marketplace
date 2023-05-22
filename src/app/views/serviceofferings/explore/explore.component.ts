@@ -56,7 +56,7 @@ export class ExploreComponent implements OnInit {
   constructor(
     protected serviceOfferingApiService : ServiceofferingApiService,
     private organizationsApiService: OrganizationsApiService,
-    private authService: AuthService,
+    protected authService: AuthService,
     private apiService: ApiService, 
     private formFieldService: FormfieldControlService) {
   }

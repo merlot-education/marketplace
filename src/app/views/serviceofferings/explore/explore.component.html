@@ -80,7 +80,7 @@
               </li>
             </ul>
             <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary" [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = true; requestDetails(offering.id)">
+              <button type="button" class="btn btn-primary" *ngIf="authService.isLoggedIn" [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = true; requestDetails(offering.id)">
                 Details
               </button>
             </div>
