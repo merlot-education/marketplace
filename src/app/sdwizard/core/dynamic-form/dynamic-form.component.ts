@@ -19,6 +19,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import {timer} from 'rxjs';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
+import { IOfferingsDetailed } from 'src/app/views/serviceofferings/serviceofferings-data';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -39,6 +40,8 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   groupsNumber = 1;
   DownloadFormat = DownloadFormat;
   downloadFormatKeys = Object.keys(DownloadFormat).filter(e => typeof (e) === 'string');
+
+  @Input() prefillData: IOfferingsDetailed = undefined;
 
   showSuccessMessage: boolean = false;
   showErrorMessage: boolean = false;
@@ -82,7 +85,8 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   getFormFields(): void {
     this.shape = this.file?.shapes.find(shape => shape.selected);
-    this.reorderFormFields();
+    this.prefillShapeFields();
+    this.reorderShapeFields();
     this.formFields = this.shape?.fields;
     this.form = this.formfieldService.toFormGroup(this.formFields);
     this.form.addControl('user_prefix', new FormControl());
@@ -91,42 +95,70 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     this.groupFormFields();
   }
 
-  reorderFormFields(): void {
+  reorderShapeFields(): void {
     if (this.shape?.fields === undefined) {
       return;
     }
+    console.log("shape fields", this.shape?.fields);
 
     let beforeFieldsNames = ["name", "offeredBy", "providedBy", "creationDate"];
     let afterFieldsNames = ["merlotTermsAndConditionsAccepted"];
 
-    let formFieldCopy = this.shape?.fields;
-    formFieldCopy.sort((a, b) => (a.key < b.key ? -1 : 1));
+    let shapeFieldCopy = this.shape?.fields;
+    shapeFieldCopy.sort((a, b) => (a.key < b.key ? -1 : 1));
 
     let beforeFields = [];
     let afterFields = [];
 
-    for (let i = 0; i < formFieldCopy.length;) {
-      let f = formFieldCopy[i];
+    for (let i = 0; i < shapeFieldCopy.length;) {
+      let f = shapeFieldCopy[i];
       if (beforeFieldsNames.includes(f.key)) {
         beforeFields.splice(beforeFields.indexOf(f.key), 0, f);
-        formFieldCopy.splice(i, 1);
+        shapeFieldCopy.splice(i, 1);
       } else if (afterFieldsNames.includes(f.key)) {
         afterFields.splice(afterFields.indexOf(f.key), 0, f);
-        formFieldCopy.splice(i, 1);
+        shapeFieldCopy.splice(i, 1);
       } else {
         i++;
       }
     }
 
-    this.shape.fields = beforeFields.concat(formFieldCopy.concat(afterFields));
+    this.shape.fields = beforeFields.concat(shapeFieldCopy.concat(afterFields));
+  }
 
-    console.log(this.formFields);
+  prefillShapeFields(): void {
+    if (this.shape?.fields === undefined || this.prefillData === undefined) {
+      return;
+    }
+    
+    console.log("prefilling with ", this.prefillData);
+
+    let shapeFieldCopy = this.shape?.fields;
+
+    /*for (let i = 0; i < shapeFieldCopy.length;) {
+      let f = shapeFieldCopy[i];
+    }*/
+    let fieldCount = shapeFieldCopy.length;
+
+    for (let i = 0; i < fieldCount; i++) {
+      let field = shapeFieldCopy[i];
+      if (field.key === "userCountOption") {
+        for (let j = 0; j < 3; j++) {
+          let fieldcopy = structuredClone(field);
+          fieldcopy.id = fieldcopy.id + "_" + j.toString();
+          shapeFieldCopy.push(fieldcopy);
+        }
+      }
+    }
+
+    this.shape.fields = shapeFieldCopy;
 
   }
 
   groupFormFields(): void {
     this.groupedFormFields = Utils.groupBy(this.formFields, (formField) => formField.group);
-    this.patchRequiredFields(this.groupedFormFields);
+    if (this.prefillData === undefined)
+      this.patchRequiredFields(this.groupedFormFields);
     this.groupsNumber = this.groupedFormFields.length;
   }
 
@@ -235,8 +267,10 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       this.shape.userPrefix = this.form.get('user_prefix').value;
     }
     this.shape.downloadFormat = this.form.get('download_format').value;
+    console.log("shape fields pre update/empty", this.shape.fields);
     this.shape.fields = this.updateFormFieldsValues(this.formFields, this.form);
     this.shape.fields = this.emptyChildrenFields(this.shape.fields);
+    console.log("shape fields pre save", this.shape.fields);
     this.exportService.saveFile(this.file).then(result => {
       console.log(result);
       if (result === undefined) {

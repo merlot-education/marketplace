@@ -41,7 +41,7 @@
               <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = false; requestDetails(offering.id)">
                 Details
               </button>
-              <button type="button" class="btn btn-primary flex-item-grow disabled" [cModalToggle]="modalEditServiceOffering.id" (click)="updateServiceOfferingEdit(offering)">
+              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalEditServiceOffering.id" (click)="updateServiceOfferingEdit(offering)">
                 Bearbeiten
               </button>
             </div>
@@ -233,7 +233,7 @@
     <h5 cModalTitle>Service Angebot "{{ selectedOfferingDetails.name }}" bearbeiten</h5>
   </c-modal-header>
   <c-modal-body>
-    <app-dynamic-form [file]="shaclFile"></app-dynamic-form>
+    <app-dynamic-form [file]="shaclFile" [prefillData]="selectedOfferingDetails"></app-dynamic-form>
   </c-modal-body>
   <c-modal-footer>
     <button cButton color="secondary" [cModalToggle]="modalEditServiceOffering.id">Schließen</button>

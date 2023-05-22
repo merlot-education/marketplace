@@ -4,7 +4,6 @@ import { ServiceofferingApiService } from '../../../services/serviceoffering-api
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ShaclFile } from '@models/shacl-file';
-import { ApiService } from '@services/api.service';
 import { FormfieldControlService } from '@services/form-field.service';
 import { Shape } from '@models/shape';
 import { serviceFileNameDict } from '../serviceofferings-data';
@@ -21,7 +20,7 @@ export class ExploreComponent implements OnInit {
   offerings: IOfferings[] = [];
   orgaOfferings: IOfferings[] = [];
   filteredOrgaOfferings: IOfferings[] = []
-  shaclFile: ShaclFile;
+  shaclFile: ShaclFile = undefined;
   filteredShapes: Shape[];
 
   protected friendlyStatusNames = {
@@ -58,7 +57,6 @@ export class ExploreComponent implements OnInit {
     protected serviceOfferingApiService : ServiceofferingApiService,
     private organizationsApiService: OrganizationsApiService,
     protected authService: AuthService,
-    private apiService: ApiService, 
     private formFieldService: FormfieldControlService) {
   }
 
@@ -163,7 +161,7 @@ export class ExploreComponent implements OnInit {
   }
 
   select(name: string): void {
-    this.apiService.getJSON(name).subscribe(
+    this.serviceOfferingApiService.fetchShape(name).subscribe(
       res => {
         this.shaclFile = this.formFieldService.readShaclFile(res);
         this.filteredShapes = this.formFieldService.updateFilteredShapes(this.shaclFile);

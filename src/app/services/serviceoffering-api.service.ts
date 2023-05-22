@@ -33,7 +33,6 @@ export class ServiceofferingApiService {
   // get details to a specific service offering (authenticated)
   public async fetchServiceOfferingDetails(id: string): Promise<IOfferingsDetailed> {
     if (this.authService.isLoggedIn) {
-      let activeOrgaId = this.authService.activeOrganizationRole.value.orgaId;
       return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/serviceofferings/serviceoffering/" + id)) as IOfferingsDetailed;
     }
       
