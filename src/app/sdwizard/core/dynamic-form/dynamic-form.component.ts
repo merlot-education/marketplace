@@ -83,7 +83,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   getFormFields(): void {
     this.shape = this.file?.shapes.find(shape => shape.selected);
     this.formFields = this.shape?.fields;
-    this.reorderFormFields();
+    //this.reorderFormFields();
     this.form = this.formfieldService.toFormGroup(this.formFields);
     this.form.addControl('user_prefix', new FormControl());
     this.form.addControl('download_format', new FormControl(DownloadFormat.jsonld));
