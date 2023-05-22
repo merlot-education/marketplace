@@ -20,6 +20,7 @@ export class ExploreComponent implements OnInit {
 
   offerings: IOfferings[] = [];
   orgaOfferings: IOfferings[] = [];
+  filteredOrgaOfferings: IOfferings[] = []
   shaclFile: ShaclFile;
   filteredShapes: Shape[];
 
@@ -78,6 +79,18 @@ export class ExploreComponent implements OnInit {
       console.log(result)
       this.orgaOfferings = result;
     });
+  }
+
+  protected filterByStatus(applyFilter: boolean, status: string) {
+    if (applyFilter) {
+      console.log("filter by ", status);
+      this.filteredOrgaOfferings = [];
+      for (let offering of this.orgaOfferings) {
+        if (offering.merlotState === status) {
+          this.filteredOrgaOfferings.push(offering);
+        }
+      }
+    }
   }
 
   protected resolveOrganizationLegalName(offeredByString: string): string {

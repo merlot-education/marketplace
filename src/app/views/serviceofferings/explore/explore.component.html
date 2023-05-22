@@ -4,17 +4,17 @@
 
 <div style="padding:10px">
   <c-form-check [inline]="true" switch sizing="xl">
-    <input cFormCheckInput id="filterCheck" type="checkbox" [(ngModel)]="applyStatusFilter"/>
+    <input cFormCheckInput id="filterCheck" type="checkbox" [(ngModel)]="applyStatusFilter" (change)="filterByStatus(applyStatusFilter, selectedStatusFilter)"/>
     <label cFormCheckLabel for="filterCheck">Zeige nur Angebote mit Status: </label>
   </c-form-check> <br/>
-  <select class="form-select" (change)="selectedStatusFilter = $event.target.value">
+  <select class="form-select" (change)="selectedStatusFilter = $event.target.value; filterByStatus(applyStatusFilter, selectedStatusFilter)">
     <option *ngFor="let option of objectKeys(friendlyStatusNames)" [value]="option">{{friendlyStatusNames[option]}}</option>
   </select>
 </div>
 
 <c-row [xl]="3">
-  <c-col xs *ngFor="let offering of orgaOfferings">
-    <c-card class="mb-4" *ngIf="!applyStatusFilter || (applyStatusFilter && offering.merlotState === selectedStatusFilter)">
+  <c-col xs *ngFor="let offering of (applyStatusFilter ? filteredOrgaOfferings : orgaOfferings)">
+    <c-card class="mb-4">
       <c-card-header><b>{{ resolveTypeFriendlyName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
       <c-card-body>
         <c-row>
