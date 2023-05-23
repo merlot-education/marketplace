@@ -228,7 +228,7 @@
   </c-modal-footer>
 </c-modal>
 
-<c-modal #modalEditServiceOffering id="modalEditServiceOffering" size="xl" alignment="center">
+<c-modal #modalEditServiceOffering id="modalEditServiceOffering" size="xl" alignment="center" (visibleChange)="handleEventEditModal($event)">
   <c-modal-header>
     <h5 cModalTitle>Service Angebot "{{ selectedOfferingDetails.name }}" bearbeiten</h5>
   </c-modal-header>

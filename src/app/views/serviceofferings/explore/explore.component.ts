@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {IOfferings, IOfferingsDetailed} from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
@@ -7,6 +7,7 @@ import { ShaclFile } from '@models/shacl-file';
 import { FormfieldControlService } from '@services/form-field.service';
 import { Shape } from '@models/shape';
 import { serviceFileNameDict } from '../serviceofferings-data';
+import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
 
 
 @Component({
@@ -14,6 +15,8 @@ import { serviceFileNameDict } from '../serviceofferings-data';
   styleUrls: ['./explore.component.scss']
 })
 export class ExploreComponent implements OnInit {
+
+  @ViewChild(DynamicFormComponent, {static: false}) childRef: DynamicFormComponent;
 
   objectKeys = Object.keys;
 
@@ -62,6 +65,15 @@ export class ExploreComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.activeOrganizationRole.subscribe(value => this.refreshOfferings());
+  }
+
+  protected handleEventEditModal(modalVisible) {
+    console.log("handle event", modalVisible);
+    if (!modalVisible) {
+      this.selectedOfferingDetails = this.emptyOfferingDetails;
+      this.childRef.ngOnDestroy();
+      this.refreshOfferings();
+    }
   }
 
   private refreshOfferings() {

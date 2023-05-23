@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, OnDestroy} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, HostListener} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FormField} from '@models/form-field.model';
 import {FormfieldControlService} from '@services/form-field.service';
@@ -341,8 +341,13 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    console.log("Destroying dynamic form component"); 
     if (this.createDateTimer)
       clearInterval(this.createDateTimer);
+    
+    this.showSuccessMessage = false;
+    this.showErrorMessage = false;
+    this.submitButtonsDisabled = false;
   }
 
 
