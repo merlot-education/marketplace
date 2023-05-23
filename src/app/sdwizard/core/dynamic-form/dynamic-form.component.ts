@@ -88,9 +88,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     let prefilledFields = this.prefillShapeFields(this.shape?.fields, this.prefillData);
     if (this.shape !== undefined && prefilledFields !== undefined && prefilledFields.length > 0) {
       this.shape.fields = prefilledFields;
-      console.log("after prefill", this.shape.fields);
     }
-    console.log(this.shape?.fields);
     this.reorderShapeFields();
     this.formFields = this.shape?.fields;
     this.form = this.formfieldService.toFormGroup(this.formFields);
@@ -135,9 +133,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     if (shapeFields === undefined || prefillData === undefined) {
       return;
     }
-    
-    console.log("shapeFields", shapeFields);
-    console.log("prefilling with ", prefillData);
 
     if ("offeredBy" in prefillData)
       prefillData["providedBy"] = prefillData["offeredBy"];  // since we store the same in both fields, only one is returned by the backend
@@ -190,8 +185,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   groupFormFields(): void {
     this.groupedFormFields = Utils.groupBy(this.formFields, (formField) => formField.group);
-    if (this.prefillData === undefined)
-      this.patchRequiredFields(this.groupedFormFields);
+    this.patchRequiredFields(this.groupedFormFields);
     this.groupsNumber = this.groupedFormFields.length;
   }
 
@@ -203,21 +197,28 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     // Automatically fill fields depending on selected Organization and time, also set required fields of gax-trust-framework that are hidden
     for (let group of groupedFormFields) {
       for (let field of group) {
-        if (field.key === "offeredBy" || field.key === "providedBy" ) {
+        if ((field.key === "offeredBy" || field.key === "providedBy")) {
           let formField = this.form.get(field.id);
           // TODO create subscription for each of the two fields
-          this.orgaSubscription = this.authService.activeOrganizationRole.subscribe((value) => {
-            formField.patchValue(this.organizationsApiService.getOrgaById(value.orgaId).organizationLegalName);
-          });
-          
+          if (this.prefillData === undefined) {
+            this.orgaSubscription = this.authService.activeOrganizationRole.subscribe((value) => {
+              formField.patchValue(this.organizationsApiService.getOrgaById(value.orgaId).organizationLegalName);
+            });
+          } else {
+            let orgaId = this.prefillData.offeredBy.split(":").slice(1).join();
+            formField.patchValue(this.organizationsApiService.getOrgaById(orgaId).organizationLegalName);
+          }
+            
           formField.disable();
         } else if (field.key === "creationDate") {
           let formField = this.form.get(field.id);
-          if (this.createDateTimer !== undefined) {
-            clearInterval(this.createDateTimer);
+          if (this.prefillData === undefined) {
+            if (this.createDateTimer !== undefined) {
+              clearInterval(this.createDateTimer);
+            }
+            this.updateDateField(formField as FormControl); // initial update
+            this.createDateTimer = setInterval(() => this.updateDateField(formField as FormControl), 1000); // set timer to refresh date field
           }
-          this.updateDateField(formField as FormControl); // initial update
-          this.createDateTimer = setInterval(() => this.updateDateField(formField as FormControl), 1000); // set timer to refresh date field
 
           formField.disable();
         }
@@ -240,7 +241,12 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     
     // set did to a dummy value that gets replaced by the orchestrator
     let didField = this.form.get("user_prefix");
-    didField.patchValue("ServiceOffering:TBR");
+    if (this.prefillData === undefined) {
+      didField.patchValue("ServiceOffering:TBR");
+    } else {
+      didField.patchValue(this.prefillData.id);
+    }
+    
     didField.disable();
   }
 
@@ -293,12 +299,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     this.createdServiceOfferingId = "";
 
     this.patchFieldsForSubmit(this.groupedFormFields);
-    console.log("its here"+this.form.get('user_prefix').value)
-    if(typeof (this.form.get('user_prefix').value) == undefined || this.form.get('user_prefix').value == null || this.form.get('user_prefix').value == ""){
-      this.shape.userPrefix ="did:web:registry.gaia-x.eu:"+this.shape.name+":"+this.makeId(36);
-    }else{
-      this.shape.userPrefix = this.form.get('user_prefix').value;
-    }
+
     this.shape.downloadFormat = this.form.get('download_format').value;
     console.log("shape fields pre update/empty", this.shape.fields);
     this.shape.fields = this.updateFormFieldsValues(this.formFields, this.form);
@@ -312,6 +313,11 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       } else {
         this.showSuccessMessage = true;
         this.createdServiceOfferingId = result["id"];
+        let didField = this.form.get("user_prefix");
+        didField.patchValue(result["id"]);
+
+        // TODO reenable one or both buttons if successfull to allow further edits
+
         if (publishAfterSave) {
           this.serviceofferingApiService.releaseServiceOffering(result["id"]);
         }
