@@ -256,7 +256,10 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       for (let field of group) {
         if (field.key === "offeredBy" || field.key === "providedBy" ) {
           let formField = this.form.get(field.id);
-          formField.patchValue("Participant:" + this.authService.activeOrganizationRole.value.orgaId);
+          if (this.prefillData === undefined)
+            formField.patchValue("Participant:" + this.authService.activeOrganizationRole.value.orgaId);
+          else
+            formField.patchValue(this.prefillData.offeredBy);
         }
       }
     }
@@ -297,6 +300,8 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     this.showSuccessMessage = false;
     this.showErrorMessage = false;
     this.createdServiceOfferingId = "";
+
+    this.shape.userPrefix = this.form.get('user_prefix').value;
 
     this.patchFieldsForSubmit(this.groupedFormFields);
 
