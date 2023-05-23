@@ -28,10 +28,15 @@ export class DynamicFormArrayComponent implements OnInit {
     this.inputs = this.form.get(this.input.id) as FormArray;
     this.validator = this.validationService.getValidatorFn(this.input);
     // In the for loop we specify the limit (this.input.minCount-1) because the FormArray comes with a FormControl added by the service
+    console.log("input", this.input);
     for (let i = 0; i < this.input.minCount - 1; i++) {
       // The form array has only a single FormControl
       this.inputs.push(new FormControl(this.input.value || null, this.validator));
     }
+    for (let value of this.input.values) {
+      this.inputs.push(new FormControl(value || null, this.validator));
+    }
+
     this.displayAddButton = this.input.maxCount === undefined || this.input.maxCount > this.input.minCount;
   }
 

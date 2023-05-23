@@ -85,7 +85,12 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   getFormFields(): void {
     this.shape = this.file?.shapes.find(shape => shape.selected);
-    this.prefillShapeFields();
+    let prefilledFields = this.prefillShapeFields(this.shape?.fields, this.prefillData);
+    if (this.shape !== undefined && prefilledFields !== undefined && prefilledFields.length > 0) {
+      this.shape.fields = prefilledFields;
+      console.log("after prefill", this.shape.fields);
+    }
+    console.log(this.shape?.fields);
     this.reorderShapeFields();
     this.formFields = this.shape?.fields;
     this.form = this.formfieldService.toFormGroup(this.formFields);
@@ -126,33 +131,61 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     this.shape.fields = beforeFields.concat(shapeFieldCopy.concat(afterFields));
   }
 
-  prefillShapeFields(): void {
-    if (this.shape?.fields === undefined || this.prefillData === undefined) {
+  prefillShapeFields(shapeFields: FormField[], prefillData: IOfferingsDetailed): FormField[] {
+    if (shapeFields === undefined || prefillData === undefined) {
       return;
     }
     
-    console.log("prefilling with ", this.prefillData);
+    console.log("shapeFields", shapeFields);
+    console.log("prefilling with ", prefillData);
 
-    let shapeFieldCopy = this.shape?.fields;
+    if ("offeredBy" in prefillData)
+      prefillData["providedBy"] = prefillData["offeredBy"];  // since we store the same in both fields, only one is returned by the backend
 
-    /*for (let i = 0; i < shapeFieldCopy.length;) {
-      let f = shapeFieldCopy[i];
-    }*/
-    let fieldCount = shapeFieldCopy.length;
+    let additionalFields = [];
 
-    for (let i = 0; i < fieldCount; i++) {
-      let field = shapeFieldCopy[i];
-      if (field.key === "userCountOption") {
+
+    for (let field of shapeFields) {
+      if (field.key in prefillData) {
+        if (prefillData[field.key] instanceof Array) {
+          console.log(field.key, "is Array");
+          if (field.componentType === "dynamicFormArray") {  // array of primitives
+            field.values = prefillData[field.key];
+          } else {
+            for (let i = 0; i < prefillData[field.key].length; i++) {
+              if (i === 0) {
+                field.id = field.id + "_" + i.toString();
+                field.childrenFields = this.prefillShapeFields(field.childrenFields, prefillData[field.key][i])
+              } else {
+                let fieldcopy = structuredClone(field);
+                fieldcopy.id = fieldcopy.id + "_" + i.toString();
+                fieldcopy.childrenFields = this.prefillShapeFields(fieldcopy.childrenFields, prefillData[field.key][i])
+                additionalFields.push(fieldcopy);
+              }
+            }
+          }
+          
+        } else if (prefillData[field.key] instanceof Object) {
+          console.log(field.key, "is Object");
+          field.childrenFields = this.prefillShapeFields(field.childrenFields, prefillData[field.key])
+        } else {
+          console.log(field.key, "is primitive");
+          field.value = prefillData[field.key];
+        }
+      } else {
+        console.log(field.key, " not found");
+      }
+      /*if (field.key === "userCountOption") {
         for (let j = 0; j < 3; j++) {
           let fieldcopy = structuredClone(field);
           fieldcopy.id = fieldcopy.id + "_" + j.toString();
           shapeFieldCopy.push(fieldcopy);
         }
-      }
+      }*/
     }
 
-    this.shape.fields = shapeFieldCopy;
-
+    shapeFields = shapeFields.concat(additionalFields);
+    return shapeFields;
   }
 
   groupFormFields(): void {
