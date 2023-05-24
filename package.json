@@ -46,7 +46,7 @@
     "ngx-rerender": "^1.2.0",
     "rxjs": "~7.8.0",
     "stream": "^0.0.2",
-    "sweetalert2": "^11.7.5",
+    "sweetalert2": "^11.4.8",
     "tslib": "^2.5.2",
     "url": "^0.11.0",
     "zone.js": "^0.12.0"

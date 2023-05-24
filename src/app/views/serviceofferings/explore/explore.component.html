@@ -149,7 +149,7 @@
         <strong>Allgemeine Geschäftsbedingungen:</strong><br />
         <ul *ngFor="let tnc of selectedOfferingDetails.termsAndConditions">
           <li>
-            <a [href]="tnc.url">{{ tnc.url }}</a> (Hash: {{ tnc.hash }})
+            <a [href]="tnc.content">{{ tnc.content }}</a> (Hash: {{ tnc.hash }})
           </li>
         </ul>
         
