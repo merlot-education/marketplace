@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {IOfferings, IOfferingsDetailed} from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ShaclFile } from '@models/shacl-file';
-import { ApiService } from '@services/api.service';
 import { FormfieldControlService } from '@services/form-field.service';
 import { Shape } from '@models/shape';
 import { serviceFileNameDict } from '../serviceofferings-data';
+import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
 
 
 @Component({
@@ -16,12 +16,14 @@ import { serviceFileNameDict } from '../serviceofferings-data';
 })
 export class ExploreComponent implements OnInit {
 
+  @ViewChild(DynamicFormComponent, {static: false}) childRef: DynamicFormComponent;
+
   objectKeys = Object.keys;
 
   offerings: IOfferings[] = [];
   orgaOfferings: IOfferings[] = [];
   filteredOrgaOfferings: IOfferings[] = []
-  shaclFile: ShaclFile;
+  shaclFile: ShaclFile = undefined;
   filteredShapes: Shape[];
 
   protected friendlyStatusNames = {
@@ -58,12 +60,25 @@ export class ExploreComponent implements OnInit {
     protected serviceOfferingApiService : ServiceofferingApiService,
     private organizationsApiService: OrganizationsApiService,
     protected authService: AuthService,
-    private apiService: ApiService, 
     private formFieldService: FormfieldControlService) {
   }
 
   ngOnInit(): void {
     this.authService.activeOrganizationRole.subscribe(value => this.refreshOfferings());
+  }
+
+  protected handleEventEditModal(modalVisible: boolean) {
+    if (!modalVisible) {
+      this.selectedOfferingDetails = this.emptyOfferingDetails;
+      this.childRef.ngOnDestroy();
+      this.refreshOfferings();
+    }
+  }
+
+  protected handleEventDetailsModal(modalVisible: boolean) {
+    if (!modalVisible) {
+      this.selectedOfferingDetails = this.emptyOfferingDetails;
+    }
   }
 
   private refreshOfferings() {
@@ -83,7 +98,6 @@ export class ExploreComponent implements OnInit {
 
   protected filterByStatus(applyFilter: boolean, status: string) {
     if (applyFilter) {
-      console.log("filter by ", status);
       this.filteredOrgaOfferings = [];
       for (let offering of this.orgaOfferings) {
         if (offering.merlotState === status) {
@@ -163,7 +177,7 @@ export class ExploreComponent implements OnInit {
   }
 
   select(name: string): void {
-    this.apiService.getJSON(name).subscribe(
+    this.serviceOfferingApiService.fetchShape(name).subscribe(
       res => {
         this.shaclFile = this.formFieldService.readShaclFile(res);
         this.filteredShapes = this.formFieldService.updateFilteredShapes(this.shaclFile);

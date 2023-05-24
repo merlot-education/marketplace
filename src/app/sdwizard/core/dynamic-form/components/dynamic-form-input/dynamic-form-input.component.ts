@@ -29,7 +29,7 @@ export class DynamicFormInputComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.input.datatype !== undefined && this.input.datatype.value === 'boolean') {
-      this.form.get(this.input.id).setValue(false);
+      this.form.get(this.input.id).setValue(this.input.value ? this.input.value : false);
     }
   }
 

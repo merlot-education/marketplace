@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, OnDestroy} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, HostListener} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FormField} from '@models/form-field.model';
 import {FormfieldControlService} from '@services/form-field.service';
@@ -19,6 +19,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import {timer} from 'rxjs';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
+import { IOfferingsDetailed } from 'src/app/views/serviceofferings/serviceofferings-data';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -40,12 +41,14 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   DownloadFormat = DownloadFormat;
   downloadFormatKeys = Object.keys(DownloadFormat).filter(e => typeof (e) === 'string');
 
+  @Input() prefillData: IOfferingsDetailed = undefined;
+
   showSuccessMessage: boolean = false;
   showErrorMessage: boolean = false;
   createdServiceOfferingId: string = "";
 
   createDateTimer: NodeJS.Timer = undefined;
-  orgaSubscription: Subscription = undefined;
+  orgaSubscriptions: Subscription[] = [];
   submitButtonsDisabled = false;
 
 
@@ -82,7 +85,11 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   getFormFields(): void {
     this.shape = this.file?.shapes.find(shape => shape.selected);
-    this.reorderFormFields();
+    let prefilledFields = this.prefillShapeFields(this.shape?.fields, this.prefillData);
+    if (this.shape !== undefined && prefilledFields !== undefined && prefilledFields.length > 0) {
+      this.shape.fields = prefilledFields;
+    }
+    this.reorderShapeFields();
     this.formFields = this.shape?.fields;
     this.form = this.formfieldService.toFormGroup(this.formFields);
     this.form.addControl('user_prefix', new FormControl());
@@ -91,37 +98,85 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     this.groupFormFields();
   }
 
-  reorderFormFields(): void {
+  reorderShapeFields(): void {
     if (this.shape?.fields === undefined) {
       return;
     }
+    console.log("shape fields", this.shape?.fields);
 
     let beforeFieldsNames = ["name", "offeredBy", "providedBy", "creationDate"];
     let afterFieldsNames = ["merlotTermsAndConditionsAccepted"];
 
-    let formFieldCopy = this.shape?.fields;
-    formFieldCopy.sort((a, b) => (a.key < b.key ? -1 : 1));
+    let shapeFieldCopy = this.shape?.fields;
+    shapeFieldCopy.sort((a, b) => (a.key < b.key ? -1 : 1));
 
     let beforeFields = [];
     let afterFields = [];
 
-    for (let i = 0; i < formFieldCopy.length;) {
-      let f = formFieldCopy[i];
+    for (let i = 0; i < shapeFieldCopy.length;) {
+      let f = shapeFieldCopy[i];
       if (beforeFieldsNames.includes(f.key)) {
         beforeFields.splice(beforeFields.indexOf(f.key), 0, f);
-        formFieldCopy.splice(i, 1);
+        shapeFieldCopy.splice(i, 1);
       } else if (afterFieldsNames.includes(f.key)) {
         afterFields.splice(afterFields.indexOf(f.key), 0, f);
-        formFieldCopy.splice(i, 1);
+        shapeFieldCopy.splice(i, 1);
       } else {
         i++;
       }
     }
 
-    this.shape.fields = beforeFields.concat(formFieldCopy.concat(afterFields));
+    this.shape.fields = beforeFields.concat(shapeFieldCopy.concat(afterFields));
+  }
 
-    console.log(this.formFields);
+  prefillShapeFields(shapeFields: FormField[], prefillData: IOfferingsDetailed): FormField[] {
+    if (shapeFields === undefined || prefillData === undefined) {
+      return;
+    }
 
+    if ("offeredBy" in prefillData)
+      prefillData["providedBy"] = prefillData["offeredBy"];  // since we store the same in both fields, only one is returned by the backend
+
+    let additionalFields = [];
+
+
+    for (let field of shapeFields) {
+      if (field.key in prefillData) {
+        if (prefillData[field.key] instanceof Array) {
+          if (field.componentType === "dynamicFormArray") {  // array of primitives
+            field.values = prefillData[field.key];
+          } else {
+            for (let i = 0; i < prefillData[field.key].length; i++) {
+              if (i === 0) {
+                field.id = field.id + "_" + i.toString();
+                field.childrenFields = this.prefillShapeFields(field.childrenFields, prefillData[field.key][i])
+              } else {
+                let fieldcopy = structuredClone(field);
+                fieldcopy.id = fieldcopy.id + "_" + i.toString();
+                fieldcopy.childrenFields = this.prefillShapeFields(fieldcopy.childrenFields, prefillData[field.key][i])
+                additionalFields.push(fieldcopy);
+              }
+            }
+          }
+          
+        } else if (prefillData[field.key] instanceof Object) {
+          field.childrenFields = this.prefillShapeFields(field.childrenFields, prefillData[field.key])
+        } else {
+          field.value = prefillData[field.key];
+        }
+      } else {
+      }
+      /*if (field.key === "userCountOption") {
+        for (let j = 0; j < 3; j++) {
+          let fieldcopy = structuredClone(field);
+          fieldcopy.id = fieldcopy.id + "_" + j.toString();
+          shapeFieldCopy.push(fieldcopy);
+        }
+      }*/
+    }
+
+    shapeFields = shapeFields.concat(additionalFields);
+    return shapeFields;
   }
 
   groupFormFields(): void {
@@ -138,21 +193,28 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     // Automatically fill fields depending on selected Organization and time, also set required fields of gax-trust-framework that are hidden
     for (let group of groupedFormFields) {
       for (let field of group) {
-        if (field.key === "offeredBy" || field.key === "providedBy" ) {
+        if ((field.key === "offeredBy" || field.key === "providedBy")) {
           let formField = this.form.get(field.id);
-          // TODO create subscription for each of the two fields
-          this.orgaSubscription = this.authService.activeOrganizationRole.subscribe((value) => {
-            formField.patchValue(this.organizationsApiService.getOrgaById(value.orgaId).organizationLegalName);
-          });
-          
+          if (this.prefillData === undefined) {
+            this.orgaSubscriptions.push(this.authService.activeOrganizationRole.subscribe((value) => {
+              formField.patchValue(this.organizationsApiService.getOrgaById(value.orgaId).organizationLegalName);
+            }));
+          } else {
+            let orgaId = this.prefillData.offeredBy.split(":").slice(1).join();
+            if (orgaId !== "")
+              formField.patchValue(this.organizationsApiService.getOrgaById(orgaId).organizationLegalName);
+          }
+            
           formField.disable();
         } else if (field.key === "creationDate") {
           let formField = this.form.get(field.id);
-          if (this.createDateTimer !== undefined) {
-            clearInterval(this.createDateTimer);
+          if (this.prefillData === undefined) {
+            if (this.createDateTimer !== undefined) {
+              clearInterval(this.createDateTimer);
+            }
+            this.updateDateField(formField as FormControl); // initial update
+            this.createDateTimer = setInterval(() => this.updateDateField(formField as FormControl), 1000); // set timer to refresh date field
           }
-          this.updateDateField(formField as FormControl); // initial update
-          this.createDateTimer = setInterval(() => this.updateDateField(formField as FormControl), 1000); // set timer to refresh date field
 
           formField.disable();
         }
@@ -163,7 +225,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
         }
         else if (field.key === "dataAccountExport") {
           let formField = this.form.get(field.id) as FormGroup;
-          console.log(formField);
           for (let childKey in formField.controls) {
             let child = formField.controls[childKey];
             child.patchValue("dummyValue");
@@ -175,7 +236,12 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     
     // set did to a dummy value that gets replaced by the orchestrator
     let didField = this.form.get("user_prefix");
-    didField.patchValue("ServiceOffering:TBR");
+    if (this.prefillData === undefined) {
+      didField.patchValue("ServiceOffering:TBR");
+    } else {
+      didField.patchValue(this.prefillData.id);
+    }
+    
     didField.disable();
   }
 
@@ -185,7 +251,10 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       for (let field of group) {
         if (field.key === "offeredBy" || field.key === "providedBy" ) {
           let formField = this.form.get(field.id);
-          formField.patchValue("Participant:" + this.authService.activeOrganizationRole.value.orgaId);
+          if (this.prefillData === undefined)
+            formField.patchValue("Participant:" + this.authService.activeOrganizationRole.value.orgaId);
+          else
+            formField.patchValue(this.prefillData.offeredBy);
         }
       }
     }
@@ -227,16 +296,15 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     this.showErrorMessage = false;
     this.createdServiceOfferingId = "";
 
+    this.shape.userPrefix = this.form.get('user_prefix').value;
+
     this.patchFieldsForSubmit(this.groupedFormFields);
-    console.log("its here"+this.form.get('user_prefix').value)
-    if(typeof (this.form.get('user_prefix').value) == undefined || this.form.get('user_prefix').value == null || this.form.get('user_prefix').value == ""){
-      this.shape.userPrefix ="did:web:registry.gaia-x.eu:"+this.shape.name+":"+this.makeId(36);
-    }else{
-      this.shape.userPrefix = this.form.get('user_prefix').value;
-    }
+
     this.shape.downloadFormat = this.form.get('download_format').value;
+    console.log("shape fields pre update/empty", this.shape.fields);  
     this.shape.fields = this.updateFormFieldsValues(this.formFields, this.form);
     this.shape.fields = this.emptyChildrenFields(this.shape.fields);
+    console.log("shape fields pre save", this.shape.fields);
     this.exportService.saveFile(this.file).then(result => {
       console.log(result);
       if (result === undefined) {
@@ -245,8 +313,14 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       } else {
         this.showSuccessMessage = true;
         this.createdServiceOfferingId = result["id"];
+        let didField = this.form.get("user_prefix");
+        didField.patchValue(result["id"]);
+
         if (publishAfterSave) {
           this.serviceofferingApiService.releaseServiceOffering(result["id"]);
+        } else {
+          // if we did not publish, we can further edit the same offering
+          this.submitButtonsDisabled = false;
         }
         //this.navigateToOverview();
         /*timer(1500)
@@ -263,8 +337,18 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    console.log("Destroying dynamic form component"); 
     if (this.createDateTimer)
       clearInterval(this.createDateTimer);
+    
+    for (let orgaSub of this.orgaSubscriptions) {
+      orgaSub.unsubscribe();
+    }
+    this.orgaSubscriptions = [];
+
+    this.showSuccessMessage = false;
+    this.showErrorMessage = false;
+    this.submitButtonsDisabled = false;
   }
 
 

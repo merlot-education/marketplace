@@ -15,7 +15,7 @@ export interface IOfferingsDetailed extends IOfferings {
   exampleCosts: string;
   attachments: string[];
   termsAndConditions: {
-    url: string;
+    content: string;
     hash: string;
   }[];
   runtimeOption: {

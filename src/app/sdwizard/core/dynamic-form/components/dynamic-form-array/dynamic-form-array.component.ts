@@ -32,6 +32,16 @@ export class DynamicFormArrayComponent implements OnInit {
       // The form array has only a single FormControl
       this.inputs.push(new FormControl(this.input.value || null, this.validator));
     }
+
+    // if we have pre-existing values, patch them into the fields
+    for (let i = 0; i < this.input.values.length; i++) {
+      if (i < this.inputs.controls.length) {
+        this.inputs.controls[i].patchValue(this.input.values[i]);
+      } else {
+        this.inputs.push(new FormControl(this.input.values[i] || null, this.validator));
+      }
+    }
+
     this.displayAddButton = this.input.maxCount === undefined || this.input.maxCount > this.input.minCount;
   }
 
