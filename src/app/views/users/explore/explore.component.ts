@@ -1,17 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import { IUserAuth, IUserData, users } from '../user-data';
+import { IUserData } from '../user-data';
+import { AaamApiService } from 'src/app/services/aaam-api.service';
+import { AuthService, OrganizationRole } from 'src/app/services/auth.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   templateUrl: './explore.component.html',
-  styleUrls: ['./explore.component.scss']
+  styleUrls: ['./explore.component.scss'],
 })
 export class ExploreComponent implements OnInit {
+  users: IUserData[] = [];
 
-  users: (IUserAuth & IUserData)[] = users;
-
-  constructor() {
-  }
+  constructor(
+    protected authService: AuthService,
+    private aaamApiService: AaamApiService
+  ) {}
 
   ngOnInit(): void {
+    this.authService.activeOrganizationRole.subscribe((value) =>
+      this.updateUserList(value)
+    );
+  }
+
+  private updateUserList(activeOrganizationRole: OrganizationRole) {
+    this.users = [];
+    this.aaamApiService
+      .getUsersFromOrganization(
+        activeOrganizationRole.orgaId
+      )
+      .then((result) => {
+        this.users = result;
+      });
   }
 }

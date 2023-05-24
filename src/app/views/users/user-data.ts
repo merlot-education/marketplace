@@ -1,18 +1,13 @@
-export interface IUserAuth {
-    username: string,
-    userFirstName?: string,
-    userLastName?: string,
-    companyRoles: ICompanyRole[] 
-    loggedIn: boolean
-}
-  
 export interface IUserData {
+    id: string;
     username: string;
-    registered: string;
-    country: string;
-    activity: string;
-    avatar: string;
-    status: string;
+    firstName: string;
+    lastName: string;
+    orgaRole: string;
+    email: string;
+    attributes?: {[key: string]: string[]};
+    createdTimestamp: number;
+    enabled: boolean;
 }
   
 export interface IRole {
@@ -74,48 +69,3 @@ export let chempointComp: ICompany = {
     companyName: "ChemPoint",
     companyLongName: "ChemPoint"
 }
-
-
-export let visitorUser: IUserAuth = {
-    username: "Besucher",
-    companyRoles: [
-        {role: visitorRole}
-    ],
-    loggedIn: false
-}
-
-export let dDueseUser: (IUserAuth & IUserData) = {
-    username: "DDüse",
-    userFirstName: "Daniel",
-    userLastName: "Düsentrieb",
-    companyRoles: [
-        {company: dataportComp, role: orgLegRepRole},
-        {company: nachhilfeclubComp, role: orgLegRepRole}
-    ],
-    loggedIn: true,
-    registered: "01.02.2023",
-    country: "De",
-    activity: "Vor 10 Sekunden",
-    avatar: "./assets/img/avatars/default-user.png",
-    status: "success",
-}
-
-export let jHageUser: (IUserAuth & IUserData) = {
-    username: "JHage",
-    userFirstName: "Jennifer",
-    userLastName: "Hage",
-    companyRoles: [
-        {company: chempointComp, role: orgLegRepRole}
-    ],
-    loggedIn: true,
-    registered: "01.01.2023",
-    country: "De",
-    activity: "Vor 5 Minuten",
-    avatar: "./assets/img/avatars/default-user.png",
-    status: "warning",
-}
-
-export let users: (IUserAuth & IUserData)[] = [
-    dDueseUser,
-    jHageUser
-]

@@ -1,0 +1,116 @@
+<form [formGroup]="form">
+  <div [ngSwitch]="input.controlTypes[0]">
+    <div *ngSwitchCase="'textbox'">
+
+      <div class="mb-3">
+        <label class="form-label">{{input.name}}<span *ngIf="input.required" aria-required="true" class="required">*</span>
+        </label>
+        <input [type]="input.datatype" class="form-control" [formControlName]="input.id" placeholder="{{input.example}}">
+        <div cFormText>
+          {{input.description[this.translate.currentLang]}}
+        </div>
+      </div>
+
+      <mat-error>
+        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+      </mat-error>
+    </div>
+
+    <div *ngSwitchCase="'textbox_integer'">
+
+      <div class="mb-3">
+        <label class="form-label">{{input.name}}<span *ngIf="input.required" aria-required="true" class="required">*</span>
+        </label>
+        <input type="number" class="form-control" [formControlName]="input.id" placeholder="{{input.example}}">
+        <div cFormText>
+          {{input.description[this.translate.currentLang]}}
+        </div>
+      </div>
+
+      <mat-error>
+        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+      </mat-error>
+    </div>
+    <div *ngSwitchCase="'textbox_decimal'">
+
+      <div class="mb-3">
+        <label class="form-label">{{input.name}}<span *ngIf="input.required" aria-required="true" class="required">*</span>
+        </label>
+        <input type="number" class="form-control" [formControlName]="input.id" placeholder="{{input.example}}">
+        <div cFormText>
+          {{input.description[this.translate.currentLang]}}
+        </div>
+      </div>
+
+      <mat-error>
+        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+      </mat-error>
+    </div>
+    <div *ngSwitchCase="'textbox_uri'">
+
+      <div class="mb-3">
+        <label class="form-label">{{input.name}}<span *ngIf="input.required" aria-required="true" class="required">*</span>
+        </label>
+        <input class="form-control" [formControlName]="input.id" placeholder="{{input.example}}">
+        <div cFormText>
+          {{input.description[this.translate.currentLang]}}
+        </div>
+      </div>
+
+      <mat-error>
+        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+      </mat-error>
+    </div>
+    <div *ngSwitchCase="'dropdown'">
+      <div class="mb-3">
+
+        <label class="form-label">{{input.name}}<span *ngIf="input.required" aria-required="true" class="required">*</span></label>
+        <select class="form-select" [formControlName]="input.id">
+          <option *ngFor="let option of input.in" [value]="option.value">{{option.value}}</option>
+        </select>
+        
+      </div>
+      <mat-error>
+        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+      </mat-error>
+    </div>
+
+    <div *ngSwitchCase="'dropdown_object'">
+      <app-dynamic-form-in [form]="form" [input]="input" [shapes]="shapes"></app-dynamic-form-in>
+    </div>
+
+    <div *ngSwitchCase="'datepicker'">
+      <mat-form-field class="full-width-input">
+        <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span>
+        </mat-label>
+        <input [formControlName]="input.id" [matDatepicker]="picker" matInput>
+        <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-error>
+        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+      </mat-error>
+    </div>
+
+    <div *ngSwitchCase="'datetimepicker'">
+      <mat-form-field class="full-width-input">
+        <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span>
+        </mat-label>
+        <input [formControlName]="input.id" [ngxMatDatetimePicker]="picker" matInput>
+        <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
+      </mat-form-field>
+      <mat-error>
+        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+      </mat-error>
+    </div>
+
+    <div *ngSwitchCase="'checkbox'">
+      <mat-checkbox [formControlName]="input.id" class="checkbox-style">{{input.name}}
+      </mat-checkbox>
+      <mat-error>
+        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+      </mat-error>
+    </div>
+  </div>
+</form>

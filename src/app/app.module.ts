@@ -1,8 +1,17 @@
-import { NgModule } from '@angular/core';
-import { HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
+import {
+  HashLocationStrategy,
+  LocationStrategy,
+  PathLocationStrategy,
+} from '@angular/common';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+
+import { WizardAppModule } from './sdwizard/app.module';
 
 import {
   PERFECT_SCROLLBAR_CONFIG,
@@ -45,6 +54,7 @@ import {
 } from '@coreui/angular';
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
+import { environment } from 'src/environments/environment';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -55,6 +65,27 @@ const APP_CONTAINERS = [
   DefaultHeaderComponent,
   DefaultLayoutComponent,
 ];
+
+function initializeKeycloak(keycloak: KeycloakService) {
+  return async () => {
+    try {
+      await keycloak.init({
+        config: {
+          url: environment.sso_url,
+          realm: 'POC1',
+          clientId: 'MARKETPLACE',
+        },
+        initOptions: {
+          onLoad: 'check-sso',
+          silentCheckSsoRedirectUri:
+            window.location.origin + '/assets/silent-check-sso.html',
+        },
+      });
+    } catch (error) {
+      console.log("failed to reach SSO server");
+    }
+  };
+}
 
 @NgModule({
   declarations: [AppComponent, ...APP_CONTAINERS],
@@ -85,6 +116,11 @@ const APP_CONTAINERS = [
     BadgeModule,
     ListGroupModule,
     CardModule,
+    KeycloakAngularModule,
+    HttpClientModule,
+    FormsModule,
+    WizardAppModule,
+    
   ],
   providers: [
     {
@@ -95,10 +131,15 @@ const APP_CONTAINERS = [
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
     },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeKeycloak,
+      multi: true,
+      deps: [KeycloakService],
+    },
     IconSetService,
-    Title
+    Title,
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}

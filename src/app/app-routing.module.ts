@@ -6,6 +6,8 @@ import { Page404Component } from './views/pages/page404/page404.component';
 import { Page500Component } from './views/pages/page500/page500.component';
 import { LoginComponent } from './views/pages/login/login.component';
 import { RegisterComponent } from './views/pages/register/register.component';
+import { KeycloakGuard } from './keycloak.guard'
+import { KeycloakAuthGuard } from 'keycloak-angular';
 
 const routes: Routes = [
   {
@@ -28,7 +30,7 @@ const routes: Routes = [
       {
         path: 'organization',
         loadChildren: () =>
-          import('./views/organization/organization.module').then((m) => m.OrganizationModule)
+          import('./views/organization/organization.module').then((m) => m.OrganizationModule),
       },
       {
         path: 'about',
@@ -38,7 +40,8 @@ const routes: Routes = [
       {
         path: 'users',
         loadChildren: () =>
-          import('./views/users/users.module').then((m) => m.UsersModule)
+          import('./views/users/users.module').then((m) => m.UsersModule),
+          canActivate: [KeycloakGuard]
       },
       {
         path: 'service-offerings',
@@ -50,7 +53,7 @@ const routes: Routes = [
         loadChildren: () =>
           import('./views/pages/pages.module').then((m) => m.PagesModule)
       },
-    ]
+    ],
   },
   {
     path: '404',
@@ -80,7 +83,7 @@ const routes: Routes = [
       title: 'Register Page'
     }
   },
-  {path: '**', redirectTo: 'dashboard'}
+  {path: '**', redirectTo: 'start'}
 ];
 
 @NgModule({

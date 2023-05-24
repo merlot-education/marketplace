@@ -1,0 +1,406 @@
+<form [formGroup]="form">
+  <div *ngFor="let control of inputs?.controls; index as i">
+    <div [ngSwitch]="input.controlTypes[0]">
+      <span class="addDelete">
+        <div *ngSwitchCase="'textbox'">
+          <div class="full-width-input">
+            <label class="form-label" *ngIf="i == 0"
+              >{{ input.name }}
+              <span
+                *ngIf="hasRequiredValidator(control)"
+                aria-required="true"
+                class="required"
+              >
+                *
+              </span>
+            </label>
+
+            <div class="flex-container">
+              <input
+                class="form-control"
+                [formControl]="inputs.controls[i]"
+                placeholder="{{ input.example }}"
+              />
+
+              <button
+                cButton
+                variant="ghost"
+                color="primary"
+                (click)="addInput()"
+                *ngIf="i == 0 && displayAddButton"
+                [disabled]="!enableButton"
+                size="sm"
+              >
+                <svg class="" cIcon name="cib-addthis" size="xl"></svg>
+              </button>
+
+              <button
+                cButton
+                variant="ghost"
+                (click)="deleteInput(i)"
+                *ngIf="i != 0 && i >= input.minCount"
+                color="primary"
+                size="sm"
+              >
+                <svg class="" cIcon name="cil-trash" size="xl"></svg>
+              </button>
+            </div>
+            <div cFormText *ngIf="i == inputs.controls.length - 1">
+              {{ input.description[this.translate.currentLang] }}
+            </div>
+          </div>
+
+          <mat-error>
+            <app-show-errors
+              [ctrl]="inputs.controls[i]"
+              [label]="input.name"
+            ></app-show-errors>
+          </mat-error>
+        </div>
+      </span>
+      <div *ngSwitchCase="'textbox_integer'">
+        <div class="full-width-input">
+          <label class="form-label" *ngIf="i == 0"
+            >{{ input.name }}
+            <span
+              *ngIf="hasRequiredValidator(control)"
+              aria-required="true"
+              class="required"
+            >
+              *
+            </span>
+          </label>
+
+          <div class="flex-container">
+            <input
+              class="form-control"
+              [formControl]="inputs.controls[i]"
+              placeholder="{{ input.example }}"
+              type="number"
+            />
+
+            <button
+              cButton
+              variant="ghost"
+              color="primary"
+              (click)="addInput()"
+              *ngIf="i == 0 && displayAddButton"
+              [disabled]="!enableButton"
+              size="sm"
+            >
+              <svg class="" cIcon name="cib-addthis" size="xl"></svg>
+            </button>
+
+            <button
+              cButton
+              variant="ghost"
+              (click)="deleteInput(i)"
+              *ngIf="i != 0 && i >= input.minCount"
+              color="primary"
+              size="sm"
+            >
+              <svg class="" cIcon name="cil-trash" size="xl"></svg>
+            </button>
+          </div>
+          <div cFormText *ngIf="i == inputs.controls.length - 1">
+            {{ input.description[this.translate.currentLang] }}
+          </div>
+        </div>
+
+        <mat-error>
+          <app-show-errors
+            [ctrl]="inputs.controls[i]"
+            [label]="input.name"
+          ></app-show-errors>
+        </mat-error>
+      </div>
+
+      <div *ngSwitchCase="'textbox_decimal'">
+        <div class="full-width-input">
+          <label class="form-label" *ngIf="i == 0"
+            >{{ input.name }}
+            <span
+              *ngIf="hasRequiredValidator(control)"
+              aria-required="true"
+              class="required"
+            >
+              *
+            </span>
+          </label>
+
+          <div class="flex-container">
+            <input
+              class="form-control"
+              [formControl]="inputs.controls[i]"
+              placeholder="{{ input.example }}"
+            />
+
+            <button
+              cButton
+              variant="ghost"
+              color="primary"
+              (click)="addInput()"
+              *ngIf="i == 0 && displayAddButton"
+              [disabled]="!enableButton"
+              size="sm"
+            >
+              <svg class="" cIcon name="cib-addthis" size="xl"></svg>
+            </button>
+
+            <button
+              cButton
+              variant="ghost"
+              (click)="deleteInput(i)"
+              *ngIf="i != 0 && i >= input.minCount"
+              color="primary"
+              size="sm"
+            >
+              <svg class="" cIcon name="cil-trash" size="xl"></svg>
+            </button>
+          </div>
+          <div cFormText *ngIf="i == inputs.controls.length - 1">
+            {{ input.description[this.translate.currentLang] }}
+          </div>
+        </div>
+
+        <mat-error>
+          <app-show-errors
+            [ctrl]="inputs.controls[i]"
+            [label]="input.name"
+          ></app-show-errors>
+        </mat-error>
+      </div>
+
+      <div *ngSwitchCase="'textbox_uri'">
+        <div class="full-width-input">
+          <label class="form-label" *ngIf="i == 0"
+            >{{ input.name }}
+            <span
+              *ngIf="hasRequiredValidator(control)"
+              aria-required="true"
+              class="required"
+            >
+              *
+            </span>
+          </label>
+
+          <div class="flex-container">
+            <input
+              class="form-control"
+              [formControl]="inputs.controls[i]"
+              placeholder="{{ input.example }}"
+            />
+
+            <button
+              cButton
+              variant="ghost"
+              color="primary"
+              (click)="addInput()"
+              *ngIf="i == 0 && displayAddButton"
+              [disabled]="!enableButton"
+              size="sm"
+            >
+              <svg class="" cIcon name="cib-addthis" size="xl"></svg>
+            </button>
+
+            <button
+              cButton
+              variant="ghost"
+              (click)="deleteInput(i)"
+              *ngIf="i != 0 && i >= input.minCount"
+              color="primary"
+              size="sm"
+            >
+              <svg class="" cIcon name="cil-trash" size="xl"></svg>
+            </button>
+          </div>
+          <div cFormText *ngIf="i == inputs.controls.length - 1">
+            {{ input.description[this.translate.currentLang] }}
+          </div>
+        </div>
+
+        <mat-error>
+          <app-show-errors
+            [ctrl]="inputs.controls[i]"
+            [label]="input.name"
+          ></app-show-errors>
+        </mat-error>
+      </div>
+
+      <div *ngSwitchCase="'datepicker'">
+        <mat-form-field
+          [ngClass]="{
+            'full-width-input': addFullWidthClass(i),
+            'width-input': addNonFullWidthClass(i)
+          }"
+        >
+          <mat-label
+            >{{ input.name }}
+            <span *ngIf="hasRequiredValidator(control)" aria-required="true">
+              *
+            </span>
+          </mat-label>
+          <input
+            [formControl]="inputs.controls[i]"
+            [matDatepicker]="picker"
+            matInput
+          />
+          <mat-datepicker-toggle
+            [for]="picker"
+            matSuffix
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <button
+          (click)="addInput()"
+          *ngIf="i == 0 && displayAddButton"
+          [disabled]="!enableButton"
+          color="primary"
+          mat-icon-button
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+        <button
+          (click)="deleteInput(i)"
+          *ngIf="i != 0 && i >= input.minCount"
+          color="warn"
+          mat-icon-button
+          type="button"
+        >
+          <mat-icon>delete icon</mat-icon>
+        </button>
+        <mat-error>
+          <app-show-errors
+            [ctrl]="inputs.controls[i]"
+            [label]="input.name"
+          ></app-show-errors>
+        </mat-error>
+      </div>
+
+      <div *ngSwitchCase="'datetimepicker'">
+        <mat-form-field
+          [ngClass]="{
+            'full-width-input': addFullWidthClass(i),
+            'width-input': addNonFullWidthClass(i)
+          }"
+        >
+          <mat-label
+            >{{ input.name }}
+            <span
+              *ngIf="hasRequiredValidator(control)"
+              aria-required="true"
+              class="required"
+            >
+              *
+            </span>
+          </mat-label>
+          <input
+            [formControl]="inputs.controls[i]"
+            [ngxMatDatetimePicker]="picker"
+            matInput
+          />
+          <mat-datepicker-toggle
+            [for]="picker"
+            matSuffix
+          ></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
+        </mat-form-field>
+        <button
+          (click)="addInput()"
+          *ngIf="i == 0 && displayAddButton"
+          [disabled]="!enableButton"
+          color="primary"
+          mat-icon-button
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+        <button
+          (click)="deleteInput(i)"
+          *ngIf="i != 0 && i >= input.minCount"
+          color="warn"
+          mat-icon-button
+          type="button"
+        >
+          <mat-icon>delete icon</mat-icon>
+        </button>
+        <mat-error>
+          <app-show-errors
+            [ctrl]="inputs.controls[i]"
+            [label]="input.name"
+          ></app-show-errors>
+        </mat-error>
+      </div>
+
+      <div *ngSwitchCase="'dropdown'">
+        <div class="mb-3">
+          <div class="full-width-input">
+            <label class="form-label" *ngIf="i == 0"
+              >{{ input.name }}
+              <span
+                *ngIf="hasRequiredValidator(control)"
+                aria-required="true"
+                class="required"
+              >
+                *
+              </span>
+            </label>
+
+            <div class="flex-container">
+              <select
+                class="form-select"
+                [formControl]="inputs.controls[i]"
+                [multiple]="false"
+              >
+                <option *ngFor="let option of input.in" [value]="option.value">
+                  {{ option.value }}
+                </option>
+              </select>
+
+              <button
+                cButton
+                variant="ghost"
+                color="primary"
+                (click)="addInput()"
+                *ngIf="i == 0 && displayAddButton"
+                [disabled]="!enableButton"
+                size="sm"
+              >
+                <svg class="" cIcon name="cib-addthis" size="xl"></svg>
+              </button>
+
+              <button
+                cButton
+                variant="ghost"
+                (click)="deleteInput(i)"
+                *ngIf="i != 0 && i >= input.minCount"
+                color="primary"
+                size="sm"
+              >
+                <svg class="" cIcon name="cil-trash" size="xl"></svg>
+              </button>
+            </div>
+            <div cFormText *ngIf="i == inputs.controls.length - 1">
+              {{ input.description[this.translate.currentLang] }}
+            </div>
+          </div>
+        </div>
+
+        <mat-error>
+          <app-show-errors
+            [ctrl]="inputs.controls[i]"
+            [label]="input.name"
+          ></app-show-errors>
+        </mat-error>
+      </div>
+
+      <div *ngSwitchCase="'dropdown_object'">
+        <app-dynamic-form-in
+          [control]="inputs.controls[i]"
+          [form]="form"
+          [input]="input"
+          [shapes]="shapes"
+        ></app-dynamic-form-in>
+      </div>
+    </div>
+  </div>
+</form>

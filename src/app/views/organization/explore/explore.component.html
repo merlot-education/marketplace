@@ -1,76 +1,67 @@
-<style>
-  strong {
-    display: inline-block;
-    width: 180px;
-    text-align: left;
-  }
-</style>
+
 
 <c-row>
-  <c-col xs *ngFor="let organization of organizations" [sm]="6">
-    <c-card class="mb-4">
-      <c-card-header>{{ organization.name }}</c-card-header>
+  <c-col xs *ngFor="let organization of organizations" [sm]="4">
+    <c-card
+      class="mb-4"
+      [cBorder]="
+        organization.activeRepresentant
+          ? { top: { color: 'primary', width: 5 } }
+          : (organization.passiveRepresentant
+          ? { top: { color: 'secondary', width: 5 } }
+          : '')
+      "
+    >
+      <c-card-header>{{ organization.organizationName }} </c-card-header>
       <c-card-body>
-        <c-row>
-          <c-col>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item" style="border: none">
-                <strong>MERLOT ID:</strong>
-                {{ organization.merlotId }} <br />
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Land:</strong>
-                <svg
-                  cIcon
-                  id="{{ organization.merlotId + organization.countryCode }}"
-                  name="cif{{ organization.countryCode }}"
-                  size="xl"
-                  title="{{ organization.countryCode }}"
-                  style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));"
-                ></svg><br />
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Postleitzahl:</strong>
-                {{ organization.postalCode }} <br />
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Straße:</strong>
-                {{ organization.street }} <br />
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Beschreibung:</strong> <br />
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                diam nonumy eirmod tempor invidunt ut labore et dolore magna
-                aliquyam erat, sed diam voluptua.
-              </li>
-            </ul>
-          </c-col>
-          <c-col md="auto">
-            <div class="row">
-              <svg
-                class=""
-                cIcon
-                name="{{ organization.iconName }}"
-                size="9xl"
-                style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));"
-              ></svg>
-            </div>
-            <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary disabled">Weitere Infos</button>
-            </div>
-            <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary disabled">Kontakt</button>
-            </div>
-            <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary disabled">Services</button>
-            </div>
-            <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary disabled">Benutzer</button>
-            </div>  
-            
-          </c-col>
-        </c-row>
+        <!--div class="center" style="display: flex;
+        justify-content: center;">
+          <svg
+            class=""
+            cIcon
+            name="cil-building"
+            size="5xl"
+            style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.25))"
+          ></svg>
+        </div> 
+        <hr class="hr hr-blurry" /--> <!-- TODO readd this once organization logos are implemented-->
+        <div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" style="border: none">
+              <strong>Merlot ID:</strong><br />
+              {{ organization.merlotId }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Registrierungsnummer:</strong><br />
+              {{ organization.registrationNumber }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Name der Organisation:</strong><br />
+              {{ organization.organizationLegalName }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Adresse:</strong><br />
+              {{ organization.legalAddress.street }} <br />
+              {{ organization.legalAddress.postalCode }} {{ organization.legalAddress.city }} <br />
+              {{ organization.legalAddress.countryCode }}
+            </li>
+          </ul>
+        </div>
       </c-card-body>
+      <c-card-footer
+        *ngIf="
+          organization.activeRepresentant || organization.passiveRepresentant
+        "
+      >
+        <small
+          *ngIf="organization.activeRepresentant; else passive_repr_footer"
+          class="text-medium-emphasis"
+          >Aktive Rolle</small
+        >
+        <ng-template #passive_repr_footer>
+          <small class="text-medium-emphasis">Inaktive Rolle</small>
+        </ng-template>
+      </c-card-footer>
     </c-card>
   </c-col>
 </c-row>

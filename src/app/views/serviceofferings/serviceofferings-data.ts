@@ -1,31 +1,49 @@
 export interface IOfferings {
   id: string;
+  sdHash: string;
+  creationDate: string;
+  offeredBy: string;
+  merlotState: string;
+  type: string;
   name: string;
-  country: string;
-  provider: string;
-  availablesince: string;
 }
 
-export let offerings: IOfferings[] = [
-  /*{
-    id: "0001",
-    name: 'DataOffering1',
-    country: 'De',
-    provider: 'ProviderCorp',
-    availablesince: 'Jan 1, 2021',
+export interface IOfferingsDetailed extends IOfferings {
+  description: string;
+  modifiedDate: string;
+  dataAccessType: string;
+  exampleCosts: string;
+  attachments: string[];
+  termsAndConditions: {
+    content: string;
+    hash: string;
+  }[];
+  runtimeOption: {
+    runtimeCount?: number;
+    runtimeMeasurement?: string;
+    runtimeUnlimited?: boolean;
+  }[];
+  hardwareRequirements?: string;
+  userCountOption?: {
+    userCountUpTo?: number;
+    userCountUnlimited?: boolean;
+  }[];
+  exchangeCountOption?: {
+    exchangeCountUpTo?: number;
+    exchangeCountUnlimited?: boolean;
+  }[]
+}
+
+export let serviceFileNameDict: { [key: string]: {
+  name: string;
+  type: string;
+}} = {
+    'Merlot Saas.json': {
+      name: 'Software as a Service',
+      type: "merlot:MerlotServiceOfferingSaaS"
+    },
+    'Merlot DataDelivery.json': {
+      name: 'Data Delivery',
+      type: "merlot:MerlotServiceOfferingDataDelivery"
   },
-  {
-    id: "0002",
-    name: 'DataOffering2',
-    country: 'Fr',
-    provider: 'ProviderCorp',
-    availablesince: 'Jan 1, 2021',
-  },
-  {
-    id: "0003",
-    name: 'SmartServiceOffering1',
-    country: 'Be',
-    provider: 'ProviderCorp',
-    availablesince: 'Jan 1, 2021',
-  },*/
-];
+};

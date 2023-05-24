@@ -1,17 +1,34 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthService} from "src/app/auth.service"
-import { OrganizationData, orgaData } from "../organization-data";
+import { OrganizationData } from "../organization-data";
+import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   templateUrl: './explore.component.html',
   styleUrls: ['./explore.component.scss']
 })
 export class ExploreComponent implements OnInit {
-  public organizations: OrganizationData[] = orgaData;
+  public organizations: OrganizationData[] = [];
 
-  constructor() {
+  constructor(
+    private organizationsApiService: OrganizationsApiService,
+    private authService: AuthService
+  ) {
   }
 
   ngOnInit(): void {
+    this.organizationsApiService.organizations.subscribe((value) => this.organizations = value);
+  }
+
+  checkRepresentant(organization: OrganizationData): string {
+    if (organization.activeRepresentant) {
+      return " - Aktiver Repräsentant";
+    } else if (organization.passiveRepresentant) {
+      return " - Passiver Repräsentant";
+    } else {
+      return "";
+    }
   }
 }
