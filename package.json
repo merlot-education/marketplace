@@ -10,7 +10,8 @@
     "start": "ng serve",
     "build": "ng build --configuration local",
     "watch": "ng build --watch --configuration local",
-    "test": "ng test"
+    "test": "ng test",
+    "qa": "ng test && ng serve"
   },
   "private": true,
   "dependencies": {
