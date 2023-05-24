@@ -67,11 +67,17 @@ export class ExploreComponent implements OnInit {
     this.authService.activeOrganizationRole.subscribe(value => this.refreshOfferings());
   }
 
-  protected handleEventEditModal(modalVisible) {
+  protected handleEventEditModal(modalVisible: boolean) {
     if (!modalVisible) {
       this.selectedOfferingDetails = this.emptyOfferingDetails;
       this.childRef.ngOnDestroy();
       this.refreshOfferings();
+    }
+  }
+
+  protected handleEventDetailsModal(modalVisible: boolean) {
+    if (!modalVisible) {
+      this.selectedOfferingDetails = this.emptyOfferingDetails;
     }
   }
 
