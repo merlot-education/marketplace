@@ -195,7 +195,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       for (let field of group) {
         if ((field.key === "offeredBy" || field.key === "providedBy")) {
           let formField = this.form.get(field.id);
-          // TODO create subscription for each of the two fields
           if (this.prefillData === undefined) {
             this.orgaSubscriptions.push(this.authService.activeOrganizationRole.subscribe((value) => {
               formField.patchValue(this.organizationsApiService.getOrgaById(value.orgaId).organizationLegalName);
@@ -317,10 +316,11 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
         let didField = this.form.get("user_prefix");
         didField.patchValue(result["id"]);
 
-        // TODO reenable one or both buttons if successfull to allow further edits
-
         if (publishAfterSave) {
           this.serviceofferingApiService.releaseServiceOffering(result["id"]);
+        } else {
+          // if we did not publish, we can further edit the same offering
+          this.submitButtonsDisabled = false;
         }
         //this.navigateToOverview();
         /*timer(1500)
