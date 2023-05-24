@@ -68,7 +68,6 @@ export class ExploreComponent implements OnInit {
   }
 
   protected handleEventEditModal(modalVisible) {
-    console.log("handle event", modalVisible);
     if (!modalVisible) {
       this.selectedOfferingDetails = this.emptyOfferingDetails;
       this.childRef.ngOnDestroy();
@@ -93,7 +92,6 @@ export class ExploreComponent implements OnInit {
 
   protected filterByStatus(applyFilter: boolean, status: string) {
     if (applyFilter) {
-      console.log("filter by ", status);
       this.filteredOrgaOfferings = [];
       for (let offering of this.orgaOfferings) {
         if (offering.merlotState === status) {

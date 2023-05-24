@@ -48,7 +48,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   createdServiceOfferingId: string = "";
 
   createDateTimer: NodeJS.Timer = undefined;
-  orgaSubscription: Subscription = undefined;
+  orgaSubscriptions: Subscription[] = [];
   submitButtonsDisabled = false;
 
 
@@ -143,7 +143,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     for (let field of shapeFields) {
       if (field.key in prefillData) {
         if (prefillData[field.key] instanceof Array) {
-          console.log(field.key, "is Array");
           if (field.componentType === "dynamicFormArray") {  // array of primitives
             field.values = prefillData[field.key];
           } else {
@@ -161,14 +160,11 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
           }
           
         } else if (prefillData[field.key] instanceof Object) {
-          console.log(field.key, "is Object");
           field.childrenFields = this.prefillShapeFields(field.childrenFields, prefillData[field.key])
         } else {
-          console.log(field.key, "is primitive");
           field.value = prefillData[field.key];
         }
       } else {
-        console.log(field.key, " not found");
       }
       /*if (field.key === "userCountOption") {
         for (let j = 0; j < 3; j++) {
@@ -201,12 +197,13 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
           let formField = this.form.get(field.id);
           // TODO create subscription for each of the two fields
           if (this.prefillData === undefined) {
-            this.orgaSubscription = this.authService.activeOrganizationRole.subscribe((value) => {
+            this.orgaSubscriptions.push(this.authService.activeOrganizationRole.subscribe((value) => {
               formField.patchValue(this.organizationsApiService.getOrgaById(value.orgaId).organizationLegalName);
-            });
+            }));
           } else {
             let orgaId = this.prefillData.offeredBy.split(":").slice(1).join();
-            formField.patchValue(this.organizationsApiService.getOrgaById(orgaId).organizationLegalName);
+            if (orgaId !== "")
+              formField.patchValue(this.organizationsApiService.getOrgaById(orgaId).organizationLegalName);
           }
             
           formField.disable();
@@ -229,7 +226,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
         }
         else if (field.key === "dataAccountExport") {
           let formField = this.form.get(field.id) as FormGroup;
-          console.log(formField);
           for (let childKey in formField.controls) {
             let child = formField.controls[childKey];
             child.patchValue("dummyValue");
@@ -306,7 +302,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     this.patchFieldsForSubmit(this.groupedFormFields);
 
     this.shape.downloadFormat = this.form.get('download_format').value;
-    console.log("shape fields pre update/empty", this.shape.fields);
+    console.log("shape fields pre update/empty", this.shape.fields);  
     this.shape.fields = this.updateFormFieldsValues(this.formFields, this.form);
     this.shape.fields = this.emptyChildrenFields(this.shape.fields);
     console.log("shape fields pre save", this.shape.fields);
@@ -345,6 +341,11 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     if (this.createDateTimer)
       clearInterval(this.createDateTimer);
     
+    for (let orgaSub of this.orgaSubscriptions) {
+      orgaSub.unsubscribe();
+    }
+    this.orgaSubscriptions = [];
+
     this.showSuccessMessage = false;
     this.showErrorMessage = false;
     this.submitButtonsDisabled = false;
