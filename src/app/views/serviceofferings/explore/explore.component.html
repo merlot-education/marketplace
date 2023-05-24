@@ -41,7 +41,7 @@
               <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = false; requestDetails(offering.id)">
                 Details
               </button>
-              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalEditServiceOffering.id" (click)="updateServiceOfferingEdit(offering)">
+              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalEditServiceOffering.id" (click)="updateServiceOfferingEdit(offering)" *ngIf="offering.merlotState === 'IN_DRAFT'">
                 Bearbeiten
               </button>
             </div>
