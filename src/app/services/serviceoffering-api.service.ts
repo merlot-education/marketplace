@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, Observable, lastValueFrom } from 'rxjs';
-import { IOfferings, IOfferingsDetailed, IPageOfferings } from '../views/serviceofferings/serviceofferings-data';
+import { Observable, lastValueFrom } from 'rxjs';
+import { IOfferingsDetailed, IPageOfferings } from '../views/serviceofferings/serviceofferings-data';
 import { OrganizationsApiService } from './organizations-api.service';
 import { AuthService } from './auth.service';
 

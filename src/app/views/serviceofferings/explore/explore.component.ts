@@ -107,7 +107,12 @@ export class ExploreComponent implements OnInit {
       active: false,
     }];
     
-    let startIndex = activePage > 0 ? (activePage === (totalPages-1) ? (activePage-2) : (activePage-1)) : activePage;
+    let startIndex;
+    if (activePage > 0) {
+      startIndex = activePage === (totalPages-1) ? (activePage-2) : (activePage-1);
+    } else {
+      startIndex = activePage;
+    }
 
     for (let i = startIndex; i < Math.min(startIndex + 3, totalPages); i++) {
       target.push({
