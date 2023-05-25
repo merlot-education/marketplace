@@ -109,7 +109,7 @@ export class ExploreComponent implements OnInit {
     
     let startIndex;
     if (activePage > 0) {
-      startIndex = activePage === (totalPages-1) ? (activePage-2) : (activePage-1);
+      startIndex = activePage === (totalPages-1) ? Math.max(0, (activePage-2)) : (activePage-1);
     } else {
       startIndex = activePage;
     }
