@@ -68,6 +68,8 @@ export class ExploreComponent implements OnInit {
   selectedOfferingDetails: IOfferingsDetailed = this.emptyOfferingDetails;
   selectedOfferingPublic: boolean = false;
 
+  private isFiltered: boolean = false;
+
   constructor(
     protected serviceOfferingApiService : ServiceofferingApiService,
     private organizationsApiService: OrganizationsApiService,
@@ -164,7 +166,14 @@ export class ExploreComponent implements OnInit {
   }
 
   protected filterByStatus(applyFilter: boolean, status: string) {
-    this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
+    // either we should apply the filter and need to refresh, or we switched the filter off and should refresh just once
+    if (applyFilter) {
+      this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
+      this.isFiltered = true;
+    } else if (this.isFiltered) {
+      this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
+      this.isFiltered = false;
+    }
   }
 
   protected resolveOrganizationLegalName(offeredByString: string): string {
