@@ -24,7 +24,7 @@ export class ExploreComponent implements OnInit {
 
   @ViewChild(DynamicFormComponent, {static: false}) childRef: DynamicFormComponent;
 
-  readonly ITEMS_PER_PAGE = 1;
+  readonly ITEMS_PER_PAGE = 9;
 
   objectKeys = Object.keys;
 
