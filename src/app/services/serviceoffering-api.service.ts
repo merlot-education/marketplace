@@ -16,15 +16,23 @@ export class ServiceofferingApiService {
   }
 
   // get released service offering overview (unauthenticated)
-  public async fetchPublicServiceOfferings(page: number, size: number): Promise<IPageOfferings> {
-    return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "?page=" + page + "&size=" + size)) as IPageOfferings;
+  public async fetchPublicServiceOfferings(page: number, size: number, state?: string): Promise<IPageOfferings> {
+    let target_url = environment.serviceoffering_api_url + "?page=" + page + "&size=" + size
+    if (state !== undefined) {
+      target_url += "&state=" + state
+    }
+    return await lastValueFrom(this.http.get(target_url)) as IPageOfferings;
   }
 
   // get all service offerings for the active organization
-  public async fetchOrganizationServiceOfferings(page: number, size: number): Promise<IPageOfferings> {
+  public async fetchOrganizationServiceOfferings(page: number, size: number, state?: string): Promise<IPageOfferings> {
     if (this.authService.isLoggedIn) {
       let activeOrgaId = this.authService.activeOrganizationRole.value.orgaId;
-      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "organization/" + activeOrgaId + "?page=" + page + "&size=" + size)) as IPageOfferings;
+      let target_url = environment.serviceoffering_api_url + "organization/" + activeOrgaId + "?page=" + page + "&size=" + size;
+      if (state !== undefined) {
+        target_url += "&state=" + state
+      }
+      return await lastValueFrom(this.http.get(target_url)) as IPageOfferings;
     }
       
     return undefined;

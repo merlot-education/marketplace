@@ -24,33 +24,19 @@ export class ExploreComponent implements OnInit {
 
   @ViewChild(DynamicFormComponent, {static: false}) childRef: DynamicFormComponent;
 
+  readonly ITEMS_PER_PAGE = 1;
+
   objectKeys = Object.keys;
 
   offerings: IOfferings[] = [];
   orgaOfferings: IOfferings[] = [];
-  filteredOrgaOfferings: IOfferings[] = []
   shaclFile: ShaclFile = undefined;
   filteredShapes: Shape[];
 
 
-  protected publicOfferingPages: IPageOption[] = [{
-    target: 0,
-    text: "Zurück",
-    disabled: true,
-    active: false,
-  },
-  {
-    target: 0,
-    text: "0",
-    disabled: false,
-    active: true
-  },
-  {
-    target: 0,
-    text: "Vor",
-    disabled: true,
-    active: false
-  }]
+  protected publicOfferingPages: IPageOption[] = []
+
+  protected orgaOfferingPages: IPageOption[] = []
 
   protected friendlyStatusNames = {
     "IN_DRAFT": "In Bearbeitung",
@@ -93,8 +79,50 @@ export class ExploreComponent implements OnInit {
     this.authService.activeOrganizationRole.subscribe(value => this.refreshOfferings());
   }
 
-  protected handlePageNavigation(option: IPageOption) {
+  protected handlePublicPageNavigation(option: IPageOption) {
+    if (option.active) {
+      return;
+    }
+
     console.log(option);
+    this.refreshPublicOfferings(option.target, this.ITEMS_PER_PAGE);
+  }
+
+  protected handleOrgaPageNavigation(option: IPageOption) {
+    if (option.active) {
+      return;
+    }
+
+    console.log(option);
+    this.refreshOrgaOfferings(option.target, this.ITEMS_PER_PAGE);
+  }
+
+  private updatePageNavigationOptions(activePage: number, totalPages: number): IPageOption[] {
+    let target = [{
+      target: 0,
+      text: "Anfang",
+      disabled: activePage === 0,
+      active: false,
+    }];
+    
+    let startIndex = activePage > 0 ? (activePage === (totalPages-1) ? (activePage-2) : (activePage-1)) : activePage;
+
+    for (let i = startIndex; i < Math.min(startIndex + 3, totalPages); i++) {
+      target.push({
+        target: i,
+        text: "" + (i+1),
+        disabled: false,
+        active: activePage === i,
+      })
+    }
+
+    target.push({
+        target: totalPages-1,
+        text: "Ende",
+        disabled: activePage === (totalPages-1),
+        active: false,
+    })
+    return target;
   }
 
   protected handleEventEditModal(modalVisible: boolean) {
@@ -115,26 +143,28 @@ export class ExploreComponent implements OnInit {
     if (this.selectedOfferingDetails !== this.emptyOfferingDetails) {
       this.requestDetails(this.selectedOfferingDetails.id);
     }
+    this.refreshPublicOfferings(0, this.ITEMS_PER_PAGE);
+    this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
+  }
 
-    this.serviceOfferingApiService.fetchPublicServiceOfferings(0, 3).then(result => {
+  private refreshPublicOfferings(page: number, size: number) {
+    this.serviceOfferingApiService.fetchPublicServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
       console.log(result)
+      this.publicOfferingPages = this.updatePageNavigationOptions(result.pageable.pageNumber, result.totalPages);
       this.offerings = result.content;
     });
-    this.serviceOfferingApiService.fetchOrganizationServiceOfferings(0, 3).then(result => {
+  }
+
+  private refreshOrgaOfferings(page: number, size: number) {
+    this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
       console.log(result)
+      this.orgaOfferingPages = this.updatePageNavigationOptions(result.pageable.pageNumber, result.totalPages);
       this.orgaOfferings = result.content;
     });
   }
 
   protected filterByStatus(applyFilter: boolean, status: string) {
-    if (applyFilter) {
-      this.filteredOrgaOfferings = [];
-      for (let offering of this.orgaOfferings) {
-        if (offering.merlotState === status) {
-          this.filteredOrgaOfferings.push(offering);
-        }
-      }
-    }
+    this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
   }
 
   protected resolveOrganizationLegalName(offeredByString: string): string {

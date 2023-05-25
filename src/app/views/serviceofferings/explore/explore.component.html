@@ -13,7 +13,7 @@
 </div>
 
 <c-row [xl]="3">
-  <c-col xs *ngFor="let offering of (applyStatusFilter ? filteredOrgaOfferings : orgaOfferings)">
+  <c-col xs *ngFor="let offering of orgaOfferings">
     <c-card class="mb-4">
       <c-card-header><b>{{ resolveTypeFriendlyName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
       <c-card-body>
@@ -53,20 +53,8 @@
 </c-row>
 
 <c-pagination align="left" aria-label="Page navigation example">
-  <li cPageItem [disabled]="true">
-    <a cPageLink [routerLink]>Previous</a>
-  </li>
-  <li cPageItem>
-    <a cPageLink [routerLink]>1</a>
-  </li>
-  <li cPageItem>
-    <a cPageLink [routerLink]>2</a>
-  </li>
-  <li cPageItem>
-    <a cPageLink [routerLink]>3</a>
-  </li>
-  <li cPageItem>
-    <a cPageLink [routerLink]>Next</a>
+  <li cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of orgaOfferingPages">
+    <a cPageLink [routerLink] (click)="handleOrgaPageNavigation(pageOption)">{{ pageOption.text }}</a>
   </li>
 </c-pagination>
 
@@ -111,7 +99,7 @@
 
 <c-pagination align="left" aria-label="Page navigation example">
   <li cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of publicOfferingPages">
-    <a cPageLink [routerLink] (click)="handlePageNavigation(pageOption)">{{ pageOption.text }}</a>
+    <a cPageLink [routerLink] (click)="handlePublicPageNavigation(pageOption)">{{ pageOption.text }}</a>
   </li>
 </c-pagination>
 
