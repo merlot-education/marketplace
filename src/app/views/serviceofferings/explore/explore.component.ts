@@ -9,6 +9,12 @@ import { Shape } from '@models/shape';
 import { serviceFileNameDict } from '../serviceofferings-data';
 import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
 
+interface IPageOption {
+  target: number;
+  text: string;
+  disabled: boolean;
+  active: boolean;
+}
 
 @Component({
   templateUrl: './explore.component.html',
@@ -18,13 +24,19 @@ export class ExploreComponent implements OnInit {
 
   @ViewChild(DynamicFormComponent, {static: false}) childRef: DynamicFormComponent;
 
+  readonly ITEMS_PER_PAGE = 9;
+
   objectKeys = Object.keys;
 
   offerings: IOfferings[] = [];
   orgaOfferings: IOfferings[] = [];
-  filteredOrgaOfferings: IOfferings[] = []
   shaclFile: ShaclFile = undefined;
   filteredShapes: Shape[];
+
+
+  protected publicOfferingPages: IPageOption[] = []
+
+  protected orgaOfferingPages: IPageOption[] = []
 
   protected friendlyStatusNames = {
     "IN_DRAFT": "In Bearbeitung",
@@ -56,6 +68,8 @@ export class ExploreComponent implements OnInit {
   selectedOfferingDetails: IOfferingsDetailed = this.emptyOfferingDetails;
   selectedOfferingPublic: boolean = false;
 
+  private isFiltered: boolean = false;
+
   constructor(
     protected serviceOfferingApiService : ServiceofferingApiService,
     private organizationsApiService: OrganizationsApiService,
@@ -65,6 +79,57 @@ export class ExploreComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.activeOrganizationRole.subscribe(value => this.refreshOfferings());
+  }
+
+  protected handlePublicPageNavigation(option: IPageOption) {
+    if (option.active) {
+      return;
+    }
+
+    console.log(option);
+    this.refreshPublicOfferings(option.target, this.ITEMS_PER_PAGE);
+  }
+
+  protected handleOrgaPageNavigation(option: IPageOption) {
+    if (option.active) {
+      return;
+    }
+
+    console.log(option);
+    this.refreshOrgaOfferings(option.target, this.ITEMS_PER_PAGE);
+  }
+
+  private updatePageNavigationOptions(activePage: number, totalPages: number): IPageOption[] {
+    let target = [{
+      target: 0,
+      text: "Anfang",
+      disabled: activePage === 0,
+      active: false,
+    }];
+    
+    let startIndex;
+    if (activePage > 0) {
+      startIndex = activePage === (totalPages-1) ? (activePage-2) : (activePage-1);
+    } else {
+      startIndex = activePage;
+    }
+
+    for (let i = startIndex; i < Math.min(startIndex + 3, totalPages); i++) {
+      target.push({
+        target: i,
+        text: "" + (i+1),
+        disabled: false,
+        active: activePage === i,
+      })
+    }
+
+    target.push({
+        target: totalPages-1,
+        text: "Ende",
+        disabled: activePage === (totalPages-1),
+        active: false,
+    })
+    return target;
   }
 
   protected handleEventEditModal(modalVisible: boolean) {
@@ -85,25 +150,34 @@ export class ExploreComponent implements OnInit {
     if (this.selectedOfferingDetails !== this.emptyOfferingDetails) {
       this.requestDetails(this.selectedOfferingDetails.id);
     }
+    this.refreshPublicOfferings(0, this.ITEMS_PER_PAGE);
+    this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
+  }
 
-    this.serviceOfferingApiService.fetchPublicServiceOfferings().then(result => {
+  private refreshPublicOfferings(page: number, size: number) {
+    this.serviceOfferingApiService.fetchPublicServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
       console.log(result)
-      this.offerings = result;
+      this.publicOfferingPages = this.updatePageNavigationOptions(result.pageable.pageNumber, result.totalPages);
+      this.offerings = result.content;
     });
-    this.serviceOfferingApiService.fetchOrganizationServiceOfferings().then(result => {
+  }
+
+  private refreshOrgaOfferings(page: number, size: number) {
+    this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
       console.log(result)
-      this.orgaOfferings = result;
+      this.orgaOfferingPages = this.updatePageNavigationOptions(result.pageable.pageNumber, result.totalPages);
+      this.orgaOfferings = result.content;
     });
   }
 
   protected filterByStatus(applyFilter: boolean, status: string) {
+    // either we should apply the filter and need to refresh, or we switched the filter off and should refresh just once
     if (applyFilter) {
-      this.filteredOrgaOfferings = [];
-      for (let offering of this.orgaOfferings) {
-        if (offering.merlotState === status) {
-          this.filteredOrgaOfferings.push(offering);
-        }
-      }
+      this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
+      this.isFiltered = true;
+    } else if (this.isFiltered) {
+      this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
+      this.isFiltered = false;
     }
   }
 

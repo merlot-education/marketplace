@@ -1,4 +1,4 @@
-<div *ngIf="orgaOfferings.length > 0">
+<div *ngIf="orgaOfferings.length > 0 || applyStatusFilter">
 
 <h1>Service Angebote meiner Organisation</h1>
 
@@ -13,7 +13,7 @@
 </div>
 
 <c-row [xl]="3">
-  <c-col xs *ngFor="let offering of (applyStatusFilter ? filteredOrgaOfferings : orgaOfferings)">
+  <c-col xs *ngFor="let offering of orgaOfferings">
     <c-card class="mb-4">
       <c-card-header><b>{{ resolveTypeFriendlyName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
       <c-card-body>
@@ -51,6 +51,12 @@
     </c-card>
   </c-col>
 </c-row>
+
+<c-pagination align="left" aria-label="Page navigation example">
+  <div cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of orgaOfferingPages">
+    <a cPageLink [routerLink] (click)="handleOrgaPageNavigation(pageOption)">{{ pageOption.text }}</a>
+  </div>
+</c-pagination>
 
 </div>
 
@@ -90,6 +96,12 @@
     </c-card>
   </c-col>
 </c-row>
+
+<c-pagination align="left" aria-label="Page navigation example">
+  <div cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of publicOfferingPages">
+    <a cPageLink [routerLink] (click)="handlePublicPageNavigation(pageOption)">{{ pageOption.text }}</a>
+  </div>
+</c-pagination>
 
 </div>
 
