@@ -9,6 +9,12 @@ import { Shape } from '@models/shape';
 import { serviceFileNameDict } from '../serviceofferings-data';
 import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
 
+interface IPageOption {
+  target: number;
+  text: string;
+  disabled: boolean;
+  active: boolean;
+}
 
 @Component({
   templateUrl: './explore.component.html',
@@ -25,6 +31,26 @@ export class ExploreComponent implements OnInit {
   filteredOrgaOfferings: IOfferings[] = []
   shaclFile: ShaclFile = undefined;
   filteredShapes: Shape[];
+
+
+  protected publicOfferingPages: IPageOption[] = [{
+    target: 0,
+    text: "Zurück",
+    disabled: true,
+    active: false,
+  },
+  {
+    target: 0,
+    text: "0",
+    disabled: false,
+    active: true
+  },
+  {
+    target: 0,
+    text: "Vor",
+    disabled: true,
+    active: false
+  }]
 
   protected friendlyStatusNames = {
     "IN_DRAFT": "In Bearbeitung",
@@ -67,6 +93,10 @@ export class ExploreComponent implements OnInit {
     this.authService.activeOrganizationRole.subscribe(value => this.refreshOfferings());
   }
 
+  protected handlePageNavigation(option: IPageOption) {
+    console.log(option);
+  }
+
   protected handleEventEditModal(modalVisible: boolean) {
     if (!modalVisible) {
       this.selectedOfferingDetails = this.emptyOfferingDetails;
@@ -86,13 +116,13 @@ export class ExploreComponent implements OnInit {
       this.requestDetails(this.selectedOfferingDetails.id);
     }
 
-    this.serviceOfferingApiService.fetchPublicServiceOfferings().then(result => {
+    this.serviceOfferingApiService.fetchPublicServiceOfferings(0, 3).then(result => {
       console.log(result)
-      this.offerings = result;
+      this.offerings = result.content;
     });
-    this.serviceOfferingApiService.fetchOrganizationServiceOfferings().then(result => {
+    this.serviceOfferingApiService.fetchOrganizationServiceOfferings(0, 3).then(result => {
       console.log(result)
-      this.orgaOfferings = result;
+      this.orgaOfferings = result.content;
     });
   }
 

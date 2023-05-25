@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, lastValueFrom } from 'rxjs';
-import { IOfferings, IOfferingsDetailed } from '../views/serviceofferings/serviceofferings-data';
+import { IOfferings, IOfferingsDetailed, IPageOfferings } from '../views/serviceofferings/serviceofferings-data';
 import { OrganizationsApiService } from './organizations-api.service';
 import { AuthService } from './auth.service';
 
@@ -16,18 +16,18 @@ export class ServiceofferingApiService {
   }
 
   // get released service offering overview (unauthenticated)
-  public async fetchPublicServiceOfferings() {
-    return await lastValueFrom(this.http.get(environment.serviceoffering_api_url)) as IOfferings[];
+  public async fetchPublicServiceOfferings(page: number, size: number): Promise<IPageOfferings> {
+    return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "?page=" + page + "&size=" + size)) as IPageOfferings;
   }
 
   // get all service offerings for the active organization
-  public async fetchOrganizationServiceOfferings() {
+  public async fetchOrganizationServiceOfferings(page: number, size: number): Promise<IPageOfferings> {
     if (this.authService.isLoggedIn) {
       let activeOrgaId = this.authService.activeOrganizationRole.value.orgaId;
-      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "organization/" + activeOrgaId)) as IOfferings[];
+      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "organization/" + activeOrgaId + "?page=" + page + "&size=" + size)) as IPageOfferings;
     }
       
-    return [];
+    return undefined;
   }
 
   // get details to a specific service offering (authenticated)

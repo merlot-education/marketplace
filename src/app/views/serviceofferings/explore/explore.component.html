@@ -52,6 +52,24 @@
   </c-col>
 </c-row>
 
+<c-pagination align="left" aria-label="Page navigation example">
+  <li cPageItem [disabled]="true">
+    <a cPageLink [routerLink]>Previous</a>
+  </li>
+  <li cPageItem>
+    <a cPageLink [routerLink]>1</a>
+  </li>
+  <li cPageItem>
+    <a cPageLink [routerLink]>2</a>
+  </li>
+  <li cPageItem>
+    <a cPageLink [routerLink]>3</a>
+  </li>
+  <li cPageItem>
+    <a cPageLink [routerLink]>Next</a>
+  </li>
+</c-pagination>
+
 </div>
 
 
@@ -90,6 +108,12 @@
     </c-card>
   </c-col>
 </c-row>
+
+<c-pagination align="left" aria-label="Page navigation example">
+  <li cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of publicOfferingPages">
+    <a cPageLink [routerLink] (click)="handlePageNavigation(pageOption)">{{ pageOption.text }}</a>
+  </li>
+</c-pagination>
 
 </div>
 
