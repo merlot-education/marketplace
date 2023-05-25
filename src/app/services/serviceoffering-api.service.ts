@@ -17,14 +17,14 @@ export class ServiceofferingApiService {
 
   // get released service offering overview (unauthenticated)
   public async fetchPublicServiceOfferings() {
-    return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/serviceofferings")) as IOfferings[];
+    return await lastValueFrom(this.http.get(environment.serviceoffering_api_url)) as IOfferings[];
   }
 
   // get all service offerings for the active organization
   public async fetchOrganizationServiceOfferings() {
     if (this.authService.isLoggedIn) {
       let activeOrgaId = this.authService.activeOrganizationRole.value.orgaId;
-      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/serviceofferings/organization/" + activeOrgaId)) as IOfferings[];
+      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "organization/" + activeOrgaId)) as IOfferings[];
     }
       
     return [];
@@ -33,7 +33,7 @@ export class ServiceofferingApiService {
   // get details to a specific service offering (authenticated)
   public async fetchServiceOfferingDetails(id: string): Promise<IOfferingsDetailed> {
     if (this.authService.isLoggedIn) {
-      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/serviceofferings/serviceoffering/" + id)) as IOfferingsDetailed;
+      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "serviceoffering/" + id)) as IOfferingsDetailed;
     }
       
     return undefined;
@@ -46,7 +46,7 @@ export class ServiceofferingApiService {
 
     try {
       const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
-      let result = await lastValueFrom(this.http.post(environment.serviceoffering_api_url + "/serviceofferings/serviceoffering/" + type, sdJson, {headers: headers}));
+      let result = await lastValueFrom(this.http.post(environment.serviceoffering_api_url + "serviceoffering/" + type, sdJson, {headers: headers}));
       return result;
     } catch (e) {
       console.log(e);
@@ -54,22 +54,26 @@ export class ServiceofferingApiService {
     }
   }
 
+  private getStatusShiftUrl(id: string, targetstatus: string) {
+    return environment.serviceoffering_api_url + "serviceoffering/status/" + id + "/" + targetstatus;
+  }
+
 
   // State machine
   public async releaseServiceOffering(id: string) {
-    return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/serviceofferings/serviceoffering/release/" + id));
+    return await lastValueFrom(this.http.patch(this.getStatusShiftUrl(id, "RELEASED"), null));
   }
 
   public async revokeServiceOffering(id: string) {
-    return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/serviceofferings/serviceoffering/revoke/" + id));
+    return await lastValueFrom(this.http.patch(this.getStatusShiftUrl(id, "REVOKED"), null));
   }
 
   public async deleteServiceOffering(id: string) {
-    return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/serviceofferings/serviceoffering/delete/" + id));
+    return await lastValueFrom(this.http.patch(this.getStatusShiftUrl(id, "DELETED"), null));
   }
 
   public async inDraftServiceOffering(id: string) {
-    return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "/serviceofferings/serviceoffering/inDraft/" + id));
+    return await lastValueFrom(this.http.patch(this.getStatusShiftUrl(id, "IN_DRAFT"), null));
   }
 
   public fetchAvailableShapes(system: string): Observable<any> {

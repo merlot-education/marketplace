@@ -39,7 +39,7 @@ export class OrganizationsApiService {
     console.log("fetching organizations");
     // fetch data and cast it into interface
     let orgaData = (await lastValueFrom(
-      this.http.get(environment.organizations_api_url + '/organizations')
+      this.http.get(environment.organizations_api_url)
     )) as OrganizationData[];
     return orgaData;
   }
