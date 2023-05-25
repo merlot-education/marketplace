@@ -53,9 +53,9 @@
 </c-row>
 
 <c-pagination align="left" aria-label="Page navigation example">
-  <li cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of orgaOfferingPages">
+  <div cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of orgaOfferingPages">
     <a cPageLink [routerLink] (click)="handleOrgaPageNavigation(pageOption)">{{ pageOption.text }}</a>
-  </li>
+  </div>
 </c-pagination>
 
 </div>
@@ -98,9 +98,9 @@
 </c-row>
 
 <c-pagination align="left" aria-label="Page navigation example">
-  <li cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of publicOfferingPages">
+  <div cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of publicOfferingPages">
     <a cPageLink [routerLink] (click)="handlePublicPageNavigation(pageOption)">{{ pageOption.text }}</a>
-  </li>
+  </div>
 </c-pagination>
 
 </div>
