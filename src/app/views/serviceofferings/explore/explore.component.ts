@@ -146,6 +146,12 @@ export class ExploreComponent implements OnInit {
     }
   }
 
+  protected handleEventContractModal(modalVisible: boolean) {
+    if (!modalVisible) {
+      this.selectedOfferingDetails = this.emptyOfferingDetails;
+    }
+  }
+
   private refreshOfferings() {
     if (this.selectedOfferingDetails !== this.emptyOfferingDetails) {
       this.requestDetails(this.selectedOfferingDetails.id);
