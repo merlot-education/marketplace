@@ -1,6 +1,6 @@
 {
   "name": "marketplace",
-  "version": "1.2.10",
+  "version": "1.2.11",
   "config": {
     "coreui_library_short_version": "4.3",
     "coreui_library_docs_url": "https://coreui.io/angular/docs/"
