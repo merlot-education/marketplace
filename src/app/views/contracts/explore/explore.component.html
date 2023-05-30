@@ -1,2 +1,54 @@
 
-<h1>Meine Verträge</h1>
+<c-row [xl]="3">
+    <c-col xs *ngFor="let contract of contracts">
+      <c-card class="mb-4">
+        <c-card-header><b>Vertrag</b>: {{ contract.id }}</c-card-header>
+        <c-card-body>
+          <c-row>
+            <c-col>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item" style="border: none">
+                    <strong>Erstelldatum:</strong><br />
+                    {{ contract.creationDate }}
+                </li>
+                <li class="list-group-item" style="border: none">
+                    <strong>Angebots-ID:</strong> <br />
+                    {{ contract.offeringId }}
+                </li>
+                <li class="list-group-item" style="border: none">
+                  <strong>Serviceanbieter:</strong><br />
+                  {{ organizationsApiService.resolveOrganizationLegalName(contract.provider) }}
+                </li>
+                <li class="list-group-item" style="border: none">
+                    <strong>Kunde:</strong><br />
+                    {{ organizationsApiService.resolveOrganizationLegalName(contract.consumer) }}
+                  </li>
+                <li class="list-group-item" style="border: none">
+                    <strong>Servicename:</strong><br />
+                    {{ contract.offeringName }}
+                </li>
+                <li class="list-group-item" style="border: none">
+                  <strong>Status:</strong><br />
+                  {{ resolveContractStatusFriendlyName(contract.state) }}
+                </li>
+              </ul>
+              <div style="padding: 10px">
+                <button type="button" class="btn btn-primary flex-item-grow disabled" [cModalToggle]="">
+                  Details
+                </button>
+                <button type="button" class="btn btn-primary flex-item-grow disabled" [cModalToggle]="" *ngIf="contract.state === 'IN_DRAFT'">
+                  Bearbeiten
+                </button>
+              </div>
+            </c-col>
+          </c-row>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+  
+  <c-pagination align="left" aria-label="Page navigation example">
+    <div cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of []">
+      <a cPageLink [routerLink] (click)="handleOrgaPageNavigation(pageOption)">{{ pageOption.text }}</a>
+    </div>
+  </c-pagination>

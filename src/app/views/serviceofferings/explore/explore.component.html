@@ -30,7 +30,7 @@
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Anbieter:</strong><br />
-                {{ resolveOrganizationLegalName(offering.offeredBy) }}
+                {{ organizationsApiService.resolveOrganizationLegalName(offering.offeredBy) }}
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Status:</strong><br />
@@ -82,7 +82,7 @@
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Anbieter:</strong><br />
-                {{ resolveOrganizationLegalName(offering.offeredBy) }}
+                {{ organizationsApiService.resolveOrganizationLegalName(offering.offeredBy) }}
               </li>
             </ul>
             <div style="padding: 10px">
@@ -134,7 +134,7 @@
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Anbieter:</strong><br />
-        {{ resolveOrganizationLegalName(selectedOfferingDetails.offeredBy) }}
+        {{ organizationsApiService.resolveOrganizationLegalName(selectedOfferingDetails.offeredBy) }}
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Status:</strong><br />
@@ -279,7 +279,7 @@
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Anbieter:</strong><br />
-        {{ resolveOrganizationLegalName(selectedOfferingDetails.offeredBy) }}
+        {{ organizationsApiService.resolveOrganizationLegalName(selectedOfferingDetails.offeredBy) }}
       </li>
       <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.description !== null">
         <strong>Beschreibung:</strong><br />

@@ -72,7 +72,7 @@ export class ExploreComponent implements OnInit {
 
   constructor(
     protected serviceOfferingApiService : ServiceofferingApiService,
-    private organizationsApiService: OrganizationsApiService,
+    protected organizationsApiService: OrganizationsApiService,
     protected authService: AuthService,
     private formFieldService: FormfieldControlService) {
   }
@@ -185,11 +185,6 @@ export class ExploreComponent implements OnInit {
       this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
       this.isFiltered = false;
     }
-  }
-
-  protected resolveOrganizationLegalName(offeredByString: string): string {
-    let result = this.organizationsApiService.getOrgaById(offeredByString.replace("Participant:", ""))?.organizationLegalName;
-    return result ? result : "Unbekannt";
   }
 
   protected resolveMerlotStatusFriendlyName(merlotStatusString: string): string {
