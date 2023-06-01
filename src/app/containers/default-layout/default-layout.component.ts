@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { INavData } from '@coreui/angular';
-import { KeycloakService } from 'keycloak-angular';
+import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { AuthService } from 'src/app/services/auth.service';
 import { AaamApiService } from 'src/app/services/aaam-api.service';
 
 import { IRoleNavData, navItems } from './_nav';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,9 +26,10 @@ export class DefaultLayoutComponent {
 
   constructor(
     protected authService: AuthService,
-    protected keycloakService: KeycloakService,
+    public keycloakService: KeycloakService,
     private aaamApiService: AaamApiService,
-    private organizationsApiService: OrganizationsApiService
+    private organizationsApiService: OrganizationsApiService,
+    private router: Router
   ) {
     let globalNavItems = structuredClone(navItems);
     this.navItems = this.buildAllowedNavItems(globalNavItems);
@@ -39,6 +41,15 @@ export class DefaultLayoutComponent {
     this.navItems = this.buildAllowedNavItems(globalNavItems);
     //});
     this.selectedRoleOption = this.authService.activeOrganizationRole.getValue().orgaRoleString;
+    
+    // TODO fix token refresh
+    /*this.keycloakService.keycloakEvents$.subscribe({
+      next(event) {
+        if (event.type == KeycloakEventType.OnTokenExpired) {
+          this.keycloakService.updateToken();
+        }
+      }
+    });*/
   }
 
   private buildAllowedNavItems(navItems: IRoleNavData[]) {
