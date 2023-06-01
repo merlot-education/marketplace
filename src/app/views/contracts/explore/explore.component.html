@@ -15,11 +15,11 @@
                     <strong>Angebots-ID:</strong> <br />
                     {{ contract.offeringId }}
                 </li>
-                <li class="list-group-item" style="border: none">
+                <li class="list-group-item" style="border: none" *ngIf='contract.provider.replace("Participant:", "") != authService.activeOrganizationRole.value.orgaId'>
                   <strong>Serviceanbieter:</strong><br />
                   {{ organizationsApiService.resolveOrganizationLegalName(contract.provider) }}
                 </li>
-                <li class="list-group-item" style="border: none">
+                <li class="list-group-item" style="border: none" *ngIf='contract.consumer.replace("Participant:", "") != authService.activeOrganizationRole.value.orgaId'>
                     <strong>Kunde:</strong><br />
                     {{ organizationsApiService.resolveOrganizationLegalName(contract.consumer) }}
                   </li>

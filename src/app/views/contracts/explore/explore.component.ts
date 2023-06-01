@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { demoContracts, IContract } from '../contracts-data';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   templateUrl: './explore.component.html',
@@ -18,7 +19,8 @@ export class ExploreComponent implements OnInit {
     "ARCHIVED": "Archiviert"
   }
 
-  constructor(protected organizationsApiService: OrganizationsApiService) {
+  constructor(protected organizationsApiService: OrganizationsApiService,
+    protected authService: AuthService) {
   }
 
   ngOnInit(): void {

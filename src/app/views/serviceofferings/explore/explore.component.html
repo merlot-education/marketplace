@@ -302,17 +302,16 @@
         </ul>
       </li>
       <li class="list-group-item" style="border: none">
-        <strong>Allgemeine Geschäftsbedingungen:</strong><br />
+        <strong>Service-Angebot-spezifische AGB:</strong><br />
         <ul *ngFor="let tnc of selectedOfferingDetails.termsAndConditions">
           <li>
             <a [href]="tnc.content">{{ tnc.content }}</a> (Hash: {{ tnc.hash }})
           </li>
         </ul>
-        <c-form-check inline>
-          <input cFormCheckInput id="checkAGB" type="checkbox" />
-          <label cFormCheckLabel for="checkAGB" style="padding-left: 10px;"><b>AGB gelesen und akzeptiert*</b></label>
-        </c-form-check>
-        
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Anbieter AGB:</strong><br />
+          <a [href]="'http://example.com'">http://example.com</a> (Hash: 1234)
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Laufzeit*:</strong><br />
@@ -356,7 +355,12 @@
           <input class="form-control" placeholder="Zusatzvereinbarungen" [disabled]="true"/>
         </div>
       </li>
-      
+      <li class="list-group-item" style="border: none">
+        <c-form-check inline>
+          <input cFormCheckInput id="checkAGB" type="checkbox" />
+          <label cFormCheckLabel for="checkAGB" style="padding-left: 10px;"><b>Anbieter AGB gelesen und akzeptiert*</b></label>
+        </c-form-check>
+      </li>
       <li class="list-group-item" style="border: none">
         <c-form-check inline>
           <input cFormCheckInput id="checkMerlotAGB" type="checkbox" />
@@ -367,7 +371,7 @@
       <li class="list-group-item" style="border: none">
         <c-form-check inline>
           <input cFormCheckInput id="checkSpecificAGB" type="checkbox" />
-          <label cFormCheckLabel for="checkSpecificAGB" style="padding-left: 10px;"><b>Service-Angebot-spezifische gelesen und akzeptiert*</b></label>
+          <label cFormCheckLabel for="checkSpecificAGB" style="padding-left: 10px;"><b>Service-Angebot-spezifische AGB gelesen und akzeptiert*</b></label>
         </c-form-check>
       </li>
       
