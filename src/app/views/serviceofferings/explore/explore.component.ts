@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import {IOfferings, IOfferingsDetailed} from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
+import { ContractApiService } from 'src/app/services/contract-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ShaclFile } from '@models/shacl-file';
 import { FormfieldControlService } from '@services/form-field.service';
@@ -73,6 +74,7 @@ export class ExploreComponent implements OnInit {
   constructor(
     protected serviceOfferingApiService : ServiceofferingApiService,
     protected organizationsApiService: OrganizationsApiService,
+    private contractApiService: ContractApiService,
     protected authService: AuthService,
     private formFieldService: FormfieldControlService) {
   }
@@ -275,5 +277,13 @@ export class ExploreComponent implements OnInit {
     if (shape !== undefined) {
       this.shaclFile.shapes.find(x => x.name === shape.name).selected = true;
     }
+  }
+
+  bookServiceOffering(offeringId: string): void {
+    this.requestDetails(offeringId);
+    this.contractApiService.createNewContract(
+      offeringId, 
+      "Participant:" + this.authService.activeOrganizationRole.value.orgaId)
+      .then(result => console.log(result));
   }
 }
