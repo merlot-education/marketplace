@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {IOfferings, IOfferingsDetailed} from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
@@ -8,6 +8,7 @@ import { FormfieldControlService } from '@services/form-field.service';
 import { Shape } from '@models/shape';
 import { serviceFileNameDict } from '../serviceofferings-data';
 import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
+import { Subscription } from 'rxjs';
 
 interface IPageOption {
   target: number;
@@ -20,13 +21,15 @@ interface IPageOption {
   templateUrl: './explore.component.html',
   styleUrls: ['./explore.component.scss']
 })
-export class ExploreComponent implements OnInit {
+export class ExploreComponent implements OnInit, OnDestroy {
 
   @ViewChild(DynamicFormComponent, {static: false}) childRef: DynamicFormComponent;
 
   readonly ITEMS_PER_PAGE = 9;
 
   objectKeys = Object.keys;
+
+  private activeOrgaSubscription: Subscription;
 
   offerings: IOfferings[] = [];
   orgaOfferings: IOfferings[] = [];
@@ -78,7 +81,11 @@ export class ExploreComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.activeOrganizationRole.subscribe(value => this.refreshOfferings());
+    this.activeOrgaSubscription = this.authService.activeOrganizationRole.subscribe(value => this.refreshOfferings());
+  }
+
+  ngOnDestroy(): void {
+    this.activeOrgaSubscription.unsubscribe();
   }
 
   protected handlePublicPageNavigation(option: IPageOption) {
@@ -251,7 +258,7 @@ export class ExploreComponent implements OnInit {
   }
 
   select(name: string): void {
-    this.serviceOfferingApiService.fetchShape(name).subscribe(
+    this.serviceOfferingApiService.fetchShape(name).then(
       res => {
         this.shaclFile = this.formFieldService.readShaclFile(res);
         this.filteredShapes = this.formFieldService.updateFilteredShapes(this.shaclFile);

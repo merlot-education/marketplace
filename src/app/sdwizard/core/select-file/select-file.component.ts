@@ -39,7 +39,7 @@ export class SelectFileComponent implements OnInit {
   ngOnInit(): void { }
   requestShapes(system:string){
     //pass the system string down here
-    this.serviceofferingApiService.fetchAvailableShapes(system).subscribe(res => {
+    this.serviceofferingApiService.fetchAvailableShapes(system).then(res => {
       //this.files = res;
       this.defaultFiles=res?.Resource;
       this.serviceFiles=res?.Service;
@@ -51,7 +51,7 @@ export class SelectFileComponent implements OnInit {
     });
   }
   select(name: string): void {
-    this.serviceofferingApiService.fetchShape(name).subscribe(
+    this.serviceofferingApiService.fetchShape(name).then(
       res => {
         this.shaclFile = this.formFieldService.readShaclFile(res);
         this.filteredShapes = this.formFieldService.updateFilteredShapes(this.shaclFile);

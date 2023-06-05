@@ -36,7 +36,7 @@ export class EditComponent implements OnInit {
 
   requestShapes(system:string){
     //pass the system string down here
-    this.serviceofferingsApiService.fetchAvailableShapes(system).subscribe(res => {
+    this.serviceofferingsApiService.fetchAvailableShapes(system).then(res => {
       for (let i = 0; i < res?.Service.length;) {
         if (this.ignoredServiceFiles.includes(res?.Service[i])) {
           res?.Service.splice(i, 1);
@@ -50,7 +50,7 @@ export class EditComponent implements OnInit {
   }
 
   select(name: string): void {
-    this.serviceofferingsApiService.fetchShape(name).subscribe(
+    this.serviceofferingsApiService.fetchShape(name).then(
       res => {
         this.shaclFile = this.formFieldService.readShaclFile(res);
         this.filteredShapes = this.formFieldService.updateFilteredShapes(this.shaclFile);
