@@ -31,6 +31,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   private activeOrgaSubscription: Subscription;
 
+  private detailsModalPreviouslyVisible = false;
+  private editModalPreviouslyVisible = false;
+
   offerings: IOfferings[] = [];
   orgaOfferings: IOfferings[] = [];
   shaclFile: ShaclFile = undefined;
@@ -140,17 +143,19 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   protected handleEventEditModal(modalVisible: boolean) {
-    if (!modalVisible) {
-      this.selectedOfferingDetails = this.emptyOfferingDetails;
+    if (this.editModalPreviouslyVisible && !modalVisible) {
       this.childRef.ngOnDestroy();
+      this.selectedOfferingDetails = this.emptyOfferingDetails;
       this.refreshOfferings();
     }
+    this.editModalPreviouslyVisible = modalVisible;
   }
 
   protected handleEventDetailsModal(modalVisible: boolean) {
-    if (!modalVisible) {
+    if (this.detailsModalPreviouslyVisible && !modalVisible) {
       this.selectedOfferingDetails = this.emptyOfferingDetails;
     }
+    this.detailsModalPreviouslyVisible = modalVisible;
   }
 
   private refreshOfferings() {

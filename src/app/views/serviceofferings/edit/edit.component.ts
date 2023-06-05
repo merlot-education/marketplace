@@ -25,12 +25,11 @@ export class EditComponent implements OnInit {
   private ignoredServiceFiles: string[] = ["Merlot ServiceOffering.json"];
 
   constructor(private serviceofferingsApiService: ServiceofferingApiService, protected authService : AuthService, private formFieldService: FormfieldControlService) {
-    this.requestShapes(this.ecoSystem);
   }
 
 
   ngOnInit(): void {
-    console.log(this.authService.activeOrganizationRole.value.orgaRoleString);
+    this.requestShapes(this.ecoSystem);
   }
   
 
