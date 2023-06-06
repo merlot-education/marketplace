@@ -12,7 +12,7 @@ import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.
 })
 export class ContractviewComponent {
 
-  @Input() offeringDetails: IOfferingsDetailed = {
+  private emptyOfferingDetails: IOfferingsDetailed = {
     description: '',
     modifiedDate: '',
     dataAccessType: '',
@@ -28,7 +28,8 @@ export class ContractviewComponent {
     type: '',
     name: ''
   };
-  @Input() contractDetails: IContractDetailed = {
+
+  private emptyContractDetails: IContractDetailed = {
     userCountSelection: '',
     consumerMerlotTncAccepted: false,
     providerMerlotTncAccepted: false,
@@ -44,6 +45,9 @@ export class ContractviewComponent {
     consumerId: ''
   };
 
+  @Input() offeringDetails: IOfferingsDetailed = this.emptyOfferingDetails;
+  @Input() contractDetails: IContractDetailed = this.emptyContractDetails;
+
   constructor(
     private contractApiService: ContractApiService,
     protected serviceOfferingApiService: ServiceofferingApiService,
@@ -52,10 +56,14 @@ export class ContractviewComponent {
 
   protected saveContract() {
     console.log(this.contractDetails);
+    this.contractApiService.updateContract(this.contractDetails).then(result => console.log(result));
   }
 
   protected handleEventContractModal(isVisible: boolean) {
-
+    if (!isVisible) {
+      this.offeringDetails = this.emptyOfferingDetails;
+      this.contractDetails = this.emptyContractDetails;
+    }
   }
 
 }

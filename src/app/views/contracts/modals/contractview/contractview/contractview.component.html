@@ -83,7 +83,7 @@
             <strong>Anzahl erlaubter Benutzer*:</strong><br />
             <select class="form-select" [(ngModel)]="contractDetails.userCountSelection">
               <ng-container *ngFor="let auc of offeringDetails.userCountOption">
-                <option *ngIf="!auc.userCountUnlimited" [value]="auc.userCountUpTo ">Bis zu {{ auc.userCountUpTo }}</option>
+                <option *ngIf="!auc.userCountUnlimited" [value]="auc.userCountUpTo">Bis zu {{ auc.userCountUpTo }}</option>
                 <option *ngIf="auc.userCountUnlimited" [value]="'unlimited'">Unbegrenzt</option>
               </ng-container>
             </select>
@@ -94,7 +94,7 @@
             <strong>Anzahl erlaubter Datenaustausche*:</strong><br />
             <select class="form-select" [(ngModel)]="contractDetails.exchangeCountSelection">
               <ng-container *ngFor="let dec of offeringDetails.exchangeCountOption">
-                <option *ngIf="!dec.exchangeCountUnlimited" [value]="dec.exchangeCountUpTo ">Bis zu {{ dec.exchangeCountUpTo }}</option>
+                <option *ngIf="!dec.exchangeCountUnlimited" [value]="dec.exchangeCountUpTo">Bis zu {{ dec.exchangeCountUpTo }}</option>
                 <option *ngIf="dec.exchangeCountUnlimited" [value]="'unlimited'">Unbegrenzt</option>
               </ng-container>
             </select>
