@@ -307,8 +307,4 @@ export class ExploreComponent implements OnInit, OnDestroy {
         this.contractTemplate = result;
       });
   }
-
-  saveContract() {
-    console.log(this.contractTemplate);
-  }
 }
