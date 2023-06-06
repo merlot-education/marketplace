@@ -27,9 +27,14 @@ export class ContractApiService {
     })) as IContractDetailed;
   }
 
-  public async getOrgaContracts(consumerId: string) {
+  public async getOrgaContracts(consumerId: string): Promise<IPageContracts> {
     return await lastValueFrom(this.http.get(
       environment.contract_api_url + "organization/" + consumerId)) as IPageContracts;
+  }
+
+  public async getContractDetails(contractId: string): Promise<IContractDetailed> {
+    return await lastValueFrom(this.http.get(
+      environment.contract_api_url + "contract/" + contractId)) as IContractDetailed;
   }
 
   public resolveFriendlyStatusName(contractStatus: string) {

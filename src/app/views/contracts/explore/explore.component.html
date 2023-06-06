@@ -33,10 +33,7 @@
                 </li>
               </ul>
               <div style="padding: 10px">
-                <button type="button" class="btn btn-primary flex-item-grow disabled" [cModalToggle]="">
-                  Details
-                </button>
-                <button type="button" class="btn btn-primary flex-item-grow disabled" [cModalToggle]="" *ngIf="contract.state === 'IN_DRAFT'">
+                <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="'modalViewContract'" *ngIf="contract.state === 'IN_DRAFT'" (click)="prepareEditContract(contract)">
                   Bearbeiten
                 </button>
               </div>
@@ -52,3 +49,5 @@
       <a cPageLink [routerLink] (click)="handleOrgaPageNavigation(pageOption)">{{ pageOption.text }}</a>
     </div>
   </c-pagination>
+
+  <app-contractview [offeringDetails]="selectedOfferingDetails" [contractDetails]="contractTemplate"></app-contractview>
