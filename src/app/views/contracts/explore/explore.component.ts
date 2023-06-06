@@ -12,14 +12,6 @@ export class ExploreComponent implements OnInit {
 
   contracts: IContractBasic[] = [];
 
-  protected friendlyStatusNames = {  // TODO update to contract stati
-    "IN_DRAFT": "In Bearbeitung",
-    "RELEASED": "Veröffentlicht",
-    "REVOKED": "Widerrufen",
-    "DELETED": "Gelöscht",
-    "ARCHIVED": "Archiviert"
-  }
-
   constructor(
     protected organizationsApiService: OrganizationsApiService,
     protected authService: AuthService,
@@ -33,10 +25,6 @@ export class ExploreComponent implements OnInit {
         "Participant:" + value.orgaId)
         .then(result => this.contracts = result.content);
     })
-  }
-
-  protected resolveContractStatusFriendlyName(status: string) {
-    return this.friendlyStatusNames[status] ? this.friendlyStatusNames[status] : "Unbekannt";
   }
 
 }

@@ -52,10 +52,12 @@ import { IconModule } from '@coreui/icons-angular';
 
 // Components Routing
 import { ContractsRoutingModule } from './contracts-routing.module';
+import { ContractviewComponent } from './modals/contractview/contractview/contractview.component';
 
 @NgModule({
     declarations: [
-        ExploreComponent
+        ExploreComponent,
+        ContractviewComponent
     ],
     imports: [
         CommonModule,

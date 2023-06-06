@@ -34,7 +34,7 @@
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Status:</strong><br />
-                {{ resolveMerlotStatusFriendlyName(offering.merlotState) }}
+                {{ serviceOfferingApiService.resolveFriendlyStatusName(offering.merlotState) }}
               </li>
             </ul>
             <div style="padding: 10px">
@@ -118,7 +118,7 @@
     <ul class="list-group list-group-flush">
       <li class="list-group-item" style="border: none">
         <strong>Angebotstyp:</strong> <br />
-        {{ resolveTypeFriendlyName(selectedOfferingDetails.type) }}
+        {{ serviceOfferingApiService.resolveFriendlyTypeName(selectedOfferingDetails.type) }}
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Service ID:</strong> <br />
@@ -138,7 +138,7 @@
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Status:</strong><br />
-        {{ resolveMerlotStatusFriendlyName(selectedOfferingDetails.merlotState) }}
+        {{ serviceOfferingApiService.resolveFriendlyStatusName(selectedOfferingDetails.merlotState) }}
       </li>
       <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.description !== null">
         <strong>Beschreibung:</strong><br />
@@ -279,7 +279,7 @@
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Angebotstyp:</strong> <br />
-        {{ resolveTypeFriendlyName(selectedOfferingDetails.type) }}
+        {{ serviceOfferingApiService.resolveFriendlyTypeName(selectedOfferingDetails.type) }}
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Service ID:</strong> <br />

@@ -9,6 +9,15 @@ import { IContractBasic, IContractDetailed, IPageContracts } from '../views/cont
   providedIn: 'root',
 })
 export class ContractApiService {
+
+  private friendlyStatusNames = {  // TODO update to contract stati
+    "IN_DRAFT": "In Bearbeitung",
+    "RELEASED": "Veröffentlicht",
+    "REVOKED": "Widerrufen",
+    "DELETED": "Gelöscht",
+    "ARCHIVED": "Archiviert"
+  }
+
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   public async createNewContract(offeringId: string, consumerId: string): Promise<IContractDetailed> {
@@ -21,5 +30,9 @@ export class ContractApiService {
   public async getOrgaContracts(consumerId: string) {
     return await lastValueFrom(this.http.get(
       environment.contract_api_url + "organization/" + consumerId)) as IPageContracts;
+  }
+
+  public resolveFriendlyStatusName(contractStatus: string) {
+    return this.friendlyStatusNames[contractStatus] ? this.friendlyStatusNames[contractStatus] : "Unbekannt";
   }
 }
