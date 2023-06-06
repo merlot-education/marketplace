@@ -10,6 +10,7 @@ import { Shape } from '@models/shape';
 import { serviceFileNameDict } from '../serviceofferings-data';
 import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
 import { Subscription } from 'rxjs';
+import { IContractDetailed } from '../../contracts/contracts-data';
 
 interface IPageOption {
   target: number;
@@ -72,8 +73,26 @@ export class ExploreComponent implements OnInit, OnDestroy {
     name: ''
   };
 
+  emptyContractTemplate: IContractDetailed = {
+    userCountSelection: '',
+    consumerMerlotTncAccepted: false,
+    providerMerlotTncAccepted: false,
+    consumerOfferingTncAccepted: false,
+    consumerProviderTncAccepted: false,
+    providerTncUrl: '',
+    id: '',
+    state: '',
+    creationDate: '',
+    offeringId: '',
+    offeringName: '',
+    providerId: '',
+    consumerId: ''
+  }
+
   selectedOfferingDetails: IOfferingsDetailed = this.emptyOfferingDetails;
   selectedOfferingPublic: boolean = false;
+
+  contractTemplate: IContractDetailed = this.emptyContractTemplate;
 
   private isFiltered: boolean = false;
 
@@ -296,6 +315,13 @@ export class ExploreComponent implements OnInit, OnDestroy {
     this.contractApiService.createNewContract(
       offeringId, 
       "Participant:" + this.authService.activeOrganizationRole.value.orgaId)
-      .then(result => console.log(result));
+      .then(result => {
+        console.log(result)
+        this.contractTemplate = result;
+      });
+  }
+
+  saveContract() {
+    console.log(this.contractTemplate);
   }
 }

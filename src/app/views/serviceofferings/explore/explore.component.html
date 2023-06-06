@@ -266,6 +266,18 @@
   <c-modal-body>
     <ul class="list-group list-group-flush">
       <li class="list-group-item" style="border: none">
+        <strong>Vertrags-ID:</strong> <br />
+        {{ contractTemplate.id }}
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Erstelldatum des Vertrags:</strong> <br />
+        {{ contractTemplate.creationDate }}
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Vertrags-Status:</strong> <br />
+        {{ contractTemplate.state }}
+      </li>
+      <li class="list-group-item" style="border: none">
         <strong>Angebotstyp:</strong> <br />
         {{ resolveTypeFriendlyName(selectedOfferingDetails.type) }}
       </li>
@@ -295,7 +307,7 @@
       </li>
       <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.attachments !== null">
         <strong>Anhänge:</strong><br />
-        <ul *ngFor="let attachment of selectedOfferingDetails.attachments">
+        <ul *ngFor="let attachment of contractTemplate.attachments">
           <li>
             <a [href]="attachment">{{ attachment }}</a>
           </li>
@@ -311,14 +323,14 @@
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Anbieter AGB:</strong><br />
-          <a [href]="'http://example.com'">http://example.com</a> (Hash: 1234)
+          <a [href]="contractTemplate.providerTncUrl">{{ contractTemplate.providerTncUrl }}</a>
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Laufzeit*:</strong><br />
-        <select class="form-select">
+        <select class="form-select" [(ngModel)]="contractTemplate.runtimeSelection">
           <ng-container *ngFor="let rt of selectedOfferingDetails.runtimeOption">
             <option *ngIf="!rt.runtimeUnlimited" [value]="rt.runtimeCount + ' ' + rt.runtimeMeasurement">{{ rt.runtimeCount }} {{ rt.runtimeMeasurement }}</option>
-            <option *ngIf="rt.runtimeUnlimited" [value]="'unlimited'">Unbegrenzte Laufzeit</option>
+            <option *ngIf="rt.runtimeUnlimited" [value]="'unlimited'">Unbegrenzt</option>
           </ng-container>
         </select>
         
@@ -330,10 +342,10 @@
         </li>
         <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.userCountOption !== null">
           <strong>Anzahl erlaubter Benutzer*:</strong><br />
-          <select class="form-select">
+          <select class="form-select" [(ngModel)]="contractTemplate.userCountSelection">
             <ng-container *ngFor="let auc of selectedOfferingDetails.userCountOption">
-              <option *ngIf="!auc.userCountUnlimited" [value]="auc.userCountUpTo ">Bis zu {{ auc.userCountUpTo }} Benutzer</option>
-              <option *ngIf="auc.userCountUnlimited" [value]="'unlimited'">Unbegrenzt viele Benutzer</option>
+              <option *ngIf="!auc.userCountUnlimited" [value]="auc.userCountUpTo ">Bis zu {{ auc.userCountUpTo }}</option>
+              <option *ngIf="auc.userCountUnlimited" [value]="'unlimited'">Unbegrenzt</option>
             </ng-container>
           </select>
         </li>
@@ -341,10 +353,10 @@
       <div *ngIf="selectedOfferingDetails.type === 'merlot:MerlotServiceOfferingDataDelivery'">
         <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.exchangeCountOption !== null">
           <strong>Anzahl erlaubter Datenaustausche*:</strong><br />
-          <select class="form-select">
+          <select class="form-select" [(ngModel)]="contractTemplate.exchangeCountSelection">
             <ng-container *ngFor="let dec of selectedOfferingDetails.exchangeCountOption">
-              <option *ngIf="!dec.exchangeCountUnlimited" [value]="dec.exchangeCountUpTo ">Bis zu {{ dec.exchangeCountUpTo }} Datenaustausche</option>
-              <option *ngIf="dec.exchangeCountUnlimited" [value]="'unlimited'">Unbegrenzt viele Datenaustausche</option>
+              <option *ngIf="!dec.exchangeCountUnlimited" [value]="dec.exchangeCountUpTo ">Bis zu {{ dec.exchangeCountUpTo }}</option>
+              <option *ngIf="dec.exchangeCountUnlimited" [value]="'unlimited'">Unbegrenzt</option>
             </ng-container>
           </select>
         </li>
@@ -352,26 +364,25 @@
       <li class="list-group-item" style="border: none">
         <div class="mb-3">
           <label class="form-label"><strong>Zusatzvereinbarungen</strong></label>
-          <input class="form-control" placeholder="Zusatzvereinbarungen" [disabled]="true"/>
+          <input class="form-control" placeholder="Keine Zusatzvereinbarungen" [disabled]="true" [value]="contractTemplate.additionalAgreements">
         </div>
       </li>
       <li class="list-group-item" style="border: none">
         <c-form-check inline>
-          <input cFormCheckInput id="checkAGB" type="checkbox" />
+          <input cFormCheckInput id="checkAGB" type="checkbox" [checked]="contractTemplate.consumerProviderTncAccepted" />
           <label cFormCheckLabel for="checkAGB" style="padding-left: 10px;"><b>Anbieter AGB gelesen und akzeptiert*</b></label>
         </c-form-check>
       </li>
       <li class="list-group-item" style="border: none">
         <c-form-check inline>
-          <input cFormCheckInput id="checkMerlotAGB" type="checkbox" />
-          <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Merlot AGB gelesen und akzeptiert*</b></label>
+          <input cFormCheckInput id="checkSpecificAGB" type="checkbox" [checked]="contractTemplate.consumerOfferingTncAccepted"/>
+          <label cFormCheckLabel for="checkSpecificAGB" style="padding-left: 10px;"><b>Service-Angebot-spezifische AGB gelesen und akzeptiert*</b></label>
         </c-form-check>
       </li>
-
       <li class="list-group-item" style="border: none">
         <c-form-check inline>
-          <input cFormCheckInput id="checkSpecificAGB" type="checkbox" />
-          <label cFormCheckLabel for="checkSpecificAGB" style="padding-left: 10px;"><b>Service-Angebot-spezifische AGB gelesen und akzeptiert*</b></label>
+          <input cFormCheckInput id="checkMerlotAGB" type="checkbox" [checked]="contractTemplate.consumerMerlotTncAccepted"/>
+          <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Merlot AGB gelesen und akzeptiert*</b></label>
         </c-form-check>
       </li>
       
@@ -379,7 +390,7 @@
   </c-modal-body>
   <c-modal-footer>
     <button cButton color="secondary" [cModalToggle]="modalViewContract.id">Schließen</button>
-    <button cButton disabled color="primary">Vertragsentwurf speichern</button>
+    <button cButton color="primary" (click)="saveContract()">Vertragsentwurf speichern</button>
     <button cButton disabled color="primary">Vertragsentwurf löschen</button>
     <button cButton disabled color="primary">Kostenpflichtig bestellen</button>
   </c-modal-footer>

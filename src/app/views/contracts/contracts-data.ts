@@ -9,7 +9,16 @@ export interface IContractBasic {
 }
 
 export interface IContractDetailed extends IContractBasic {
-
+  runtimeSelection?: string;
+  exchangeCountSelection?: string;
+  userCountSelection: string;
+  consumerMerlotTncAccepted: boolean;
+  providerMerlotTncAccepted: boolean;
+  consumerOfferingTncAccepted: boolean;
+  consumerProviderTncAccepted: boolean;
+  providerTncUrl: string;
+  additionalAgreements?: string;
+  offeringAttachments?: string[];
 }
 
 export interface IPageContracts {
