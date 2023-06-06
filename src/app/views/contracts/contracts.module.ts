@@ -89,6 +89,9 @@ import { ContractviewComponent } from './modals/contractview/contractview/contra
         PopoverModule,
         TableModule,
         ModalModule
+    ],
+    exports: [
+        ContractviewComponent
     ]
 })
 export class ContractsModule {}

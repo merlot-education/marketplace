@@ -56,6 +56,7 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 // Components Routing
 import { ServiceofferingsRoutingModule } from './serviceofferings-routing.module';
 import { WizardAppModule } from "../../sdwizard/app.module";
+import { ContractsModule } from "../contracts/contracts.module";
 
 @NgModule({
     declarations: [
@@ -93,7 +94,8 @@ import { WizardAppModule } from "../../sdwizard/app.module";
         TableModule,
         DocsComponentsModule,
         WizardAppModule,
-        ModalModule
+        ModalModule,
+        ContractsModule
     ]
 })
 export class ServiceofferingsModule {}
