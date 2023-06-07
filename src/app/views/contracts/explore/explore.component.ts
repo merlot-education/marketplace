@@ -43,7 +43,8 @@ export class ExploreComponent implements OnInit {
     offeringId: '',
     offeringName: '',
     providerId: '',
-    consumerId: ''
+    consumerId: '',
+    offeringAttachments: []
   };
 
   constructor(

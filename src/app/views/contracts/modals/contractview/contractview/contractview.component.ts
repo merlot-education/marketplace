@@ -43,17 +43,22 @@ export class ContractviewComponent {
     offeringId: '',
     offeringName: '',
     providerId: '',
-    consumerId: ''
+    consumerId: '',
+    offeringAttachments: []
   };
 
   @Input() offeringDetails: IOfferingsDetailed = this.emptyOfferingDetails;
   @Input() contractDetails: IContractDetailed = this.emptyContractDetails;
 
   constructor(
-    private contractApiService: ContractApiService,
+    protected contractApiService: ContractApiService,
     private authService: AuthService,
     protected serviceOfferingApiService: ServiceofferingApiService,
     protected organizationsApiService: OrganizationsApiService) {
+  }
+
+  protected trackByFn(index, item) {
+    return index;  
   }
 
   protected saveContract() {
@@ -70,6 +75,14 @@ export class ContractviewComponent {
 
   protected userIsActiveProvider(): boolean {
     return this.authService.activeOrganizationRole.value.orgaId == this.contractDetails.providerId.replace("Participant:", "");
+  }
+
+  protected addAttachment() {
+    this.contractDetails.offeringAttachments.push("");
+  }
+
+  protected deleteAttachment(index: number) {
+    this.contractDetails.offeringAttachments.splice(index, 1);
   }
 
 }

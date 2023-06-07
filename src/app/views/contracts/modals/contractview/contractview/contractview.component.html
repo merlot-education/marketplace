@@ -14,7 +14,7 @@
         </li>
         <li class="list-group-item" style="border: none">
           <strong>Vertrags-Status:</strong> <br />
-          {{ contractDetails.state }}
+          {{ contractApiService.resolveFriendlyStatusName(contractDetails.state) }}
         </li>
         <li class="list-group-item" style="border: none">
           <strong>Angebotstyp:</strong> <br />
@@ -25,7 +25,7 @@
           {{ offeringDetails.id }}
         </li>
         <li class="list-group-item" style="border: none">
-          <strong>Name:</strong> <br />
+          <strong>Name des Angebots:</strong> <br />
           {{ offeringDetails.name }}
         </li>
         <li class="list-group-item" style="border: none">
@@ -37,7 +37,7 @@
           {{ organizationsApiService.resolveOrganizationLegalName(contractDetails.consumerId) }}
         </li>
         <li class="list-group-item" style="border: none" *ngIf="offeringDetails.description !== null">
-          <strong>Beschreibung:</strong><br />
+          <strong>Beschreibung des Angebots:</strong><br />
           {{ offeringDetails.description }}
         </li>
         <li class="list-group-item" style="border: none">
@@ -48,11 +48,30 @@
           <strong>Beispielkosten:</strong><br />
           {{ offeringDetails.exampleCosts }}
         </li>
-        <li class="list-group-item" style="border: none" *ngIf="offeringDetails.attachments !== null">
-          <strong>Anhänge:</strong><br />
-          <ul *ngFor="let attachment of contractDetails.attachments">
+        <li class="list-group-item" style="border: none">
+          <strong>Anhänge:</strong>
+          <button cButton color="primary" variant="ghost" (click)="addAttachment()" size="sm" *ngIf="userIsActiveProvider()">
+            <svg
+            class=""
+            cIcon
+            name="cib-addthis"
+            size="xl"
+          ></svg></button>
+          <br />
+          <ul *ngFor="let attachment of contractDetails.offeringAttachments;let index = index;trackBy: trackByFn">
             <li>
-              <a [href]="attachment">{{ attachment }}</a>
+              <a [href]="attachment" *ngIf="!userIsActiveProvider()">{{ attachment }}</a>
+              <div *ngIf="userIsActiveProvider()" class="mb-3 flex-container">
+                <input class="form-control" placeholder="Anhang" 
+                  [(ngModel)]="contractDetails.offeringAttachments[index]">
+                  <button cButton variant="ghost" (click)="deleteAttachment(index)" color="primary" size="sm">
+                    <svg
+                    class=""
+                    cIcon
+                    name="cil-trash"
+                    size="xl"
+                  ></svg></button>
+              </div>
             </li>
           </ul>
         </li>

@@ -18,7 +18,7 @@ export interface IContractDetailed extends IContractBasic {
   consumerProviderTncAccepted: boolean;
   providerTncUrl: string;
   additionalAgreements?: string;
-  offeringAttachments?: string[];
+  offeringAttachments: string[];
 }
 
 export interface IPageContracts {
