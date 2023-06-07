@@ -30,7 +30,11 @@
         </li>
         <li class="list-group-item" style="border: none">
           <strong>Anbieter:</strong><br />
-          {{ organizationsApiService.resolveOrganizationLegalName(offeringDetails.offeredBy) }}
+          {{ organizationsApiService.resolveOrganizationLegalName(contractDetails.providerId) }}
+        </li>
+        <li class="list-group-item" style="border: none">
+          <strong>Kunde:</strong><br />
+          {{ organizationsApiService.resolveOrganizationLegalName(contractDetails.consumerId) }}
         </li>
         <li class="list-group-item" style="border: none" *ngIf="offeringDetails.description !== null">
           <strong>Beschreibung:</strong><br />
@@ -103,25 +107,33 @@
         <li class="list-group-item" style="border: none">
           <div class="mb-3">
             <label class="form-label"><strong>Zusatzvereinbarungen</strong></label>
-            <input class="form-control" placeholder="Keine Zusatzvereinbarungen" [disabled]="true" [value]="contractDetails.additionalAgreements">
+            <input class="form-control" placeholder="Keine Zusatzvereinbarungen" 
+              [disabled]="!userIsActiveProvider()" 
+              [(ngModel)]="contractDetails.additionalAgreements">
           </div>
         </li>
-        <li class="list-group-item" style="border: none">
+        <li class="list-group-item" style="border: none" *ngIf="!userIsActiveProvider()">
           <c-form-check inline>
-            <input cFormCheckInput id="checkAGB" type="checkbox" [checked]="contractDetails.consumerProviderTncAccepted" />
+            <input cFormCheckInput id="checkAGB" type="checkbox" [(ngModel)]="contractDetails.consumerProviderTncAccepted"/>
             <label cFormCheckLabel for="checkAGB" style="padding-left: 10px;"><b>Anbieter AGB gelesen und akzeptiert*</b></label>
           </c-form-check>
         </li>
-        <li class="list-group-item" style="border: none">
+        <li class="list-group-item" style="border: none" *ngIf="!userIsActiveProvider()">
           <c-form-check inline>
-            <input cFormCheckInput id="checkSpecificAGB" type="checkbox" [checked]="contractDetails.consumerOfferingTncAccepted"/>
+            <input cFormCheckInput id="checkSpecificAGB" type="checkbox" [(ngModel)]="contractDetails.consumerOfferingTncAccepted"/>
             <label cFormCheckLabel for="checkSpecificAGB" style="padding-left: 10px;"><b>Service-Angebot-spezifische AGB gelesen und akzeptiert*</b></label>
           </c-form-check>
         </li>
-        <li class="list-group-item" style="border: none">
+        <li class="list-group-item" style="border: none" *ngIf="!userIsActiveProvider()">
           <c-form-check inline>
-            <input cFormCheckInput id="checkMerlotAGB" type="checkbox" [checked]="contractDetails.consumerMerlotTncAccepted"/>
-            <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Merlot AGB gelesen und akzeptiert*</b></label>
+            <input cFormCheckInput id="checkMerlotAGB" type="checkbox" [(ngModel)]="contractDetails.consumerMerlotTncAccepted"/>
+            <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Kunde: Merlot AGB gelesen und akzeptiert*</b></label>
+          </c-form-check>
+        </li>
+        <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+          <c-form-check inline>
+            <input cFormCheckInput id="checkMerlotAGB" type="checkbox" [(ngModel)]="contractDetails.providerMerlotTncAccepted">
+            <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Anbieter: Merlot AGB gelesen und akzeptiert*</b></label>
           </c-form-check>
         </li>
         

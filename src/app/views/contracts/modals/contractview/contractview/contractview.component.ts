@@ -4,6 +4,7 @@ import { IOfferingsDetailed } from 'src/app/views/serviceofferings/serviceofferi
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-contractview',
@@ -50,6 +51,7 @@ export class ContractviewComponent {
 
   constructor(
     private contractApiService: ContractApiService,
+    private authService: AuthService,
     protected serviceOfferingApiService: ServiceofferingApiService,
     protected organizationsApiService: OrganizationsApiService) {
   }
@@ -64,6 +66,10 @@ export class ContractviewComponent {
       this.offeringDetails = this.emptyOfferingDetails;
       this.contractDetails = this.emptyContractDetails;
     }
+  }
+
+  protected userIsActiveProvider(): boolean {
+    return this.authService.activeOrganizationRole.value.orgaId == this.contractDetails.providerId.replace("Participant:", "");
   }
 
 }
