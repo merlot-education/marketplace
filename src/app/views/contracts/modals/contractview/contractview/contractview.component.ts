@@ -50,6 +50,10 @@ export class ContractviewComponent {
   @Input() offeringDetails: IOfferingsDetailed = this.emptyOfferingDetails;
   @Input() contractDetails: IContractDetailed = this.emptyContractDetails;
 
+  protected saveButtonDisabled: boolean = false;
+  protected showErrorMessage: boolean = false;
+  protected showSuccessMessage: boolean = false;
+
   constructor(
     protected contractApiService: ContractApiService,
     private authService: AuthService,
@@ -63,10 +67,21 @@ export class ContractviewComponent {
 
   protected saveContract() {
     console.log(this.contractDetails);
-    this.contractApiService.updateContract(this.contractDetails).then(result =>  {
-      this.contractDetails = result;
-      console.log(result)
-    });
+    this.saveButtonDisabled = true;
+    this.showSuccessMessage = false;
+    this.showErrorMessage = false;
+    try {
+      this.contractApiService.updateContract(this.contractDetails).then(result =>  {
+        this.contractDetails = result;
+        this.showSuccessMessage = true;
+        this.saveButtonDisabled = false;
+        console.log(result)
+      });
+    } catch (e){
+      console.log(e);
+      this.showErrorMessage = true;
+    }
+    
   }
 
   protected handleEventContractModal(isVisible: boolean) {

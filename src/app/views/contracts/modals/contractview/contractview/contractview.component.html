@@ -155,12 +155,13 @@
             <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Anbieter: Merlot AGB gelesen und akzeptiert*</b></label>
           </c-form-check>
         </li>
-        
+        <strong *ngIf="showErrorMessage" style="color:red">Fehler beim Speichern der Vertragskonfiguration.</strong>
+        <strong *ngIf="showSuccessMessage" style="color:green">Vertragskonfiguration gespeichert!</strong>
       </ul>
     </c-modal-body>
     <c-modal-footer>
       <button cButton color="secondary" [cModalToggle]="modalViewContract.id">Schließen</button>
-      <button cButton color="primary" (click)="saveContract()">Vertragsentwurf speichern</button>
+      <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="saveContract()">Vertragsentwurf speichern</button>
       <button cButton disabled color="primary">Vertragsentwurf löschen</button>
       <button cButton disabled color="primary">Kostenpflichtig bestellen</button>
     </c-modal-footer>
