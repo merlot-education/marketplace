@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {IOfferings, IOfferingsDetailed} from '../serviceofferings-data'
+import {IOfferings, IOfferingsDetailed, IPageOfferings} from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
@@ -9,7 +9,7 @@ import { FormfieldControlService } from '@services/form-field.service';
 import { Shape } from '@models/shape';
 import { serviceFileNameDict } from '../serviceofferings-data';
 import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { IContractDetailed } from '../../contracts/contracts-data';
 
 interface IPageOption {
@@ -36,15 +36,57 @@ export class ExploreComponent implements OnInit, OnDestroy {
   private detailsModalPreviouslyVisible = false;
   private editModalPreviouslyVisible = false;
 
-  offerings: IOfferings[] = [];
-  orgaOfferings: IOfferings[] = [];
   shaclFile: ShaclFile = undefined;
   filteredShapes: Shape[];
 
+  protected activePublicOfferingPage: BehaviorSubject<IPageOfferings> = new BehaviorSubject<IPageOfferings>({
+    content: [],
+    empty: false,
+    first: false,
+    last: false,
+    number: 0,
+    numberOfElements: 0,
+    pageable: {
+      offset: 0,
+      pageNumber: 0,
+      pageSize: 0,
+      paged: false,
+      sort: {
+        empty: false,
+        sorted: false,
+        unsorted: false
+      },
+      unpaged: false
+    },
+    size: 0,
+    totalElements: 0,
+    totalPages: 0
+  });
 
-  protected publicOfferingPages: IPageOption[] = []
+  protected activeOrgaOfferingPage: BehaviorSubject<IPageOfferings> = new BehaviorSubject<IPageOfferings>({
+    content: [],
+    empty: false,
+    first: false,
+    last: false,
+    number: 0,
+    numberOfElements: 0,
+    pageable: {
+      offset: 0,
+      pageNumber: 0,
+      pageSize: 0,
+      paged: false,
+      sort: {
+        empty: false,
+        sorted: false,
+        unsorted: false
+      },
+      unpaged: false
+    },
+    size: 0,
+    totalElements: 0,
+    totalPages: 0
+  });
 
-  protected orgaOfferingPages: IPageOption[] = []
 
   protected friendlyStatusNames = {
     "IN_DRAFT": "In Bearbeitung",
@@ -113,57 +155,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
     this.activeOrgaSubscription.unsubscribe();
   }
 
-  protected handlePublicPageNavigation(option: IPageOption) {
-    if (option.active) {
-      return;
-    }
-
-    console.log(option);
-    this.refreshPublicOfferings(option.target, this.ITEMS_PER_PAGE);
-  }
-
-  protected handleOrgaPageNavigation(option: IPageOption) {
-    if (option.active) {
-      return;
-    }
-
-    console.log(option);
-    this.refreshOrgaOfferings(option.target, this.ITEMS_PER_PAGE);
-  }
-
-  private updatePageNavigationOptions(activePage: number, totalPages: number): IPageOption[] {
-    let target = [{
-      target: 0,
-      text: "Anfang",
-      disabled: activePage === 0,
-      active: false,
-    }];
-    
-    let startIndex;
-    if (activePage > 0) {
-      startIndex = activePage === (totalPages-1) ? Math.max(0, (activePage-2)) : (activePage-1);
-    } else {
-      startIndex = activePage;
-    }
-
-    for (let i = startIndex; i < Math.min(startIndex + 3, totalPages); i++) {
-      target.push({
-        target: i,
-        text: "" + (i+1),
-        disabled: false,
-        active: activePage === i,
-      })
-    }
-
-    target.push({
-        target: totalPages-1,
-        text: "Ende",
-        disabled: activePage === (totalPages-1),
-        active: false,
-    })
-    return target;
-  }
-
   protected handleEventEditModal(modalVisible: boolean) {
     if (this.editModalPreviouslyVisible && !modalVisible) {
       this.childRef.ngOnDestroy();
@@ -194,19 +185,15 @@ export class ExploreComponent implements OnInit, OnDestroy {
     this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
   }
 
-  private refreshPublicOfferings(page: number, size: number) {
+  protected refreshPublicOfferings(page: number, size: number) {
     this.serviceOfferingApiService.fetchPublicServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
-      console.log(result)
-      this.publicOfferingPages = this.updatePageNavigationOptions(result.pageable.pageNumber, result.totalPages);
-      this.offerings = result.content;
+      this.activePublicOfferingPage.next(result);
     });
   }
 
   private refreshOrgaOfferings(page: number, size: number) {
     this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
-      console.log(result)
-      this.orgaOfferingPages = this.updatePageNavigationOptions(result.pageable.pageNumber, result.totalPages);
-      this.orgaOfferings = result.content;
+      this.activeOrgaOfferingPage.next(result);
     });
   }
 

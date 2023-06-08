@@ -1,4 +1,4 @@
-<div *ngIf="orgaOfferings.length > 0 || applyStatusFilter">
+<div *ngIf="this.activeOrgaOfferingPage.value.content.length > 0 || applyStatusFilter">
 
 <h1>Service Angebote meiner Organisation</h1>
 
@@ -13,7 +13,7 @@
 </div>
 
 <c-row [xl]="3">
-  <c-col xs *ngFor="let offering of orgaOfferings">
+  <c-col xs *ngFor="let offering of this.activeOrgaOfferingPage.value.content">
     <c-card class="mb-4">
       <c-card-header><b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
       <c-card-body>
@@ -52,20 +52,16 @@
   </c-col>
 </c-row>
 
-<c-pagination align="left" aria-label="Page navigation example">
-  <div cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of orgaOfferingPages">
-    <a cPageLink [routerLink] (click)="handleOrgaPageNavigation(pageOption)">{{ pageOption.text }}</a>
-  </div>
-</c-pagination>
+<app-paging-footer [currentPage]="activeOrgaOfferingPage" (pageChangeEvent)="refreshOrgaOfferings($event, ITEMS_PER_PAGE)"></app-paging-footer>
 
 </div>
 
 
-<div *ngIf="offerings.length > 0">
+<div *ngIf="this.activePublicOfferingPage.value.content.length > 0">
 <h1>Öffentliche Service Angebote</h1>
 
 <c-row [xl]="3">
-  <c-col xs *ngFor="let offering of offerings">
+  <c-col xs *ngFor="let offering of this.activePublicOfferingPage.value.content">
     <c-card class="mb-4">
       <c-card-header><b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
       <c-card-body>
@@ -100,15 +96,11 @@
   </c-col>
 </c-row>
 
-<c-pagination align="left" aria-label="Page navigation example">
-  <div cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of publicOfferingPages">
-    <a cPageLink [routerLink] (click)="handlePublicPageNavigation(pageOption)">{{ pageOption.text }}</a>
-  </div>
-</c-pagination>
+<app-paging-footer [currentPage]="activePublicOfferingPage" (pageChangeEvent)="refreshPublicOfferings($event, ITEMS_PER_PAGE)"></app-paging-footer>
 
 </div>
 
-<h1 *ngIf="orgaOfferings.length === 0 && offerings.length === 0">Es konnten keine Service Angebote gefunden werden.</h1>
+<h1 *ngIf="this.activeOrgaOfferingPage.value.content.length === 0 && this.activePublicOfferingPage.value.content.length === 0">Es konnten keine Service Angebote gefunden werden.</h1>
 
 <c-modal #modalViewDetails id="modalViewDetails" size="xl" alignment="center" (visibleChange)="handleEventDetailsModal($event)">
   <c-modal-header>

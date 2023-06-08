@@ -57,6 +57,7 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 import { ServiceofferingsRoutingModule } from './serviceofferings-routing.module';
 import { WizardAppModule } from "../../sdwizard/app.module";
 import { ContractsModule } from "../contracts/contracts.module";
+import { CommonViewsModule } from "../common-views/common-views.module";
 
 @NgModule({
     declarations: [
@@ -64,6 +65,7 @@ import { ContractsModule } from "../contracts/contracts.module";
         EditComponent
     ],
     imports: [
+        CommonViewsModule,
         CommonModule,
         ServiceofferingsRoutingModule,
         AccordionModule,
@@ -95,7 +97,7 @@ import { ContractsModule } from "../contracts/contracts.module";
         DocsComponentsModule,
         WizardAppModule,
         ModalModule,
-        ContractsModule
+        ContractsModule,
     ]
 })
 export class ServiceofferingsModule {}
