@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IPageOfferings } from 'src/app/views/serviceofferings/serviceofferings-data';
+import { ISpringPage } from './page-data';
 
 interface IPageOption {
   target: number;
@@ -16,7 +17,7 @@ interface IPageOption {
 })
 export class PagingFooterComponent implements OnInit {
 
-  @Input() private currentPage: BehaviorSubject<IPageOfferings>;
+  @Input() private currentPage: BehaviorSubject<ISpringPage>;
   @Output() private pageChangeEvent = new EventEmitter<number>();
 
   protected pageOptions: IPageOption[];
@@ -30,7 +31,6 @@ export class PagingFooterComponent implements OnInit {
   }
 
   private updatePageNavigationOptions(activePage: number, totalPages: number): IPageOption[] {
-    console.log("updatePageNavigation");
     let target = [{
       target: 0,
       text: "Anfang",

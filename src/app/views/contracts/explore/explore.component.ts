@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { demoContracts, IContractBasic, IContractDetailed } from '../contracts-data';
+import { demoContracts, IContractBasic, IContractDetailed, IPageContracts } from '../contracts-data';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { IOfferingsDetailed } from '../../serviceofferings/serviceofferings-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   templateUrl: './explore.component.html',
@@ -12,7 +13,31 @@ import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.
 })
 export class ExploreComponent implements OnInit {
 
-  contracts: IContractBasic[] = [];
+  readonly ITEMS_PER_PAGE = 9;
+
+  activePage: BehaviorSubject<IPageContracts> = new BehaviorSubject({
+    content: [],
+    empty: false,
+    first: false,
+    last: false,
+    number: 0,
+    numberOfElements: 0,
+    pageable: {
+      offset: 0,
+      pageNumber: 0,
+      pageSize: 0,
+      paged: false,
+      sort: {
+        empty: false,
+        sorted: false,
+        unsorted: false
+      },
+      unpaged: false
+    },
+    size: 0,
+    totalElements: 0,
+    totalPages: 0
+  });
 
   protected selectedOfferingDetails: IOfferingsDetailed = {
     description: '',
@@ -57,9 +82,7 @@ export class ExploreComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.activeOrganizationRole.subscribe(value => {
-      this.contractApiService.getOrgaContracts(
-        "Participant:" + value.orgaId)
-        .then(result => this.contracts = result.content);
+      this.refreshContracts(0, this.ITEMS_PER_PAGE, value.orgaId);
     })
   }
 
@@ -70,6 +93,12 @@ export class ExploreComponent implements OnInit {
     this.contractApiService.getContractDetails(contract.id).then(result => {
       this.contractTemplate = result;
     })
+  }
+
+  protected refreshContracts(page: number, size: number, activeOrgaId: string) {
+    this.contractApiService.getOrgaContracts(page, size, "Participant:" + activeOrgaId).then(result => {
+        this.activePage.next(result);
+      });
   }
 
 }

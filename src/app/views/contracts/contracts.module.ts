@@ -53,6 +53,7 @@ import { IconModule } from '@coreui/icons-angular';
 // Components Routing
 import { ContractsRoutingModule } from './contracts-routing.module';
 import { ContractviewComponent } from './modals/contractview/contractview/contractview.component';
+import { CommonViewsModule } from '../common-views/common-views.module';
 
 @NgModule({
     declarations: [
@@ -61,6 +62,7 @@ import { ContractviewComponent } from './modals/contractview/contractview/contra
     ],
     imports: [
         CommonModule,
+        CommonViewsModule,
         ContractsRoutingModule,
         AccordionModule,
         BadgeModule,

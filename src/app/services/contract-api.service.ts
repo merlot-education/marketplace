@@ -31,9 +31,9 @@ export class ContractApiService {
     return await lastValueFrom(this.http.put(environment.contract_api_url, contract)) as IContractDetailed;
   }
 
-  public async getOrgaContracts(consumerId: string): Promise<IPageContracts> {
+  public async getOrgaContracts(page: number, size: number, consumerId: string): Promise<IPageContracts> {
     return await lastValueFrom(this.http.get(
-      environment.contract_api_url + "organization/" + consumerId)) as IPageContracts;
+      environment.contract_api_url + "organization/" + consumerId + "?page=" + page + "&size=" + size)) as IPageContracts;
   }
 
   public async getContractDetails(contractId: string): Promise<IContractDetailed> {

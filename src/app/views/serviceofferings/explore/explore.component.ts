@@ -39,7 +39,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   shaclFile: ShaclFile = undefined;
   filteredShapes: Shape[];
 
-  protected activePublicOfferingPage: BehaviorSubject<IPageOfferings> = new BehaviorSubject<IPageOfferings>({
+  protected activePublicOfferingPage: BehaviorSubject<IPageOfferings> = new BehaviorSubject({
     content: [],
     empty: false,
     first: false,
@@ -63,7 +63,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
     totalPages: 0
   });
 
-  protected activeOrgaOfferingPage: BehaviorSubject<IPageOfferings> = new BehaviorSubject<IPageOfferings>({
+  protected activeOrgaOfferingPage: BehaviorSubject<IPageOfferings> = new BehaviorSubject({
     content: [],
     empty: false,
     first: false,

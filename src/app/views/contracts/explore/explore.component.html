@@ -1,6 +1,6 @@
 
 <c-row [xl]="3">
-    <c-col xs *ngFor="let contract of contracts">
+    <c-col xs *ngFor="let contract of activePage.value.content">
       <c-card class="mb-4">
         <c-card-header><b>Vertrag</b>: {{ contract.id }}</c-card-header>
         <c-card-body>
@@ -44,10 +44,6 @@
     </c-col>
   </c-row>
   
-  <c-pagination align="left" aria-label="Page navigation example">
-    <div cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of []">
-      <a cPageLink [routerLink] (click)="handleOrgaPageNavigation(pageOption)">{{ pageOption.text }}</a>
-    </div>
-  </c-pagination>
+  <app-paging-footer [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE, authService.activeOrganizationRole.value.orgaId)"></app-paging-footer>
 
   <app-contractview [offeringDetails]="selectedOfferingDetails" [contractDetails]="contractTemplate"></app-contractview>
