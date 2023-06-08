@@ -88,11 +88,18 @@ export class ContractviewComponent {
     if (!isVisible) {
       this.offeringDetails = this.emptyOfferingDetails;
       this.contractDetails = this.emptyContractDetails;
+      this.saveButtonDisabled = false;
+      this.showErrorMessage = false;
+      this.showSuccessMessage = false;
     }
   }
 
   protected userIsActiveProvider(): boolean {
     return this.authService.activeOrganizationRole.value.orgaId == this.contractDetails.providerId.replace("Participant:", "");
+  }
+
+  protected userIsActiveConsumer(): boolean {
+    return this.authService.activeOrganizationRole.value.orgaId == this.contractDetails.consumerId.replace("Participant:", "");
   }
 
   protected addAttachment() {
