@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
 import { lastValueFrom } from 'rxjs';
-import { IContractBasic, IContractDetailed, IPageContracts } from '../views/contracts/contracts-data';
+import { IContractBasic, IContractDetailed, IPageContracts, ISaasContractDetailed } from '../views/contracts/contracts-data';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +28,8 @@ export class ContractApiService {
   }
 
   public async updateContract(contract: IContractDetailed) {
-    return await lastValueFrom(this.http.put(environment.contract_api_url, contract)) as IContractDetailed;
+    console.log("sending", contract);
+    return await lastValueFrom(this.http.put(environment.contract_api_url, contract)) as ISaasContractDetailed;
   }
 
   public async getOrgaContracts(page: number, size: number, consumerId: string): Promise<IPageContracts> {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { demoContracts, IContractBasic, IContractDetailed, IPageContracts } from '../contracts-data';
+import { demoContracts, IContractBasic, IContractDetailed, IPageContracts, ISaasContractDetailed } from '../contracts-data';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
@@ -56,7 +56,6 @@ export class ExploreComponent implements OnInit {
     name: ''
   };
   protected contractTemplate: IContractDetailed = {
-    userCountSelection: '',
     consumerMerlotTncAccepted: false,
     providerMerlotTncAccepted: false,
     consumerOfferingTncAccepted: false,
@@ -92,6 +91,7 @@ export class ExploreComponent implements OnInit {
     })
     this.contractApiService.getContractDetails(contract.id).then(result => {
       this.contractTemplate = result;
+      console.log("result is saas", result as ISaasContractDetailed)  
     })
   }
 

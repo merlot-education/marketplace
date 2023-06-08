@@ -115,7 +115,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
   };
 
   emptyContractTemplate: IContractDetailed = {
-    userCountSelection: '',
     consumerMerlotTncAccepted: false,
     providerMerlotTncAccepted: false,
     consumerOfferingTncAccepted: false,

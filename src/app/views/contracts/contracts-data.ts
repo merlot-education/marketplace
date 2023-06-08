@@ -1,4 +1,6 @@
-export interface IContractBasic {
+import { ISpringPage } from "../common-views/paging-footer/page-data";
+
+export class IContractBasic {
     id: string;
     state: string;
     creationDate: string;
@@ -8,10 +10,8 @@ export interface IContractBasic {
     consumerId: string;
 }
 
-export interface IContractDetailed extends IContractBasic {
+export class IContractDetailed extends IContractBasic {
   runtimeSelection?: string;
-  exchangeCountSelection?: string;
-  userCountSelection: string;
   consumerMerlotTncAccepted: boolean;
   providerMerlotTncAccepted: boolean;
   consumerOfferingTncAccepted: boolean;
@@ -21,28 +21,16 @@ export interface IContractDetailed extends IContractBasic {
   offeringAttachments: string[];
 }
 
-export interface IPageContracts {
+export class ISaasContractDetailed extends IContractDetailed {
+  userCountSelection: string;
+}
+
+export class IDataDeliveryContractDetailed extends IContractDetailed {
+  exchangeCountSelection?: string;
+}
+
+export interface IPageContracts extends ISpringPage {
     content: IContractBasic[];
-    empty: boolean;
-    first: boolean;
-    last: boolean;
-    number: number;
-    numberOfElements: number;
-    pageable: {
-      offset: number;
-      pageNumber: number;
-      pageSize: number;
-      paged: boolean;
-      sort: {
-        empty: boolean;
-        sorted: boolean;
-        unsorted: boolean;
-      }
-      unpaged: boolean;
-    }
-    size: number;
-    totalElements: number;
-    totalPages: number;
   }
 
 export let demoContracts: IContractBasic[] = [

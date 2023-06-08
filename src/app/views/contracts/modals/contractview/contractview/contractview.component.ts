@@ -31,7 +31,6 @@ export class ContractviewComponent {
   };
 
   private emptyContractDetails: IContractDetailed = {
-    userCountSelection: '',
     consumerMerlotTncAccepted: false,
     providerMerlotTncAccepted: false,
     consumerOfferingTncAccepted: false,
