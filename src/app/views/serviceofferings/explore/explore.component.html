@@ -85,9 +85,6 @@
               <button type="button" class="btn btn-primary flex-item-grow" *ngIf="authService.isLoggedIn" [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = true; requestDetails(offering.id)">
                 Details
               </button>
-              <button type="button" class="btn btn-primary flex-item-grow" *ngIf="authService.isLoggedIn && (offering.offeredBy.replace('Participant:', '') != authService.activeOrganizationRole.value.orgaId)" [cModalToggle]="'modalViewContract'" (click)="selectedOfferingPublic = true; bookServiceOffering(offering.id)">
-                Buchen
-              </button>
             </div>
           </c-col>
         </c-row>
@@ -235,6 +232,9 @@
     (click)="deleteOffering(selectedOfferingDetails.id)"
     >
       Löschen
+    </button>
+    <button type="button" class="btn btn-primary flex-item-grow" *ngIf="authService.isLoggedIn && (selectedOfferingDetails.offeredBy.replace('Participant:', '') != authService.activeOrganizationRole.value.orgaId)" [cModalToggle]="'modalViewContract'" (click)="bookServiceOffering(selectedOfferingDetails.id)">
+      Buchen
     </button>
   </c-modal-footer>
 </c-modal>

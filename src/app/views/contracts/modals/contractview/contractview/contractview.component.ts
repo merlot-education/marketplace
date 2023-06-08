@@ -63,7 +63,10 @@ export class ContractviewComponent {
 
   protected saveContract() {
     console.log(this.contractDetails);
-    this.contractApiService.updateContract(this.contractDetails).then(result => console.log(result));
+    this.contractApiService.updateContract(this.contractDetails).then(result =>  {
+      this.contractDetails = result;
+      console.log(result)
+    });
   }
 
   protected handleEventContractModal(isVisible: boolean) {

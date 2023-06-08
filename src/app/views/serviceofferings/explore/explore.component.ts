@@ -33,7 +33,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   private activeOrgaSubscription: Subscription;
 
-  private detailsModalPreviouslyVisible = false;
   private editModalPreviouslyVisible = false;
 
   shaclFile: ShaclFile = undefined;
@@ -137,6 +136,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   contractTemplate: IContractDetailed = this.emptyContractTemplate;
 
+  private showingModal: boolean = false;
+
   private isFiltered: boolean = false;
 
   constructor(
@@ -156,29 +157,24 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   protected handleEventEditModal(modalVisible: boolean) {
+    this.showingModal = modalVisible;
     if (this.editModalPreviouslyVisible && !modalVisible) {
       this.childRef.ngOnDestroy();
-      this.selectedOfferingDetails = this.emptyOfferingDetails;
       this.refreshOfferings();
     }
     this.editModalPreviouslyVisible = modalVisible;
   }
 
   protected handleEventDetailsModal(modalVisible: boolean) {
-    if (this.detailsModalPreviouslyVisible && !modalVisible) {
-      this.selectedOfferingDetails = this.emptyOfferingDetails;
-    }
-    this.detailsModalPreviouslyVisible = modalVisible;
+    this.showingModal = modalVisible;
   }
 
   protected handleEventContractModal(modalVisible: boolean) {
-    if (!modalVisible) {
-      this.selectedOfferingDetails = this.emptyOfferingDetails;
-    }
+    this.showingModal = modalVisible;
   }
 
   private refreshOfferings() {
-    if (this.selectedOfferingDetails !== this.emptyOfferingDetails) {
+    if (this.showingModal) {
       this.requestDetails(this.selectedOfferingDetails.id);
     }
     this.refreshPublicOfferings(0, this.ITEMS_PER_PAGE);
@@ -286,7 +282,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   bookServiceOffering(offeringId: string): void {
-    this.requestDetails(offeringId);
     this.contractApiService.createNewContract(
       offeringId, 
       "Participant:" + this.authService.activeOrganizationRole.value.orgaId)
