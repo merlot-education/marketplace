@@ -1,4 +1,4 @@
-
+<div *ngIf="this.activePage.value.content.length !== 0">
 <c-row [xl]="3">
     <c-col xs *ngFor="let contract of activePage.value.content">
       <c-card class="mb-4">
@@ -43,7 +43,11 @@
       </c-card>
     </c-col>
   </c-row>
-  
-  <app-paging-footer [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE, authService.activeOrganizationRole.value.orgaId)"></app-paging-footer>
 
-  <app-contractview [offeringDetails]="selectedOfferingDetails" [contractDetails]="contractTemplate"></app-contractview>
+  <app-paging-footer [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE, authService.activeOrganizationRole.value.orgaId)"></app-paging-footer>
+</div>
+
+<h1 *ngIf="this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.</h1>
+
+
+<app-contractview [offeringDetails]="selectedOfferingDetails" [contractDetails]="contractTemplate"></app-contractview>

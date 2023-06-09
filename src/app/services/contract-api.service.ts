@@ -28,7 +28,6 @@ export class ContractApiService {
   }
 
   public async updateContract(contract: IContractDetailed) {
-    console.log("sending", contract);
     return await lastValueFrom(this.http.put(environment.contract_api_url, contract)) as IContractDetailed;
   }
 
