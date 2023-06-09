@@ -11,6 +11,19 @@ import { AuthService } from './auth.service';
 })
 export class ServiceofferingApiService {
 
+  private friendlyStatusNames = {
+    "IN_DRAFT": "In Bearbeitung",
+    "RELEASED": "Veröffentlicht",
+    "REVOKED": "Widerrufen",
+    "DELETED": "Gelöscht",
+    "ARCHIVED": "Archiviert"
+  }
+
+  private friendlyTypeNames = {
+    "merlot:MerlotServiceOfferingSaaS": "Software as a Service",
+    "merlot:MerlotServiceOfferingDataDelivery": "Data Delivery"
+  }
+
   constructor(private http: HttpClient, private authService: AuthService, private organizationsApiService: OrganizationsApiService) { 
 
   }
@@ -84,13 +97,21 @@ export class ServiceofferingApiService {
     return await lastValueFrom(this.http.patch(this.getStatusShiftUrl(id, "IN_DRAFT"), null));
   }
 
-  public fetchAvailableShapes(system: string): Observable<any> {
-    return this.http.get(`${environment.wizard_api_url}/getAvailableShapesCategorized?ecoSystem=`+system);
+  public async fetchAvailableShapes(system: string): Promise<any> {
+    return await lastValueFrom(this.http.get(`${environment.wizard_api_url}/getAvailableShapesCategorized?ecoSystem=`+system));
   }
 
-  public fetchShape(filename: string): Observable<any> {
+  public async fetchShape(filename: string): Promise<any> {
     const params = new HttpParams().set('name', filename);
-    return this.http.get(`${environment.wizard_api_url}/getJSON`, {params});
+    return await lastValueFrom(this.http.get(`${environment.wizard_api_url}/getJSON`, {params}));
+  }
+
+  public resolveFriendlyStatusName(merlotStatus: string): string {
+    return this.friendlyStatusNames[merlotStatus] ? this.friendlyStatusNames[merlotStatus] : "Unbekannt";
+  }
+
+  public resolveFriendlyTypeName(offeringType: string): string {
+    return this.friendlyTypeNames[offeringType] ? this.friendlyTypeNames[offeringType] : "Unbekannt";
   }
 
 }

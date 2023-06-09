@@ -1,13 +1,16 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import {IOfferings, IOfferingsDetailed} from '../serviceofferings-data'
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {IOfferings, IOfferingsDetailed, IPageOfferings} from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
+import { ContractApiService } from 'src/app/services/contract-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ShaclFile } from '@models/shacl-file';
 import { FormfieldControlService } from '@services/form-field.service';
 import { Shape } from '@models/shape';
 import { serviceFileNameDict } from '../serviceofferings-data';
 import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { IContractDetailed } from '../../contracts/contracts-data';
 
 interface IPageOption {
   target: number;
@@ -20,7 +23,7 @@ interface IPageOption {
   templateUrl: './explore.component.html',
   styleUrls: ['./explore.component.scss']
 })
-export class ExploreComponent implements OnInit {
+export class ExploreComponent implements OnInit, OnDestroy {
 
   @ViewChild(DynamicFormComponent, {static: false}) childRef: DynamicFormComponent;
 
@@ -28,15 +31,61 @@ export class ExploreComponent implements OnInit {
 
   objectKeys = Object.keys;
 
-  offerings: IOfferings[] = [];
-  orgaOfferings: IOfferings[] = [];
+  private activeOrgaSubscription: Subscription;
+
+  private editModalPreviouslyVisible = false;
+
   shaclFile: ShaclFile = undefined;
   filteredShapes: Shape[];
 
+  protected activePublicOfferingPage: BehaviorSubject<IPageOfferings> = new BehaviorSubject({
+    content: [],
+    empty: false,
+    first: false,
+    last: false,
+    number: 0,
+    numberOfElements: 0,
+    pageable: {
+      offset: 0,
+      pageNumber: 0,
+      pageSize: 0,
+      paged: false,
+      sort: {
+        empty: false,
+        sorted: false,
+        unsorted: false
+      },
+      unpaged: false
+    },
+    size: 0,
+    totalElements: 0,
+    totalPages: 0
+  });
 
-  protected publicOfferingPages: IPageOption[] = []
+  protected activeOrgaOfferingPage: BehaviorSubject<IPageOfferings> = new BehaviorSubject({
+    content: [],
+    empty: false,
+    first: false,
+    last: false,
+    number: 0,
+    numberOfElements: 0,
+    pageable: {
+      offset: 0,
+      pageNumber: 0,
+      pageSize: 0,
+      paged: false,
+      sort: {
+        empty: false,
+        sorted: false,
+        unsorted: false
+      },
+      unpaged: false
+    },
+    size: 0,
+    totalElements: 0,
+    totalPages: 0
+  });
 
-  protected orgaOfferingPages: IPageOption[] = []
 
   protected friendlyStatusNames = {
     "IN_DRAFT": "In Bearbeitung",
@@ -65,108 +114,81 @@ export class ExploreComponent implements OnInit {
     name: ''
   };
 
+  emptyContractTemplate: IContractDetailed = {
+    consumerMerlotTncAccepted: false,
+    providerMerlotTncAccepted: false,
+    consumerOfferingTncAccepted: false,
+    consumerProviderTncAccepted: false,
+    providerTncUrl: '',
+    id: '',
+    state: '',
+    creationDate: '',
+    offeringId: '',
+    offeringName: '',
+    providerId: '',
+    consumerId: '',
+    offeringAttachments: []
+  }
+
   selectedOfferingDetails: IOfferingsDetailed = this.emptyOfferingDetails;
   selectedOfferingPublic: boolean = false;
+
+  contractTemplate: IContractDetailed = this.emptyContractTemplate;
+
+  private showingModal: boolean = false;
 
   private isFiltered: boolean = false;
 
   constructor(
     protected serviceOfferingApiService : ServiceofferingApiService,
-    private organizationsApiService: OrganizationsApiService,
+    protected organizationsApiService: OrganizationsApiService,
+    private contractApiService: ContractApiService,
     protected authService: AuthService,
     private formFieldService: FormfieldControlService) {
   }
 
   ngOnInit(): void {
-    this.authService.activeOrganizationRole.subscribe(value => this.refreshOfferings());
+    this.activeOrgaSubscription = this.authService.activeOrganizationRole.subscribe(value => this.refreshOfferings());
   }
 
-  protected handlePublicPageNavigation(option: IPageOption) {
-    if (option.active) {
-      return;
-    }
-
-    console.log(option);
-    this.refreshPublicOfferings(option.target, this.ITEMS_PER_PAGE);
-  }
-
-  protected handleOrgaPageNavigation(option: IPageOption) {
-    if (option.active) {
-      return;
-    }
-
-    console.log(option);
-    this.refreshOrgaOfferings(option.target, this.ITEMS_PER_PAGE);
-  }
-
-  private updatePageNavigationOptions(activePage: number, totalPages: number): IPageOption[] {
-    let target = [{
-      target: 0,
-      text: "Anfang",
-      disabled: activePage === 0,
-      active: false,
-    }];
-    
-    let startIndex;
-    if (activePage > 0) {
-      startIndex = activePage === (totalPages-1) ? Math.max(0, (activePage-2)) : (activePage-1);
-    } else {
-      startIndex = activePage;
-    }
-
-    for (let i = startIndex; i < Math.min(startIndex + 3, totalPages); i++) {
-      target.push({
-        target: i,
-        text: "" + (i+1),
-        disabled: false,
-        active: activePage === i,
-      })
-    }
-
-    target.push({
-        target: totalPages-1,
-        text: "Ende",
-        disabled: activePage === (totalPages-1),
-        active: false,
-    })
-    return target;
+  ngOnDestroy(): void {
+    this.activeOrgaSubscription.unsubscribe();
   }
 
   protected handleEventEditModal(modalVisible: boolean) {
-    if (!modalVisible) {
-      this.selectedOfferingDetails = this.emptyOfferingDetails;
+    this.showingModal = modalVisible;
+    if (this.editModalPreviouslyVisible && !modalVisible) {
       this.childRef.ngOnDestroy();
       this.refreshOfferings();
     }
+    this.editModalPreviouslyVisible = modalVisible;
   }
 
   protected handleEventDetailsModal(modalVisible: boolean) {
-    if (!modalVisible) {
-      this.selectedOfferingDetails = this.emptyOfferingDetails;
-    }
+    this.showingModal = modalVisible;
+  }
+
+  protected handleEventContractModal(modalVisible: boolean) {
+    this.showingModal = modalVisible;
   }
 
   private refreshOfferings() {
-    if (this.selectedOfferingDetails !== this.emptyOfferingDetails) {
+    if (this.showingModal) {
       this.requestDetails(this.selectedOfferingDetails.id);
     }
     this.refreshPublicOfferings(0, this.ITEMS_PER_PAGE);
     this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
   }
 
-  private refreshPublicOfferings(page: number, size: number) {
+  protected refreshPublicOfferings(page: number, size: number) {
     this.serviceOfferingApiService.fetchPublicServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
-      console.log(result)
-      this.publicOfferingPages = this.updatePageNavigationOptions(result.pageable.pageNumber, result.totalPages);
-      this.offerings = result.content;
+      this.activePublicOfferingPage.next(result);
     });
   }
 
   private refreshOrgaOfferings(page: number, size: number) {
     this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
-      console.log(result)
-      this.orgaOfferingPages = this.updatePageNavigationOptions(result.pageable.pageNumber, result.totalPages);
-      this.orgaOfferings = result.content;
+      this.activeOrgaOfferingPage.next(result);
     });
   }
 
@@ -181,24 +203,6 @@ export class ExploreComponent implements OnInit {
     }
   }
 
-  protected resolveOrganizationLegalName(offeredByString: string): string {
-    let result = this.organizationsApiService.getOrgaById(offeredByString.replace("Participant:", ""))?.organizationLegalName;
-    return result ? result : "Unbekannt";
-  }
-
-  protected resolveMerlotStatusFriendlyName(merlotStatusString: string): string {
-    
-    return this.friendlyStatusNames[merlotStatusString] ? this.friendlyStatusNames[merlotStatusString] : "Unbekannt";
-  }
-
-  protected resolveTypeFriendlyName(merlotType: string) : string {
-    for (let key in serviceFileNameDict) {
-      if (serviceFileNameDict[key].type === merlotType) {
-        return serviceFileNameDict[key].name;
-      }
-    }
-    return undefined;
-  }
 
   protected async requestDetails(id: string) {
     this.selectedOfferingDetails = this.emptyOfferingDetails;
@@ -251,7 +255,7 @@ export class ExploreComponent implements OnInit {
   }
 
   select(name: string): void {
-    this.serviceOfferingApiService.fetchShape(name).subscribe(
+    this.serviceOfferingApiService.fetchShape(name).then(
       res => {
         this.shaclFile = this.formFieldService.readShaclFile(res);
         this.filteredShapes = this.formFieldService.updateFilteredShapes(this.shaclFile);
@@ -274,5 +278,15 @@ export class ExploreComponent implements OnInit {
     if (shape !== undefined) {
       this.shaclFile.shapes.find(x => x.name === shape.name).selected = true;
     }
+  }
+
+  bookServiceOffering(offeringId: string): void {
+    this.contractApiService.createNewContract(
+      offeringId, 
+      "Participant:" + this.authService.activeOrganizationRole.value.orgaId)
+      .then(result => {
+        console.log(result)
+        this.contractTemplate = result;
+      });
   }
 }

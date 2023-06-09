@@ -107,4 +107,10 @@ export const navItems: IRoleNavData[] = [
       },
     ]
   },
+  {
+    name: 'Meine Verträge',
+    url: '/contracts/explore',
+    iconComponent: { name: 'cil-balance-scale' },
+    allowedRoles: ["visitor", "user", "principal", "admin"],
+  },
 ];

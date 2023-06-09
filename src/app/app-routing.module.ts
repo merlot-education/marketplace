@@ -49,6 +49,12 @@ const routes: Routes = [
           import('./views/serviceofferings/serviceofferings.module').then((m) => m.ServiceofferingsModule)
       },
       {
+        path: 'contracts',
+        loadChildren: () =>
+          import('./views/contracts/contracts.module').then((m) => m.ContractsModule),
+          canActivate: [KeycloakGuard]
+      },
+      {
         path: 'pages',
         loadChildren: () =>
           import('./views/pages/pages.module').then((m) => m.PagesModule)

@@ -69,4 +69,13 @@ export class OrganizationsApiService {
     // TODO consider using a dictionary based on the merlotId instead of a list for faster access
     return this.organizations.getValue().find((orga) => orga.merlotId === id);
   }
+
+  public resolveOrganizationLegalName(id: string) {
+    if (id.startsWith("Participant:")) {
+      id = id.replace("Participant:", "");
+    }
+    let orga = this.getOrgaById(id);
+    
+    return orga ? orga.organizationLegalName : "Unbekannt";
+  }
 }

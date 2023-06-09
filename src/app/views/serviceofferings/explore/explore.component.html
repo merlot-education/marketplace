@@ -1,4 +1,4 @@
-<div *ngIf="orgaOfferings.length > 0 || applyStatusFilter">
+<div *ngIf="this.activeOrgaOfferingPage.value.content.length > 0 || applyStatusFilter">
 
 <h1>Service Angebote meiner Organisation</h1>
 
@@ -13,9 +13,9 @@
 </div>
 
 <c-row [xl]="3">
-  <c-col xs *ngFor="let offering of orgaOfferings">
+  <c-col xs *ngFor="let offering of this.activeOrgaOfferingPage.value.content">
     <c-card class="mb-4">
-      <c-card-header><b>{{ resolveTypeFriendlyName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
+      <c-card-header><b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
       <c-card-body>
         <c-row>
           <c-col>
@@ -30,11 +30,11 @@
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Anbieter:</strong><br />
-                {{ resolveOrganizationLegalName(offering.offeredBy) }}
+                {{ organizationsApiService.resolveOrganizationLegalName(offering.offeredBy) }}
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Status:</strong><br />
-                {{ resolveMerlotStatusFriendlyName(offering.merlotState) }}
+                {{ serviceOfferingApiService.resolveFriendlyStatusName(offering.merlotState) }}
               </li>
             </ul>
             <div style="padding: 10px">
@@ -52,22 +52,18 @@
   </c-col>
 </c-row>
 
-<c-pagination align="left" aria-label="Page navigation example">
-  <div cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of orgaOfferingPages">
-    <a cPageLink [routerLink] (click)="handleOrgaPageNavigation(pageOption)">{{ pageOption.text }}</a>
-  </div>
-</c-pagination>
+<app-paging-footer [currentPage]="activeOrgaOfferingPage" (pageChangeEvent)="refreshOrgaOfferings($event, ITEMS_PER_PAGE)"></app-paging-footer>
 
 </div>
 
 
-<div *ngIf="offerings.length > 0">
+<div *ngIf="this.activePublicOfferingPage.value.content.length > 0">
 <h1>Öffentliche Service Angebote</h1>
 
 <c-row [xl]="3">
-  <c-col xs *ngFor="let offering of offerings">
+  <c-col xs *ngFor="let offering of this.activePublicOfferingPage.value.content">
     <c-card class="mb-4">
-      <c-card-header><b>{{ resolveTypeFriendlyName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
+      <c-card-header><b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
       <c-card-body>
         <c-row>
           <c-col>
@@ -82,11 +78,11 @@
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Anbieter:</strong><br />
-                {{ resolveOrganizationLegalName(offering.offeredBy) }}
+                {{ organizationsApiService.resolveOrganizationLegalName(offering.offeredBy) }}
               </li>
             </ul>
-            <div class="row" style="padding: 10px">
-              <button type="button" class="btn btn-primary" *ngIf="authService.isLoggedIn" [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = true; requestDetails(offering.id)">
+            <div style="padding: 10px">
+              <button type="button" class="btn btn-primary flex-item-grow" *ngIf="authService.isLoggedIn" [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = true; requestDetails(offering.id)">
                 Details
               </button>
             </div>
@@ -97,29 +93,29 @@
   </c-col>
 </c-row>
 
-<c-pagination align="left" aria-label="Page navigation example">
-  <div cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of publicOfferingPages">
-    <a cPageLink [routerLink] (click)="handlePublicPageNavigation(pageOption)">{{ pageOption.text }}</a>
-  </div>
-</c-pagination>
+<app-paging-footer [currentPage]="activePublicOfferingPage" (pageChangeEvent)="refreshPublicOfferings($event, ITEMS_PER_PAGE)"></app-paging-footer>
 
 </div>
 
-<h1 *ngIf="orgaOfferings.length === 0 && offerings.length === 0">Es konnten keine Service Angebote gefunden werden.</h1>
+<h1 *ngIf="this.activeOrgaOfferingPage.value.content.length === 0 && this.activePublicOfferingPage.value.content.length === 0">Es konnten keine Service Angebote gefunden werden.</h1>
 
 <c-modal #modalViewDetails id="modalViewDetails" size="xl" alignment="center" (visibleChange)="handleEventDetailsModal($event)">
   <c-modal-header>
-    <h5 cModalTitle>Details zum Service Angebot "{{ selectedOfferingDetails.name }}"</h5>
+    <h5 cModalTitle>Details zum Service Angebot "{{ selectedOfferingDetails.id }}"</h5>
   </c-modal-header>
   <c-modal-body>
     <ul class="list-group list-group-flush">
       <li class="list-group-item" style="border: none">
         <strong>Angebotstyp:</strong> <br />
-        {{ resolveTypeFriendlyName(selectedOfferingDetails.type) }}
+        {{ serviceOfferingApiService.resolveFriendlyTypeName(selectedOfferingDetails.type) }}
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Service ID:</strong> <br />
         {{ selectedOfferingDetails.id }}
+      </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Name:</strong> <br />
+        {{ selectedOfferingDetails.name }}
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Erstelldatum:</strong><br />
@@ -127,11 +123,11 @@
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Anbieter:</strong><br />
-        {{ resolveOrganizationLegalName(selectedOfferingDetails.offeredBy) }}
+        {{ organizationsApiService.resolveOrganizationLegalName(selectedOfferingDetails.offeredBy) }}
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Status:</strong><br />
-        {{ resolveMerlotStatusFriendlyName(selectedOfferingDetails.merlotState) }}
+        {{ serviceOfferingApiService.resolveFriendlyStatusName(selectedOfferingDetails.merlotState) }}
       </li>
       <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.description !== null">
         <strong>Beschreibung:</strong><br />
@@ -237,6 +233,9 @@
     >
       Löschen
     </button>
+    <button type="button" class="btn btn-primary flex-item-grow" *ngIf="authService.isLoggedIn && (selectedOfferingDetails.offeredBy.replace('Participant:', '') != authService.activeOrganizationRole.value.orgaId)" [cModalToggle]="'modalViewContract'" (click)="bookServiceOffering(selectedOfferingDetails.id)">
+      Buchen
+    </button>
   </c-modal-footer>
 </c-modal>
 
@@ -252,3 +251,4 @@
   </c-modal-footer>
 </c-modal>
 
+<app-contractview [offeringDetails]="selectedOfferingDetails" [contractDetails]="contractTemplate"></app-contractview>

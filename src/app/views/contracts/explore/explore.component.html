@@ -1,0 +1,53 @@
+<div *ngIf="this.activePage.value.content.length !== 0">
+<c-row [xl]="3">
+    <c-col xs *ngFor="let contract of activePage.value.content">
+      <c-card class="mb-4">
+        <c-card-header><b>Vertrag</b>: {{ contract.id }}</c-card-header>
+        <c-card-body>
+          <c-row>
+            <c-col>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item" style="border: none">
+                    <strong>Erstelldatum:</strong><br />
+                    {{ contract.creationDate }}
+                </li>
+                <li class="list-group-item" style="border: none">
+                    <strong>Angebots-ID:</strong> <br />
+                    {{ contract.offeringId }}
+                </li>
+                <li class="list-group-item" style="border: none" *ngIf='contract.providerId.replace("Participant:", "") != authService.activeOrganizationRole.value.orgaId'>
+                  <strong>Serviceanbieter:</strong><br />
+                  {{ organizationsApiService.resolveOrganizationLegalName(contract.providerId) }}
+                </li>
+                <li class="list-group-item" style="border: none" *ngIf='contract.consumerId.replace("Participant:", "") != authService.activeOrganizationRole.value.orgaId'>
+                    <strong>Kunde:</strong><br />
+                    {{ organizationsApiService.resolveOrganizationLegalName(contract.consumerId) }}
+                  </li>
+                <li class="list-group-item" style="border: none">
+                    <strong>Servicename:</strong><br />
+                    {{ contract.offeringName }}
+                </li>
+                <li class="list-group-item" style="border: none">
+                  <strong>Status:</strong><br />
+                  {{ contractApiService.resolveFriendlyStatusName(contract.state) }}
+                </li>
+              </ul>
+              <div style="padding: 10px">
+                <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="'modalViewContract'" *ngIf="contract.state === 'IN_DRAFT'" (click)="prepareEditContract(contract)">
+                  Bearbeiten
+                </button>
+              </div>
+            </c-col>
+          </c-row>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+
+  <app-paging-footer [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE, authService.activeOrganizationRole.value.orgaId)"></app-paging-footer>
+</div>
+
+<h1 *ngIf="this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.</h1>
+
+
+<app-contractview [offeringDetails]="selectedOfferingDetails" [contractDetails]="contractTemplate"></app-contractview>

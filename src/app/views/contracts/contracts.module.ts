@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ExploreComponent } from './explore/explore.component';
-import { EditComponent } from './edit/edit.component';
 
 // CoreUI Modules
 import {
@@ -33,8 +32,6 @@ import {
 
 import { IconModule } from '@coreui/icons-angular';
 
-// // utils
-import { DocsComponentsModule } from '@docs-components/docs-components.module';
 
 // // views
 // import { AccordionsComponent } from './accordion/accordions.component';
@@ -54,20 +51,19 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 // import { TabsComponent } from './tabs/tabs.component';
 
 // Components Routing
-import { ServiceofferingsRoutingModule } from './serviceofferings-routing.module';
-import { WizardAppModule } from "../../sdwizard/app.module";
-import { ContractsModule } from "../contracts/contracts.module";
-import { CommonViewsModule } from "../common-views/common-views.module";
+import { ContractsRoutingModule } from './contracts-routing.module';
+import { ContractviewComponent } from './modals/contractview/contractview/contractview.component';
+import { CommonViewsModule } from '../common-views/common-views.module';
 
 @NgModule({
     declarations: [
         ExploreComponent,
-        EditComponent
+        ContractviewComponent
     ],
     imports: [
-        CommonViewsModule,
         CommonModule,
-        ServiceofferingsRoutingModule,
+        CommonViewsModule,
+        ContractsRoutingModule,
         AccordionModule,
         BadgeModule,
         BreadcrumbModule,
@@ -94,10 +90,10 @@ import { CommonViewsModule } from "../common-views/common-views.module";
         PaginationModule,
         PopoverModule,
         TableModule,
-        DocsComponentsModule,
-        WizardAppModule,
-        ModalModule,
-        ContractsModule,
+        ModalModule
+    ],
+    exports: [
+        ContractviewComponent
     ]
 })
-export class ServiceofferingsModule {}
+export class ContractsModule {}
