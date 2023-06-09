@@ -91,7 +91,6 @@ export class ExploreComponent implements OnInit {
     })
     this.contractApiService.getContractDetails(contract.id).then(result => {
       this.contractTemplate = result;
-      console.log("result is saas", result as ISaasContractDetailed)  
     })
   }
 
