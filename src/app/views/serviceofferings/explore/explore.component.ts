@@ -187,9 +187,11 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   private refreshOrgaOfferings(page: number, size: number) {
-    this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
+    if (this.authService.isLoggedIn) {
+      this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
       this.activeOrgaOfferingPage.next(result);
     });
+    }
   }
 
   protected filterByStatus(applyFilter: boolean, status: string) {
