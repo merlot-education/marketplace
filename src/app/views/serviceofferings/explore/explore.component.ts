@@ -215,28 +215,24 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   releaseOffering(id: string) {
     this.serviceOfferingApiService.releaseServiceOffering(id).then(result => {
-      console.log(result);
       this.refreshOfferings();
     });
   }
 
   revokeOffering(id: string) {
     this.serviceOfferingApiService.revokeServiceOffering(id).then(result => {
-      console.log(result);
       this.refreshOfferings();
     });
   }
 
   inDraftOffering(id: string) {
     this.serviceOfferingApiService.inDraftServiceOffering(id).then(result => {
-      console.log(result);
       this.refreshOfferings();
     });
   }
   
   deleteOffering(id: string) {
     this.serviceOfferingApiService.deleteServiceOffering(id).then(result => {
-      console.log(result);
       this.refreshOfferings();
     });
   }
