@@ -135,6 +135,27 @@
               [(ngModel)]="contractDetails.additionalAgreements">
           </div>
         </li>
+        <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+          <div class="mb-3">
+            <label class="form-label"><strong>Name der Datenadresse</strong></label>
+            <input class="form-control" placeholder="MyStorage" 
+              [(ngModel)]="contractDetails.dataAddressName">
+          </div>
+        </li>
+        <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+          <div class="mb-3">
+            <label class="form-label"><strong>Datenadresse</strong></label>
+            <input class="form-control" placeholder="http://example.com/example.json" 
+              [(ngModel)]="contractDetails.dataAddressBaseUrl">
+          </div>
+        </li>
+        <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+          <div class="mb-3">
+            <label class="form-label"><strong>Typ der Datenadresse</strong></label>
+            <input class="form-control" placeholder="HttpData" 
+              [(ngModel)]="contractDetails.dataAddressDataType">
+          </div>
+        </li>
         <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
           <c-form-check inline>
             <input cFormCheckInput id="checkAGB" type="checkbox" [(ngModel)]="contractDetails.consumerProviderTncAccepted"/>
