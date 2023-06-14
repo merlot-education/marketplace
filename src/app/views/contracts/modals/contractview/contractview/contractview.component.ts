@@ -16,7 +16,6 @@ export class ContractviewComponent {
   private emptyOfferingDetails: IOfferingsDetailed = {
     description: '',
     modifiedDate: '',
-    dataAccessType: '',
     exampleCosts: '',
     attachments: [],
     termsAndConditions: [],

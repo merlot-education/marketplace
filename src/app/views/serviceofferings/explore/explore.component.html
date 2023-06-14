@@ -137,10 +137,6 @@
         <strong>Letzte Änderung:</strong><br />
         {{ selectedOfferingDetails.modifiedDate }}
       </li>
-      <li class="list-group-item" style="border: none">
-        <strong>Datenzugriffsart:</strong><br />
-        {{ selectedOfferingDetails.dataAccessType }}
-      </li>
       <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.exampleCosts !== null">
         <strong>Beispielkosten:</strong><br />
         {{ selectedOfferingDetails.exampleCosts }}
@@ -192,6 +188,14 @@
         </li>
       </div>
       <div *ngIf="selectedOfferingDetails.type === 'merlot:MerlotServiceOfferingDataDelivery'">
+        <li class="list-group-item" style="border: none">
+          <strong>Datenzugriffsart:</strong><br />
+          {{ selectedOfferingDetails.dataAccessType }}
+        </li>
+        <li class="list-group-item" style="border: none">
+          <strong>Art des Datentransfers:</strong><br />
+          {{ selectedOfferingDetails.dataTransferType }}
+        </li>
         <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.exchangeCountOption !== null">
           <strong>Optionen für Anzahl erlaubter Datenaustausche:</strong><br />
           <ul *ngFor="let dec of selectedOfferingDetails.exchangeCountOption">

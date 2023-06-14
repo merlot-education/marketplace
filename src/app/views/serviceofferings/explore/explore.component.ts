@@ -100,7 +100,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
   emptyOfferingDetails: IOfferingsDetailed = {
     description: '',
     modifiedDate: '',
-    dataAccessType: '',
     exampleCosts: '',
     attachments: [],
     termsAndConditions: [],

@@ -17,7 +17,6 @@ export interface IOfferings {
 export interface IOfferingsDetailed extends IOfferings {
   description: string;
   modifiedDate: string;
-  dataAccessType: string;
   exampleCosts: string;
   attachments: string[];
   termsAndConditions: {

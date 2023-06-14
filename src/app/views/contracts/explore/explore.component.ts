@@ -42,7 +42,6 @@ export class ExploreComponent implements OnInit {
   protected selectedOfferingDetails: IOfferingsDetailed = {
     description: '',
     modifiedDate: '',
-    dataAccessType: '',
     exampleCosts: '',
     attachments: [],
     termsAndConditions: [],
