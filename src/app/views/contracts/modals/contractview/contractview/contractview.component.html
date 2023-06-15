@@ -40,10 +40,6 @@
           <strong>Beschreibung des Angebots:</strong><br />
           {{ offeringDetails.description }}
         </li>
-        <li class="list-group-item" style="border: none">
-          <strong>Datenzugriffsart:</strong><br />
-          {{ offeringDetails.dataAccessType }}
-        </li>
         <li class="list-group-item" style="border: none" *ngIf="offeringDetails.exampleCosts !== null">
           <strong>Beispielkosten:</strong><br />
           {{ offeringDetails.exampleCosts }}
@@ -113,6 +109,14 @@
           </li>
         </div>
         <div *ngIf="offeringDetails.type === 'merlot:MerlotServiceOfferingDataDelivery'">
+          <li class="list-group-item" style="border: none">
+            <strong>Datenzugriffsart:</strong><br />
+            {{ offeringDetails.dataAccessType }}
+          </li>
+          <li class="list-group-item" style="border: none">
+            <strong>Art des Datentransfers:</strong><br />
+            {{ offeringDetails.dataTransferType }}
+          </li>
           <li class="list-group-item" style="border: none" *ngIf="offeringDetails.exchangeCountOption !== null">
             <strong>Anzahl erlaubter Datenaustausche*:</strong><br />
             <select class="form-select" [(ngModel)]="contractDetails.exchangeCountSelection">
@@ -129,6 +133,27 @@
             <input class="form-control" placeholder="Keine Zusatzvereinbarungen" 
               [disabled]="userIsActiveConsumer()" 
               [(ngModel)]="contractDetails.additionalAgreements">
+          </div>
+        </li>
+        <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+          <div class="mb-3">
+            <label class="form-label"><strong>Name der Datenadresse</strong></label>
+            <input class="form-control" placeholder="MyStorage" 
+              [(ngModel)]="contractDetails.dataAddressName">
+          </div>
+        </li>
+        <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+          <div class="mb-3">
+            <label class="form-label"><strong>Datenadresse</strong></label>
+            <input class="form-control" placeholder="http://example.com/example.json" 
+              [(ngModel)]="contractDetails.dataAddressBaseUrl">
+          </div>
+        </li>
+        <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+          <div class="mb-3">
+            <label class="form-label"><strong>Typ der Datenadresse</strong></label>
+            <input class="form-control" placeholder="HttpData" 
+              [(ngModel)]="contractDetails.dataAddressDataType">
           </div>
         </li>
         <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">

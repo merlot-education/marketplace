@@ -17,7 +17,6 @@ export interface IOfferings {
 export interface IOfferingsDetailed extends IOfferings {
   description: string;
   modifiedDate: string;
-  dataAccessType: string;
   exampleCosts: string;
   attachments: string[];
   termsAndConditions: {
@@ -29,15 +28,6 @@ export interface IOfferingsDetailed extends IOfferings {
     runtimeMeasurement?: string;
     runtimeUnlimited?: boolean;
   }[];
-  hardwareRequirements?: string;
-  userCountOption?: {
-    userCountUpTo?: number;
-    userCountUnlimited?: boolean;
-  }[];
-  exchangeCountOption?: {
-    exchangeCountUpTo?: number;
-    exchangeCountUnlimited?: boolean;
-  }[]
 }
 
 export let serviceFileNameDict: { [key: string]: {
