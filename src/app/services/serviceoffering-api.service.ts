@@ -93,6 +93,10 @@ export class ServiceofferingApiService {
     return await lastValueFrom(this.http.patch(this.getStatusShiftUrl(id, "DELETED"), null));
   }
 
+  public async purgeServiceOffering(id: string) {
+    return await lastValueFrom(this.http.patch(this.getStatusShiftUrl(id, "PURGED"), null));
+  }
+
   public async inDraftServiceOffering(id: string) {
     return await lastValueFrom(this.http.patch(this.getStatusShiftUrl(id, "IN_DRAFT"), null));
   }
