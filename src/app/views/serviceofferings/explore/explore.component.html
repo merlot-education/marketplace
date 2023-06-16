@@ -237,6 +237,13 @@
     >
       Löschen
     </button>
+    <button type="button" class="btn btn-primary flex-item-grow" 
+    [cModalToggle]="modalViewDetails.id"
+    *ngIf="!selectedOfferingPublic && selectedOfferingDetails.merlotState === 'DELETED'"
+    (click)="purgeOffering(selectedOfferingDetails.id)"
+    >
+      Endgültig löschen
+    </button>
     <button type="button" class="btn btn-primary flex-item-grow" *ngIf="authService.isLoggedIn && (selectedOfferingDetails.offeredBy.replace('Participant:', '') != authService.activeOrganizationRole.value.orgaId)" [cModalToggle]="'modalViewContract'" (click)="bookServiceOffering(selectedOfferingDetails.id)">
       Buchen
     </button>
