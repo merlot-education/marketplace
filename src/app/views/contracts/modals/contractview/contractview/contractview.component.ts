@@ -85,14 +85,13 @@ export class ContractviewComponent {
     } catch (e){
       console.log(e);
       this.showErrorMessage = true;
-    }
-    
+    }    
   }
 
   protected deleteContract() {
     try {
       this.contractApiService.statusShiftContract(this.contractDetails.id, 'DELETED').then(result =>  {
-        //this.contractDetails = result;
+        this.contractDetails = result;
         console.log(result)
       });
     } catch (e){
@@ -104,7 +103,7 @@ export class ContractviewComponent {
   protected orderContract() {
     try {
       this.contractApiService.statusShiftContract(this.contractDetails.id, 'SIGNED_CONSUMER').then(result =>  {
-        //this.contractDetails = result;
+        this.contractDetails = result;
         console.log(result)
       });
     } catch (e){
@@ -116,7 +115,7 @@ export class ContractviewComponent {
   protected acceptOrderContract() {
     try {
       this.contractApiService.statusShiftContract(this.contractDetails.id, 'RELEASED').then(result =>  {
-        //this.contractDetails = result;
+        this.contractDetails = result;
         console.log(result)
       });
     } catch (e){
@@ -128,7 +127,7 @@ export class ContractviewComponent {
   protected revokeContract() {
     try {
       this.contractApiService.statusShiftContract(this.contractDetails.id, 'REVOKED').then(result =>  {
-        //this.contractDetails = result;
+        this.contractDetails = result;
         console.log(result)
       });
     } catch (e){
@@ -140,7 +139,7 @@ export class ContractviewComponent {
   protected archiveContract() {
     try {
       this.contractApiService.statusShiftContract(this.contractDetails.id, 'ARCHIVED').then(result =>  {
-        //this.contractDetails = result;
+        this.contractDetails = result;
         console.log(result)
       });
     } catch (e){
