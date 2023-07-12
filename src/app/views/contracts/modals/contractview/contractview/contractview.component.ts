@@ -49,11 +49,11 @@ export class ContractviewComponent {
   @Input() contractDetails: IContractDetailed = this.emptyContractDetails;
 
   protected saveButtonDisabled: boolean = false;
-  protected deleteButtonDisabled: boolean = false;
-  protected orderButtonDisabled: boolean = false;
-  protected acceptOrderButtonDisabled: boolean = false;
-  protected revokeButtonDisabled: boolean = false;
-  protected archiveButtonDisabled: boolean = false;
+  // protected deleteButtonDisabled: boolean = false;
+  // protected orderButtonDisabled: boolean = false;
+  // protected acceptOrderButtonDisabled: boolean = false;
+  // protected revokeButtonDisabled: boolean = false;
+  // protected archiveButtonDisabled: boolean = false;
 
 
   protected showErrorMessage: boolean = false;
