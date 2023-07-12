@@ -21,8 +21,8 @@ export class ContractApiService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   private getActiveRoleHeaders() : HttpHeaders {
-    let headers = new HttpHeaders();
-    headers = headers.append('Active-Role', this.authService.activeOrganizationRole.value.orgaRoleString);
+    let headers = new HttpHeaders({'Active-Role' : this.authService.activeOrganizationRole.value.orgaRoleString });
+    headers.append('Active-Role', this.authService.activeOrganizationRole.value.orgaRoleString)
     return headers;
   }
 
@@ -35,6 +35,14 @@ export class ContractApiService {
 
   public async updateContract(contract: IContractDetailed) {
     return await lastValueFrom(this.http.put(environment.contract_api_url, contract, {headers: this.getActiveRoleHeaders()})) as IContractDetailed;
+  }
+
+  public async statusShiftContract(contractId: string, newStatus: string) {  
+    let headers = this.getActiveRoleHeaders();
+
+    let fullUrl = environment.contract_api_url + 'contract/status/' + contractId + '/' + newStatus;
+    
+    return await lastValueFrom(this.http.patch(fullUrl, null, {headers: headers})) as IContractDetailed;
   }
 
   public async getOrgaContracts(page: number, size: number, consumerId: string): Promise<IPageContracts> {

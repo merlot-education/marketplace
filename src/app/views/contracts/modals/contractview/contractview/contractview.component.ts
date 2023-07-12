@@ -49,6 +49,13 @@ export class ContractviewComponent {
   @Input() contractDetails: IContractDetailed = this.emptyContractDetails;
 
   protected saveButtonDisabled: boolean = false;
+  protected deleteButtonDisabled: boolean = false;
+  protected orderButtonDisabled: boolean = false;
+  protected acceptOrderButtonDisabled: boolean = false;
+  protected revokeButtonDisabled: boolean = false;
+  protected archiveButtonDisabled: boolean = false;
+
+
   protected showErrorMessage: boolean = false;
   protected showSuccessMessage: boolean = false;
 
@@ -80,6 +87,66 @@ export class ContractviewComponent {
       this.showErrorMessage = true;
     }
     
+  }
+
+  protected deleteContract() {
+    try {
+      this.contractApiService.statusShiftContract(this.contractDetails.id, 'DELETED').then(result =>  {
+        //this.contractDetails = result;
+        console.log(result)
+      });
+    } catch (e){
+      console.log(e);
+      this.showErrorMessage = true;
+    }
+  }
+
+  protected orderContract() {
+    try {
+      this.contractApiService.statusShiftContract(this.contractDetails.id, 'SIGNED_CONSUMER').then(result =>  {
+        //this.contractDetails = result;
+        console.log(result)
+      });
+    } catch (e){
+      console.log(e);
+      this.showErrorMessage = true;
+    }   
+  }
+
+  protected acceptOrderContract() {
+    try {
+      this.contractApiService.statusShiftContract(this.contractDetails.id, 'RELEASED').then(result =>  {
+        //this.contractDetails = result;
+        console.log(result)
+      });
+    } catch (e){
+      console.log(e);
+      this.showErrorMessage = true;
+    }   
+  }
+
+  protected revokeContract() {
+    try {
+      this.contractApiService.statusShiftContract(this.contractDetails.id, 'REVOKED').then(result =>  {
+        //this.contractDetails = result;
+        console.log(result)
+      });
+    } catch (e){
+      console.log(e);
+      this.showErrorMessage = true;
+    }       
+  }
+
+  protected archiveContract() {
+    try {
+      this.contractApiService.statusShiftContract(this.contractDetails.id, 'ARCHIVED').then(result =>  {
+        //this.contractDetails = result;
+        console.log(result)
+      });
+    } catch (e){
+      console.log(e);
+      this.showErrorMessage = true;
+    }    
   }
 
   protected handleEventContractModal(isVisible: boolean) {
