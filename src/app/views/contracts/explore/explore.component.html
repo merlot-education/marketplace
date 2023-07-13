@@ -33,8 +33,13 @@
                 </li>
               </ul>
               <div style="padding: 10px">
-                <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="'modalViewContract'" *ngIf="contract.state === 'IN_DRAFT'" (click)="prepareEditContract(contract)">
-                  Bearbeiten
+                <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="'modalViewContract'" (click)="prepareEditContract(contract)">
+                  <div *ngIf="contract.state === 'IN_DRAFT'">
+                    Bearbeiten
+                  </div>
+                  <div *ngIf="contract.state !== 'IN_DRAFT'">
+                    Details
+                  </div>
                 </button>
               </div>
             </c-col>
@@ -50,4 +55,4 @@
 <h1 *ngIf="this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.</h1>
 
 
-<app-contractview [offeringDetails]="selectedOfferingDetails" [contractDetails]="contractTemplate"></app-contractview>
+<app-contractview [offeringDetails]="selectedOfferingDetails" [contractDetails]="contractTemplate" (buttonClickCallback)="buttonClicked()"></app-contractview>

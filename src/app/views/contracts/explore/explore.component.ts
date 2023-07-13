@@ -99,4 +99,10 @@ export class ExploreComponent implements OnInit {
       });
   }
 
+  public buttonClicked() {
+    this.refreshContracts(this.activePage.value.pageable.pageNumber, 
+      this.activePage.value.pageable.pageSize,
+      this.authService.activeOrganizationRole.value.orgaId);
+  }
+
 }

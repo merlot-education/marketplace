@@ -46,7 +46,7 @@
         </li>
         <li class="list-group-item" style="border: none">
           <strong>Anhänge:</strong>
-          <button cButton color="primary" variant="ghost" (click)="addAttachment()" size="sm" *ngIf="userIsActiveProvider()">
+          <button cButton color="primary" variant="ghost" (click)="addAttachment()" size="sm" *ngIf="userIsActiveProvider() && contractDetails.state !== 'IN_DRAFT'">
             <svg
             class=""
             cIcon
@@ -60,7 +60,7 @@
               <div *ngIf="userIsActiveProvider()" class="mb-3 flex-container">
                 <input class="form-control" placeholder="Anhang" 
                   [(ngModel)]="contractDetails.offeringAttachments[index]">
-                  <button cButton variant="ghost" (click)="deleteAttachment(index)" color="primary" size="sm">
+                  <button cButton variant="ghost" (click)="deleteAttachment(index)" color="primary" size="sm" *ngIf="contractDetails.state !== 'IN_DRAFT'">
                     <svg
                     class=""
                     cIcon
@@ -85,7 +85,7 @@
         </li>
         <li class="list-group-item" style="border: none">
           <strong>Laufzeit*:</strong><br />
-          <select class="form-select" [(ngModel)]="contractDetails.runtimeSelection">
+          <select class="form-select" [(ngModel)]="contractDetails.runtimeSelection" [disabled]="contractDetails.state !== 'IN_DRAFT'">
             <ng-container *ngFor="let rt of offeringDetails.runtimeOption">
               <option *ngIf="!rt.runtimeUnlimited" [value]="rt.runtimeCount + ' ' + rt.runtimeMeasurement">{{ rt.runtimeCount }} {{ rt.runtimeMeasurement }}</option>
               <option *ngIf="rt.runtimeUnlimited" [value]="'unlimited'">Unbegrenzt</option>
@@ -100,7 +100,7 @@
           </li>
           <li class="list-group-item" style="border: none" *ngIf="offeringDetails.userCountOption !== null">
             <strong>Anzahl erlaubter Benutzer*:</strong><br />
-            <select class="form-select" [(ngModel)]="contractDetails.userCountSelection">
+            <select class="form-select" [(ngModel)]="contractDetails.userCountSelection" [disabled]="contractDetails.state !== 'IN_DRAFT'">
               <ng-container *ngFor="let auc of offeringDetails.userCountOption">
                 <option *ngIf="!auc.userCountUnlimited" [value]="auc.userCountUpTo">Bis zu {{ auc.userCountUpTo }}</option>
                 <option *ngIf="auc.userCountUnlimited" [value]="'unlimited'">Unbegrenzt</option>
@@ -119,7 +119,7 @@
           </li>
           <li class="list-group-item" style="border: none" *ngIf="offeringDetails.exchangeCountOption !== null">
             <strong>Anzahl erlaubter Datenaustausche*:</strong><br />
-            <select class="form-select" [(ngModel)]="contractDetails.exchangeCountSelection">
+            <select class="form-select" [(ngModel)]="contractDetails.exchangeCountSelection" [disabled]="contractDetails.state !== 'IN_DRAFT'">
               <ng-container *ngFor="let dec of offeringDetails.exchangeCountOption">
                 <option *ngIf="!dec.exchangeCountUnlimited" [value]="dec.exchangeCountUpTo">Bis zu {{ dec.exchangeCountUpTo }}</option>
                 <option *ngIf="dec.exchangeCountUnlimited" [value]="'unlimited'">Unbegrenzt</option>
@@ -131,7 +131,7 @@
           <div class="mb-3">
             <label class="form-label"><strong>Zusatzvereinbarungen</strong></label>
             <input class="form-control" placeholder="Keine Zusatzvereinbarungen" 
-              [disabled]="userIsActiveConsumer()" 
+              [disabled]="userIsActiveConsumer() || contractDetails.state !== 'IN_DRAFT'" 
               [(ngModel)]="contractDetails.additionalAgreements">
           </div>
         </li>

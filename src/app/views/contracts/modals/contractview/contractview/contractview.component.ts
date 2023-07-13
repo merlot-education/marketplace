@@ -1,4 +1,4 @@
-import { Component, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { IContractDetailed } from '../../../contracts-data';
 import { IOfferingsDetailed } from 'src/app/views/serviceofferings/serviceofferings-data';
 import { ContractApiService } from 'src/app/services/contract-api.service';
@@ -47,6 +47,7 @@ export class ContractviewComponent {
 
   @Input() offeringDetails: IOfferingsDetailed = this.emptyOfferingDetails;
   @Input() contractDetails: IContractDetailed = this.emptyContractDetails;
+  @Output() buttonClickCallback: EventEmitter<any> = new EventEmitter();
 
   protected saveButtonDisabled: boolean = false;
 
@@ -74,19 +75,21 @@ export class ContractviewComponent {
         this.contractDetails = result;
         this.showSuccessMessage = true;
         this.saveButtonDisabled = false;
-        console.log(result)
+        console.log(result);
+        this.buttonClickCallback.emit(); 
       });
     } catch (e){
       console.log(e);
       this.showErrorMessage = true;
-    }    
+    }   
   }
 
   protected deleteContract() {
     try {
       this.contractApiService.statusShiftContract(this.contractDetails.id, 'DELETED').then(result =>  {
         this.contractDetails = result;
-        console.log(result)
+        console.log(result);
+        this.buttonClickCallback.emit(); 
       });
     } catch (e){
       console.log(e);
@@ -98,7 +101,8 @@ export class ContractviewComponent {
     try {
       this.contractApiService.statusShiftContract(this.contractDetails.id, 'SIGNED_CONSUMER').then(result =>  {
         this.contractDetails = result;
-        console.log(result)
+        console.log(result);
+        this.buttonClickCallback.emit(); 
       });
     } catch (e){
       console.log(e);
@@ -110,7 +114,8 @@ export class ContractviewComponent {
     try {
       this.contractApiService.statusShiftContract(this.contractDetails.id, 'RELEASED').then(result =>  {
         this.contractDetails = result;
-        console.log(result)
+        console.log(result);
+        this.buttonClickCallback.emit(); 
       });
     } catch (e){
       console.log(e);
@@ -122,7 +127,8 @@ export class ContractviewComponent {
     try {
       this.contractApiService.statusShiftContract(this.contractDetails.id, 'REVOKED').then(result =>  {
         this.contractDetails = result;
-        console.log(result)
+        console.log(result);
+        this.buttonClickCallback.emit(); 
       });
     } catch (e){
       console.log(e);
@@ -134,7 +140,8 @@ export class ContractviewComponent {
     try {
       this.contractApiService.statusShiftContract(this.contractDetails.id, 'ARCHIVED').then(result =>  {
         this.contractDetails = result;
-        console.log(result)
+        console.log(result);
+        this.buttonClickCallback.emit(); 
       });
     } catch (e){
       console.log(e);
