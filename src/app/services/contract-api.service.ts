@@ -10,8 +10,9 @@ import { IContractBasic, IContractDetailed, IPageContracts, ISaasContractDetaile
 })
 export class ContractApiService {
 
-  private friendlyStatusNames = {  // TODO update to contract stati
+  private friendlyStatusNames = {
     "IN_DRAFT": "In Bearbeitung",
+    "SIGNED_CONSUMER": "Vom Kunden unterschrieben",
     "RELEASED": "Veröffentlicht",
     "REVOKED": "Widerrufen",
     "DELETED": "Gelöscht",
