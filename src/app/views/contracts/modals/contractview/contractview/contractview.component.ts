@@ -99,11 +99,13 @@ export class ContractviewComponent {
 
   protected orderContract() {
     try {
-      this.contractApiService.statusShiftContract(this.contractDetails.id, 'SIGNED_CONSUMER').then(result =>  {
-        this.contractDetails = result;
-        console.log(result);
-        this.buttonClickCallback.emit(); 
-      });
+      this.contractApiService.updateContract(this.contractDetails).then(result =>  
+        this.contractApiService.statusShiftContract(this.contractDetails.id, 'SIGNED_CONSUMER').then(result =>  {
+          this.contractDetails = result;
+          console.log(result);
+          this.buttonClickCallback.emit(); 
+        })
+      );
     } catch (e){
       console.log(e);
       this.showErrorMessage = true;
@@ -112,11 +114,13 @@ export class ContractviewComponent {
 
   protected acceptOrderContract() {
     try {
-      this.contractApiService.statusShiftContract(this.contractDetails.id, 'RELEASED').then(result =>  {
-        this.contractDetails = result;
-        console.log(result);
-        this.buttonClickCallback.emit(); 
-      });
+      this.contractApiService.updateContract(this.contractDetails).then(result =>  
+        this.contractApiService.statusShiftContract(this.contractDetails.id, 'RELEASED').then(result =>  {
+          this.contractDetails = result;
+          console.log(result);
+          this.buttonClickCallback.emit(); 
+        })
+      );
     } catch (e){
       console.log(e);
       this.showErrorMessage = true;
