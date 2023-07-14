@@ -67,7 +67,10 @@ export class ExploreComponent implements OnInit {
     offeringName: '',
     providerId: '',
     consumerId: '',
-    offeringAttachments: []
+    offeringAttachments: [],
+    serviceContractProvisioning: {
+      validUntil: ''
+    }
   };
 
   constructor(

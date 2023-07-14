@@ -12,6 +12,10 @@
           <strong>Erstelldatum des Vertrags:</strong> <br />
           {{ contractDetails.creationDate }}
         </li>
+        <li class="list-group-item" style="border: none" *ngIf="contractDetails.state === 'RELEASED'">
+          <strong>Gültig bis:</strong> <br />
+          {{ contractDetails.serviceContractProvisioning.validUntil }}
+        </li>
         <li class="list-group-item" style="border: none">
           <strong>Vertrags-Status:</strong> <br />
           {{ contractApiService.resolveFriendlyStatusName(contractDetails.state) }}
@@ -126,6 +130,49 @@
               </ng-container>
             </select>
           </li>
+          <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+            <div class="mb-3">
+              <label class="form-label"><strong>Name der Datenadresse*</strong></label>
+              <input class="form-control" placeholder="MyStorage" 
+                [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
+            </div>
+          </li>
+          <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+            <div class="mb-3">
+              <label class="form-label"><strong>IONOS-S3 Quell-Bucket*</strong></label>
+              <input class="form-control" placeholder="MyBucket1" 
+                [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressSourceBucketName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
+            </div>
+          </li>
+          <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+            <div class="mb-3">
+              <label class="form-label"><strong>Quell-Dateiname im IONOS-S3 Bucket*</strong></label>
+              <input class="form-control" placeholder="MyFile1.json" 
+                [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressSourceFileName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
+            </div>
+          </li>
+          <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+            <div class="mb-3">
+              <label class="form-label"><strong>Typ der Datenadresse*</strong></label>
+              <input class="form-control" placeholder="placeholder" value="IonosS3"
+                [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressType" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
+            </div>
+          </li>
+  
+          <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
+            <div class="mb-3">
+              <label class="form-label"><strong>IONOS-S3 Ziel-Bucket*</strong></label>
+              <input class="form-control" placeholder="MyBucket1" 
+                [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressTargetBucketName" [disabled]="contractDetails.state !== 'IN_DRAFT'">
+            </div>
+          </li>
+          <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
+            <div class="mb-3">
+              <label class="form-label"><strong>Ziel-Dateiname im IONOS-S3 Bucket*</strong></label>
+              <input class="form-control" placeholder="MyFile1.json" 
+                [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressTargetFileName" [disabled]="contractDetails.state !== 'IN_DRAFT'">
+            </div>
+          </li>
         </div>
         <li class="list-group-item" style="border: none">
           <div class="mb-3">
@@ -135,49 +182,7 @@
               [(ngModel)]="contractDetails.additionalAgreements">
           </div>
         </li>
-        <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
-          <div class="mb-3">
-            <label class="form-label"><strong>Name der Datenadresse*</strong></label>
-            <input class="form-control" placeholder="MyStorage" 
-              [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
-          </div>
-        </li>
-        <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
-          <div class="mb-3">
-            <label class="form-label"><strong>IONOS-S3 Quell-Bucket*</strong></label>
-            <input class="form-control" placeholder="MyBucket1" 
-              [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressSourceBucketName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
-          </div>
-        </li>
-        <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
-          <div class="mb-3">
-            <label class="form-label"><strong>Quell-Dateiname im IONOS-S3 Bucket*</strong></label>
-            <input class="form-control" placeholder="MyFile1.json" 
-              [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressSourceFileName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
-          </div>
-        </li>
-        <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
-          <div class="mb-3">
-            <label class="form-label"><strong>Typ der Datenadresse*</strong></label>
-            <input class="form-control" placeholder="placeholder" value="IonosS3"
-              [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressType" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
-          </div>
-        </li>
-
-        <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
-          <div class="mb-3">
-            <label class="form-label"><strong>IONOS-S3 Ziel-Bucket*</strong></label>
-            <input class="form-control" placeholder="MyBucket1" 
-              [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressTargetBucketName" [disabled]="contractDetails.state !== 'IN_DRAFT'">
-          </div>
-        </li>
-        <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
-          <div class="mb-3">
-            <label class="form-label"><strong>Ziel-Dateiname im IONOS-S3 Bucket*</strong></label>
-            <input class="form-control" placeholder="MyFile1.json" 
-              [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressTargetFileName" [disabled]="contractDetails.state !== 'IN_DRAFT'">
-          </div>
-        </li>
+        
 
         <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
           <c-form-check inline>

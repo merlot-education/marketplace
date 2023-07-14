@@ -43,7 +43,10 @@ export class ContractviewComponent {
     offeringName: '',
     providerId: '',
     consumerId: '',
-    offeringAttachments: []
+    offeringAttachments: [],
+    serviceContractProvisioning: {
+      validUntil: ''
+    }
   };
 
   @Input() offeringDetails: IOfferingsDetailed = this.emptyOfferingDetails;

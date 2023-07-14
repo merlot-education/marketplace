@@ -126,7 +126,10 @@ export class ExploreComponent implements OnInit, OnDestroy {
     offeringName: '',
     providerId: '',
     consumerId: '',
-    offeringAttachments: []
+    offeringAttachments: [],
+    serviceContractProvisioning: {
+      validUntil: ''
+    }
   }
 
   selectedOfferingDetails: IOfferingsDetailed = this.emptyOfferingDetails;

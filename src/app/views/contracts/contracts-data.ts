@@ -19,6 +19,9 @@ export class IContractDetailed extends IContractBasic {
   providerTncUrl: string;
   additionalAgreements?: string;
   offeringAttachments: string[];
+  serviceContractProvisioning: {
+    validUntil?: string;
+  }
 }
 
 export class ISaasContractDetailed extends IContractDetailed {
