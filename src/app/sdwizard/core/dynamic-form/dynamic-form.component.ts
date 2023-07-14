@@ -20,6 +20,7 @@ import { OrganizationsApiService } from 'src/app/services/organizations-api.serv
 import {timer} from 'rxjs';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { IOfferingsDetailed } from 'src/app/views/serviceofferings/serviceofferings-data';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -45,6 +46,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   showSuccessMessage: boolean = false;
   showErrorMessage: boolean = false;
+  errorDetails: string = "";
   createdServiceOfferingId: string = "";
 
   createDateTimer: NodeJS.Timer = undefined;
@@ -300,6 +302,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     this.showSuccessMessage = false;
     this.showErrorMessage = false;
     this.createdServiceOfferingId = "";
+    this.errorDetails = "";
 
     this.shape.userPrefix = this.form.get('user_prefix').value;
 
@@ -310,12 +313,9 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     this.shape.fields = this.updateFormFieldsValues(this.formFields, this.form);
     this.shape.fields = this.emptyChildrenFields(this.shape.fields);
     console.log("shape fields pre save", this.shape.fields);
-    this.exportService.saveFile(this.file).then(result => {
-      console.log(result);
-      if (result === undefined) {
-        this.showErrorMessage = true;
-        this.submitButtonsDisabled = false;
-      } else {
+    this.exportService.saveFile(this.file)
+      .then(result => {
+        console.log(result);
         this.showSuccessMessage = true;
         this.createdServiceOfferingId = result["id"];
         let didField = this.form.get("user_prefix");
@@ -323,17 +323,20 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
         if (publishAfterSave) {
           this.serviceofferingApiService.releaseServiceOffering(result["id"]);
-        } else {
-          // if we did not publish, we can further edit the same offering
+        }
+      })
+      .catch((e: HttpErrorResponse) => {
+        this.showErrorMessage = true;
+        this.errorDetails = e.error.message;
+      })
+      .catch(e => {
+        this.showErrorMessage = true;
+        this.errorDetails = "Unbekannter Fehler.";
+      }).finally(() => {
+        if (!publishAfterSave) {
           this.submitButtonsDisabled = false;
         }
-        //this.navigateToOverview();
-        /*timer(1500)
-        .subscribe(i => { 
-          this.router.navigate(['/service-offerings/explore']); 
-        })*/
-      }
-    });
+      });
     this.patchRequiredFields(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
   }
 

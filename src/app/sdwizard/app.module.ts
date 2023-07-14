@@ -44,7 +44,6 @@ import { CustomRouteReuseStrategy } from './shared/custom-route-reuse-strategy'
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import { HttpErrorInterceptor } from './http-error.interceptor';
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 
@@ -139,11 +138,7 @@ export function filesProviderFactory(provider: FilesProvider) {
     StartingPageComponent,
     SelectFileComponent
   ],
-  providers: [FormfieldControlService, ValidationControlService, DatePipe, {
-    provide: HTTP_INTERCEPTORS,
-    useClass: HttpErrorInterceptor,
-    multi: true,
-  },
+  providers: [FormfieldControlService, ValidationControlService, DatePipe,
     FilesProvider, {provide: APP_INITIALIZER, useFactory: filesProviderFactory, deps: [FilesProvider], multi: true},
     {
       provide: RouteReuseStrategy,

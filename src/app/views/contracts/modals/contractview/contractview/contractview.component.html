@@ -137,28 +137,28 @@
         </li>
         <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
           <div class="mb-3">
-            <label class="form-label"><strong>Name der Datenadresse</strong></label>
+            <label class="form-label"><strong>Name der Datenadresse*</strong></label>
             <input class="form-control" placeholder="MyStorage" 
               [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
           </div>
         </li>
         <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
           <div class="mb-3">
-            <label class="form-label"><strong>IONOS-S3 Quell-Bucket</strong></label>
+            <label class="form-label"><strong>IONOS-S3 Quell-Bucket*</strong></label>
             <input class="form-control" placeholder="MyBucket1" 
               [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressSourceBucketName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
           </div>
         </li>
         <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
           <div class="mb-3">
-            <label class="form-label"><strong>Quell-Dateiname im IONOS-S3 Bucket</strong></label>
+            <label class="form-label"><strong>Quell-Dateiname im IONOS-S3 Bucket*</strong></label>
             <input class="form-control" placeholder="MyFile1.json" 
               [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressSourceFileName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
           </div>
         </li>
         <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
           <div class="mb-3">
-            <label class="form-label"><strong>Typ der Datenadresse</strong></label>
+            <label class="form-label"><strong>Typ der Datenadresse*</strong></label>
             <input class="form-control" placeholder="placeholder" value="IonosS3"
               [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressType" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
           </div>
@@ -166,14 +166,14 @@
 
         <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
           <div class="mb-3">
-            <label class="form-label"><strong>IONOS-S3 Ziel-Bucket</strong></label>
+            <label class="form-label"><strong>IONOS-S3 Ziel-Bucket*</strong></label>
             <input class="form-control" placeholder="MyBucket1" 
               [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressTargetBucketName" [disabled]="contractDetails.state !== 'IN_DRAFT'">
           </div>
         </li>
         <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
           <div class="mb-3">
-            <label class="form-label"><strong>Ziel-Dateiname im IONOS-S3 Bucket</strong></label>
+            <label class="form-label"><strong>Ziel-Dateiname im IONOS-S3 Bucket*</strong></label>
             <input class="form-control" placeholder="MyFile1.json" 
               [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressTargetFileName" [disabled]="contractDetails.state !== 'IN_DRAFT'">
           </div>
@@ -203,17 +203,17 @@
             <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Anbieter: Merlot AGB gelesen und akzeptiert*</b></label>
           </c-form-check>
         </li>
-        <strong *ngIf="showErrorMessage" style="color:red">Fehler beim Speichern der Vertragskonfiguration.</strong>
+        <strong *ngIf="showErrorMessage" style="color:red">Fehler beim Speichern der Vertragskonfiguration. ({{ errorDetails }})</strong>
         <strong *ngIf="showSuccessMessage" style="color:green">Vertragskonfiguration gespeichert!</strong>
       </ul>
     </c-modal-body>
     <c-modal-footer>
       <button cButton color="secondary" [cModalToggle]="modalViewContract.id">Schließen</button>
-      <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="saveContract()" *ngIf="contractDetails.state === 'IN_DRAFT' || (userIsActiveProvider() && contractDetails.state === 'SIGNED_CONSUMER')">Vertragsentwurf speichern</button>
-      <button cButton color="primary" (click)="deleteContract()" *ngIf="contractDetails.state === 'IN_DRAFT'">Vertragsentwurf löschen</button> 
-      <button cButton color="primary" (click)="orderContract()" *ngIf="contractDetails.state === 'IN_DRAFT' && userIsActiveConsumer()">Kostenpflichtig bestellen</button> 
-      <button cButton color="primary" (click)="acceptOrderContract()" *ngIf="contractDetails.state === 'SIGNED_CONSUMER' && userIsActiveProvider()">Bestellung annehmen</button>
-      <button cButton color="primary" (click)="revokeContract()" *ngIf="contractDetails.state === 'RELEASED'">Vertrag widerrufen</button> 
-      <button cButton color="primary" (click)="archiveContract()" *ngIf="contractDetails.state === 'RELEASED'">Vertrag archivieren</button> 
+      <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(saveContract)" *ngIf="contractDetails.state === 'IN_DRAFT' || (userIsActiveProvider() && contractDetails.state === 'SIGNED_CONSUMER')">Vertragsentwurf speichern</button>
+      <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(deleteContract)" *ngIf="contractDetails.state === 'IN_DRAFT'">Vertragsentwurf löschen</button> 
+      <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(orderContract)" *ngIf="contractDetails.state === 'IN_DRAFT' && userIsActiveConsumer()">Kostenpflichtig bestellen</button> 
+      <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(acceptOrderContract)" *ngIf="contractDetails.state === 'SIGNED_CONSUMER' && userIsActiveProvider()">Bestellung annehmen</button>
+      <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(revokeContract)" *ngIf="contractDetails.state === 'RELEASED'">Vertrag widerrufen</button> 
+      <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(archiveContract)" *ngIf="contractDetails.state === 'RELEASED'">Vertrag archivieren</button> 
     </c-modal-footer>
   </c-modal>

@@ -64,15 +64,8 @@ export class ServiceofferingApiService {
   public async createServiceOffering(sdJson: string, type: string) {
     console.log(sdJson); 
     console.log(type);
-
-    try {
-      const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
-      let result = await lastValueFrom(this.http.post(environment.serviceoffering_api_url + "serviceoffering/" + type, sdJson, {headers: headers}));
-      return result;
-    } catch (e) {
-      console.log(e);
-      return undefined;
-    }
+    const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
+    return await lastValueFrom(this.http.post(environment.serviceoffering_api_url + "serviceoffering/" + type, sdJson, {headers: headers}));
   }
 
   private getStatusShiftUrl(id: string, targetstatus: string) {

@@ -5,6 +5,7 @@ import { ContractApiService } from 'src/app/services/contract-api.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-contractview',
@@ -54,6 +55,8 @@ export class ContractviewComponent {
   protected showErrorMessage: boolean = false;
   protected showSuccessMessage: boolean = false;
 
+  protected errorDetails: string = "";
+
   constructor(
     protected contractApiService: ContractApiService,
     private authService: AuthService,
@@ -65,92 +68,59 @@ export class ContractviewComponent {
     return index;  
   }
 
-  protected saveContract() {
+  protected handleButtonClick(targetFunction: (contractApiService: ContractApiService, contractDetails: IContractDetailed) => Promise<IContractDetailed>) {
     console.log(this.contractDetails);
     this.saveButtonDisabled = true;
     this.showSuccessMessage = false;
     this.showErrorMessage = false;
-    try {
-      this.contractApiService.updateContract(this.contractDetails).then(result =>  {
+    this.errorDetails = "";
+
+    targetFunction(this.contractApiService, this.contractDetails)
+      .then(result => {
         this.contractDetails = result;
         this.showSuccessMessage = true;
+        console.log(result);
+        this.buttonClickCallback.emit();
+      })
+      .catch((e: HttpErrorResponse) => {
+        console.log(e);
+        this.errorDetails = e.error.message;
+        this.showErrorMessage = true;
+      })
+      .catch(e => {
+        console.log(e);
+        this.errorDetails = "Unbekannter Fehler.";
+        this.showErrorMessage = true;
+      })
+      .finally(() => {
         this.saveButtonDisabled = false;
-        console.log(result);
-        this.buttonClickCallback.emit(); 
       });
-    } catch (e){
-      console.log(e);
-      this.showErrorMessage = true;
-    }   
   }
 
-  protected deleteContract() {
-    try {
-      this.contractApiService.statusShiftContract(this.contractDetails.id, 'DELETED').then(result =>  {
-        this.contractDetails = result;
-        console.log(result);
-        this.buttonClickCallback.emit(); 
-      });
-    } catch (e){
-      console.log(e);
-      this.showErrorMessage = true;
-    }
+  protected async saveContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
+    return await contractApiService.updateContract(contractDetails);
   }
 
-  protected orderContract() {
-    try {
-      this.contractApiService.updateContract(this.contractDetails).then(result =>  
-        this.contractApiService.statusShiftContract(this.contractDetails.id, 'SIGNED_CONSUMER').then(result =>  {
-          this.contractDetails = result;
-          console.log(result);
-          this.buttonClickCallback.emit(); 
-        })
-      );
-    } catch (e){
-      console.log(e);
-      this.showErrorMessage = true;
-    }   
+  protected async deleteContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
+    return await contractApiService.statusShiftContract(contractDetails.id, 'DELETED');
   }
 
-  protected acceptOrderContract() {
-    try {
-      this.contractApiService.updateContract(this.contractDetails).then(result =>  
-        this.contractApiService.statusShiftContract(this.contractDetails.id, 'RELEASED').then(result =>  {
-          this.contractDetails = result;
-          console.log(result);
-          this.buttonClickCallback.emit(); 
-        })
-      );
-    } catch (e){
-      console.log(e);
-      this.showErrorMessage = true;
-    }   
+  protected async orderContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
+    return await contractApiService.updateContract(contractDetails).then(result =>  
+      contractApiService.statusShiftContract(contractDetails.id, 'SIGNED_CONSUMER'));
   }
 
-  protected revokeContract() {
-    try {
-      this.contractApiService.statusShiftContract(this.contractDetails.id, 'REVOKED').then(result =>  {
-        this.contractDetails = result;
-        console.log(result);
-        this.buttonClickCallback.emit(); 
-      });
-    } catch (e){
-      console.log(e);
-      this.showErrorMessage = true;
-    }       
+  protected async acceptOrderContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
+    return await contractApiService.updateContract(contractDetails).then(result =>  
+      contractApiService.statusShiftContract(contractDetails.id, 'RELEASED'));
   }
 
-  protected archiveContract() {
-    try {
-      this.contractApiService.statusShiftContract(this.contractDetails.id, 'ARCHIVED').then(result =>  {
-        this.contractDetails = result;
-        console.log(result);
-        this.buttonClickCallback.emit(); 
-      });
-    } catch (e){
-      console.log(e);
-      this.showErrorMessage = true;
-    }    
+  protected async revokeContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
+    return await contractApiService.statusShiftContract(contractDetails.id, 'REVOKED');
+  }
+
+  protected async archiveContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
+    return await contractApiService.statusShiftContract(contractDetails.id, 'ARCHIVED');
   }
 
   protected handleEventContractModal(isVisible: boolean) {
