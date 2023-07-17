@@ -71,14 +71,14 @@ export class ContractviewComponent {
     return index;  
   }
 
-  protected handleButtonClick(targetFunction: (contractApiService: ContractApiService, contractDetails: IContractDetailed) => Promise<IContractDetailed>) {
-    console.log(this.contractDetails);
+  protected handleButtonClick(targetFunction: (contractApiService: ContractApiService, contractDetails: IContractDetailed) => Promise<IContractDetailed>, contractDetails: IContractDetailed) {
+    console.log(contractDetails);
     this.saveButtonDisabled = true;
     this.showSuccessMessage = false;
     this.showErrorMessage = false;
     this.errorDetails = "";
 
-    targetFunction(this.contractApiService, this.contractDetails)
+    targetFunction(this.contractApiService, contractDetails)
       .then(result => {
         this.contractDetails = result;
         this.showSuccessMessage = true;
@@ -132,8 +132,6 @@ export class ContractviewComponent {
 
   protected handleEventContractModal(isVisible: boolean) {
     if (!isVisible) {
-      this.offeringDetails = this.emptyOfferingDetails;
-      this.contractDetails = this.emptyContractDetails;
       this.saveButtonDisabled = false;
       this.showErrorMessage = false;
       this.showSuccessMessage = false;
