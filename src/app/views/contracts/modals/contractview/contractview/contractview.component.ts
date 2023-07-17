@@ -108,6 +108,10 @@ export class ContractviewComponent {
     return await contractApiService.statusShiftContract(contractDetails.id, 'DELETED');
   }
 
+  protected async purgeContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
+    return await contractApiService.statusShiftContract(contractDetails.id, 'PURGED');
+  }
+
   protected async orderContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
     return await contractApiService.updateContract(contractDetails).then(result =>  
       contractApiService.statusShiftContract(contractDetails.id, 'SIGNED_CONSUMER'));

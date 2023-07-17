@@ -216,6 +216,7 @@
       <button cButton color="secondary" [cModalToggle]="modalViewContract.id">Schließen</button>
       <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(saveContract)" *ngIf="contractDetails.state === 'IN_DRAFT' || (userIsActiveProvider() && contractDetails.state === 'SIGNED_CONSUMER')">Vertragsentwurf speichern</button>
       <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(deleteContract)" *ngIf="contractDetails.state === 'IN_DRAFT'">Vertragsentwurf löschen</button> 
+      <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(purgeContract)" *ngIf="contractDetails.state === 'DELETED' && userIsActiveProvider()">Vertragsentwurf endgültig löschen</button> 
       <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(orderContract)" *ngIf="contractDetails.state === 'IN_DRAFT' && userIsActiveConsumer()">Kostenpflichtig bestellen</button> 
       <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(acceptOrderContract)" *ngIf="contractDetails.state === 'SIGNED_CONSUMER' && userIsActiveProvider()">Bestellung annehmen</button>
       <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(revokeContract)" *ngIf="contractDetails.state === 'SIGNED_CONSUMER' || contractDetails.state === 'RELEASED'">Vertrag widerrufen</button> 
