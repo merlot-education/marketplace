@@ -34,7 +34,7 @@ export class ContractApiService {
     }, {headers: this.getActiveRoleHeaders()})) as IContractDetailed;
   }
 
-  public async updateContract(contract: IContractDetailed) {
+  public async updateContract(contract: IContractDetailed): Promise<IContractDetailed> {
     return await lastValueFrom(this.http.put(environment.contract_api_url, contract, {headers: this.getActiveRoleHeaders()})) as IContractDetailed;
   }
 

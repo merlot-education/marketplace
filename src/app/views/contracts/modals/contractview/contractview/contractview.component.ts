@@ -130,6 +130,13 @@ export class ContractviewComponent {
     return await contractApiService.statusShiftContract(contractDetails.id, 'ARCHIVED');
   }
 
+  protected async regenerateContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
+    return await contractApiService.createNewContract(contractDetails.offeringId, contractDetails.consumerId).then(result => {
+      contractDetails.id = result.id;
+      return contractApiService.updateContract(contractDetails);
+    });
+  }
+
   protected handleEventContractModal(isVisible: boolean) {
     if (!isVisible) {
       this.saveButtonDisabled = false;
