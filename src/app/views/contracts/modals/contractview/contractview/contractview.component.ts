@@ -131,10 +131,7 @@ export class ContractviewComponent {
   }
 
   protected async regenerateContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
-    return await contractApiService.createNewContract(contractDetails.offeringId, contractDetails.consumerId).then(result => {
-      contractDetails.id = result.id;
-      return contractApiService.updateContract(contractDetails);
-    });
+    return await contractApiService.regenerateContract(contractDetails.id);
   }
 
   protected handleEventContractModal(isVisible: boolean) {
