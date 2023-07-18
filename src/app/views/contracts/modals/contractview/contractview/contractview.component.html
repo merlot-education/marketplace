@@ -60,8 +60,8 @@
           <br />
           <ul *ngFor="let attachment of contractDetails.offeringAttachments;let index = index;trackBy: trackByFn">
             <li>
-              <a [href]="attachment" *ngIf="userIsActiveConsumer()">{{ attachment }}</a>
-              <div *ngIf="userIsActiveProvider()" class="mb-3 flex-container">
+              <a [href]="attachment" *ngIf="userIsActiveConsumer() || contractDetails.state !== 'IN_DRAFT">{{ attachment }}</a>
+              <div *ngIf="userIsActiveProvider() && contractDetails.state === 'IN_DRAFT'" class="mb-3 flex-container">
                 <input class="form-control" placeholder="Anhang" 
                   [(ngModel)]="contractDetails.offeringAttachments[index]">
                   <button cButton variant="ghost" (click)="deleteAttachment(index)" color="primary" size="sm" *ngIf="contractDetails.state === 'IN_DRAFT'">
