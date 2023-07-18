@@ -46,7 +46,8 @@ export class ContractviewComponent {
     offeringAttachments: [],
     serviceContractProvisioning: {
       validUntil: ''
-    }
+    },
+    type: ''
   };
 
   @Input() offeringDetails: IOfferingsDetailed = this.emptyOfferingDetails;
@@ -135,6 +136,10 @@ export class ContractviewComponent {
       contractDetails.id = result.id;
       return contractApiService.updateContract(contractDetails);
     });
+  }
+
+  protected initiateDataTransfer(contractDetails: IContractDetailed) {
+    console.log("Initiate transfer");
   }
 
   protected handleEventContractModal(isVisible: boolean) {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { demoContracts, IContractBasic, IContractDetailed, IPageContracts, ISaasContractDetailed } from '../contracts-data';
+import { IContractBasic, IContractDetailed, IPageContracts, ISaasContractDetailed } from '../contracts-data';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
@@ -70,7 +70,8 @@ export class ExploreComponent implements OnInit {
     offeringAttachments: [],
     serviceContractProvisioning: {
       validUntil: ''
-    }
+    },
+    type: ''
   };
 
   constructor(

@@ -222,5 +222,11 @@
       <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(revokeContract, contractDetails)" *ngIf="contractDetails.state === 'SIGNED_CONSUMER' || contractDetails.state === 'RELEASED'">Vertrag widerrufen</button> 
       <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(archiveContract, contractDetails)" *ngIf="contractDetails.state === 'RELEASED'">Vertrag archivieren</button> 
       <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(regenerateContract, contractDetails)" *ngIf="userIsActiveConsumer() && (contractDetails.state === 'ARCHIVED' || contractDetails.state === 'DELETED')">Vertrag neu erstellen</button> 
+      <button cButton color="primary" 
+        [disabled]="(offeringDetails.dataTransferType === 'Push' && userIsActiveConsumer()) || (offeringDetails.dataTransferType === 'Pull' && userIsActiveProvider())" 
+        (click)="initiateDataTransfer(contractDetails)" 
+        *ngIf="contractDetails.type === 'DataDeliveryContractTemplate' && contractDetails.state === 'RELEASED'">
+        Datentransfer starten
+      </button> 
     </c-modal-footer>
   </c-modal>
