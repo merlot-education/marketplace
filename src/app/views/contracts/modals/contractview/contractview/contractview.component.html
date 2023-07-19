@@ -210,6 +210,7 @@
         </li>
         <strong *ngIf="showErrorMessage" style="color:red">Fehler beim Speichern der Vertragskonfiguration. ({{ errorDetails }})</strong>
         <strong *ngIf="showSuccessMessage" style="color:green">Vertragskonfiguration gespeichert!</strong>
+        <strong *ngIf="showEdcStatusMessage" style="color:blue">{{edcStatusMessage}}</strong>
       </ul>
     </c-modal-body>
     <c-modal-footer>
@@ -223,7 +224,7 @@
       <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(archiveContract, contractDetails)" *ngIf="contractDetails.state === 'RELEASED'">Vertrag archivieren</button>  
       <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(regenerateContract, contractDetails)" *ngIf="contractDetails.state === 'ARCHIVED' || contractDetails.state === 'DELETED'">Vertrag neu erstellen</button> 
       <button cButton color="primary" 
-        [disabled]="(offeringDetails.dataTransferType === 'Push' && userIsActiveConsumer()) || (offeringDetails.dataTransferType === 'Pull' && userIsActiveProvider())" 
+        [disabled]="saveButtonDisabled || (offeringDetails.dataTransferType === 'Push' && userIsActiveConsumer()) || (offeringDetails.dataTransferType === 'Pull' && userIsActiveProvider())" 
         (click)="initiateDataTransfer(contractDetails)" 
         *ngIf="contractDetails.type === 'DataDeliveryContractTemplate' && contractDetails.state === 'RELEASED'">
         Datentransfer starten

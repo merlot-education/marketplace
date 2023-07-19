@@ -1,11 +1,13 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { IContractDetailed } from '../../../contracts-data';
+import { IContractDetailed, IEdcIdResponse, IEdcNegotiationStatus, IEdcTransferStatus } from '../../../contracts-data';
 import { IOfferingsDetailed } from 'src/app/views/serviceofferings/serviceofferings-data';
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 @Component({
   selector: 'app-contractview',
@@ -58,8 +60,10 @@ export class ContractviewComponent {
 
   protected showErrorMessage: boolean = false;
   protected showSuccessMessage: boolean = false;
+  protected showEdcStatusMessage: boolean = false;
 
   protected errorDetails: string = "";
+  protected edcStatusMessage: string = "";
 
   constructor(
     protected contractApiService: ContractApiService,
@@ -77,6 +81,8 @@ export class ContractviewComponent {
     this.saveButtonDisabled = true;
     this.showSuccessMessage = false;
     this.showErrorMessage = false;
+    this.showEdcStatusMessage = false;
+    this.edcStatusMessage = "";
     this.errorDetails = "";
 
     targetFunction(this.contractApiService, contractDetails)
@@ -136,7 +142,48 @@ export class ContractviewComponent {
   }
 
   protected initiateDataTransfer(contractDetails: IContractDetailed) {
+    this.saveButtonDisabled = true;
+    this.showSuccessMessage = false;
+    this.showErrorMessage = false;
+    this.errorDetails = "";
+    this.showEdcStatusMessage = true;
+    this.edcStatusMessage = "Starte EDC Verhandlung...";
     console.log("Initiate transfer");
+    this.contractApiService.initiateEdcNegotiation(contractDetails.id).then(async (negotiationId: IEdcIdResponse) => {
+      console.log(negotiationId);
+      let negotiationState: IEdcNegotiationStatus = {
+        id: '',
+        state: '',
+        contractAgreementId: ''
+      }
+      while (negotiationState.state !== "FINALIZED") {
+        negotiationState = await this.contractApiService.getEdcNegotiationStatus(contractDetails.id, negotiationId.id);
+        this.edcStatusMessage = "EDC Verhandlung gestartet. Aktueller Status: " + negotiationState.state;
+        console.log(negotiationState);
+        await sleep(1000);
+      }
+      this.edcStatusMessage = "EDC Verhandlung abgeschlossen! Starte EDC Datentransfer...";
+      this.contractApiService.initiateEdcTransfer(contractDetails.id, negotiationId.id).then(async (transferId: IEdcIdResponse) => {
+        console.log(transferId);
+        let transferState: IEdcTransferStatus = {
+          id: '',
+          state: ''
+        }
+        while (transferState.state !== "COMPLETED") {
+          transferState = await this.contractApiService.getEdcTransferStatus(contractDetails.id, transferId.id);
+          this.edcStatusMessage = "EDC Datentransfer gestartet. Aktueller Status: " + transferState.state;
+          console.log(transferState);
+          await sleep(1000);
+        }
+        this.edcStatusMessage = "EDC Datentransfer abgeschlossen!";
+      })
+    }).catch((e: HttpErrorResponse) => {
+      this.edcStatusMessage = "Fehler bei der EDC Kommunikation. (" + e.error.message + ")";
+    }).catch(e => {
+      this.edcStatusMessage = "Fehler bei der EDC Kommunikation. (Unbekannter Fehler)";
+    }).finally(() => {
+      this.saveButtonDisabled = false;
+    })
   }
 
   protected handleEventContractModal(isVisible: boolean) {
@@ -144,6 +191,7 @@ export class ContractviewComponent {
       this.saveButtonDisabled = false;
       this.showErrorMessage = false;
       this.showSuccessMessage = false;
+      this.showEdcStatusMessage = false;
     }
   }
 

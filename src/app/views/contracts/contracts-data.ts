@@ -1,4 +1,5 @@
 import { ISpringPage } from "../common-views/paging-footer/page-data";
+import { LoginComponent } from "../pages/login/login.component";
 
 export class IContractBasic {
     id: string;
@@ -23,6 +24,21 @@ export class IContractDetailed extends IContractBasic {
   serviceContractProvisioning: {
     validUntil?: string;
   }
+}
+
+export class IEdcIdResponse {
+  id: string;
+}
+
+export class IEdcNegotiationStatus {
+  id: string;
+  state: string;
+  contractAgreementId?: string;
+}
+
+export class IEdcTransferStatus {
+  id: string;
+  state: string;
 }
 
 export class ISaasContractDetailed extends IContractDetailed {
