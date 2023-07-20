@@ -158,14 +158,6 @@
           </li>
 
           <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
-            <div class="mb-3">
-              <label class="form-label"><strong>Name der Datenadresse*</strong></label>
-              <input class="form-control" placeholder="MyStorage" 
-                [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
-            </div>
-          </li>
-
-          <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
             <strong>Typ der Datenadresse*</strong><br />
             <select class="form-select" [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressType" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
               <option [value]="'IonosS3'">IonosS3</option>
