@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, lastValueFrom } from 'rxjs';
-import { OrganizationData } from '../views/organization/organization-data';
+import { ConnectorData, OrganizationData } from '../views/organization/organization-data';
 import { AuthService, OrganizationRole } from './auth.service';
 import { environment } from 'src/environments/environment';
 
@@ -42,6 +42,12 @@ export class OrganizationsApiService {
       this.http.get(environment.organizations_api_url)
     )) as OrganizationData[];
     return orgaData;
+  }
+
+  public async getConnectorsOfOrganization(orgaId: string) {
+    return await lastValueFrom(
+      this.http.get(environment.organizations_api_url + "organization/" + orgaId + "/connectors/")
+    ) as ConnectorData[];
   }
 
   public updateOrganizationRepresentation(activeRole: OrganizationRole) {

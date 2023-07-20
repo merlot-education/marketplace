@@ -6,6 +6,8 @@ import { ContractApiService } from 'src/app/services/contract-api.service';
 import { IOfferingsDetailed } from '../../serviceofferings/serviceofferings-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { BehaviorSubject } from 'rxjs';
+import { ConnectorData } from '../../organization/organization-data';
+import { throws } from 'assert';
 
 @Component({
   templateUrl: './explore.component.html',
@@ -74,6 +76,8 @@ export class ExploreComponent implements OnInit {
     type: ''
   };
 
+  protected orgaConnectors: ConnectorData[] = [];
+
   constructor(
     protected organizationsApiService: OrganizationsApiService,
     protected authService: AuthService,
@@ -84,6 +88,9 @@ export class ExploreComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.activeOrganizationRole.subscribe(value => {
+      this.organizationsApiService.getConnectorsOfOrganization(value.orgaId).then(result => {
+        this.orgaConnectors = result;
+      });
       this.refreshContracts(0, this.ITEMS_PER_PAGE, value.orgaId);
     })
   }

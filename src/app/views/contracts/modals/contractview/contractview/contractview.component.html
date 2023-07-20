@@ -130,20 +130,25 @@
               </ng-container>
             </select>
           </li>
+
           <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
-            <div class="mb-3">
-              <label class="form-label"><strong>Name der Datenadresse*</strong></label>
-              <input class="form-control" placeholder="MyStorage" 
-                [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
-            </div>
+            <strong>Aktiver EDC Connector*:</strong><br />
+            <select class="form-select" [(ngModel)]="contractDetails.serviceContractProvisioning.selectedProviderConnectorId" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
+              <ng-container *ngFor="let connector of availableConnectors">
+                <option [value]="connector.connectorId">{{ connector.connectorId }}</option>
+              </ng-container>
+            </select>
           </li>
+
           <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
-            <div class="mb-3">
-              <label class="form-label"><strong>IONOS-S3 Quell-Bucket*</strong></label>
-              <input class="form-control" placeholder="MyBucket1" 
-                [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressSourceBucketName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
-            </div>
+            <strong>IONOS-S3 Quell-Bucket*</strong><br />
+            <select class="form-select" [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressSourceBucketName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
+              <ng-container *ngFor="let bucket of getConnectorBuckets(contractDetails.serviceContractProvisioning.selectedProviderConnectorId)">
+                <option [value]="bucket">{{ bucket }}</option>
+              </ng-container>
+            </select>
           </li>
+
           <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
             <div class="mb-3">
               <label class="form-label"><strong>Quell-Dateiname im IONOS-S3 Bucket*</strong></label>
@@ -151,21 +156,41 @@
                 [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressSourceFileName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
             </div>
           </li>
+
           <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
             <div class="mb-3">
-              <label class="form-label"><strong>Typ der Datenadresse*</strong></label>
-              <input class="form-control" placeholder="placeholder" value="IonosS3"
-                [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressType" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
+              <label class="form-label"><strong>Name der Datenadresse*</strong></label>
+              <input class="form-control" placeholder="MyStorage" 
+                [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
             </div>
           </li>
-  
+
+          <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+            <strong>Typ der Datenadresse*</strong><br />
+            <select class="form-select" [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressType" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
+              <option [value]="'IonosS3'">IonosS3</option>
+            </select>
+          </li>
+
+
           <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
-            <div class="mb-3">
-              <label class="form-label"><strong>IONOS-S3 Ziel-Bucket*</strong></label>
-              <input class="form-control" placeholder="MyBucket1" 
-                [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressTargetBucketName" [disabled]="contractDetails.state !== 'IN_DRAFT'">
-            </div>
+            <strong>Aktiver EDC Connector*:</strong><br />
+            <select class="form-select" [(ngModel)]="contractDetails.serviceContractProvisioning.selectedConsumerConnectorId" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
+              <ng-container *ngFor="let connector of availableConnectors">
+                <option [value]="connector.connectorId">{{ connector.connectorId }}</option>
+              </ng-container>
+            </select>
           </li>
+
+          <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
+            <strong>IONOS-S3 Ziel-Bucket*</strong><br />
+            <select class="form-select" [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressTargetBucketName" [disabled]="contractDetails.state !== 'IN_DRAFT'">
+              <ng-container *ngFor="let bucket of getConnectorBuckets(contractDetails.serviceContractProvisioning.selectedConsumerConnectorId)">
+                <option [value]="bucket">{{ bucket }}</option>
+              </ng-container>
+            </select>
+          </li>
+
           <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
             <div class="mb-3">
               <label class="form-label"><strong>Ziel-Dateiname im IONOS-S3 Bucket*</strong></label>
@@ -173,6 +198,7 @@
                 [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressTargetFileName" [disabled]="contractDetails.state !== 'IN_DRAFT'">
             </div>
           </li>
+
         </div>
         <li class="list-group-item" style="border: none">
           <div class="mb-3">

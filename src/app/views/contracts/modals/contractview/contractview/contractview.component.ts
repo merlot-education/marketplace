@@ -6,6 +6,7 @@ import { OrganizationsApiService } from 'src/app/services/organizations-api.serv
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ConnectorData } from 'src/app/views/organization/organization-data';
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -54,6 +55,7 @@ export class ContractviewComponent {
 
   @Input() offeringDetails: IOfferingsDetailed = this.emptyOfferingDetails;
   @Input() contractDetails: IContractDetailed = this.emptyContractDetails;
+  @Input() availableConnectors : ConnectorData[] = [];
   @Output() buttonClickCallback: EventEmitter<any> = new EventEmitter();
 
   protected saveButtonDisabled: boolean = false;
@@ -74,6 +76,14 @@ export class ContractviewComponent {
 
   protected trackByFn(index, item) {
     return index;  
+  }
+
+  protected getConnectorBuckets(connectorId: string) {
+    try {
+      return this.availableConnectors.find(con => con.connectorId === connectorId).bucketNames;
+    } catch (e) {
+      return [];
+    }
   }
 
   protected handleButtonClick(targetFunction: (contractApiService: ContractApiService, contractDetails: IContractDetailed) => Promise<IContractDetailed>, contractDetails: IContractDetailed) {
