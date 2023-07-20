@@ -151,37 +151,49 @@ export class ContractviewComponent {
     console.log("Initiate transfer");
     this.contractApiService.initiateEdcNegotiation(contractDetails.id).then(async (negotiationId: IEdcIdResponse) => {
       console.log(negotiationId);
-      let negotiationState: IEdcNegotiationStatus = {
-        id: '',
-        state: '',
-        contractAgreementId: ''
-      }
-      while (negotiationState.state !== "FINALIZED") {
-        negotiationState = await this.contractApiService.getEdcNegotiationStatus(contractDetails.id, negotiationId.id);
-        this.edcStatusMessage = "EDC Verhandlung gestartet. Aktueller Status: " + negotiationState.state;
-        console.log(negotiationState);
-        await sleep(1000);
-      }
-      this.edcStatusMessage = "EDC Verhandlung abgeschlossen! Starte EDC Datentransfer...";
-      this.contractApiService.initiateEdcTransfer(contractDetails.id, negotiationId.id).then(async (transferId: IEdcIdResponse) => {
-        console.log(transferId);
-        let transferState: IEdcTransferStatus = {
+      try {
+        let negotiationState: IEdcNegotiationStatus = {
           id: '',
-          state: ''
+          state: '',
+          contractAgreementId: ''
         }
-        while (transferState.state !== "COMPLETED") {
-          transferState = await this.contractApiService.getEdcTransferStatus(contractDetails.id, transferId.id);
-          this.edcStatusMessage = "EDC Datentransfer gestartet. Aktueller Status: " + transferState.state;
-          console.log(transferState);
+        while (negotiationState.state !== "FINALIZED") {
+          negotiationState = await this.contractApiService.getEdcNegotiationStatus(contractDetails.id, negotiationId.id);
+          this.edcStatusMessage = "EDC Verhandlung gestartet. Aktueller Status: " + negotiationState.state;
+          console.log(negotiationState);
           await sleep(1000);
         }
-        this.edcStatusMessage = "EDC Datentransfer abgeschlossen!";
+        this.edcStatusMessage = "EDC Verhandlung abgeschlossen! Starte EDC Datentransfer..."; 
+      } catch (e) {
+        this.edcStatusMessage = "Fehler bei der EDC Verhandlung. (" + e.message + ")";
+        this.saveButtonDisabled = false;
+      }
+
+      this.contractApiService.initiateEdcTransfer(contractDetails.id, negotiationId.id).then(async (transferId: IEdcIdResponse) => {
+        console.log(transferId);
+        try {
+          let transferState: IEdcTransferStatus = {
+            id: '',
+            state: ''
+          }
+          while (transferState.state !== "COMPLETED") {
+            transferState = await this.contractApiService.getEdcTransferStatus(contractDetails.id, transferId.id);
+            this.edcStatusMessage = "EDC Datentransfer gestartet. Aktueller Status: " + transferState.state;
+            console.log(transferState);
+            await sleep(1000);
+          }
+          this.edcStatusMessage = "EDC Datentransfer abgeschlossen!";
+        } catch (e) {
+          this.edcStatusMessage = "Fehler beim EDC Dateitransfer. (" + e.message + ")";
+        }
+        
+        this.saveButtonDisabled = false;
       })
     }).catch((e: HttpErrorResponse) => {
       this.edcStatusMessage = "Fehler bei der EDC Kommunikation. (" + e.error.message + ")";
+      this.saveButtonDisabled = false;
     }).catch(e => {
       this.edcStatusMessage = "Fehler bei der EDC Kommunikation. (Unbekannter Fehler)";
-    }).finally(() => {
       this.saveButtonDisabled = false;
     })
   }
