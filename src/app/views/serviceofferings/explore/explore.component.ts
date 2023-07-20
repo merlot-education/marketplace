@@ -129,7 +129,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
     offeringAttachments: [],
     serviceContractProvisioning: {
       validUntil: ''
-    }
+    },
+    type: ''
   }
 
   selectedOfferingDetails: IOfferingsDetailed = this.emptyOfferingDetails;

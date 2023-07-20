@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
 import { lastValueFrom } from 'rxjs';
-import { IContractBasic, IContractDetailed, IPageContracts, ISaasContractDetailed } from '../views/contracts/contracts-data';
+import { IContractBasic, IContractDetailed, IEdcIdResponse, IEdcNegotiationStatus, IEdcTransferStatus, IPageContracts, ISaasContractDetailed } from '../views/contracts/contracts-data';
 
 @Injectable({
   providedIn: 'root',
@@ -58,6 +58,26 @@ export class ContractApiService {
   public async getContractDetails(contractId: string): Promise<IContractDetailed> {
     return await lastValueFrom(this.http.get(
       environment.contract_api_url + "contract/" + contractId, {headers: this.getActiveRoleHeaders()})) as IContractDetailed;
+  }
+
+  public async initiateEdcNegotiation(contractId: string): Promise<IEdcIdResponse> {
+    return await lastValueFrom(this.http.post(
+      environment.contract_api_url + "transfers/contract/" + contractId + "/negotiation/start", null, {headers: this.getActiveRoleHeaders()})) as IEdcIdResponse;
+  }
+
+  public async getEdcNegotiationStatus(contractId: string, negotiationId: string): Promise<IEdcNegotiationStatus> {
+    return await lastValueFrom(this.http.get(
+      environment.contract_api_url + "transfers/contract/" + contractId + "/negotiation/" + negotiationId + "/status", {headers: this.getActiveRoleHeaders()})) as IEdcNegotiationStatus;
+  }
+
+  public async initiateEdcTransfer(contractId: string, negotiationId: string): Promise<IEdcIdResponse> {
+    return await lastValueFrom(this.http.post(
+      environment.contract_api_url + "transfers/contract/" + contractId + "/negotiation/" + negotiationId + "/transfer/start", null, {headers: this.getActiveRoleHeaders()})) as IEdcIdResponse;
+  }
+
+  public async getEdcTransferStatus(contractId: string, transferId: string): Promise<IEdcTransferStatus> {
+    return await lastValueFrom(this.http.get(
+      environment.contract_api_url + "transfers/contract/" + contractId + "/transfer/" + transferId + "/status", {headers: this.getActiveRoleHeaders()})) as IEdcTransferStatus;
   }
 
   public resolveFriendlyStatusName(contractStatus: string) {
