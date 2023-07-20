@@ -175,7 +175,7 @@
 
           <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
             <strong>Aktiver EDC Connector*:</strong><br />
-            <select class="form-select" [(ngModel)]="contractDetails.serviceContractProvisioning.selectedConsumerConnectorId" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
+            <select class="form-select" [(ngModel)]="contractDetails.serviceContractProvisioning.selectedConsumerConnectorId" [disabled]="contractDetails.state !== 'IN_DRAFT'">
               <ng-container *ngFor="let connector of availableConnectors">
                 <option [value]="connector.connectorId">{{ connector.connectorId }}</option>
               </ng-container>

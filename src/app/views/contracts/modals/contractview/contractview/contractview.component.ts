@@ -87,7 +87,7 @@ export class ContractviewComponent {
   }
 
   protected handleButtonClick(targetFunction: (contractApiService: ContractApiService, contractDetails: IContractDetailed) => Promise<IContractDetailed>, contractDetails: IContractDetailed) {
-    console.log(contractDetails);
+    console.log("sent", contractDetails);
     this.saveButtonDisabled = true;
     this.showSuccessMessage = false;
     this.showErrorMessage = false;
@@ -99,7 +99,7 @@ export class ContractviewComponent {
       .then(result => {
         this.contractDetails = result;
         this.showSuccessMessage = true;
-        console.log(result);
+        console.log("received", result);
         this.buttonClickCallback.emit();
       })
       .catch((e: HttpErrorResponse) => {
