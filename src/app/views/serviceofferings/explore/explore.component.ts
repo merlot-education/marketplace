@@ -11,6 +11,7 @@ import { serviceFileNameDict } from '../serviceofferings-data';
 import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { IContractDetailed } from '../../contracts/contracts-data';
+import { ConnectorData } from '../../organization/organization-data';
 
 interface IPageOption {
   target: number;
@@ -137,6 +138,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   selectedOfferingPublic: boolean = false;
 
   contractTemplate: IContractDetailed = this.emptyContractTemplate;
+  protected orgaConnectors: ConnectorData[] = [];
 
   private showingModal: boolean = false;
 
@@ -151,7 +153,12 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.activeOrgaSubscription = this.authService.activeOrganizationRole.subscribe(value => this.refreshOfferings());
+    this.activeOrgaSubscription = this.authService.activeOrganizationRole.subscribe(value => {
+      this.organizationsApiService.getConnectorsOfOrganization(value.orgaId).then(result => {
+        this.orgaConnectors = result;
+      });
+      this.refreshOfferings();
+    });
   }
 
   ngOnDestroy(): void {
