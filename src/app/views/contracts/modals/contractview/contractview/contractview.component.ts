@@ -214,6 +214,7 @@ export class ContractviewComponent {
       this.showErrorMessage = false;
       this.showSuccessMessage = false;
       this.showEdcStatusMessage = false;
+      // TODO clear contract on close again
     }
   }
 
