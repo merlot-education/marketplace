@@ -49,13 +49,13 @@
           <table cTable *ngIf="organization.activeRepresentant">
             <thead>
             <tr>
-              <th scope="col">connectorEndpoint</th>
-              <th scope="col">bucketNames</th>
+              <th scope="col">EDC Id</th>
+              <th scope="col">S3 Buckets</th>
             </tr>
             </thead>
             <tbody>              
             <tr *ngFor="let ci of connectorInfo">
-              <td>{{ ci.connectorEndpoint }}</td>
+              <td>{{ ci.connectorId }}</td>
               <td>{{ ci.bucketNames }}</td>
             </tr>
             </tbody>
