@@ -46,6 +46,20 @@
               {{ organization.legalAddress.countryCode }}
             </li>
           </ul>
+          <table cTable *ngIf="organization.activeRepresentant">
+            <thead>
+            <tr>
+              <th scope="col">connectorEndpoint</th>
+              <th scope="col">bucketNames</th>
+            </tr>
+            </thead>
+            <tbody>              
+            <tr *ngFor="let ci of connectorInfo">
+              <td>{{ ci.connectorEndpoint }}</td>
+              <td>{{ ci.bucketNames }}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </c-card-body>
       <c-card-footer

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OrganizationData } from "../organization-data";
+import { ConnectorData, OrganizationData } from "../organization-data";
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 export class ExploreComponent implements OnInit {
   public organizations: OrganizationData[] = [];
 
+  public connectorInfo: ConnectorData[] = [];
+
   constructor(
     private organizationsApiService: OrganizationsApiService,
     private authService: AuthService
@@ -19,7 +21,18 @@ export class ExploreComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.organizationsApiService.organizations.subscribe((value) => this.organizations = value);
+    this.organizationsApiService.organizations.subscribe((value) => {
+      this.organizations = value
+
+      for(let orga of this.organizations) {
+        if(orga.activeRepresentant) {
+          this.organizationsApiService.getConnectorsOfOrganization(orga.id).then(value => {
+            this.connectorInfo = value;
+          });
+        }
+      }
+
+    });
   }
 
   checkRepresentant(organization: OrganizationData): string {
