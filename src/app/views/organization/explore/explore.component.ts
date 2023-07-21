@@ -26,7 +26,7 @@ export class ExploreComponent implements OnInit {
 
       for(let orga of this.organizations) {
         if(orga.activeRepresentant) {
-          this.organizationsApiService.getConnectorsOfOrganization(orga.id).then(value => {
+          this.organizationsApiService.getConnectorsOfOrganization(orga.id.replace('Participant:', '')).then(value => {
             this.connectorInfo = value;
           });
         }
