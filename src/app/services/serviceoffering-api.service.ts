@@ -20,8 +20,9 @@ export class ServiceofferingApiService {
   }
 
   private friendlyTypeNames = {
-    "merlot:MerlotServiceOfferingSaaS": "Software as a Service",
-    "merlot:MerlotServiceOfferingDataDelivery": "Data Delivery"
+    "merlot:MerlotServiceOfferingSaaS": "Webanwendung",
+    "merlot:MerlotServiceOfferingDataDelivery": "Datenlieferung",
+    "merlot:MerlotServiceOfferingCooperation": "Kooperationsvertrag"
   }
 
   constructor(private http: HttpClient, private authService: AuthService, private organizationsApiService: OrganizationsApiService) { 

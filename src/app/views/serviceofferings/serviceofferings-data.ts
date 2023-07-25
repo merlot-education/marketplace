@@ -35,11 +35,15 @@ export let serviceFileNameDict: { [key: string]: {
   type: string;
 }} = {
     'Merlot Saas.json': {
-      name: 'Software as a Service',
+      name: 'Webanwendung',
       type: "merlot:MerlotServiceOfferingSaaS"
     },
     'Merlot DataDelivery.json': {
-      name: 'Data Delivery',
+      name: 'Datenlieferung',
       type: "merlot:MerlotServiceOfferingDataDelivery"
+  },
+    'Merlot CoopContract.json': {
+      name: 'Kooperationsvertrag',
+      type: "merlot:MerlotServiceOfferingCooperation"
   },
 };
