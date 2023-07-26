@@ -106,7 +106,9 @@
     </div>
 
     <div *ngSwitchCase="'checkbox'">
-      <mat-checkbox [formControlName]="input.id" class="checkbox-style">{{input.name}}
+      <mat-checkbox [formControlName]="input.id" class="checkbox-style">
+        <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span>
+      </mat-label>
       </mat-checkbox>
       <mat-error>
         <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
