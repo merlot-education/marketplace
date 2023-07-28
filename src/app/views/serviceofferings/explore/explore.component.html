@@ -160,15 +160,12 @@
       </li>
       <li class="list-group-item" style="border: none">
         <strong>Laufzeitoptionen:</strong><br />
-        <ul *ngFor="let rt of selectedOfferingDetails.runtimeOption">
-          <li>
-          <div *ngIf="rt.runtimeUnlimited">Unbegrenzt</div>
-          <div *ngIf="!rt.runtimeUnlimited">
-            {{ rt.runtimeCount }} {{ rt.runtimeMeasurement }}
-          </div>
-          </li>
+        <ul>
+          <ng-container *ngFor="let rt of selectedOfferingDetails.runtimeOption">
+            <li>{{ rt.runtimeCount }} {{ rt.runtimeMeasurement }}</li>
+          </ng-container>
+          <li *ngIf="selectedOfferingDetails.runtimeUnlimited">Unbegrenzt</li>
         </ul>
-        
       </li>
       <div *ngIf="selectedOfferingDetails.type === 'merlot:MerlotServiceOfferingSaaS'">
         <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.hardwareRequirements !== null">
@@ -177,13 +174,11 @@
         </li>
         <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.userCountOption !== null">
           <strong>Optionen für Anzahl erlaubter Benutzer:</strong><br />
-          <ul *ngFor="let auc of selectedOfferingDetails.userCountOption">
-            <li>
-            <div *ngIf="auc.userCountUnlimited">Unbegrenzt</div>
-            <div *ngIf="!auc.userCountUnlimited">
-              Bis zu {{ auc.userCountUpTo }} Benutzer
-            </div>
-            </li>
+          <ul>
+            <ng-container *ngFor="let auc of selectedOfferingDetails.userCountOption">
+              <li>Bis zu {{ auc.userCountUpTo }} Benutzer</li>
+            </ng-container>
+            <li *ngIf="selectedOfferingDetails.userCountUnlimited">Unbegrenzt</li>
           </ul>
         </li>
       </div>
@@ -198,13 +193,11 @@
         </li>
         <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.exchangeCountOption !== null">
           <strong>Optionen für Anzahl erlaubter Datenaustausche:</strong><br />
-          <ul *ngFor="let dec of selectedOfferingDetails.exchangeCountOption">
-            <li>
-            <div *ngIf="dec.exchangeCountUnlimited">Unbegrenzt</div>
-            <div *ngIf="!dec.exchangeCountUnlimited">
-              Bis zu {{ dec.exchangeCountUpTo }} Datenaustausche
-            </div>
-            </li>
+          <ul>
+            <ng-container *ngFor="let dec of selectedOfferingDetails.exchangeCountOption">
+              <li>Bis zu {{ dec.exchangeCountUpTo }} Datenaustausche</li>
+            </ng-container>
+            <li *ngIf="selectedOfferingDetails.exchangeCountUnlimited">Unbegrenzt</li>
           </ul>
         </li>
       </div>
