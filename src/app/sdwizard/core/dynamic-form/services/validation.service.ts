@@ -49,9 +49,13 @@ export class ValidationControlService {
         validator.push(specificValidation);
       }
     });
-
+    
     if (input.required) {
-      validator.push(Validators.required);
+      if(input.datatype.value === 'boolean' ) {
+        validator.push(Validators.requiredTrue);
+      } else {
+        validator.push(Validators.required);
+      }
     }
     if(typeof input.datatype.value === 'string' )
     {
