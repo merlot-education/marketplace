@@ -91,9 +91,9 @@
           <strong>Laufzeit*:</strong><br />
           <select class="form-select" [(ngModel)]="contractDetails.runtimeSelection" [disabled]="contractDetails.state !== 'IN_DRAFT'">
             <ng-container *ngFor="let rt of offeringDetails.runtimeOption">
-              <option *ngIf="!rt.runtimeUnlimited" [value]="rt.runtimeCount + ' ' + rt.runtimeMeasurement">{{ rt.runtimeCount }} {{ rt.runtimeMeasurement }}</option>
-              <option *ngIf="rt.runtimeUnlimited" [value]="'unlimited'">Unbegrenzt</option>
+              <option [value]="rt.runtimeCount + ' ' + rt.runtimeMeasurement">{{ rt.runtimeCount }} {{ rt.runtimeMeasurement }}</option>
             </ng-container>
+            <option *ngIf="offeringDetails.runtimeUnlimited" [value]="'unlimited'">Unbegrenzt</option>
           </select>
           
         </li>
@@ -106,9 +106,9 @@
             <strong>Anzahl erlaubter Benutzer*:</strong><br />
             <select class="form-select" [(ngModel)]="contractDetails.userCountSelection" [disabled]="contractDetails.state !== 'IN_DRAFT'">
               <ng-container *ngFor="let auc of offeringDetails.userCountOption">
-                <option *ngIf="!auc.userCountUnlimited" [value]="auc.userCountUpTo">Bis zu {{ auc.userCountUpTo }}</option>
-                <option *ngIf="auc.userCountUnlimited" [value]="'unlimited'">Unbegrenzt</option>
+                <option [value]="auc.userCountUpTo">Bis zu {{ auc.userCountUpTo }}</option>
               </ng-container>
+              <option *ngIf="offeringDetails.userCountUnlimited" [value]="'unlimited'">Unbegrenzt</option>
             </select>
           </li>
         </div>
@@ -125,9 +125,9 @@
             <strong>Anzahl erlaubter Datenaustausche*:</strong><br />
             <select class="form-select" [(ngModel)]="contractDetails.exchangeCountSelection" [disabled]="contractDetails.state !== 'IN_DRAFT'">
               <ng-container *ngFor="let dec of offeringDetails.exchangeCountOption">
-                <option *ngIf="!dec.exchangeCountUnlimited" [value]="dec.exchangeCountUpTo">Bis zu {{ dec.exchangeCountUpTo }}</option>
-                <option *ngIf="dec.exchangeCountUnlimited" [value]="'unlimited'">Unbegrenzt</option>
+                <option [value]="dec.exchangeCountUpTo">Bis zu {{ dec.exchangeCountUpTo }}</option>
               </ng-container>
+              <option *ngIf="offeringDetails.exchangeCountUnlimited" [value]="'unlimited'">Unbegrenzt</option>
             </select>
           </li>
 
