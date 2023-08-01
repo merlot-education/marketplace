@@ -151,7 +151,7 @@
 
           <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
             <div class="mb-3">
-              <label class="form-label"><strong>Quell-Dateiname im IONOS-S3 Bucket*</strong></label>
+              <label class="form-label"><strong>Quell-Dateipfad im IONOS-S3 Bucket*</strong></label>
               <input class="form-control" placeholder="MyFile1.json" 
                 [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressSourceFileName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
             </div>
@@ -185,7 +185,7 @@
 
           <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
             <div class="mb-3">
-              <label class="form-label"><strong>Ziel-Dateiname im IONOS-S3 Bucket*</strong></label>
+              <label class="form-label"><strong>Ziel-Dateipfad im IONOS-S3 Bucket*</strong></label>
               <input class="form-control" placeholder="MyFile1.json" 
                 [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressTargetFileName" [disabled]="contractDetails.state !== 'IN_DRAFT'">
             </div>
