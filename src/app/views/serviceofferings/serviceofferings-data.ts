@@ -26,8 +26,8 @@ export interface IOfferingsDetailed extends IOfferings {
   runtimeOption: {
     runtimeCount?: number;
     runtimeMeasurement?: string;
-    runtimeUnlimited?: boolean;
   }[];
+  runtimeUnlimited?: boolean;
 }
 
 export let serviceFileNameDict: { [key: string]: {

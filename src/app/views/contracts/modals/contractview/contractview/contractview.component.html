@@ -91,8 +91,14 @@
           <strong>Laufzeit*:</strong><br />
           <select class="form-select" [(ngModel)]="contractDetails.runtimeSelection" [disabled]="contractDetails.state !== 'IN_DRAFT'">
             <ng-container *ngFor="let rt of offeringDetails.runtimeOption">
-              <option *ngIf="!rt.runtimeUnlimited" [value]="rt.runtimeCount + ' ' + rt.runtimeMeasurement">{{ rt.runtimeCount }} {{ rt.runtimeMeasurement }}</option>
-              <option *ngIf="rt.runtimeUnlimited" [value]="'unlimited'">Unbegrenzt</option>
+              <option [value]="rt.runtimeCount + ' ' + rt.runtimeMeasurement">
+                <ng-container *ngIf="rt.runtimeCount === 0 || rt.runtimeMeasurement === 'unlimited'; else notUnlimitedRuntime">
+                  Unbegrenzt
+                </ng-container>
+                <ng-template #notUnlimitedRuntime>
+                  {{ rt.runtimeCount }} {{ rt.runtimeMeasurement }}
+                </ng-template>
+              </option>
             </ng-container>
           </select>
           
@@ -106,9 +112,16 @@
             <strong>Anzahl erlaubter Benutzer*:</strong><br />
             <select class="form-select" [(ngModel)]="contractDetails.userCountSelection" [disabled]="contractDetails.state !== 'IN_DRAFT'">
               <ng-container *ngFor="let auc of offeringDetails.userCountOption">
-                <option *ngIf="!auc.userCountUnlimited" [value]="auc.userCountUpTo">Bis zu {{ auc.userCountUpTo }}</option>
-                <option *ngIf="auc.userCountUnlimited" [value]="'unlimited'">Unbegrenzt</option>
+                <option [value]="auc.userCountUpTo">
+                  <ng-container *ngIf="auc.userCountUpTo === 0; else notUnlimitedUserCount">
+                    Unbegrenzt
+                  </ng-container>
+                  <ng-template #notUnlimitedUserCount>
+                    Bis zu {{ auc.userCountUpTo }}
+                  </ng-template>
+                </option>
               </ng-container>
+              <option *ngIf="offeringDetails.userCountUnlimited" [value]="'unlimited'">Unbegrenzt</option>
             </select>
           </li>
         </div>
@@ -125,9 +138,16 @@
             <strong>Anzahl erlaubter Datenaustausche*:</strong><br />
             <select class="form-select" [(ngModel)]="contractDetails.exchangeCountSelection" [disabled]="contractDetails.state !== 'IN_DRAFT'">
               <ng-container *ngFor="let dec of offeringDetails.exchangeCountOption">
-                <option *ngIf="!dec.exchangeCountUnlimited" [value]="dec.exchangeCountUpTo">Bis zu {{ dec.exchangeCountUpTo }}</option>
-                <option *ngIf="dec.exchangeCountUnlimited" [value]="'unlimited'">Unbegrenzt</option>
+                <option [value]="dec.exchangeCountUpTo">
+                  <ng-container *ngIf="dec.exchangeCountUpTo === 0; else notUnlimitedExchangeCount">
+                    Unbegrenzt
+                  </ng-container>
+                  <ng-template #notUnlimitedExchangeCount>
+                    Bis zu {{ dec.exchangeCountUpTo }}
+                  </ng-template>
+                </option>
               </ng-container>
+              <option *ngIf="offeringDetails.exchangeCountUnlimited" [value]="'unlimited'">Unbegrenzt</option>
             </select>
           </li>
 
@@ -151,7 +171,7 @@
 
           <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
             <div class="mb-3">
-              <label class="form-label"><strong>Quell-Dateiname im IONOS-S3 Bucket*</strong></label>
+              <label class="form-label"><strong>Quell-Dateipfad im IONOS-S3 Bucket*</strong></label>
               <input class="form-control" placeholder="MyFile1.json" 
                 [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressSourceFileName" [disabled]="contractDetails.state !== 'IN_DRAFT' && contractDetails.state !== 'SIGNED_CONSUMER'">
             </div>
@@ -185,7 +205,7 @@
 
           <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
             <div class="mb-3">
-              <label class="form-label"><strong>Ziel-Dateiname im IONOS-S3 Bucket*</strong></label>
+              <label class="form-label"><strong>Ziel-Dateipfad im IONOS-S3 Bucket*</strong></label>
               <input class="form-control" placeholder="MyFile1.json" 
                 [(ngModel)]="contractDetails.serviceContractProvisioning.dataAddressTargetFileName" [disabled]="contractDetails.state !== 'IN_DRAFT'">
             </div>
