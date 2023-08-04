@@ -162,7 +162,14 @@
         <strong>Laufzeitoptionen:</strong><br />
         <ul>
           <ng-container *ngFor="let rt of selectedOfferingDetails.runtimeOption">
-            <li>{{ rt.runtimeCount }} {{ rt.runtimeMeasurement }}</li>
+            <li>
+              <ng-container *ngIf="rt.runtimeCount === 0 || rt.runtimeMeasurement === 'unlimited'; else notUnlimitedRuntime">
+                Unbegrenzt
+              </ng-container>
+              <ng-template #notUnlimitedRuntime>
+                {{ rt.runtimeCount }} {{ rt.runtimeMeasurement }}
+              </ng-template>
+            </li>
           </ng-container>
           <li *ngIf="selectedOfferingDetails.runtimeUnlimited">Unbegrenzt</li>
         </ul>
@@ -176,7 +183,14 @@
           <strong>Optionen für Anzahl erlaubter Benutzer:</strong><br />
           <ul>
             <ng-container *ngFor="let auc of selectedOfferingDetails.userCountOption">
-              <li>Bis zu {{ auc.userCountUpTo }} Benutzer</li>
+              <li>
+                <ng-container *ngIf="auc.userCountUpTo === 0; else notUnlimitedUserCount">
+                  Unbegrenzt
+                </ng-container>
+                <ng-template #notUnlimitedUserCount>
+                  Bis zu {{ auc.userCountUpTo }} Benutzer
+                </ng-template>
+              </li>
             </ng-container>
             <li *ngIf="selectedOfferingDetails.userCountUnlimited">Unbegrenzt</li>
           </ul>
@@ -195,7 +209,14 @@
           <strong>Optionen für Anzahl erlaubter Datenaustausche:</strong><br />
           <ul>
             <ng-container *ngFor="let dec of selectedOfferingDetails.exchangeCountOption">
-              <li>Bis zu {{ dec.exchangeCountUpTo }} Datenaustausche</li>
+              <li>
+                <ng-container *ngIf="dec.exchangeCountUpTo === 0; else notUnlimitedExchangeCount">
+                  Unbegrenzt
+                </ng-container>
+                <ng-template #notUnlimitedExchangeCount>
+                  Bis zu {{ dec.exchangeCountUpTo }} Datenaustausche
+                </ng-template>
+              </li>
             </ng-container>
             <li *ngIf="selectedOfferingDetails.exchangeCountUnlimited">Unbegrenzt</li>
           </ul>
