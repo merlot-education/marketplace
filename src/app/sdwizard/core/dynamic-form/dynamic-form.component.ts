@@ -164,9 +164,13 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
         } else if (prefillData[field.key] instanceof Object) {
           field.childrenFields = this.prefillShapeFields(field.childrenFields, prefillData[field.key])
         } else {
-          field.value = prefillData[field.key];
+          // since 0 is regarded as null/empty, we need to work around this...
+          if (prefillData[field.key] === 0) {
+            field.value = "0";
+          } else {
+            field.value = prefillData[field.key];
+          }
         }
-      } else {
       }
       /*if (field.key === "userCountOption") {
         for (let j = 0; j < 3; j++) {

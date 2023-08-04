@@ -34,6 +34,7 @@ export class DynamicFormArrayComponent implements OnInit {
     }
 
     // if we have pre-existing values, patch them into the fields
+    // TODO currently broken
     for (let i = 0; i < this.input.values.length; i++) {
       if (i < this.inputs.controls.length) {
         this.inputs.controls[i].patchValue(this.input.values[i]);
