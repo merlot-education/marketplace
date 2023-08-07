@@ -95,6 +95,10 @@ export class ServiceofferingApiService {
     return await lastValueFrom(this.http.patch(this.getStatusShiftUrl(id, "IN_DRAFT"), null));
   }
 
+  public async regenerateServiceOffering(id: string) {
+    return await lastValueFrom(this.http.post(environment.serviceoffering_api_url + "serviceoffering/regenerate/" + id, null));
+  }
+
   public async fetchAvailableShapes(system: string): Promise<any> {
     return await lastValueFrom(this.http.get(`${environment.wizard_api_url}/getAvailableShapesCategorized?ecoSystem=`+system));
   }

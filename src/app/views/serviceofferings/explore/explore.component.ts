@@ -253,6 +253,14 @@ export class ExploreComponent implements OnInit, OnDestroy {
     });
   }
 
+  regenerateOffering(id: string) {
+    this.serviceOfferingApiService.regenerateServiceOffering(id).then(result => {
+      // prepare new id for refreshing
+      this.selectedOfferingDetails.id = result["id"];
+      this.refreshOfferings();
+    });
+  }
+
   findFilenameByShapeType(shapeType: string): string {
     for (let file in serviceFileNameDict) {
       if (serviceFileNameDict[file].type === shapeType) {
