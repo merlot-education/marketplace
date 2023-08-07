@@ -259,7 +259,7 @@
       Endgültig löschen
     </button>
     <button type="button" class="btn btn-primary flex-item-grow" 
-    *ngIf="!selectedOfferingPublic && (selectedOfferingDetails.merlotState === 'RELEASED') || (selectedOfferingDetails.merlotState === 'ARCHIVED') || (selectedOfferingDetails.merlotState === 'DELETED')"
+    *ngIf="!selectedOfferingPublic && ((selectedOfferingDetails.merlotState === 'RELEASED') || (selectedOfferingDetails.merlotState === 'ARCHIVED') || (selectedOfferingDetails.merlotState === 'DELETED'))"
     (click)="regenerateOffering(selectedOfferingDetails.id)"
     >
       Angebot neu erstellen
