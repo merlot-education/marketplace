@@ -10,7 +10,7 @@ import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
-import { WizardAppModule } from './sdwizard/app.module';
+import { WizardAppModule } from './sdwizard/wizardapp.module';
 
 import {
   PERFECT_SCROLLBAR_CONFIG,

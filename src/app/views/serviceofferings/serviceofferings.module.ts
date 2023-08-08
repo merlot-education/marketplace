@@ -55,7 +55,7 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 
 // Components Routing
 import { ServiceofferingsRoutingModule } from './serviceofferings-routing.module';
-import { WizardAppModule } from "../../sdwizard/app.module";
+import { WizardAppModule } from "../../sdwizard/wizardapp.module";
 import { ContractsModule } from "../contracts/contracts.module";
 import { CommonViewsModule } from "../common-views/common-views.module";
 
