@@ -11,7 +11,7 @@ import {
 } from './core/dynamic-form/components/dynamic-form-array/dynamic-form-array.component';
 import {NumericDirective} from '@directives/numeric.directive';
 import {DynamicFormOrComponent} from './core/dynamic-form/components/dynamic-form-or/dynamic-form-or.component';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HttpClientModule} from '@angular/common/http';
 import {FormfieldControlService} from '@services/form-field.service';
 import {ValidationControlService} from '@services/validation.service';
 import {FlexLayoutModule} from '@angular/flex-layout';
@@ -24,12 +24,8 @@ import {
 import {DynamicFormInComponent} from './core/dynamic-form/components/dynamic-form-in/dynamic-form-in.component';
 import {FilesProvider} from '@shared/files-provider';
 
-import { ModalModule } from './core/_modal';
 import { I18nModule } from './i18n/i18n.module';
 import { NgxRerenderModule } from 'ngx-rerender';
-
-import { RouteReuseStrategy } from '@angular/router';
-import { CustomRouteReuseStrategy } from './shared/custom-route-reuse-strategy'
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 
@@ -84,7 +80,6 @@ export function filesProviderFactory(provider: FilesProvider) {
     MaterialModule,
     HttpClientModule,
     FlexLayoutModule,
-    ModalModule,
     I18nModule,
     NgxRerenderModule,
     AccordionModule,
@@ -117,10 +112,6 @@ export function filesProviderFactory(provider: FilesProvider) {
   ],
   providers: [FormfieldControlService, ValidationControlService, DatePipe,
     FilesProvider, {provide: APP_INITIALIZER, useFactory: filesProviderFactory, deps: [FilesProvider], multi: true},
-    {
-      provide: RouteReuseStrategy,
-      useClass: CustomRouteReuseStrategy
-    },
     IconSetService,
   ]
 })
