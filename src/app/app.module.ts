@@ -78,10 +78,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
           onLoad: 'check-sso',
           silentCheckSsoRedirectUri:
             window.location.origin + '/assets/silent-check-sso.html',
-        },
-        bearerExcludedUrls: [
-          '/start'
-        ]
+        }
       });
     } catch (error) {
       console.log("failed to reach SSO server");
