@@ -10,7 +10,7 @@ import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
-import { WizardAppModule } from './sdwizard/app.module';
+import { WizardAppModule } from './sdwizard/wizardapp.module';
 
 import {
   PERFECT_SCROLLBAR_CONFIG,
@@ -78,7 +78,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
           onLoad: 'check-sso',
           silentCheckSsoRedirectUri:
             window.location.origin + '/assets/silent-check-sso.html',
-        },
+        }
       });
     } catch (error) {
       console.log("failed to reach SSO server");

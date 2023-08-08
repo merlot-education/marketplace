@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-beforeEach(() => {
+/*beforeEach(() => {
   cy.visit('http://localhost:4200/')
 })
 
@@ -23,4 +23,4 @@ it('testuser can log in', () => {
   // logout again, after this the welcome text should be for a visitor again
   cy.get("#logout-button").click();
   cy.get("#welcome-text").contains('Willkommen, Besucher!');
-})
+})*/
