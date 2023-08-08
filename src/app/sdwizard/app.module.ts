@@ -1,8 +1,5 @@
 import { CommonModule } from '@angular/common';
 import {APP_INITIALIZER, NgModule} from '@angular/core';
-
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
 import {DynamicFormComponent} from './core/dynamic-form/dynamic-form.component';
 import {
   DynamicFormInputComponent
@@ -17,11 +14,7 @@ import {DynamicFormOrComponent} from './core/dynamic-form/components/dynamic-for
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {FormfieldControlService} from '@services/form-field.service';
 import {ValidationControlService} from '@services/validation.service';
-import {ApiService} from '@services/api.service';
-import {FileUploadComponent} from './core/file-upload/component/file-upload.component';
-import {HomepageComponent} from './core/homepage/homepage.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {SelectShapeComponent} from './core/select-shape/select-shape.component';
 import {ExpandedFieldsComponent} from './core/dynamic-form/components/expanded-fields/expanded-fields.component';
 import {DatePipe} from '@angular/common';
 import {DynamicFormOrArrayComponent} from '@components/dynamic-form-or-array/dynamic-form-or-array.component';
@@ -29,23 +22,17 @@ import {
   DynamicSelfLoopsComponent
 } from './core/dynamic-form/components/dynamic-self-loops/dynamic-self-loops.component';
 import {DynamicFormInComponent} from './core/dynamic-form/components/dynamic-form-in/dynamic-form-in.component';
-import {SelectFileComponent} from './core/select-file/select-file.component';
 import {FilesProvider} from '@shared/files-provider';
-
-import { StartingPageComponent } from './core/starting-page/starting-page.component';
 
 import { ModalModule } from './core/_modal';
 import { I18nModule } from './i18n/i18n.module';
-import { SelectLanguageComponent } from './core/select-language/select-language.component';
 import { NgxRerenderModule } from 'ngx-rerender';
 
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomRouteReuseStrategy } from './shared/custom-route-reuse-strategy'
 
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-
-
 import { IconModule, IconSetService } from '@coreui/icons-angular';
+
 
 
 // CoreUI Modules
@@ -81,27 +68,19 @@ export function filesProviderFactory(provider: FilesProvider) {
 
 @NgModule({
   declarations: [
-    AppComponent,
     DynamicFormComponent,
     DynamicFormInputComponent,
     ShowErrorsComponent,
     DynamicFormArrayComponent,
     NumericDirective,
     DynamicFormOrComponent,
-    FileUploadComponent,
-    HomepageComponent,
-    SelectShapeComponent,
     ExpandedFieldsComponent,
     DynamicFormOrArrayComponent,
     DynamicSelfLoopsComponent,
     DynamicFormInComponent,
-    SelectFileComponent,
-    StartingPageComponent,
-    SelectLanguageComponent,
   ],
   imports: [
     CommonModule,
-    AppRoutingModule,
     MaterialModule,
     HttpClientModule,
     FlexLayoutModule,
@@ -134,9 +113,7 @@ export function filesProviderFactory(provider: FilesProvider) {
     IconModule,
   ],
   exports: [
-    DynamicFormComponent,
-    StartingPageComponent,
-    SelectFileComponent
+    DynamicFormComponent
   ],
   providers: [FormfieldControlService, ValidationControlService, DatePipe,
     FilesProvider, {provide: APP_INITIALIZER, useFactory: filesProviderFactory, deps: [FilesProvider], multi: true},
@@ -145,8 +122,7 @@ export function filesProviderFactory(provider: FilesProvider) {
       useClass: CustomRouteReuseStrategy
     },
     IconSetService,
-  ],
-  bootstrap: [AppComponent]
+  ]
 })
 export class WizardAppModule {
 
