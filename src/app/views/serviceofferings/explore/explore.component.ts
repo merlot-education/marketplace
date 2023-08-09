@@ -153,12 +153,14 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.activeOrgaSubscription = this.authService.activeOrganizationRole.subscribe(value => {
+    if (this.authService.isLoggedIn) {
+      this.activeOrgaSubscription = this.authService.activeOrganizationRole.subscribe(value => {
       this.organizationsApiService.getConnectorsOfOrganization(value.orgaId).then(result => {
         this.orgaConnectors = result;
       });
-      this.refreshOfferings();
     });
+    }
+    this.refreshOfferings();
   }
 
   ngOnDestroy(): void {
