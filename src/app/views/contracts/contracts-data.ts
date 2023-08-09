@@ -9,7 +9,9 @@ export class IContractBasic {
     offeringId: string;
     offeringName: string;
     providerId: string;
+    providerLegalName?: string;
     consumerId: string;
+    consumerLegalName?: string;
 }
 
 export class IContractDetailed extends IContractBasic {

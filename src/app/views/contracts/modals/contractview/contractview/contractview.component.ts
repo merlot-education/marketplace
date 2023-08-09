@@ -95,8 +95,7 @@ export class ContractviewComponent {
     this.edcStatusMessage = "";
     this.errorDetails = "";
 
-    targetFunction(this.contractApiService, contractDetails)
-      .then(result => {
+    targetFunction(this.contractApiService, contractDetails).then(result => {
         this.contractDetails = result;
         this.showSuccessMessage = true;
         console.log("received", result);

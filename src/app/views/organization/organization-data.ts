@@ -1,4 +1,6 @@
-export interface OrganizationData {
+import { ISpringPage } from "../common-views/paging-footer/page-data";
+
+export interface IOrganizationData {
     id: string,
     merlotId: string,
     organizationName: string,
@@ -15,6 +17,10 @@ export interface OrganizationData {
 
     activeRepresentant: boolean,
     passiveRepresentant: boolean
+  }
+
+  export interface IPageOrganizations extends ISpringPage {
+    content: IOrganizationData[];
   }
 
 export interface ConnectorData {

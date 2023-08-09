@@ -203,14 +203,18 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
           let formField = this.form.get(field.id);
           if (this.prefillData === undefined) {
             this.orgaSubscriptions.push(this.authService.activeOrganizationRole.subscribe((value) => {
-              formField.patchValue(this.organizationsApiService.getOrgaById(value.orgaId).organizationLegalName);
+              this.organizationsApiService.getOrgaById(value.orgaId).then(orga => {
+                formField.patchValue(orga.organizationLegalName);
+              })
             }));
           } else {
             let orgaId = this.prefillData.offeredBy.split(":").slice(1).join();
-            if (orgaId !== "")
-              formField.patchValue(this.organizationsApiService.getOrgaById(orgaId).organizationLegalName);
+            if (orgaId !== "") {
+              this.organizationsApiService.getOrgaById(orgaId).then(orga => {
+                formField.patchValue(orga.organizationLegalName);
+              }); 
+            }
           }
-            
           formField.disable();
         } else if (field.key === "creationDate") {
           let formField = this.form.get(field.id);

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ConnectorData, OrganizationData } from "../organization-data";
+import { ConnectorData, IOrganizationData } from "../organization-data";
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
@@ -10,7 +10,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./explore.component.scss']
 })
 export class ExploreComponent implements OnInit {
-  public organizations: OrganizationData[] = [];
+
+  readonly ITEMS_PER_PAGE = 9;
+
+  public organizations: IOrganizationData[] = [];
 
   public connectorInfo: ConnectorData[] = [];
 
@@ -21,8 +24,8 @@ export class ExploreComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.organizationsApiService.organizations.subscribe((value) => {
-      this.organizations = value
+    this.organizationsApiService.fetchOrganizations(0, this.ITEMS_PER_PAGE).then(result => {
+      this.organizations = result.content
 
       for(let orga of this.organizations) {
         if(orga.activeRepresentant) {
@@ -35,7 +38,7 @@ export class ExploreComponent implements OnInit {
     });
   }
 
-  checkRepresentant(organization: OrganizationData): string {
+  checkRepresentant(organization: IOrganizationData): string {
     if (organization.activeRepresentant) {
       return " - Aktiver Repräsentant";
     } else if (organization.passiveRepresentant) {
