@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ConnectorData, IOrganizationData } from "../organization-data";
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { Router } from '@angular/router';
 
 
 @Component({
@@ -20,14 +19,7 @@ export class ExploreComponent implements OnInit {
   constructor(
     private organizationsApiService: OrganizationsApiService,
     private authService: AuthService
-  ) {
-    this.organizationsApiService.fetchOrganizations(0, this.ITEMS_PER_PAGE).then(result => {
-      this.organizations = result.content
-
-      this.updateOrgaRepresentation();
-    });
-    this.authService.activeOrganizationRole.subscribe(_ => this.updateOrgaRepresentation());
-  }
+  ) {}
 
   private updateOrgaRepresentation() {
     for(let orga of this.organizations) {
@@ -49,6 +41,12 @@ export class ExploreComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.organizationsApiService.fetchOrganizations(0, this.ITEMS_PER_PAGE).then(result => {
+      this.organizations = result.content
+
+      this.updateOrgaRepresentation();
+    });
+    this.authService.activeOrganizationRole.subscribe(_ => this.updateOrgaRepresentation());
   }
 
   checkRepresentant(organization: IOrganizationData): string {
