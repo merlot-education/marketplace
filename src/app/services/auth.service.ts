@@ -82,8 +82,7 @@ export class AuthService {
   private buildOrganizationRoles(userRoles: string[]) {
     for (let r of userRoles) {
       if (r.startsWith('OrgRep_') || r.startsWith('OrgLegRep_')) {
-        let orgaRole = this.getOrganizationRole(r);
-        this.organizationRoles[r] = orgaRole;
+        this.organizationRoles[r] = this.getOrganizationRole(r);
         // if the active Role is not set, set its initial value to the first role we see
         if (this.activeOrganizationRole.getValue().orgaRoleString === '') {
           this.activeOrganizationRole.next(this.organizationRoles[r]);
