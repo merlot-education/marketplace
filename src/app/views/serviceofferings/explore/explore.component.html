@@ -264,7 +264,7 @@
     >
       Angebot neu erstellen
     </button>
-    <button type="button" class="btn btn-primary flex-item-grow" *ngIf="authService.isLoggedIn && (selectedOfferingDetails.offeredBy != authService.activeOrganizationRole.value.orgaData.id)" [cModalToggle]="'modalViewContract'" (click)="bookServiceOffering(selectedOfferingDetails.id)">
+    <button type="button" class="btn btn-primary flex-item-grow" *ngIf="authService.isLoggedIn && (selectedOfferingDetails.offeredBy !== authService.activeOrganizationRole.value.orgaData.id)" [cModalToggle]="'modalViewContract'" (click)="bookServiceOffering(selectedOfferingDetails.id)">
       Buchen
     </button>
   </c-modal-footer>
