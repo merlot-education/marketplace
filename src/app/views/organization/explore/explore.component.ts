@@ -33,7 +33,7 @@ export class ExploreComponent implements OnInit {
       }
 
       if(orga.activeRepresentant) {
-        this.organizationsApiService.getConnectorsOfOrganization(orga.id.replace('Participant:', '')).then(value => {
+        this.organizationsApiService.getConnectorsOfOrganization(orga.id).then(value => {
           this.connectorInfo = value;
         });
       }
