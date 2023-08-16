@@ -22,9 +22,7 @@ export class ContractApiService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   private getActiveRoleHeaders() : HttpHeaders {
-    let headers = new HttpHeaders({'Active-Role' : this.authService.activeOrganizationRole.value.orgaRoleString });
-    headers.append('Active-Role', this.authService.activeOrganizationRole.value.orgaRoleString)
-    return headers;
+    return new HttpHeaders({'Active-Role' : this.authService.activeOrganizationRole.value.orgaRoleString });
   }
 
   public async createNewContract(offeringId: string, consumerId: string): Promise<IContractDetailed> {

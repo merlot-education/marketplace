@@ -34,11 +34,11 @@
         </li>
         <li class="list-group-item" style="border: none">
           <strong>Anbieter:</strong><br />
-          {{ organizationsApiService.resolveOrganizationLegalName(contractDetails.providerId) }}
+          {{ contractDetails.providerId }}
         </li>
         <li class="list-group-item" style="border: none">
           <strong>Kunde:</strong><br />
-          {{ organizationsApiService.resolveOrganizationLegalName(contractDetails.consumerId) }}
+          {{ contractDetails.consumerId }}
         </li>
         <li class="list-group-item" style="border: none" *ngIf="offeringDetails.description !== null">
           <strong>Beschreibung des Angebots:</strong><br />

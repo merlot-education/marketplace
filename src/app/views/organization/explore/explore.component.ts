@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ConnectorData, OrganizationData } from "../organization-data";
+import { ConnectorData, IOrganizationData } from "../organization-data";
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { Router } from '@angular/router';
 
 
 @Component({
@@ -10,32 +9,47 @@ import { Router } from '@angular/router';
   styleUrls: ['./explore.component.scss']
 })
 export class ExploreComponent implements OnInit {
-  public organizations: OrganizationData[] = [];
+
+  readonly ITEMS_PER_PAGE = 999;
+
+  public organizations: IOrganizationData[] = [];
 
   public connectorInfo: ConnectorData[] = [];
 
   constructor(
     private organizationsApiService: OrganizationsApiService,
     private authService: AuthService
-  ) {
+  ) {}
+
+  private updateOrgaRepresentation() {
+    let representedOrgaIds = Object.values(this.authService.organizationRoles).map(orga => orga.orgaData.id);
+    for(let orga of this.organizations) {
+      if (orga.id === this.authService.activeOrganizationRole.value.orgaData.id) {
+        orga.activeRepresentant = true;
+        orga.passiveRepresentant = true;
+      } else if (representedOrgaIds.includes(orga.id)) {
+        orga.activeRepresentant = false;
+        orga.passiveRepresentant = true;
+      }
+
+      if(orga.activeRepresentant) {
+        this.organizationsApiService.getConnectorsOfOrganization(orga.id).then(value => {
+          this.connectorInfo = value;
+        });
+      }
+    }
   }
 
   ngOnInit(): void {
-    this.organizationsApiService.organizations.subscribe((value) => {
-      this.organizations = value
+    this.organizationsApiService.fetchOrganizations(0, this.ITEMS_PER_PAGE).then(result => {
+      this.organizations = result.content
 
-      for(let orga of this.organizations) {
-        if(orga.activeRepresentant) {
-          this.organizationsApiService.getConnectorsOfOrganization(orga.id.replace('Participant:', '')).then(value => {
-            this.connectorInfo = value;
-          });
-        }
-      }
-
+      this.updateOrgaRepresentation();
     });
+    this.authService.activeOrganizationRole.subscribe(_ => this.updateOrgaRepresentation());
   }
 
-  checkRepresentant(organization: OrganizationData): string {
+  checkRepresentant(organization: IOrganizationData): string {
     if (organization.activeRepresentant) {
       return " - Aktiver Repräsentant";
     } else if (organization.passiveRepresentant) {

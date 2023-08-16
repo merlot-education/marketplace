@@ -17,7 +17,7 @@ export class AaamApiService {
   }
 
   public async getUsersFromOrganization(organizationId: String) {
-    // TODO input sanetization
+    organizationId = organizationId.replace("Participant:", "");
     if (this.authService.isLoggedIn) {
       return await lastValueFrom(this.http.get(environment.aaam_api_url + "fromOrganization/" + organizationId)) as IUserData[];
     } else {

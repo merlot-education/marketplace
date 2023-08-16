@@ -88,11 +88,11 @@ export class ExploreComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.activeOrganizationRole.subscribe(value => {
-      this.organizationsApiService.getConnectorsOfOrganization(value.orgaId).then(result => {
+      this.organizationsApiService.getConnectorsOfOrganization(value.orgaData.id).then(result => {
         this.orgaConnectors = result;
       });
-      this.refreshContracts(0, this.ITEMS_PER_PAGE, value.orgaId);
-    })
+      this.refreshContracts(0, this.ITEMS_PER_PAGE, value.orgaData.id);
+    }); 
   }
 
   prepareEditContract(contract: IContractBasic) {
@@ -105,7 +105,7 @@ export class ExploreComponent implements OnInit {
   }
 
   protected refreshContracts(page: number, size: number, activeOrgaId: string) {
-    this.contractApiService.getOrgaContracts(page, size, "Participant:" + activeOrgaId).then(result => {
+    this.contractApiService.getOrgaContracts(page, size, activeOrgaId).then(result => {
         this.activePage.next(result);
       });
   }
@@ -113,7 +113,7 @@ export class ExploreComponent implements OnInit {
   public buttonClicked() {
     this.refreshContracts(this.activePage.value.pageable.pageNumber, 
       this.activePage.value.pageable.pageSize,
-      this.authService.activeOrganizationRole.value.orgaId);
+      this.authService.activeOrganizationRole.value.orgaData.id);
   }
 
 }
