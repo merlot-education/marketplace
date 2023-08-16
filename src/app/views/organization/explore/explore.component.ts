@@ -22,12 +22,12 @@ export class ExploreComponent implements OnInit {
   ) {}
 
   private updateOrgaRepresentation() {
+    let representedOrgaIds = Object.values(this.authService.organizationRoles).map(orga => orga.orgaData.id);
     for(let orga of this.organizations) {
-      let orgaNumId = orga.id.replace('Participant:', '');
-      if (orgaNumId === this.authService.activeOrganizationRole.value.orgaId) {
+      if (orga.id === this.authService.activeOrganizationRole.value.orgaData.id) {
         orga.activeRepresentant = true;
         orga.passiveRepresentant = true;
-      } else if (orgaNumId in this.authService.organizationRoles) {
+      } else if (representedOrgaIds.includes(orga.id)) {
         orga.activeRepresentant = false;
         orga.passiveRepresentant = true;
       }

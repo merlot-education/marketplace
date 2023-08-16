@@ -23,7 +23,6 @@ export class ContractApiService {
 
   private getActiveRoleHeaders() : HttpHeaders {
     let headers = new HttpHeaders({'Active-Role' : this.authService.activeOrganizationRole.value.orgaRoleString });
-    headers.append('Active-Role', this.authService.activeOrganizationRole.value.orgaRoleString)
     return headers;
   }
 

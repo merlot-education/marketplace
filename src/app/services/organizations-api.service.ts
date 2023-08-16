@@ -21,6 +21,7 @@ export class OrganizationsApiService {
   }
 
   public async getConnectorsOfOrganization(orgaId: string) {
+    orgaId = orgaId.replace("Participant:", "");
     return await lastValueFrom(
       this.http.get(environment.organizations_api_url + "organization/" + orgaId + "/connectors/")
     ) as ConnectorData[];

@@ -61,7 +61,7 @@
             value="{{ orgaRole }}"
           >
             {{ authService.organizationRoles[orgaRole].roleFriendlyName }} für
-            {{ authService.organizationRoles[orgaRole].orgaFriendlyName }}
+            {{ authService.organizationRoles[orgaRole].orgaData?.organizationName }}
           </option>
         </select>
       </div>

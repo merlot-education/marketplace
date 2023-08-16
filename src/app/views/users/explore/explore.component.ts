@@ -26,7 +26,7 @@ export class ExploreComponent implements OnInit {
     this.users = [];
     this.aaamApiService
       .getUsersFromOrganization(
-        activeOrganizationRole.orgaId
+        activeOrganizationRole.orgaData.id
       )
       .then((result) => {
         this.users = result;

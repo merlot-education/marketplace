@@ -2,16 +2,14 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
-import { HttpClient } from '@angular/common/http';
-import { HttpBackend } from '@angular/common/http';
 import { OrganizationsApiService } from './organizations-api.service';
+import { IOrganizationData } from '../views/organization/organization-data';
 
 export interface OrganizationRole {
   orgaRoleString: string;
   roleName: string;
   roleFriendlyName: string;
-  orgaId: string;
-  orgaFriendlyName: string;
+  orgaData?: IOrganizationData;
 }
 
 @Injectable({
@@ -23,16 +21,11 @@ export class AuthService {
   public isLoggedIn: boolean = false;
   public userProfile: KeycloakProfile = {};
   public organizationRoles: {
-    [orgaId: string]: OrganizationRole;
+    [orgaRoleKey: string]: OrganizationRole;
   } = {};
-
-  //public activeOrganizationRole: BehaviorSubject<string> =
-  //  new BehaviorSubject<string>('');
 
   public activeOrganizationRole: BehaviorSubject<OrganizationRole> = new BehaviorSubject<OrganizationRole>({
     orgaRoleString: '',
-    orgaId: '',
-    orgaFriendlyName: '',
     roleName: '',
     roleFriendlyName: ''
   });
@@ -75,13 +68,10 @@ export class AuthService {
   private getOrganizationRole(orgaRoleString: string): OrganizationRole {
     let role_arr: string[] = orgaRoleString.split('_');
     let roleName: string = role_arr[0]; // first part is the role name
-    let orgaId: string = role_arr.slice(1).join('_'); // everything else is the organization ID (which may include underscores again)
     return {
       orgaRoleString: orgaRoleString,
       roleName: roleName,
-      roleFriendlyName: this.roleFriendlyNameMapper[roleName],
-      orgaId: orgaId,
-      orgaFriendlyName: 'Organisation ' + orgaId, // this is properly fetched after building the initial list
+      roleFriendlyName: this.roleFriendlyNameMapper[roleName]
     };
   }
 
@@ -93,19 +83,20 @@ export class AuthService {
     for (let r of userRoles) {
       if (r.startsWith('OrgRep_') || r.startsWith('OrgLegRep_')) {
         let orgaRole = this.getOrganizationRole(r);
-        this.organizationRoles[orgaRole.orgaId] = orgaRole;
+        this.organizationRoles[r] = orgaRole;
         // if the active Role is not set, set its initial value to the first role we see
         if (this.activeOrganizationRole.getValue().orgaRoleString === '') {
-          this.activeOrganizationRole.next(this.organizationRoles[orgaRole.orgaId]);
+          this.activeOrganizationRole.next(this.organizationRoles[r]);
         }
       }
     }
 
-    // update organization names after building the list
-    for (let orgaIdKey in this.organizationRoles) {
+    // update organization data after building the list
+    for (let orgaRoleKey in this.organizationRoles) {
       // try finding the organization of this role
-      this.organizationApiService.getOrgaById(orgaIdKey).then(orga => {
-        this.organizationRoles[orgaIdKey].orgaFriendlyName = orga.organizationName;
+      let orgaId: string = orgaRoleKey.split('_').slice(1).join('_'); // everything after the first part is the organization ID (which may include underscores again)
+      this.organizationApiService.getOrgaById(orgaId).then(orga => {
+        this.organizationRoles[orgaRoleKey].orgaData = orga;
       });
     }
   }

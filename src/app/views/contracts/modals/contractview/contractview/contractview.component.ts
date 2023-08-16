@@ -218,11 +218,11 @@ export class ContractviewComponent {
   }
 
   protected userIsActiveProvider(): boolean {
-    return this.authService.activeOrganizationRole.value.orgaId == this.contractDetails.providerId.replace("Participant:", "");
+    return this.authService.activeOrganizationRole.value.orgaData.id == this.contractDetails.providerId;
   }
 
   protected userIsActiveConsumer(): boolean {
-    return this.authService.activeOrganizationRole.value.orgaId == this.contractDetails.consumerId.replace("Participant:", "");
+    return this.authService.activeOrganizationRole.value.orgaData.id == this.contractDetails.consumerId;
   }
 
   protected addAttachment() {

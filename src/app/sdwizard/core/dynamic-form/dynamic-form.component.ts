@@ -203,9 +203,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
           let formField = this.form.get(field.id);
           if (this.prefillData === undefined) {
             this.orgaSubscriptions.push(this.authService.activeOrganizationRole.subscribe((value) => {
-              this.organizationsApiService.getOrgaById(value.orgaId).then(orga => {
-                formField.patchValue(orga.organizationLegalName);
-              })
+              formField.patchValue(value.orgaData.organizationLegalName);
             }));
           } else {
             let orgaId = this.prefillData.offeredBy.split(":").slice(1).join();
@@ -261,10 +259,11 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       for (let field of group) {
         if (field.key === "offeredBy" || field.key === "providedBy" ) {
           let formField = this.form.get(field.id);
-          if (this.prefillData === undefined)
-            formField.patchValue("Participant:" + this.authService.activeOrganizationRole.value.orgaId);
-          else
+          if (this.prefillData === undefined) {
+            formField.patchValue(this.authService.activeOrganizationRole.value.orgaData.id);
+          } else {
             formField.patchValue(this.prefillData.offeredBy);
+          }
         }
       }
     }
