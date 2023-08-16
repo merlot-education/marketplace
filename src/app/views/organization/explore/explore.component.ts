@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class ExploreComponent implements OnInit {
 
-  readonly ITEMS_PER_PAGE = 9;
+  readonly ITEMS_PER_PAGE = 999;
 
   public organizations: IOrganizationData[] = [];
 
@@ -21,21 +21,34 @@ export class ExploreComponent implements OnInit {
     private organizationsApiService: OrganizationsApiService,
     private authService: AuthService
   ) {
-  }
-
-  ngOnInit(): void {
     this.organizationsApiService.fetchOrganizations(0, this.ITEMS_PER_PAGE).then(result => {
       this.organizations = result.content
 
-      for(let orga of this.organizations) {
-        if(orga.activeRepresentant) {
-          this.organizationsApiService.getConnectorsOfOrganization(orga.id.replace('Participant:', '')).then(value => {
-            this.connectorInfo = value;
-          });
-        }
+      this.updateOrgaRepresentation();
+    });
+    this.authService.activeOrganizationRole.subscribe(_ => this.updateOrgaRepresentation());
+  }
+
+  private updateOrgaRepresentation() {
+    for(let orga of this.organizations) {
+      let orgaNumId = orga.id.replace('Participant:', '');
+      if (orgaNumId === this.authService.activeOrganizationRole.value.orgaId) {
+        orga.activeRepresentant = true;
+        orga.passiveRepresentant = true;
+      } else if (orgaNumId in this.authService.organizationRoles) {
+        orga.activeRepresentant = false;
+        orga.passiveRepresentant = true;
       }
 
-    });
+      if(orga.activeRepresentant) {
+        this.organizationsApiService.getConnectorsOfOrganization(orga.id.replace('Participant:', '')).then(value => {
+          this.connectorInfo = value;
+        });
+      }
+    }
+  }
+
+  ngOnInit(): void {
   }
 
   checkRepresentant(organization: IOrganizationData): string {

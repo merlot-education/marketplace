@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { OrganizationData } from "../organization-data";
+import { IOrganizationData } from "../organization-data";
 
 @Component({
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
 export class EditComponent implements OnInit {
-  public organizations: OrganizationData[] = [];
+  public organizations: IOrganizationData[] = [];
 
   constructor() {
   }

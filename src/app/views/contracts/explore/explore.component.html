@@ -17,11 +17,11 @@
                 </li>
                 <li class="list-group-item" style="border: none" *ngIf='contract.providerId.replace("Participant:", "") != authService.activeOrganizationRole.value.orgaId'>
                   <strong>Serviceanbieter:</strong><br />
-                  {{ organizationsApiService.resolveOrganizationLegalName(contract.providerId) }}
+                  {{ contract.providerId }}
                 </li>
                 <li class="list-group-item" style="border: none" *ngIf='contract.consumerId.replace("Participant:", "") != authService.activeOrganizationRole.value.orgaId'>
                     <strong>Kunde:</strong><br />
-                    {{ organizationsApiService.resolveOrganizationLegalName(contract.consumerId) }}
+                    {{ contract.consumerId }}
                   </li>
                 <li class="list-group-item" style="border: none">
                     <strong>Servicename:</strong><br />

@@ -4,6 +4,7 @@ import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { HttpClient } from '@angular/common/http';
 import { HttpBackend } from '@angular/common/http';
+import { OrganizationsApiService } from './organizations-api.service';
 
 export interface OrganizationRole {
   orgaRoleString: string;
@@ -22,7 +23,7 @@ export class AuthService {
   public isLoggedIn: boolean = false;
   public userProfile: KeycloakProfile = {};
   public organizationRoles: {
-    [key: string]: OrganizationRole;
+    [orgaId: string]: OrganizationRole;
   } = {};
 
   //public activeOrganizationRole: BehaviorSubject<string> =
@@ -43,8 +44,7 @@ export class AuthService {
 
   constructor(
     private keycloakService: KeycloakService,
-    private http: HttpClient,
-    private httpBackend: HttpBackend
+    private organizationApiService: OrganizationsApiService
   ) {
     this.keycloakService.isLoggedIn().then((result) => {
       this.isLoggedIn = result;
@@ -81,7 +81,7 @@ export class AuthService {
       roleName: roleName,
       roleFriendlyName: this.roleFriendlyNameMapper[roleName],
       orgaId: orgaId,
-      orgaFriendlyName: 'Organisation ' + orgaId, // this is properly fetched once the organizationsApiService is loaded
+      orgaFriendlyName: 'Organisation ' + orgaId, // this is properly fetched after building the initial list
     };
   }
 
@@ -92,12 +92,21 @@ export class AuthService {
   private buildOrganizationRoles(userRoles: string[]) {
     for (let r of userRoles) {
       if (r.startsWith('OrgRep_') || r.startsWith('OrgLegRep_')) {
-        this.organizationRoles[r] = this.getOrganizationRole(r);
+        let orgaRole = this.getOrganizationRole(r);
+        this.organizationRoles[orgaRole.orgaId] = orgaRole;
         // if the active Role is not set, set its initial value to the first role we see
         if (this.activeOrganizationRole.getValue().orgaRoleString === '') {
-          this.activeOrganizationRole.next(this.organizationRoles[r]);
+          this.activeOrganizationRole.next(this.organizationRoles[orgaRole.orgaId]);
         }
       }
+    }
+
+    // update organization names after building the list
+    for (let orgaIdKey in this.organizationRoles) {
+      // try finding the organization of this role
+      this.organizationApiService.getOrgaById(orgaIdKey).then(orga => {
+        this.organizationRoles[orgaIdKey].orgaFriendlyName = orga.organizationName;
+      });
     }
   }
 }
