@@ -15,11 +15,11 @@
                     <strong>Angebots-ID:</strong> <br />
                     {{ contract.offeringId }}
                 </li>
-                <li class="list-group-item" style="border: none" *ngIf='contract.providerId !== authService.activeOrganizationRole.value.orgaData.id'>
+                <li class="list-group-item" style="border: none" *ngIf="contract.providerId !== authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']">
                   <strong>Serviceanbieter:</strong><br />
                   {{ contract.providerId }}
                 </li>
-                <li class="list-group-item" style="border: none" *ngIf='contract.consumerId !== authService.activeOrganizationRole.value.orgaData.id'>
+                <li class="list-group-item" style="border: none" *ngIf="contract.consumerId !== authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']">
                     <strong>Kunde:</strong><br />
                     {{ contract.consumerId }}
                   </li>
@@ -49,7 +49,7 @@
     </c-col>
   </c-row>
 
-  <app-paging-footer [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE, authService.activeOrganizationRole.value.orgaData.id)"></app-paging-footer>
+  <app-paging-footer [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE, authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'])"></app-paging-footer>
 </div>
 
 <h1 *ngIf="this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.</h1>

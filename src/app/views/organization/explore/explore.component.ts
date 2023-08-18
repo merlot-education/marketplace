@@ -22,18 +22,18 @@ export class ExploreComponent implements OnInit {
   ) {}
 
   private updateOrgaRepresentation() {
-    let representedOrgaIds = Object.values(this.authService.organizationRoles).map(orga => orga.orgaData.id);
+    let representedOrgaIds = Object.values(this.authService.organizationRoles).map(orga => orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
     for(let orga of this.organizations) {
-      if (orga.id === this.authService.activeOrganizationRole.value.orgaData.id) {
+      if (orga.selfDescription.verifiableCredential.credentialSubject['@id'] === this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']) {
         orga.activeRepresentant = true;
         orga.passiveRepresentant = true;
-      } else if (representedOrgaIds.includes(orga.id)) {
+      } else if (representedOrgaIds.includes(orga.selfDescription.verifiableCredential.credentialSubject['@id'])) {
         orga.activeRepresentant = false;
         orga.passiveRepresentant = true;
       }
 
       if(orga.activeRepresentant) {
-        this.organizationsApiService.getConnectorsOfOrganization(orga.id).then(value => {
+        this.organizationsApiService.getConnectorsOfOrganization(orga.selfDescription.verifiableCredential.credentialSubject['@id']).then(value => {
           this.connectorInfo = value;
         });
       }

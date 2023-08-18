@@ -155,8 +155,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.authService.isLoggedIn) {
       this.activeOrgaSubscription = this.authService.activeOrganizationRole.subscribe(value => {
-        this.organizationsApiService.getConnectorsOfOrganization(value.orgaData.id).then(result => {
+        this.organizationsApiService.getConnectorsOfOrganization(value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']).then(result => {
         this.orgaConnectors = result;
+        this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
       });
     });
     }
@@ -308,7 +309,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   bookServiceOffering(offeringId: string): void {
     this.contractApiService.createNewContract(
       offeringId, 
-      this.authService.activeOrganizationRole.value.orgaData.id)
+      this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'])
       .then(result => {
         console.log(result)
         this.contractTemplate = result;

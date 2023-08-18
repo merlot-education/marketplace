@@ -203,13 +203,13 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
           let formField = this.form.get(field.id);
           if (this.prefillData === undefined) {
             this.orgaSubscriptions.push(this.authService.activeOrganizationRole.subscribe((value) => {
-              formField.patchValue(value.orgaData.organizationLegalName);
+              formField.patchValue(value.orgaData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value']);
             }));
           } else {
             let orgaId = this.prefillData.offeredBy.split(":").slice(1).join();
             if (orgaId !== "") {
               this.organizationsApiService.getOrgaById(orgaId).then(orga => {
-                formField.patchValue(orga.organizationLegalName);
+                formField.patchValue(orga.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value']);
               }); 
             }
           }
@@ -260,7 +260,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
         if (field.key === "offeredBy" || field.key === "providedBy" ) {
           let formField = this.form.get(field.id);
           if (this.prefillData === undefined) {
-            formField.patchValue(this.authService.activeOrganizationRole.value.orgaData.id);
+            formField.patchValue(this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
           } else {
             formField.patchValue(this.prefillData.offeredBy);
           }

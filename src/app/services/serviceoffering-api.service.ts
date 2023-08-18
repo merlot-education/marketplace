@@ -41,7 +41,7 @@ export class ServiceofferingApiService {
   // get all service offerings for the active organization
   public async fetchOrganizationServiceOfferings(page: number, size: number, state?: string): Promise<IPageOfferings> {
     if (this.authService.isLoggedIn) {
-      let activeOrgaId = this.authService.activeOrganizationRole.value.orgaData.id.replace("Participant:", "");
+      let activeOrgaId = this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'].replace("Participant:", "");
       let target_url = environment.serviceoffering_api_url + "organization/" + activeOrgaId + "?page=" + page + "&size=" + size;
       if (state !== undefined) {
         target_url += "&state=" + state

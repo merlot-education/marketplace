@@ -12,7 +12,7 @@
           : '')
       "
     >
-      <c-card-header>{{ organization.organizationName }} </c-card-header>
+      <c-card-header>{{ organization.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'] }} </c-card-header>
       <c-card-body>
         <!--div class="center" style="display: flex;
         justify-content: center;">
@@ -29,21 +29,21 @@
           <ul class="list-group list-group-flush">
             <li class="list-group-item" style="border: none">
               <strong>Merlot ID:</strong><br />
-              {{ organization.merlotId }}
+              {{ organization.selfDescription.verifiableCredential.credentialSubject['merlot:merlotId']['@value'] }}
             </li>
             <li class="list-group-item" style="border: none">
               <strong>Registrierungsnummer:</strong><br />
-              {{ organization.registrationNumber }}
+              {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']['@value'] }}
             </li>
             <li class="list-group-item" style="border: none">
               <strong>Name der Organisation:</strong><br />
-              {{ organization.organizationLegalName }}
+              {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value'] }}
             </li>
             <li class="list-group-item" style="border: none">
               <strong>Adresse:</strong><br />
-              {{ organization.legalAddress.street }} <br />
-              {{ organization.legalAddress.postalCode }} {{ organization.legalAddress.city }} <br />
-              {{ organization.legalAddress.countryCode }}
+              {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:street-address']['@value'] }} <br />
+              {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:postal-code']['@value'] }} {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:locality']['@value'] }} <br />
+              {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:country-name']['@value'] }}
             </li>
           </ul>
           <table cTable *ngIf="organization.activeRepresentant">

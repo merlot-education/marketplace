@@ -1,27 +1,41 @@
 import { ISpringPage } from "../common-views/paging-footer/page-data";
 
 export interface IOrganizationData {
-    id: string,
-    merlotId: string,
-    organizationName: string,
-    organizationLegalName: string,
-    registrationNumber: string,
-    termsAndConditionsLink: string,
-    legalAddress: {
-      countryCode: string,
-      postalCode: string,
-      addressCode: string,
-      city: string,
-      street: string
-    },
-
+    metadata?: any,
+    selfDescription: {
+      verifiableCredential: {
+        credentialSubject: {
+          "@id": string,
+          "merlot:merlotId": string,
+          "gax-trust-framework:legalName": IStringTypeValue,
+          "gax-trust-framework:registrationNumber": IRegistrationNumber,
+          "gax-trust-framework:legalAddress": IVCardAddress,
+          "merlot:orgaName": IStringTypeValue,
+        }
+      }
+    }
     activeRepresentant: boolean,
     passiveRepresentant: boolean
   }
 
-  export interface IPageOrganizations extends ISpringPage {
-    content: IOrganizationData[];
-  }
+export interface IPageOrganizations extends ISpringPage {
+  content: IOrganizationData[];
+}
+
+interface IStringTypeValue {
+  "@value": string
+}
+
+interface IRegistrationNumber {
+  "gax-trust-framework:local": IStringTypeValue
+}
+
+interface IVCardAddress {
+  "vcard:country-name": IStringTypeValue,
+  "vcard:street-address": IStringTypeValue,
+  "vcard:locality": IStringTypeValue,
+  "vcard:postal-code": IStringTypeValue
+}
 
 export interface ConnectorData {
   id: string,

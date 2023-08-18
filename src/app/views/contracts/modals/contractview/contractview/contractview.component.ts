@@ -218,11 +218,11 @@ export class ContractviewComponent {
   }
 
   protected userIsActiveProvider(): boolean {
-    return this.authService.activeOrganizationRole.value.orgaData.id == this.contractDetails.providerId;
+    return this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'] == this.contractDetails.providerId;
   }
 
   protected userIsActiveConsumer(): boolean {
-    return this.authService.activeOrganizationRole.value.orgaData.id == this.contractDetails.consumerId;
+    return this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'] == this.contractDetails.consumerId;
   }
 
   protected addAttachment() {
