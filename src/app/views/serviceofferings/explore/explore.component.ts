@@ -93,11 +93,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   selectedStatusFilter: string = Object.keys(this.friendlyStatusNames)[0];
   applyStatusFilter: boolean = false;
-  emptyOfferingDetails: IOfferings = {
-    metadata: null,
-    providerDetails: null,
-    selfDescription: null
-  };
 
   emptyContractTemplate: IContractDetailed = {
     consumerMerlotTncAccepted: false,
@@ -156,7 +151,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   protected handleEventEditModal(modalVisible: boolean) {
     this.showingModal = modalVisible;
     if (this.editModalPreviouslyVisible && !modalVisible) {
-      //this.childRef.ngOnDestroy();
+      this.childRef.ngOnDestroy();
       this.refreshOfferings();
     }
     this.editModalPreviouslyVisible = modalVisible;
