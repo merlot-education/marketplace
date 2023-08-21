@@ -42,8 +42,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   DownloadFormat = DownloadFormat;
   downloadFormatKeys = Object.keys(DownloadFormat).filter(e => typeof (e) === 'string');
 
-  @Input() prefillData: IOfferings = undefined;
-
   showSuccessMessage: boolean = false;
   showErrorMessage: boolean = false;
   errorDetails: string = "";
@@ -87,10 +85,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   getFormFields(): void {
     this.shape = this.file?.shapes.find(shape => shape.selected);
-    let prefilledFields = this.prefillShapeFields(this.shape?.fields, this.prefillData);
-    if (this.shape !== undefined && prefilledFields !== undefined && prefilledFields.length > 0) {
-      this.shape.fields = prefilledFields;
-    }
     this.reorderShapeFields();
     this.formFields = this.shape?.fields;
     this.form = this.formfieldService.toFormGroup(this.formFields);
@@ -101,6 +95,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   }
 
   reorderShapeFields(): void {
+    // TODO set order in SHACL instead
     if (this.shape?.fields === undefined) {
       return;
     }
@@ -131,60 +126,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     this.shape.fields = beforeFields.concat(shapeFieldCopy.concat(afterFields));
   }
 
-  prefillShapeFields(shapeFields: FormField[], prefillData: IOfferings): FormField[] {
-    if (shapeFields === undefined || prefillData === undefined) {
-      return;
-    }
-
-    if ("offeredBy" in prefillData)
-      prefillData["providedBy"] = prefillData["offeredBy"];  // since we store the same in both fields, only one is returned by the backend
-
-    let additionalFields = [];
-
-
-    for (let field of shapeFields) {
-      if (field.key in prefillData) {
-        if (prefillData[field.key] instanceof Array) {
-          if (field.componentType === "dynamicFormArray") {  // array of primitives
-            field.values = prefillData[field.key];
-          } else {
-            for (let i = 0; i < prefillData[field.key].length; i++) {
-              if (i === 0) {
-                field.id = field.id + "_" + i.toString();
-                field.childrenFields = this.prefillShapeFields(field.childrenFields, prefillData[field.key][i])
-              } else {
-                let fieldcopy = structuredClone(field);
-                fieldcopy.id = fieldcopy.id + "_" + i.toString();
-                fieldcopy.childrenFields = this.prefillShapeFields(fieldcopy.childrenFields, prefillData[field.key][i])
-                additionalFields.push(fieldcopy);
-              }
-            }
-          }
-          
-        } else if (prefillData[field.key] instanceof Object) {
-          field.childrenFields = this.prefillShapeFields(field.childrenFields, prefillData[field.key])
-        } else {
-          // since 0 is regarded as null/empty, we need to work around this...
-          if (prefillData[field.key] === 0) {
-            field.value = "0";
-          } else {
-            field.value = prefillData[field.key];
-          }
-        }
-      }
-      /*if (field.key === "userCountOption") {
-        for (let j = 0; j < 3; j++) {
-          let fieldcopy = structuredClone(field);
-          fieldcopy.id = fieldcopy.id + "_" + j.toString();
-          shapeFieldCopy.push(fieldcopy);
-        }
-      }*/
-    }
-
-    shapeFields = shapeFields.concat(additionalFields);
-    return shapeFields;
-  }
-
   groupFormFields(): void {
     this.groupedFormFields = Utils.groupBy(this.formFields, (formField) => formField.group);
     this.patchRequiredFields(this.groupedFormFields);
@@ -201,22 +142,13 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       for (let field of group) {
         if ((field.key === "offeredBy" || field.key === "providedBy")) {
           let formField = this.form.get(field.id);
-          if (this.prefillData === undefined) {
-            this.orgaSubscriptions.push(this.authService.activeOrganizationRole.subscribe((value) => {
-              formField.patchValue(value.orgaData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value']);
-            }));
-          } else {
-            let orgaId = this.prefillData.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']["@id"];
-            if (orgaId !== "") {
-              this.organizationsApiService.getOrgaById(orgaId).then(orga => {
-                formField.patchValue(orga.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value']);
-              }); 
-            }
-          }
+          this.orgaSubscriptions.push(this.authService.activeOrganizationRole.subscribe((value) => {
+            formField.patchValue(value.orgaData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value']);
+          }));
           formField.disable();
         } else if (field.key === "creationDate") {
           let formField = this.form.get(field.id);
-          if (this.prefillData === undefined) {
+          if (formField.value === undefined || formField.value === null) {
             if (this.createDateTimer !== undefined) {
               clearInterval(this.createDateTimer);
             }
@@ -244,10 +176,9 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     
     // set did to a dummy value that gets replaced by the orchestrator
     let didField = this.form.get("user_prefix");
-    if (this.prefillData === undefined) {
+
+    if (didField.value === undefined || didField.value === null) {
       didField.patchValue("ServiceOffering:TBR");
-    } else {
-      didField.patchValue(this.prefillData.selfDescription.verifiableCredential.credentialSubject['@id']);
     }
     
     didField.disable();
@@ -259,20 +190,13 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       for (let field of group) {
         if (field.key === "offeredBy" || field.key === "providedBy" ) {
           let formField = this.form.get(field.id);
-          if (this.prefillData === undefined) {
-            formField.patchValue(this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
-          } else {
-            formField.patchValue(this.prefillData.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id']);
-          }
+          formField.patchValue(this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
         }
       }
     }
   }
 
   readObjectDataFromRoute(): void {
-    if (!this.router.getCurrentNavigation()) {
-      this.router.navigate(['/']);
-    }
     if (this.router.getCurrentNavigation().extras.state) {
       this.routeState = this.router.getCurrentNavigation().extras.state;
       if (this.routeState) {
@@ -287,11 +211,9 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   goToShapes(): void {
     this.file.shapes.forEach(shape => shape.selected = false); // set selected to false
-    this.router.navigate(['/select-shape'], {state: {file: this.file}});
   }
 
   goToFiles(): void {
-    this.router.navigate(['/select-file']);
   }
 
   makeId(length: number):string {
@@ -345,10 +267,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
         }
       });
     this.patchRequiredFields(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
-  }
-
-  navigateToOverview() {
-    this.router.navigate(['service-offerings/explore']); 
   }
 
   ngOnDestroy() {

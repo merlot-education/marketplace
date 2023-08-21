@@ -34,24 +34,24 @@ export interface IOfferings {
   }
 }
 
-interface IStringTypeValue {
+export interface IStringTypeValue {
   "@value": string
 }
 
-interface INumberTypeValue {
+export interface INumberTypeValue {
   "@value": number
 }
 
-interface INodeKindIRITypeId {
+export interface INodeKindIRITypeId {
   "@id": string
 }
 
-interface ITermsAndConditions {
+export interface ITermsAndConditions {
   "gax-trust-framework:content": IStringTypeValue,
   "gax-trust-framework:hash": IStringTypeValue
 }
 
-interface IRuntime {
+export interface IRuntime {
   "merlot:runtimeCount": INumberTypeValue,
   "merlot:runtimeMeasurement": IStringTypeValue
 }
