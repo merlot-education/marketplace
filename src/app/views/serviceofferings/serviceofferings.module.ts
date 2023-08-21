@@ -58,11 +58,13 @@ import { ServiceofferingsRoutingModule } from './serviceofferings-routing.module
 import { WizardAppModule } from "../../sdwizard/wizardapp.module";
 import { ContractsModule } from "../contracts/contracts.module";
 import { CommonViewsModule } from "../common-views/common-views.module";
+import { OfferingdetailviewComponent } from './offeringdetailview/offeringdetailview.component';
 
 @NgModule({
     declarations: [
         ExploreComponent,
-        EditComponent
+        EditComponent,
+        OfferingdetailviewComponent
     ],
     imports: [
         CommonViewsModule,
@@ -98,6 +100,9 @@ import { CommonViewsModule } from "../common-views/common-views.module";
         WizardAppModule,
         ModalModule,
         ContractsModule,
+    ],
+    exports: [
+        OfferingdetailviewComponent
     ]
 })
 export class ServiceofferingsModule {}

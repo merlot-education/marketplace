@@ -14,12 +14,6 @@ import { IContractDetailed } from '../../contracts/contracts-data';
 import { ConnectorData } from '../../organization/organization-data';
 import { FormField } from '@models/form-field.model';
 
-interface IPageOption {
-  target: number;
-  text: string;
-  disabled: boolean;
-  active: boolean;
-}
 
 @Component({
   templateUrl: './explore.component.html',
