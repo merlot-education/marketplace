@@ -3,7 +3,7 @@ import { IContractBasic, IContractDetailed, IPageContracts, ISaasContractDetaile
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
-import { IOfferingsDetailed } from '../../serviceofferings/serviceofferings-data';
+import { IOfferings } from '../../serviceofferings/serviceofferings-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { BehaviorSubject } from 'rxjs';
 import { ConnectorData } from '../../organization/organization-data';
@@ -41,21 +41,12 @@ export class ExploreComponent implements OnInit {
     totalPages: 0
   });
 
-  protected selectedOfferingDetails: IOfferingsDetailed = {
-    description: '',
-    modifiedDate: '',
-    exampleCosts: '',
-    attachments: [],
-    termsAndConditions: [],
-    runtimeOption: [],
-    id: '',
-    sdHash: '',
-    creationDate: '',
-    offeredBy: '',
-    merlotState: '',
-    type: '',
-    name: ''
+  protected selectedOfferingDetails: IOfferings = {
+    metadata: null,
+    providerDetails: null,
+    selfDescription: null
   };
+  
   protected contractTemplate: IContractDetailed = {
     consumerMerlotTncAccepted: false,
     providerMerlotTncAccepted: false,

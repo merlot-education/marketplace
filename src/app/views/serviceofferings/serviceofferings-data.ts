@@ -5,29 +5,55 @@ export interface IPageOfferings extends ISpringPage {
 }
 
 export interface IOfferings {
-  id: string;
-  sdHash: string;
-  creationDate: string;
-  offeredBy: string;
-  merlotState: string;
-  type: string;
-  name: string;
+  metadata: {
+    state: string,
+    creationDate: string,
+    modifiedDate: string
+  },
+  providerDetails: {
+    providerId: string,
+    providerLegalName: string
+  },
+  selfDescription: {
+    verifiableCredential: {
+      credentialSubject: {
+        "@id": string,
+        "@type": string,
+        "gax-core:offeredBy": INodeKindIRITypeId,
+        "gax-core:providedBy": INodeKindIRITypeId,
+        "gax-trust-framework:name": IStringTypeValue,
+        "gax-trust-framework:termsAndConditions": ITermsAndConditions[],
+        "dct:description"?: IStringTypeValue,
+        "merlot:creationDate": IStringTypeValue,
+        "merlot:attachments"?: IStringTypeValue[],
+        "merlot:exampleCosts"?: IStringTypeValue,
+        "merlot:runtimeOption": IRuntime[],
+        "merlot:merlotTermsAndConditionsAccepted": boolean,
+      }
+    }
+  }
 }
 
-export interface IOfferingsDetailed extends IOfferings {
-  description: string;
-  modifiedDate: string;
-  exampleCosts: string;
-  attachments: string[];
-  termsAndConditions: {
-    content: string;
-    hash: string;
-  }[];
-  runtimeOption: {
-    runtimeCount?: number;
-    runtimeMeasurement?: string;
-  }[];
-  runtimeUnlimited?: boolean;
+interface IStringTypeValue {
+  "@value": string
+}
+
+interface INumberTypeValue {
+  "@value": number
+}
+
+interface INodeKindIRITypeId {
+  "@id": string
+}
+
+interface ITermsAndConditions {
+  "gax-trust-framework:content": IStringTypeValue,
+  "gax-trust-framework:hash": IStringTypeValue
+}
+
+interface IRuntime {
+  "merlot:runtimeCount": INumberTypeValue,
+  "merlot:runtimeMeasurement": IStringTypeValue
 }
 
 export let serviceFileNameDict: { [key: string]: {

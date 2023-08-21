@@ -19,7 +19,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import {timer} from 'rxjs';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
-import { IOfferingsDetailed } from 'src/app/views/serviceofferings/serviceofferings-data';
+import { IOfferings } from 'src/app/views/serviceofferings/serviceofferings-data';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -42,7 +42,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   DownloadFormat = DownloadFormat;
   downloadFormatKeys = Object.keys(DownloadFormat).filter(e => typeof (e) === 'string');
 
-  @Input() prefillData: IOfferingsDetailed = undefined;
+  @Input() prefillData: IOfferings = undefined;
 
   showSuccessMessage: boolean = false;
   showErrorMessage: boolean = false;
@@ -131,7 +131,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     this.shape.fields = beforeFields.concat(shapeFieldCopy.concat(afterFields));
   }
 
-  prefillShapeFields(shapeFields: FormField[], prefillData: IOfferingsDetailed): FormField[] {
+  prefillShapeFields(shapeFields: FormField[], prefillData: IOfferings): FormField[] {
     if (shapeFields === undefined || prefillData === undefined) {
       return;
     }
@@ -206,7 +206,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
               formField.patchValue(value.orgaData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value']);
             }));
           } else {
-            let orgaId = this.prefillData.offeredBy.split(":").slice(1).join();
+            let orgaId = this.prefillData.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']["@id"];
             if (orgaId !== "") {
               this.organizationsApiService.getOrgaById(orgaId).then(orga => {
                 formField.patchValue(orga.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value']);
@@ -247,7 +247,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     if (this.prefillData === undefined) {
       didField.patchValue("ServiceOffering:TBR");
     } else {
-      didField.patchValue(this.prefillData.id);
+      didField.patchValue(this.prefillData.selfDescription.verifiableCredential.credentialSubject['@id']);
     }
     
     didField.disable();
@@ -262,7 +262,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
           if (this.prefillData === undefined) {
             formField.patchValue(this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
           } else {
-            formField.patchValue(this.prefillData.offeredBy);
+            formField.patchValue(this.prefillData.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id']);
           }
         }
       }

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {IOfferings, IOfferingsDetailed, IPageOfferings} from '../serviceofferings-data'
+import {IOfferings, IPageOfferings} from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
@@ -98,20 +98,10 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   selectedStatusFilter: string = Object.keys(this.friendlyStatusNames)[0];
   applyStatusFilter: boolean = false;
-  emptyOfferingDetails: IOfferingsDetailed = {
-    description: '',
-    modifiedDate: '',
-    exampleCosts: '',
-    attachments: [],
-    termsAndConditions: [],
-    runtimeOption: [],
-    id: '',
-    sdHash: '',
-    creationDate: '',
-    offeredBy: '',
-    merlotState: '',
-    type: '',
-    name: ''
+  emptyOfferingDetails: IOfferings = {
+    metadata: null,
+    providerDetails: null,
+    selfDescription: null
   };
 
   emptyContractTemplate: IContractDetailed = {
@@ -134,7 +124,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
     type: ''
   }
 
-  selectedOfferingDetails: IOfferingsDetailed = this.emptyOfferingDetails;
+  selectedOfferingDetails: IOfferings = null;
   selectedOfferingPublic: boolean = false;
 
   contractTemplate: IContractDetailed = this.emptyContractTemplate;
@@ -187,7 +177,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   private refreshOfferings() {
     if (this.showingModal) {
-      this.requestDetails(this.selectedOfferingDetails.id);
+      this.requestDetails(this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id']);
     }
     this.refreshPublicOfferings(0, this.ITEMS_PER_PAGE);
     this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
@@ -220,7 +210,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
 
   protected async requestDetails(id: string) {
-    this.selectedOfferingDetails = this.emptyOfferingDetails;
+    this.selectedOfferingDetails = null;
     await this.serviceOfferingApiService.fetchServiceOfferingDetails(id).then(result => {
       this.selectedOfferingDetails = result;
     });
@@ -259,7 +249,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   regenerateOffering(id: string) {
     this.serviceOfferingApiService.regenerateServiceOffering(id).then(result => {
       // prepare new id for refreshing
-      this.selectedOfferingDetails.id = result["id"];
+      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'] = result["id"];
       this.refreshOfferings();
     });
   }
@@ -274,8 +264,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   updateServiceOfferingEdit(offering: IOfferings) {
-    this.requestDetails(offering.id).then(() => {
-      this.select(this.findFilenameByShapeType(offering.type));
+    this.requestDetails(offering.selfDescription.verifiableCredential.credentialSubject['@id']).then(() => {
+      this.select(this.findFilenameByShapeType(offering.selfDescription.verifiableCredential.credentialSubject['@type']));
     });
     
   }

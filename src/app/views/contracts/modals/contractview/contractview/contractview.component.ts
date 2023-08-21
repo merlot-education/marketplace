@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { IContractDetailed, IEdcIdResponse, IEdcNegotiationStatus, IEdcTransferStatus } from '../../../contracts-data';
-import { IOfferingsDetailed } from 'src/app/views/serviceofferings/serviceofferings-data';
+import { IOfferings } from 'src/app/views/serviceofferings/serviceofferings-data';
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
@@ -17,20 +17,10 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 })
 export class ContractviewComponent {
 
-  private emptyOfferingDetails: IOfferingsDetailed = {
-    description: '',
-    modifiedDate: '',
-    exampleCosts: '',
-    attachments: [],
-    termsAndConditions: [],
-    runtimeOption: [],
-    id: '',
-    sdHash: '',
-    creationDate: '',
-    offeredBy: '',
-    merlotState: '',
-    type: '',
-    name: ''
+  private emptyOfferingDetails: IOfferings = {
+    metadata: null,
+    providerDetails: null,
+    selfDescription: null
   };
 
   private emptyContractDetails: IContractDetailed = {
@@ -53,7 +43,7 @@ export class ContractviewComponent {
     type: ''
   };
 
-  @Input() offeringDetails: IOfferingsDetailed = this.emptyOfferingDetails;
+  @Input() offeringDetails: IOfferings = this.emptyOfferingDetails;
   @Input() contractDetails: IContractDetailed = this.emptyContractDetails;
   @Input() availableConnectors : ConnectorData[] = [];
   @Output() buttonClickCallback: EventEmitter<any> = new EventEmitter();

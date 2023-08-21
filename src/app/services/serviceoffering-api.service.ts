@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable, lastValueFrom } from 'rxjs';
-import { IOfferingsDetailed, IPageOfferings } from '../views/serviceofferings/serviceofferings-data';
+import { IOfferings, IPageOfferings } from '../views/serviceofferings/serviceofferings-data';
 import { OrganizationsApiService } from './organizations-api.service';
 import { AuthService } from './auth.service';
 
@@ -53,9 +53,9 @@ export class ServiceofferingApiService {
   }
 
   // get details to a specific service offering (authenticated)
-  public async fetchServiceOfferingDetails(id: string): Promise<IOfferingsDetailed> {
+  public async fetchServiceOfferingDetails(id: string): Promise<IOfferings> {
     if (this.authService.isLoggedIn) {
-      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "serviceoffering/" + id)) as IOfferingsDetailed;
+      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "serviceoffering/" + id)) as IOfferings;
     }
       
     return undefined;

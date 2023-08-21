@@ -1,6 +1,6 @@
-<c-modal #modalViewContract id="modalViewContract" size="xl" alignment="center" (visibleChange)="handleEventContractModal($event)">
+<!--c-modal #modalViewContract id="modalViewContract" size="xl" alignment="center" (visibleChange)="handleEventContractModal($event)">
     <c-modal-header>
-      <h5 cModalTitle>Vertragskonfiguration zum Service Angebot "{{ offeringDetails.id }}"</h5>
+      <h5 cModalTitle>Vertragskonfiguration zum Service Angebot "{{ offeringDetails.selfDescription.verifiableCredential.credentialSubject['@id'] }}"</h5>
     </c-modal-header>
     <c-modal-body>
       <ul class="list-group list-group-flush">
@@ -268,4 +268,4 @@
         Datentransfer starten
       </button>
     </c-modal-footer>
-  </c-modal>
+  </c-modal-->
