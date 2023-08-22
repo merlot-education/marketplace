@@ -2,14 +2,14 @@
 <c-row [xl]="3">
     <c-col xs *ngFor="let contract of activePage.value.content">
       <c-card class="mb-4">
-        <c-card-header><b>Vertrag</b>: {{ contract.details.id }}</c-card-header>
+        <c-card-header><b>Vertrag</b>: {{ contract.id }}</c-card-header>
         <c-card-body>
           <c-row>
             <c-col>
               <ul class="list-group list-group-flush">
                 <li class="list-group-item" style="border: none">
                     <strong>Erstelldatum:</strong><br />
-                    {{ contract.details.creationDate }}
+                    {{ contract.creationDate }}
                 </li>
                 <li class="list-group-item" style="border: none">
                     <strong>Angebots-ID:</strong> <br />
@@ -17,11 +17,11 @@
                 </li>
                 <li class="list-group-item" style="border: none" *ngIf="contract.providerId !== authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']">
                   <strong>Serviceanbieter:</strong><br />
-                  {{ contract.details.providerLegalName }}
+                  {{ contract.providerLegalName }}
                 </li>
                 <li class="list-group-item" style="border: none" *ngIf="contract.consumerId !== authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']">
                     <strong>Kunde:</strong><br />
-                    {{ contract.details.consumerLegalName }}
+                    {{ contract.consumerLegalName }}
                   </li>
                 <li class="list-group-item" style="border: none">
                     <strong>Servicename:</strong><br />
@@ -29,15 +29,15 @@
                 </li>
                 <li class="list-group-item" style="border: none">
                   <strong>Status:</strong><br />
-                  {{ contractApiService.resolveFriendlyStatusName(contract.details.state) }}
+                  {{ contractApiService.resolveFriendlyStatusName(contract.state) }}
                 </li>
               </ul>
               <div style="padding: 10px">
                 <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="'modalViewContract'" (click)="prepareEditContract(contract)">
-                  <div *ngIf="contract.details.state === 'IN_DRAFT'">
+                  <div *ngIf="contract.state === 'IN_DRAFT'">
                     Bearbeiten
                   </div>
-                  <div *ngIf="contract.details.state !== 'IN_DRAFT'">
+                  <div *ngIf="contract.state !== 'IN_DRAFT'">
                     Details
                   </div>
                 </button>

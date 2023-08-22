@@ -1,6 +1,14 @@
 import { ISpringPage } from "../common-views/paging-footer/page-data";
-import { LoginComponent } from "../pages/login/login.component";
 import { IOfferings } from "../serviceofferings/serviceofferings-data";
+
+export interface IContractBasic {
+  id: string,
+  creationDate: string,
+  offering: IOfferings,
+  providerLegalName: string,
+  consumerLegalName: string,
+  state: string
+}
 
 export interface IContract {
   type: string,

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IContract, IPageContracts } from '../contracts-data';
+import { IContract, IContractBasic, IPageContracts } from '../contracts-data';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
@@ -58,8 +58,8 @@ export class ExploreComponent implements OnInit {
     }); 
   }
 
-  prepareEditContract(contract: IContract) {
-    this.contractApiService.getContractDetails(contract.details.id).then(result => {
+  prepareEditContract(contract: IContractBasic) {
+    this.contractApiService.getContractDetails(contract.id).then(result => {
       this.contractTemplate = result;
     })
   }
