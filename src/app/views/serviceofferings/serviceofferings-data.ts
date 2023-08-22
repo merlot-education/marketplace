@@ -4,6 +4,10 @@ export interface IPageOfferings extends ISpringPage {
   content: IOfferings[];
 }
 
+export interface IPageBasicOfferings extends ISpringPage {
+  content: IBasicOffering[];
+}
+
 export interface IOfferings {
   metadata: {
     state: string,
@@ -32,6 +36,15 @@ export interface IOfferings {
       }
     }
   }
+}
+
+export interface IBasicOffering {
+  id: string,
+  type: string,
+  state: string,
+  name: string,
+  creationDate: string,
+  providerLegalname: string
 }
 
 export interface IStringTypeValue {

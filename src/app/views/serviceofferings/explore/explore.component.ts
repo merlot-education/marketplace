@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {IOfferings, IPageOfferings} from '../serviceofferings-data'
+import {IBasicOffering, IOfferings, IPageBasicOfferings, IPageOfferings} from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
@@ -34,7 +34,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   shaclFile: ShaclFile;
   filteredShapes: Shape[];
 
-  protected activePublicOfferingPage: BehaviorSubject<IPageOfferings> = new BehaviorSubject({
+  protected activePublicOfferingPage: BehaviorSubject<IPageBasicOfferings> = new BehaviorSubject({
     content: [],
     empty: false,
     first: false,
@@ -58,7 +58,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
     totalPages: 0
   });
 
-  protected activeOrgaOfferingPage: BehaviorSubject<IPageOfferings> = new BehaviorSubject({
+  protected activeOrgaOfferingPage: BehaviorSubject<IPageBasicOfferings> = new BehaviorSubject({
     content: [],
     empty: false,
     first: false,
@@ -233,9 +233,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
     return undefined;
   }
 
-  updateServiceOfferingEdit(offering: IOfferings) {
-    this.requestDetails(offering.selfDescription.verifiableCredential.credentialSubject['@id']).then(() => {
-      this.select(this.findFilenameByShapeType(offering.selfDescription.verifiableCredential.credentialSubject['@type']));
+  updateServiceOfferingEdit(offering: IBasicOffering) {
+    this.requestDetails(offering.id).then(() => {
+      this.select(this.findFilenameByShapeType(offering.type));
     });
     
   }
