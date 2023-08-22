@@ -1,13 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { IContractBasic, IContractDetailed, IPageContracts, ISaasContractDetailed } from '../contracts-data';
+import { IContract, IPageContracts } from '../contracts-data';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
-import { IOfferings } from '../../serviceofferings/serviceofferings-data';
-import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { BehaviorSubject } from 'rxjs';
 import { ConnectorData } from '../../organization/organization-data';
-import { throws } from 'assert';
 
 @Component({
   templateUrl: './explore.component.html',
@@ -40,40 +37,15 @@ export class ExploreComponent implements OnInit {
     totalElements: 0,
     totalPages: 0
   });
-
-  protected selectedOfferingDetails: IOfferings = {
-    metadata: null,
-    providerDetails: null,
-    selfDescription: null
-  };
   
-  protected contractTemplate: IContractDetailed = {
-    consumerMerlotTncAccepted: false,
-    providerMerlotTncAccepted: false,
-    consumerOfferingTncAccepted: false,
-    consumerProviderTncAccepted: false,
-    providerTncUrl: '',
-    id: '',
-    state: '',
-    creationDate: '',
-    offeringId: '',
-    offeringName: '',
-    providerId: '',
-    consumerId: '',
-    offeringAttachments: [],
-    serviceContractProvisioning: {
-      validUntil: ''
-    },
-    type: ''
-  };
+  protected contractTemplate: IContract = undefined;
 
   protected orgaConnectors: ConnectorData[] = [];
 
   constructor(
     protected organizationsApiService: OrganizationsApiService,
     protected authService: AuthService,
-    protected contractApiService: ContractApiService,
-    private serviceOfferingApiService: ServiceofferingApiService
+    protected contractApiService: ContractApiService
     ) {
   }
 
@@ -86,11 +58,8 @@ export class ExploreComponent implements OnInit {
     }); 
   }
 
-  prepareEditContract(contract: IContractBasic) {
-    this.serviceOfferingApiService.fetchServiceOfferingDetails(contract.offeringId).then(result => {
-      this.selectedOfferingDetails = result;
-    })
-    this.contractApiService.getContractDetails(contract.id).then(result => {
+  prepareEditContract(contract: IContract) {
+    this.contractApiService.getContractDetails(contract.details.id).then(result => {
       this.contractTemplate = result;
     })
   }

@@ -10,7 +10,7 @@ import { Shape } from '@models/shape';
 import { serviceFileNameDict } from '../serviceofferings-data';
 import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { IContractDetailed } from '../../contracts/contracts-data';
+import { IContract } from '../../contracts/contracts-data';
 import { ConnectorData } from '../../organization/organization-data';
 import { FormField } from '@models/form-field.model';
 
@@ -94,30 +94,10 @@ export class ExploreComponent implements OnInit, OnDestroy {
   selectedStatusFilter: string = Object.keys(this.friendlyStatusNames)[0];
   applyStatusFilter: boolean = false;
 
-  emptyContractTemplate: IContractDetailed = {
-    consumerMerlotTncAccepted: false,
-    providerMerlotTncAccepted: false,
-    consumerOfferingTncAccepted: false,
-    consumerProviderTncAccepted: false,
-    providerTncUrl: '',
-    id: '',
-    state: '',
-    creationDate: '',
-    offeringId: '',
-    offeringName: '',
-    providerId: '',
-    consumerId: '',
-    offeringAttachments: [],
-    serviceContractProvisioning: {
-      validUntil: ''
-    },
-    type: ''
-  }
-
   selectedOfferingDetails: IOfferings = null;
   selectedOfferingPublic: boolean = false;
 
-  contractTemplate: IContractDetailed = this.emptyContractTemplate;
+  contractTemplate: IContract = undefined;
   protected orgaConnectors: ConnectorData[] = [];
 
   private showingModal: boolean = false;

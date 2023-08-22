@@ -2,42 +2,42 @@
 <c-row [xl]="3">
     <c-col xs *ngFor="let contract of activePage.value.content">
       <c-card class="mb-4">
-        <c-card-header><b>Vertrag</b>: {{ contract.id }}</c-card-header>
+        <c-card-header><b>Vertrag</b>: {{ contract.details.id }}</c-card-header>
         <c-card-body>
           <c-row>
             <c-col>
               <ul class="list-group list-group-flush">
                 <li class="list-group-item" style="border: none">
                     <strong>Erstelldatum:</strong><br />
-                    {{ contract.creationDate }}
+                    {{ contract.details.creationDate }}
                 </li>
                 <li class="list-group-item" style="border: none">
                     <strong>Angebots-ID:</strong> <br />
-                    {{ contract.offeringId }}
+                    {{ contract.offering.selfDescription.verifiableCredential.credentialSubject['@id'] }}
                 </li>
                 <li class="list-group-item" style="border: none" *ngIf="contract.providerId !== authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']">
                   <strong>Serviceanbieter:</strong><br />
-                  {{ contract.providerId }}
+                  {{ contract.details.providerLegalName }}
                 </li>
                 <li class="list-group-item" style="border: none" *ngIf="contract.consumerId !== authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']">
                     <strong>Kunde:</strong><br />
-                    {{ contract.consumerId }}
+                    {{ contract.details.consumerLegalName }}
                   </li>
                 <li class="list-group-item" style="border: none">
                     <strong>Servicename:</strong><br />
-                    {{ contract.offeringName }}
+                    {{ contract.offering.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:name']['@value'] }}
                 </li>
                 <li class="list-group-item" style="border: none">
                   <strong>Status:</strong><br />
-                  {{ contractApiService.resolveFriendlyStatusName(contract.state) }}
+                  {{ contractApiService.resolveFriendlyStatusName(contract.details.state) }}
                 </li>
               </ul>
               <div style="padding: 10px">
                 <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="'modalViewContract'" (click)="prepareEditContract(contract)">
-                  <div *ngIf="contract.state === 'IN_DRAFT'">
+                  <div *ngIf="contract.details.state === 'IN_DRAFT'">
                     Bearbeiten
                   </div>
-                  <div *ngIf="contract.state !== 'IN_DRAFT'">
+                  <div *ngIf="contract.details.state !== 'IN_DRAFT'">
                     Details
                   </div>
                 </button>
@@ -55,4 +55,4 @@
 <h1 *ngIf="this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.</h1>
 
 
-<app-contractview [offeringDetails]="selectedOfferingDetails" [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors" (buttonClickCallback)="buttonClicked()"></app-contractview>
+<app-contractview [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors" (buttonClickCallback)="buttonClicked()"></app-contractview>

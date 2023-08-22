@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
 import { lastValueFrom } from 'rxjs';
-import { IContractBasic, IContractDetailed, IEdcIdResponse, IEdcNegotiationStatus, IEdcTransferStatus, IPageContracts, ISaasContractDetailed } from '../views/contracts/contracts-data';
+import { IContract, IEdcIdResponse, IEdcNegotiationStatus, IEdcTransferStatus, IPageContracts } from '../views/contracts/contracts-data';
 
 @Injectable({
   providedIn: 'root',
@@ -25,19 +25,19 @@ export class ContractApiService {
     return new HttpHeaders({'Active-Role' : this.authService.activeOrganizationRole.value.orgaRoleString });
   }
 
-  public async createNewContract(offeringId: string, consumerId: string): Promise<IContractDetailed> {
+  public async createNewContract(offeringId: string, consumerId: string): Promise<IContract> {
     return await lastValueFrom(this.http.post(environment.contract_api_url, {
       offeringId: offeringId,
       consumerId: consumerId
-    }, {headers: this.getActiveRoleHeaders()})) as IContractDetailed;
+    }, {headers: this.getActiveRoleHeaders()})) as IContract;
   }
 
-  public async regenerateContract(contractId: string): Promise<IContractDetailed> {
-    return await lastValueFrom(this.http.post(environment.contract_api_url + "contract/regenerate/" + contractId, null, {headers: this.getActiveRoleHeaders()})) as IContractDetailed;
+  public async regenerateContract(contractId: string): Promise<IContract> {
+    return await lastValueFrom(this.http.post(environment.contract_api_url + "contract/regenerate/" + contractId, null, {headers: this.getActiveRoleHeaders()})) as IContract;
   }
 
-  public async updateContract(contract: IContractDetailed): Promise<IContractDetailed> {
-    return await lastValueFrom(this.http.put(environment.contract_api_url, contract, {headers: this.getActiveRoleHeaders()})) as IContractDetailed;
+  public async updateContract(contract: IContract): Promise<IContract> {
+    return await lastValueFrom(this.http.put(environment.contract_api_url, contract, {headers: this.getActiveRoleHeaders()})) as IContract;
   }
 
   public async statusShiftContract(contractId: string, newStatus: string) {  
@@ -45,7 +45,7 @@ export class ContractApiService {
 
     let fullUrl = environment.contract_api_url + 'contract/status/' + contractId + '/' + newStatus;
     
-    return await lastValueFrom(this.http.patch(fullUrl, null, {headers: headers})) as IContractDetailed;
+    return await lastValueFrom(this.http.patch(fullUrl, null, {headers: headers})) as IContract;
   }
 
   public async getOrgaContracts(page: number, size: number, consumerId: string): Promise<IPageContracts> {
@@ -53,9 +53,9 @@ export class ContractApiService {
       environment.contract_api_url + "organization/" + consumerId + "?page=" + page + "&size=" + size)) as IPageContracts;
   }
 
-  public async getContractDetails(contractId: string): Promise<IContractDetailed> {
+  public async getContractDetails(contractId: string): Promise<IContract> {
     return await lastValueFrom(this.http.get(
-      environment.contract_api_url + "contract/" + contractId, {headers: this.getActiveRoleHeaders()})) as IContractDetailed;
+      environment.contract_api_url + "contract/" + contractId, {headers: this.getActiveRoleHeaders()})) as IContract;
   }
 
   public async initiateEdcNegotiation(contractId: string): Promise<IEdcIdResponse> {

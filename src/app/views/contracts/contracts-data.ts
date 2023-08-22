@@ -1,31 +1,38 @@
 import { ISpringPage } from "../common-views/paging-footer/page-data";
 import { LoginComponent } from "../pages/login/login.component";
+import { IOfferings } from "../serviceofferings/serviceofferings-data";
 
-export class IContractBasic {
-    id: string;
-    type:string;
-    state: string;
-    creationDate: string;
-    offeringId: string;
-    offeringName: string;
-    providerId: string;
-    providerLegalName?: string;
-    consumerId: string;
-    consumerLegalName?: string;
+export interface IContract {
+  type: string,
+  details: IContractDetails,
+  negotiation: IContractNegotiation,
+  provisioning: IContractProvisioning,
+  offering: IOfferings
 }
 
-export class IContractDetailed extends IContractBasic {
-  runtimeSelection?: string;
-  consumerMerlotTncAccepted: boolean;
-  providerMerlotTncAccepted: boolean;
-  consumerOfferingTncAccepted: boolean;
-  consumerProviderTncAccepted: boolean;
-  providerTncUrl: string;
-  additionalAgreements?: string;
-  offeringAttachments: string[];
-  serviceContractProvisioning: {
-    validUntil?: string;
-  }
+export interface IContractDetails {
+  id: string,
+  creationDate: string,
+  providerId: string,
+  providerLegalName: string,
+  consumerId: string,
+  consumerLegalName: string,
+  state: string,
+  providerTncUrl: string
+}
+
+export interface IContractNegotiation {
+  runtimeSelection?: string,
+  additionalAgreements?: string,
+  attachments: string[],
+  consumerMerlotTncAccepted: boolean,
+  consumerOfferingTncAccepted: boolean,
+  consumerProviderTncAccepted: boolean,
+  providerMerlotTncAccepted: boolean
+}
+
+export interface IContractProvisioning {
+  validUntil: string
 }
 
 export class IEdcIdResponse {
@@ -43,14 +50,6 @@ export class IEdcTransferStatus {
   state: string;
 }
 
-export class ISaasContractDetailed extends IContractDetailed {
-  userCountSelection: string;
-}
-
-export class IDataDeliveryContractDetailed extends IContractDetailed {
-  exchangeCountSelection?: string;
-}
-
 export interface IPageContracts extends ISpringPage {
-    content: IContractBasic[];
-  }
+    content: IContract[];
+}
