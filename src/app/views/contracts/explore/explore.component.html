@@ -52,7 +52,8 @@
   <app-paging-footer [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE, authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'])"></app-paging-footer>
 </div>
 
-<h1 *ngIf="this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.</h1>
+<h1 *ngIf="initialLoading">Verträge werden geladen...</h1>
+<h1 *ngIf="!initialLoading && this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.</h1> <!--- TODO wird geladen -->
 
 
 <app-contractview [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors" (buttonClickCallback)="buttonClicked()"></app-contractview>

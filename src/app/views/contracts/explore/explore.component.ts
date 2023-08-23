@@ -42,6 +42,8 @@ export class ExploreComponent implements OnInit {
 
   protected orgaConnectors: ConnectorData[] = [];
 
+  protected initialLoading: boolean = true;
+
   constructor(
     protected organizationsApiService: OrganizationsApiService,
     protected authService: AuthService,
@@ -67,6 +69,7 @@ export class ExploreComponent implements OnInit {
   protected refreshContracts(page: number, size: number, activeOrgaId: string) {
     this.contractApiService.getOrgaContracts(page, size, activeOrgaId).then(result => {
         this.activePage.next(result);
+        this.initialLoading = false;
       });
   }
 

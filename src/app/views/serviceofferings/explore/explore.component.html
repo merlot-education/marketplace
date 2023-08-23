@@ -97,7 +97,9 @@
 
 </div>
 
-<h1 *ngIf="this.activeOrgaOfferingPage.value.content.length === 0 && this.activePublicOfferingPage.value.content.length === 0">Es konnten keine Service Angebote gefunden werden.</h1>
+<h1 *ngIf="initialLoading">Service Angebote werden geladen...</h1>
+
+<h1 *ngIf="!initialLoading && this.activeOrgaOfferingPage.value.content.length === 0 && this.activePublicOfferingPage.value.content.length === 0">Es konnten keine Service Angebote gefunden werden.</h1>
 
 <c-modal #modalViewDetails id="modalViewDetails" size="xl" alignment="center" (visibleChange)="handleEventDetailsModal($event)">
   <ng-container *ngIf="selectedOfferingDetails !== null">

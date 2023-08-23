@@ -100,6 +100,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
   contractTemplate: IContract = undefined;
   protected orgaConnectors: ConnectorData[] = [];
 
+  protected initialLoading: boolean = true;
+
   private showingModal: boolean = false;
 
   private isFiltered: boolean = false;
@@ -156,6 +158,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   protected refreshPublicOfferings(page: number, size: number) {
     this.serviceOfferingApiService.fetchPublicServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
       this.activePublicOfferingPage.next(result);
+      this.initialLoading = false;
     });
   }
 
@@ -163,6 +166,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
     if (this.authService.isLoggedIn) {
       this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
       this.activeOrgaOfferingPage.next(result);
+      this.initialLoading = false;
     });
     }
   }
