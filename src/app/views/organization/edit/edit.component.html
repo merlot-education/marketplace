@@ -1,38 +1,60 @@
 <c-row>
   <c-col xs>
     <c-card class="mb-4">
-      <c-card-header>Enrolled Organizations</c-card-header>
+      <c-card-header>Organisation bearbeiten</c-card-header>
       <c-card-body>
-        <table
-          [hover]="true"
-          [responsive]="true"
-          [striped]="true"
-          align="middle"
-          cTable
-          class="mb-0 border"
-        >
-          <thead cTableColor="light">
-            <tr>
-              <th scope="col">Merlot ID</th>
-              <th scope="col">Registration Number</th>
-              <th scope="col">Registration Type</th>
-              <th scope="col">Organization Name</th>
-              <th scope="col">Country Code</th>
-              <th scope="col">Postal Code</th>
-              <th scope="col">Street</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody *ngFor="let organization of organizations">
-            <tr>
-              <th scope="row">{{ organization.merlotId }}</th>
-              <td>{{ organization.registrationNumber }}</td>
-              <td>
-                <button style="margin: 5px;" type="button" class="btn btn-primary disabled">Edit</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <ng-container *ngIf="selectedOrganization">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" style="border: none">
+              <div class="mb-3">
+                <label class="form-label"><strong>Country Code:</strong></label>
+                <input class="form-control" placeholder="DE" 
+                  [disabled]="false" 
+                  [(ngModel)]="selectedOrganization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:country-name']['@value']">
+              </div>
+            </li>
+            <li class="list-group-item" style="border: none">
+              <div class="mb-3">
+                <label class="form-label"><strong>Address Code:</strong></label>
+                <input class="form-control" placeholder="DE-BER" 
+                  [disabled]="false" 
+                  [(ngModel)]="selectedOrganization.selfDescription.verifiableCredential.credentialSubject['merlot:addressCode']['@value']">
+              </div>
+            </li>
+            <li class="list-group-item" style="border: none">
+              <div class="mb-3">
+                <label class="form-label"><strong>City:</strong></label>
+                <input class="form-control" placeholder="Berlin" 
+                  [disabled]="false" 
+                  [(ngModel)]="selectedOrganization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:locality']['@value']">
+              </div>
+            </li>
+            <li class="list-group-item" style="border: none">
+              <div class="mb-3">
+                <label class="form-label"><strong>Street:</strong></label>
+                <input class="form-control" placeholder="Potsdamer Platz 1" 
+                  [disabled]="false" 
+                  [(ngModel)]="selectedOrganization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:street-address']['@value']">
+              </div>
+            </li>
+            <li class="list-group-item" style="border: none">
+              <div class="mb-3">
+                <label class="form-label"><strong>Postal Code:</strong></label>
+                <input class="form-control" placeholder="12345" 
+                  [disabled]="false" 
+                  [(ngModel)]="selectedOrganization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:postal-code']['@value']">
+              </div>
+            </li>
+            
+            <li class="list-group-item" style="border: none">
+              <strong>Mail address:</strong> <br />
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>AGB:</strong> <br />
+            </li>
+          </ul>
+        </ng-container>
+        
       </c-card-body>
     </c-card>
   </c-col>

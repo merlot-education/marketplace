@@ -27,7 +27,7 @@ const routes: Routes = [
         path: 'edit',
         component: EditComponent,
         data: {
-          title: 'Meine Organisation bearbeiten',
+          title: 'Organisation bearbeiten',
         },
       },
     ],

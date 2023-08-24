@@ -11,6 +11,7 @@ export interface IOrganizationData {
           "gax-trust-framework:registrationNumber": IRegistrationNumber,
           "gax-trust-framework:legalAddress": IVCardAddress,
           "merlot:orgaName": IStringTypeValue,
+          "merlot:addressCode": IStringTypeValue
         }
       }
     }
