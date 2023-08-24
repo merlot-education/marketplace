@@ -61,7 +61,7 @@
             value="{{ orgaRole }}"
           >
             {{ authService.organizationRoles[orgaRole].roleFriendlyName }} für
-            {{ authService.organizationRoles[orgaRole].orgaData?.organizationName }}
+            {{ authService.organizationRoles[orgaRole].orgaData?.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'] }}
           </option>
         </select>
       </div>

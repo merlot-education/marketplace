@@ -56,7 +56,6 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 // Components Routing
 import { ServiceofferingsRoutingModule } from './serviceofferings-routing.module';
 import { WizardAppModule } from "../../sdwizard/wizardapp.module";
-import { ContractsModule } from "../contracts/contracts.module";
 import { CommonViewsModule } from "../common-views/common-views.module";
 
 @NgModule({
@@ -96,8 +95,7 @@ import { CommonViewsModule } from "../common-views/common-views.module";
         TableModule,
         DocsComponentsModule,
         WizardAppModule,
-        ModalModule,
-        ContractsModule,
+        ModalModule
     ]
 })
 export class ServiceofferingsModule {}

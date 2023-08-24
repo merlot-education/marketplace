@@ -1,13 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { IContractBasic, IContractDetailed, IPageContracts, ISaasContractDetailed } from '../contracts-data';
+import { IContract, IContractBasic, IPageContracts } from '../contracts-data';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
-import { IOfferingsDetailed } from '../../serviceofferings/serviceofferings-data';
-import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { BehaviorSubject } from 'rxjs';
 import { ConnectorData } from '../../organization/organization-data';
-import { throws } from 'assert';
 
 @Component({
   templateUrl: './explore.component.html',
@@ -40,65 +37,30 @@ export class ExploreComponent implements OnInit {
     totalElements: 0,
     totalPages: 0
   });
-
-  protected selectedOfferingDetails: IOfferingsDetailed = {
-    description: '',
-    modifiedDate: '',
-    exampleCosts: '',
-    attachments: [],
-    termsAndConditions: [],
-    runtimeOption: [],
-    id: '',
-    sdHash: '',
-    creationDate: '',
-    offeredBy: '',
-    merlotState: '',
-    type: '',
-    name: ''
-  };
-  protected contractTemplate: IContractDetailed = {
-    consumerMerlotTncAccepted: false,
-    providerMerlotTncAccepted: false,
-    consumerOfferingTncAccepted: false,
-    consumerProviderTncAccepted: false,
-    providerTncUrl: '',
-    id: '',
-    state: '',
-    creationDate: '',
-    offeringId: '',
-    offeringName: '',
-    providerId: '',
-    consumerId: '',
-    offeringAttachments: [],
-    serviceContractProvisioning: {
-      validUntil: ''
-    },
-    type: ''
-  };
+  
+  protected contractTemplate: IContract = undefined;
 
   protected orgaConnectors: ConnectorData[] = [];
+
+  protected initialLoading: boolean = true;
 
   constructor(
     protected organizationsApiService: OrganizationsApiService,
     protected authService: AuthService,
-    protected contractApiService: ContractApiService,
-    private serviceOfferingApiService: ServiceofferingApiService
+    protected contractApiService: ContractApiService
     ) {
   }
 
   ngOnInit(): void {
     this.authService.activeOrganizationRole.subscribe(value => {
-      this.organizationsApiService.getConnectorsOfOrganization(value.orgaData.id).then(result => {
+      this.organizationsApiService.getConnectorsOfOrganization(value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']).then(result => {
         this.orgaConnectors = result;
       });
-      this.refreshContracts(0, this.ITEMS_PER_PAGE, value.orgaData.id);
+      this.refreshContracts(0, this.ITEMS_PER_PAGE, value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
     }); 
   }
 
   prepareEditContract(contract: IContractBasic) {
-    this.serviceOfferingApiService.fetchServiceOfferingDetails(contract.offeringId).then(result => {
-      this.selectedOfferingDetails = result;
-    })
     this.contractApiService.getContractDetails(contract.id).then(result => {
       this.contractTemplate = result;
     })
@@ -107,13 +69,14 @@ export class ExploreComponent implements OnInit {
   protected refreshContracts(page: number, size: number, activeOrgaId: string) {
     this.contractApiService.getOrgaContracts(page, size, activeOrgaId).then(result => {
         this.activePage.next(result);
+        this.initialLoading = false;
       });
   }
 
   public buttonClicked() {
     this.refreshContracts(this.activePage.value.pageable.pageNumber, 
       this.activePage.value.pageable.pageSize,
-      this.authService.activeOrganizationRole.value.orgaData.id);
+      this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
   }
 
 }

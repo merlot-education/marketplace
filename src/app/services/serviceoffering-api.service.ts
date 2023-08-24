@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable, lastValueFrom } from 'rxjs';
-import { IOfferingsDetailed, IPageOfferings } from '../views/serviceofferings/serviceofferings-data';
+import { IOfferings, IPageBasicOfferings, IPageOfferings } from '../views/serviceofferings/serviceofferings-data';
 import { OrganizationsApiService } from './organizations-api.service';
 import { AuthService } from './auth.service';
 
@@ -30,32 +30,32 @@ export class ServiceofferingApiService {
   }
 
   // get released service offering overview (unauthenticated)
-  public async fetchPublicServiceOfferings(page: number, size: number, state?: string): Promise<IPageOfferings> {
+  public async fetchPublicServiceOfferings(page: number, size: number, state?: string): Promise<IPageBasicOfferings> {
     let target_url = environment.serviceoffering_api_url + "?page=" + page + "&size=" + size
     if (state !== undefined) {
       target_url += "&state=" + state
     }
-    return await lastValueFrom(this.http.get(target_url)) as IPageOfferings;
+    return await lastValueFrom(this.http.get(target_url)) as IPageBasicOfferings;
   }
 
   // get all service offerings for the active organization
-  public async fetchOrganizationServiceOfferings(page: number, size: number, state?: string): Promise<IPageOfferings> {
+  public async fetchOrganizationServiceOfferings(page: number, size: number, state?: string): Promise<IPageBasicOfferings> {
     if (this.authService.isLoggedIn) {
-      let activeOrgaId = this.authService.activeOrganizationRole.value.orgaData.id.replace("Participant:", "");
+      let activeOrgaId = this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'].replace("Participant:", "");
       let target_url = environment.serviceoffering_api_url + "organization/" + activeOrgaId + "?page=" + page + "&size=" + size;
       if (state !== undefined) {
         target_url += "&state=" + state
       }
-      return await lastValueFrom(this.http.get(target_url)) as IPageOfferings;
+      return await lastValueFrom(this.http.get(target_url)) as IPageBasicOfferings;
     }
       
     return undefined;
   }
 
   // get details to a specific service offering (authenticated)
-  public async fetchServiceOfferingDetails(id: string): Promise<IOfferingsDetailed> {
+  public async fetchServiceOfferingDetails(id: string): Promise<IOfferings> {
     if (this.authService.isLoggedIn) {
-      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "serviceoffering/" + id)) as IOfferingsDetailed;
+      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "serviceoffering/" + id)) as IOfferings;
     }
       
     return undefined;

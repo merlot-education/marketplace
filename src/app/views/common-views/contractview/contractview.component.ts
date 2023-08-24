@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { IContractDetailed, IEdcIdResponse, IEdcNegotiationStatus, IEdcTransferStatus } from '../../../contracts-data';
-import { IOfferingsDetailed } from 'src/app/views/serviceofferings/serviceofferings-data';
+import { IContract, IEdcIdResponse, IEdcNegotiationStatus, IEdcTransferStatus } from '../../contracts/contracts-data';
+import { IOfferings } from 'src/app/views/serviceofferings/serviceofferings-data';
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
@@ -17,44 +17,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 })
 export class ContractviewComponent {
 
-  private emptyOfferingDetails: IOfferingsDetailed = {
-    description: '',
-    modifiedDate: '',
-    exampleCosts: '',
-    attachments: [],
-    termsAndConditions: [],
-    runtimeOption: [],
-    id: '',
-    sdHash: '',
-    creationDate: '',
-    offeredBy: '',
-    merlotState: '',
-    type: '',
-    name: ''
-  };
-
-  private emptyContractDetails: IContractDetailed = {
-    consumerMerlotTncAccepted: false,
-    providerMerlotTncAccepted: false,
-    consumerOfferingTncAccepted: false,
-    consumerProviderTncAccepted: false,
-    providerTncUrl: '',
-    id: '',
-    state: '',
-    creationDate: '',
-    offeringId: '',
-    offeringName: '',
-    providerId: '',
-    consumerId: '',
-    offeringAttachments: [],
-    serviceContractProvisioning: {
-      validUntil: ''
-    },
-    type: ''
-  };
-
-  @Input() offeringDetails: IOfferingsDetailed = this.emptyOfferingDetails;
-  @Input() contractDetails: IContractDetailed = this.emptyContractDetails;
+  @Input() contractDetails: IContract = undefined;
   @Input() availableConnectors : ConnectorData[] = [];
   @Output() buttonClickCallback: EventEmitter<any> = new EventEmitter();
 
@@ -86,7 +49,7 @@ export class ContractviewComponent {
     }
   }
 
-  protected handleButtonClick(targetFunction: (contractApiService: ContractApiService, contractDetails: IContractDetailed) => Promise<IContractDetailed>, contractDetails: IContractDetailed) {
+  protected handleButtonClick(targetFunction: (contractApiService: ContractApiService, contractDetails: IContract) => Promise<IContract>, contractDetails: IContract) {
     console.log("sent", contractDetails);
     this.saveButtonDisabled = true;
     this.showSuccessMessage = false;
@@ -116,41 +79,41 @@ export class ContractviewComponent {
       });
   }
 
-  protected async saveContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
+  protected async saveContract(contractApiService: ContractApiService, contractDetails: IContract): Promise<IContract> {
     return await contractApiService.updateContract(contractDetails);
   }
 
-  protected async deleteContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
-    return await contractApiService.statusShiftContract(contractDetails.id, 'DELETED');
+  protected async deleteContract(contractApiService: ContractApiService, contractDetails: IContract): Promise<IContract> {
+    return await contractApiService.statusShiftContract(contractDetails.details.id, 'DELETED');
   }
 
-  protected async purgeContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
-    return await contractApiService.statusShiftContract(contractDetails.id, 'PURGED');
+  protected async purgeContract(contractApiService: ContractApiService, contractDetails: IContract): Promise<IContract> {
+    return await contractApiService.statusShiftContract(contractDetails.details.id, 'PURGED');
   }
 
-  protected async orderContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
+  protected async orderContract(contractApiService: ContractApiService, contractDetails: IContract): Promise<IContract> {
     return await contractApiService.updateContract(contractDetails).then(result =>  
-      contractApiService.statusShiftContract(contractDetails.id, 'SIGNED_CONSUMER'));
+      contractApiService.statusShiftContract(contractDetails.details.id, 'SIGNED_CONSUMER'));
   }
 
-  protected async acceptOrderContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
+  protected async acceptOrderContract(contractApiService: ContractApiService, contractDetails: IContract): Promise<IContract> {
     return await contractApiService.updateContract(contractDetails).then(result =>  
-      contractApiService.statusShiftContract(contractDetails.id, 'RELEASED'));
+      contractApiService.statusShiftContract(contractDetails.details.id, 'RELEASED'));
   }
 
-  protected async revokeContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
-    return await contractApiService.statusShiftContract(contractDetails.id, 'REVOKED');
+  protected async revokeContract(contractApiService: ContractApiService, contractDetails: IContract): Promise<IContract> {
+    return await contractApiService.statusShiftContract(contractDetails.details.id, 'REVOKED');
   }
 
-  protected async archiveContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
-    return await contractApiService.statusShiftContract(contractDetails.id, 'ARCHIVED');
+  protected async archiveContract(contractApiService: ContractApiService, contractDetails: IContract): Promise<IContract> {
+    return await contractApiService.statusShiftContract(contractDetails.details.id, 'ARCHIVED');
   }
 
-  protected async regenerateContract(contractApiService: ContractApiService, contractDetails: IContractDetailed): Promise<IContractDetailed> {
-    return await contractApiService.regenerateContract(contractDetails.id);
+  protected async regenerateContract(contractApiService: ContractApiService, contractDetails: IContract): Promise<IContract> {
+    return await contractApiService.regenerateContract(contractDetails.details.id);
   }
 
-  protected initiateDataTransfer(contractDetails: IContractDetailed) {
+  protected initiateDataTransfer(contractDetails: IContract) {
     this.saveButtonDisabled = true;
     this.showSuccessMessage = false;
     this.showErrorMessage = false;
@@ -158,7 +121,7 @@ export class ContractviewComponent {
     this.showEdcStatusMessage = true;
     this.edcStatusMessage = "Starte EDC Verhandlung...";
     console.log("Initiate transfer");
-    this.contractApiService.initiateEdcNegotiation(contractDetails.id).then(async (negotiationId: IEdcIdResponse) => {
+    this.contractApiService.initiateEdcNegotiation(contractDetails.details.id).then(async (negotiationId: IEdcIdResponse) => {
       console.log(negotiationId);
       try {
         let negotiationState: IEdcNegotiationStatus = {
@@ -167,7 +130,7 @@ export class ContractviewComponent {
           contractAgreementId: ''
         }
         while (negotiationState.state !== "FINALIZED") {
-          negotiationState = await this.contractApiService.getEdcNegotiationStatus(contractDetails.id, negotiationId.id);
+          negotiationState = await this.contractApiService.getEdcNegotiationStatus(contractDetails.details.id, negotiationId.id);
           this.edcStatusMessage = "EDC Verhandlung gestartet. Aktueller Status: " + negotiationState.state;
           console.log(negotiationState);
           await sleep(1000);
@@ -178,7 +141,7 @@ export class ContractviewComponent {
         this.saveButtonDisabled = false;
       }
 
-      this.contractApiService.initiateEdcTransfer(contractDetails.id, negotiationId.id).then(async (transferId: IEdcIdResponse) => {
+      this.contractApiService.initiateEdcTransfer(contractDetails.details.id, negotiationId.id).then(async (transferId: IEdcIdResponse) => {
         console.log(transferId);
         try {
           let transferState: IEdcTransferStatus = {
@@ -186,7 +149,7 @@ export class ContractviewComponent {
             state: ''
           }
           while (transferState.state !== "COMPLETED") {
-            transferState = await this.contractApiService.getEdcTransferStatus(contractDetails.id, transferId.id);
+            transferState = await this.contractApiService.getEdcTransferStatus(contractDetails.details.id, transferId.id);
             this.edcStatusMessage = "EDC Datentransfer gestartet. Aktueller Status: " + transferState.state;
             console.log(transferState);
             await sleep(1000);
@@ -218,19 +181,19 @@ export class ContractviewComponent {
   }
 
   protected userIsActiveProvider(): boolean {
-    return this.authService.activeOrganizationRole.value.orgaData.id == this.contractDetails.providerId;
+    return this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'] == this.contractDetails.details.providerId;
   }
 
   protected userIsActiveConsumer(): boolean {
-    return this.authService.activeOrganizationRole.value.orgaData.id == this.contractDetails.consumerId;
+    return this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'] == this.contractDetails.details.consumerId;
   }
 
   protected addAttachment() {
-    this.contractDetails.offeringAttachments.push("");
+    this.contractDetails.negotiation.attachments.push("");
   }
 
   protected deleteAttachment(index: number) {
-    this.contractDetails.offeringAttachments.splice(index, 1);
+    this.contractDetails.negotiation.attachments.splice(index, 1);
   }
 
 }

@@ -30,18 +30,18 @@
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Anbieter:</strong><br />
-                {{ offering.offeredBy }}
+                {{ offering.providerLegalName }}
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Status:</strong><br />
-                {{ serviceOfferingApiService.resolveFriendlyStatusName(offering.merlotState) }}
+                {{ serviceOfferingApiService.resolveFriendlyStatusName(offering.state) }}
               </li>
             </ul>
             <div style="padding: 10px">
               <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = false; requestDetails(offering.id)">
                 Details
               </button>
-              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalEditServiceOffering.id" (click)="updateServiceOfferingEdit(offering)" *ngIf="offering.merlotState === 'IN_DRAFT'">
+              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalEditServiceOffering.id" (click)="updateServiceOfferingEdit(offering)" *ngIf="offering.state === 'IN_DRAFT'">
                 Bearbeiten
               </button>
             </div>
@@ -78,7 +78,7 @@
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Anbieter:</strong><br />
-                {{ offering.offeredBy }}
+                {{ offering.providerLegalName }}
               </li>
             </ul>
             <div style="padding: 10px">
@@ -97,189 +97,74 @@
 
 </div>
 
-<h1 *ngIf="this.activeOrgaOfferingPage.value.content.length === 0 && this.activePublicOfferingPage.value.content.length === 0">Es konnten keine Service Angebote gefunden werden.</h1>
+<h1 *ngIf="initialLoading">Service Angebote werden geladen...</h1>
+
+<h1 *ngIf="!initialLoading && this.activeOrgaOfferingPage.value.content.length === 0 && this.activePublicOfferingPage.value.content.length === 0">Es konnten keine Service Angebote gefunden werden.</h1>
 
 <c-modal #modalViewDetails id="modalViewDetails" size="xl" alignment="center" (visibleChange)="handleEventDetailsModal($event)">
-  <c-modal-header>
-    <h5 cModalTitle>Details zum Service Angebot "{{ selectedOfferingDetails.id }}"</h5>
-  </c-modal-header>
-  <c-modal-body>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item" style="border: none">
-        <strong>Angebotstyp:</strong> <br />
-        {{ serviceOfferingApiService.resolveFriendlyTypeName(selectedOfferingDetails.type) }}
-      </li>
-      <li class="list-group-item" style="border: none">
-        <strong>Service ID:</strong> <br />
-        {{ selectedOfferingDetails.id }}
-      </li>
-      <li class="list-group-item" style="border: none">
-        <strong>Name:</strong> <br />
-        {{ selectedOfferingDetails.name }}
-      </li>
-      <li class="list-group-item" style="border: none">
-        <strong>Erstelldatum:</strong><br />
-        {{ selectedOfferingDetails.creationDate }}
-      </li>
-      <li class="list-group-item" style="border: none">
-        <strong>Anbieter:</strong><br />
-        {{ selectedOfferingDetails.offeredBy }}
-      </li>
-      <li class="list-group-item" style="border: none">
-        <strong>Status:</strong><br />
-        {{ serviceOfferingApiService.resolveFriendlyStatusName(selectedOfferingDetails.merlotState) }}
-      </li>
-      <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.description !== null">
-        <strong>Beschreibung:</strong><br />
-        {{ selectedOfferingDetails.description }}
-      </li>
-      <li class="list-group-item" style="border: none">
-        <strong>Letzte Änderung:</strong><br />
-        {{ selectedOfferingDetails.modifiedDate }}
-      </li>
-      <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.exampleCosts !== null">
-        <strong>Beispielkosten:</strong><br />
-        {{ selectedOfferingDetails.exampleCosts }}
-      </li>
-      <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.attachments !== null">
-        <strong>Anhänge:</strong><br />
-        <ul *ngFor="let attachment of selectedOfferingDetails.attachments">
-          <li>
-            <a [href]="attachment">{{ attachment }}</a>
-          </li>
-        </ul>
-      </li>
-      <li class="list-group-item" style="border: none">
-        <strong>Allgemeine Geschäftsbedingungen:</strong><br />
-        <ul *ngFor="let tnc of selectedOfferingDetails.termsAndConditions">
-          <li>
-            <a [href]="tnc.content">{{ tnc.content }}</a> (Hash: {{ tnc.hash }})
-          </li>
-        </ul>
-        
-      </li>
-      <li class="list-group-item" style="border: none">
-        <strong>Laufzeitoptionen:</strong><br />
-        <ul>
-          <ng-container *ngFor="let rt of selectedOfferingDetails.runtimeOption">
-            <li>
-              <ng-container *ngIf="rt.runtimeCount === 0 || rt.runtimeMeasurement === 'unlimited'; else notUnlimitedRuntime">
-                Unbegrenzt
-              </ng-container>
-              <ng-template #notUnlimitedRuntime>
-                {{ rt.runtimeCount }} {{ rt.runtimeMeasurement }}
-              </ng-template>
-            </li>
-          </ng-container>
-          <li *ngIf="selectedOfferingDetails.runtimeUnlimited">Unbegrenzt</li>
-        </ul>
-      </li>
-      <div *ngIf="selectedOfferingDetails.type === 'merlot:MerlotServiceOfferingSaaS'">
-        <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.hardwareRequirements !== null">
-          <strong>Hardware-Anforderungen:</strong><br />
-          {{ selectedOfferingDetails.hardwareRequirements }}
-        </li>
-        <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.userCountOption !== null">
-          <strong>Optionen für Anzahl erlaubter Benutzer:</strong><br />
-          <ul>
-            <ng-container *ngFor="let auc of selectedOfferingDetails.userCountOption">
-              <li>
-                <ng-container *ngIf="auc.userCountUpTo === 0; else notUnlimitedUserCount">
-                  Unbegrenzt
-                </ng-container>
-                <ng-template #notUnlimitedUserCount>
-                  Bis zu {{ auc.userCountUpTo }} Benutzer
-                </ng-template>
-              </li>
-            </ng-container>
-            <li *ngIf="selectedOfferingDetails.userCountUnlimited">Unbegrenzt</li>
-          </ul>
-        </li>
-      </div>
-      <div *ngIf="selectedOfferingDetails.type === 'merlot:MerlotServiceOfferingDataDelivery'">
-        <li class="list-group-item" style="border: none">
-          <strong>Datenzugriffsart:</strong><br />
-          {{ selectedOfferingDetails.dataAccessType }}
-        </li>
-        <li class="list-group-item" style="border: none">
-          <strong>Datentransferart:</strong><br />
-          {{ selectedOfferingDetails.dataTransferType }}
-        </li>
-        <li class="list-group-item" style="border: none" *ngIf="selectedOfferingDetails.exchangeCountOption !== null">
-          <strong>Optionen für Anzahl erlaubter Datenaustausche:</strong><br />
-          <ul>
-            <ng-container *ngFor="let dec of selectedOfferingDetails.exchangeCountOption">
-              <li>
-                <ng-container *ngIf="dec.exchangeCountUpTo === 0; else notUnlimitedExchangeCount">
-                  Unbegrenzt
-                </ng-container>
-                <ng-template #notUnlimitedExchangeCount>
-                  Bis zu {{ dec.exchangeCountUpTo }} Datenaustausche
-                </ng-template>
-              </li>
-            </ng-container>
-            <li *ngIf="selectedOfferingDetails.exchangeCountUnlimited">Unbegrenzt</li>
-          </ul>
-        </li>
-      </div>
-      
-    </ul>
-  </c-modal-body>
-  <c-modal-footer>
-    <button cButton color="secondary" [cModalToggle]="modalViewDetails.id">Schließen</button>
-    <button type="button" class="btn btn-primary flex-item-grow" 
-    *ngIf="!selectedOfferingPublic && selectedOfferingDetails.merlotState === 'REVOKED'"
-    (click)="inDraftOffering(selectedOfferingDetails.id)"
-    >
-      Entwurf 
-    </button>
-    <button type="button" class="btn btn-primary flex-item-grow" 
-    *ngIf="!selectedOfferingPublic && (selectedOfferingDetails.merlotState === 'IN_DRAFT') || (selectedOfferingDetails.merlotState === 'REVOKED')"
-    (click)="releaseOffering(selectedOfferingDetails.id)"
-    >
-      Veröffentlichen
-    </button>
-    <button type="button" class="btn btn-primary flex-item-grow" 
-    *ngIf="!selectedOfferingPublic && selectedOfferingDetails.merlotState === 'RELEASED'"
-    (click)="revokeOffering(selectedOfferingDetails.id)"
-    >
-      Widerrufen
-    </button>
-    <button type="button" class="btn btn-primary flex-item-grow" 
-    *ngIf="!selectedOfferingPublic && (selectedOfferingDetails.merlotState === 'IN_DRAFT') || (selectedOfferingDetails.merlotState === 'REVOKED')"
-    (click)="deleteOffering(selectedOfferingDetails.id)"
-    >
-      Löschen
-    </button>
-    <button type="button" class="btn btn-primary flex-item-grow" 
-    [cModalToggle]="modalViewDetails.id"
-    *ngIf="!selectedOfferingPublic && selectedOfferingDetails.merlotState === 'DELETED'"
-    (click)="purgeOffering(selectedOfferingDetails.id)"
-    >
-      Endgültig löschen
-    </button>
-    <button type="button" class="btn btn-primary flex-item-grow" 
-    *ngIf="!selectedOfferingPublic && ((selectedOfferingDetails.merlotState === 'RELEASED') || (selectedOfferingDetails.merlotState === 'ARCHIVED') || (selectedOfferingDetails.merlotState === 'DELETED'))"
-    (click)="regenerateOffering(selectedOfferingDetails.id)"
-    >
-      Angebot neu erstellen
-    </button>
-    <button type="button" class="btn btn-primary flex-item-grow" *ngIf="authService.isLoggedIn && (selectedOfferingDetails.offeredBy !== authService.activeOrganizationRole.value.orgaData.id)" [cModalToggle]="'modalViewContract'" (click)="bookServiceOffering(selectedOfferingDetails.id)">
-      Buchen
-    </button>
-  </c-modal-footer>
+  <ng-container *ngIf="selectedOfferingDetails !== null">
+    <c-modal-header>
+      <h5 cModalTitle>Details zum Service Angebot "{{ selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'] }}"</h5>
+    </c-modal-header>
+    <c-modal-body>
+      <app-offeringdetailview [serviceOfferingData]="selectedOfferingDetails" [showVariableFields]="true"></app-offeringdetailview>
+    </c-modal-body>
+    <c-modal-footer>
+      <button cButton color="secondary" [cModalToggle]="modalViewDetails.id">Schließen</button>
+      <button type="button" class="btn btn-primary flex-item-grow" 
+      *ngIf="!selectedOfferingPublic && selectedOfferingDetails.metadata.state === 'REVOKED'"
+      (click)="inDraftOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'])"
+      >
+        Entwurf 
+      </button>
+      <button type="button" class="btn btn-primary flex-item-grow" 
+      *ngIf="!selectedOfferingPublic && (selectedOfferingDetails.metadata.state === 'IN_DRAFT') || (selectedOfferingDetails.metadata.state === 'REVOKED')"
+      (click)="releaseOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'])"
+      >
+        Veröffentlichen
+      </button>
+      <button type="button" class="btn btn-primary flex-item-grow" 
+      *ngIf="!selectedOfferingPublic && selectedOfferingDetails.metadata.state === 'RELEASED'"
+      (click)="revokeOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'])"
+      >
+        Widerrufen
+      </button>
+      <button type="button" class="btn btn-primary flex-item-grow" 
+      *ngIf="!selectedOfferingPublic && (selectedOfferingDetails.metadata.state === 'IN_DRAFT') || (selectedOfferingDetails.metadata.state === 'REVOKED')"
+      (click)="deleteOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'])"
+      >
+        Löschen
+      </button>
+      <button type="button" class="btn btn-primary flex-item-grow" 
+      [cModalToggle]="modalViewDetails.id"
+      *ngIf="!selectedOfferingPublic && selectedOfferingDetails.metadata.state === 'DELETED'"
+      (click)="purgeOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'])"
+      >
+        Endgültig löschen
+      </button>
+      <button type="button" class="btn btn-primary flex-item-grow" 
+      *ngIf="!selectedOfferingPublic && ((selectedOfferingDetails.metadata.state === 'RELEASED') || (selectedOfferingDetails.metadata.state === 'ARCHIVED') || (selectedOfferingDetails.metadata.state === 'DELETED'))"
+      (click)="regenerateOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'])"
+      >
+        Angebot neu erstellen
+      </button>
+      <button type="button" class="btn btn-primary flex-item-grow" *ngIf="authService.isLoggedIn && (selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] !== authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'])" [cModalToggle]="'modalViewContract'" (click)="bookServiceOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'])">
+        Buchen
+      </button>
+    </c-modal-footer>
+  </ng-container>
 </c-modal>
 
 <c-modal #modalEditServiceOffering id="modalEditServiceOffering" size="xl" alignment="center" (visibleChange)="handleEventEditModal($event)">
-  <c-modal-header>
-    <h5 cModalTitle>Service Angebot "{{ selectedOfferingDetails.name }}" bearbeiten</h5>
-  </c-modal-header>
-  <c-modal-body>
-    <app-dynamic-form [file]="shaclFile" [prefillData]="selectedOfferingDetails"></app-dynamic-form>
-  </c-modal-body>
-  <c-modal-footer>
-    <button cButton color="secondary" [cModalToggle]="modalEditServiceOffering.id">Schließen</button>
-  </c-modal-footer>
+    <c-modal-header>
+      <h5 cModalTitle>Service Angebot "{{ selectedOfferingDetails?.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:name']['@value'] }}" bearbeiten</h5>
+    </c-modal-header>
+    <c-modal-body>
+      <app-dynamic-form [file]="shaclFile"></app-dynamic-form>
+    </c-modal-body>
+    <c-modal-footer>
+      <button cButton color="secondary" [cModalToggle]="modalEditServiceOffering.id">Schließen</button>
+    </c-modal-footer>
 </c-modal>
 
-<app-contractview [offeringDetails]="selectedOfferingDetails" [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors"></app-contractview>
+<app-contractview [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors"></app-contractview>

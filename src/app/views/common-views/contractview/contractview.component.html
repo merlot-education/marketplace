@@ -1,0 +1,246 @@
+<c-modal #modalViewContract id="modalViewContract" size="xl" alignment="center" (visibleChange)="handleEventContractModal($event)">
+    <c-modal-header>
+      <h5 *ngIf="contractDetails" cModalTitle>Vertragskonfiguration zum Service Angebot "{{ contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['@id'] }}"</h5>
+    </c-modal-header>
+    <c-modal-body>
+      <ng-container *ngIf="contractDetails">
+        <h3>Angebots-Details</h3>
+        <app-offeringdetailview [serviceOfferingData]="contractDetails.offering" [showVariableFields]="false"></app-offeringdetailview>
+        <h3>Vertrags-Details</h3>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" style="border: none">
+            <strong>Vertrags-ID:</strong> <br />
+            {{ contractDetails.details.id }}
+          </li>
+          <li class="list-group-item" style="border: none">
+            <strong>Erstelldatum des Vertrags:</strong> <br />
+            {{ contractDetails.details.creationDate }}
+          </li>
+          <li class="list-group-item" style="border: none" *ngIf="contractDetails.details.state === 'RELEASED'">
+            <strong>Gültig bis:</strong> <br />
+            {{ contractDetails.provisioning.validUntil }}
+          </li>
+          <li class="list-group-item" style="border: none">
+            <strong>Vertrags-Status:</strong> <br />
+            {{ contractApiService.resolveFriendlyStatusName(contractDetails.details.state) }}
+          </li>
+          <li class="list-group-item" style="border: none">
+            <strong>Anbieter:</strong><br />
+            {{ contractDetails.details.providerLegalName }}
+          </li>
+          <li class="list-group-item" style="border: none">
+            <strong>Kunde:</strong><br />
+            {{ contractDetails.details.consumerLegalName }}
+          </li>
+          
+  
+          <li class="list-group-item" style="border: none">
+            <strong>Anhänge:</strong>
+            <button cButton color="primary" variant="ghost" (click)="addAttachment()" size="sm" *ngIf="userIsActiveProvider() && contractDetails.details.state === 'IN_DRAFT'">
+              <svg
+              class=""
+              cIcon
+              name="cib-addthis"
+              size="xl"
+            ></svg></button>
+            <br />
+            <ul *ngFor="let attachment of contractDetails.negotiation.attachments;let index = index;trackBy: trackByFn">
+              <li>
+                <a [href]="attachment" *ngIf="userIsActiveConsumer() || contractDetails.details.state !== 'IN_DRAFT'">{{ attachment }}</a>
+                <div *ngIf="userIsActiveProvider() && contractDetails.details.state === 'IN_DRAFT'" class="mb-3 flex-container">
+                  <input class="form-control" placeholder="Anhang" 
+                    [(ngModel)]="contractDetails.negotiation.attachments[index]">
+                    <button cButton variant="ghost" (click)="deleteAttachment(index)" color="primary" size="sm" *ngIf="contractDetails.details.state === 'IN_DRAFT'">
+                      <svg
+                      class=""
+                      cIcon
+                      name="cil-trash"
+                      size="xl"
+                    ></svg></button>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <li class="list-group-item" style="border: none">
+            <strong>Anbieter AGB:</strong><br />
+              <a [href]="contractDetails.details.providerTncUrl">{{ contractDetails.details.providerTncUrl }}</a>
+          </li>
+          <li class="list-group-item" style="border: none">
+            <strong>Laufzeit*:</strong><br />
+            <select class="form-select" [(ngModel)]="contractDetails.negotiation.runtimeSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
+              <option [value]="" *ngIf="contractDetails.negotiation.runtimeSelection === ''"></option>
+              <ng-container *ngFor="let rt of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:runtimeOption']">
+                <option [value]="rt['merlot:runtimeCount']['@value'] + ' ' + rt['merlot:runtimeMeasurement']['@value']">
+                  <ng-container *ngIf="rt['merlot:runtimeCount']['@value'] === 0 || rt['merlot:runtimeMeasurement']['@value'] === 'unlimited'; else notUnlimitedRuntime">
+                    Unbegrenzt
+                  </ng-container>
+                  <ng-template #notUnlimitedRuntime>
+                    {{ rt['merlot:runtimeCount']['@value'] }} {{ rt['merlot:runtimeMeasurement']['@value'] }}
+                  </ng-template>
+                </option>
+              </ng-container>
+            </select>
+            
+          </li>
+          <div *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['@type'] === 'merlot:MerlotServiceOfferingSaaS'">
+            <li class="list-group-item" style="border: none" *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:userCountOption'] !== null">
+              <strong>Anzahl erlaubter Benutzer*:</strong><br />
+              <select class="form-select" [(ngModel)]="contractDetails.negotiation.userCountSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
+                <option [value]="" *ngIf="contractDetails.negotiation.userCountSelection === ''"></option>
+                <ng-container *ngFor="let auc of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:userCountOption']">
+                  <option [value]="auc['merlot:userCountUpTo']['@value']">
+                    <ng-container *ngIf="auc['merlot:userCountUpTo']['@value'] === 0; else notUnlimitedUserCount">
+                      Unbegrenzt
+                    </ng-container>
+                    <ng-template #notUnlimitedUserCount>
+                      Bis zu {{ ['merlot:userCountUpTo']['@value'] }}
+                    </ng-template>
+                  </option>
+                </ng-container>
+              </select>
+            </li>
+          </div>
+          <div *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['@type'] === 'merlot:MerlotServiceOfferingDataDelivery'">
+            <li class="list-group-item" style="border: none" *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:exchangeCountOption'] !== null">
+              <strong>Anzahl erlaubter Datenaustausche*:</strong><br />
+              <select class="form-select" [(ngModel)]="contractDetails.negotiation.exchangeCountSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
+                <option [value]="" *ngIf="contractDetails.negotiation.exchangeCountSelection === ''"></option>
+                <ng-container *ngFor="let dec of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:exchangeCountOption']">
+                  <option [value]="dec['merlot:exchangeCountUpTo']['@value']">
+                    <ng-container *ngIf="dec['merlot:exchangeCountUpTo']['@value'] === 0; else notUnlimitedExchangeCount">
+                      Unbegrenzt
+                    </ng-container>
+                    <ng-template #notUnlimitedExchangeCount>
+                      Bis zu {{ dec['merlot:exchangeCountUpTo']['@value'] }}
+                    </ng-template>
+                  </option>
+                </ng-container>
+              </select>
+            </li>
+  
+            <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+              <strong>Aktiver EDC Connector*:</strong><br />
+              <select class="form-select" [(ngModel)]="contractDetails.provisioning.selectedProviderConnectorId" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
+                <option [value]="" *ngIf="contractDetails.provisioning.selectedProviderConnectorId === ''"></option>
+                <ng-container *ngFor="let connector of availableConnectors">
+                  <option [value]="connector.connectorId">{{ connector.connectorId }}</option>
+                </ng-container>
+              </select>
+            </li>
+  
+            <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+              <strong>IONOS-S3 Quell-Bucket*</strong><br />
+              <select class="form-select" [(ngModel)]="contractDetails.provisioning.dataAddressSourceBucketName" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
+                <option [value]="" *ngIf="contractDetails.provisioning.dataAddressSourceBucketName === ''"></option>
+                <ng-container *ngFor="let bucket of getConnectorBuckets(contractDetails.provisioning.selectedProviderConnectorId)">
+                  <option [value]="bucket">{{ bucket }}</option>
+                </ng-container>
+              </select>
+            </li>
+  
+            <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+              <div class="mb-3">
+                <label class="form-label"><strong>Quell-Dateipfad im IONOS-S3 Bucket*</strong></label>
+                <input class="form-control" placeholder="MyFile1.json" 
+                  [(ngModel)]="contractDetails.provisioning.dataAddressSourceFileName" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
+              </div>
+            </li>
+  
+            <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+              <strong>Typ der Datenadresse*</strong><br />
+              <select class="form-select" [(ngModel)]="contractDetails.provisioning.dataAddressType" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
+                <option [value]="" *ngIf="contractDetails.provisioning.dataAddressType === ''"></option>
+                <option [value]="'IonosS3'">IonosS3</option>
+              </select>
+            </li>
+  
+  
+            <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
+              <strong>Aktiver EDC Connector*:</strong><br />
+              <select class="form-select" [(ngModel)]="contractDetails.provisioning.selectedConsumerConnectorId" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
+                <option [value]="" *ngIf="contractDetails.provisioning.selectedConsumerConnectorId === ''"></option>
+                <ng-container *ngFor="let connector of availableConnectors">
+                  <option [value]="connector.connectorId">{{ connector.connectorId }}</option>
+                </ng-container>
+              </select>
+            </li>
+  
+            <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
+              <strong>IONOS-S3 Ziel-Bucket*</strong><br />
+              <select class="form-select" [(ngModel)]="contractDetails.provisioning.dataAddressTargetBucketName" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
+                <option [value]="" *ngIf="contractDetails.provisioning.dataAddressTargetBucketName === ''"></option>
+                <ng-container *ngFor="let bucket of getConnectorBuckets(contractDetails.provisioning.selectedConsumerConnectorId)">
+                  <option [value]="bucket">{{ bucket }}</option>
+                </ng-container>
+              </select>
+            </li>
+  
+            <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
+              <div class="mb-3">
+                <label class="form-label"><strong>Ziel-Dateipfad im IONOS-S3 Bucket*</strong></label>
+                <input class="form-control" placeholder="MyFile1.json" 
+                  [(ngModel)]="contractDetails.provisioning.dataAddressTargetFileName" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
+              </div>
+            </li>
+  
+          </div>
+          <li class="list-group-item" style="border: none">
+            <div class="mb-3">
+              <label class="form-label"><strong>Zusatzvereinbarungen</strong></label>
+              <input class="form-control" placeholder="Keine Zusatzvereinbarungen" 
+                [disabled]="userIsActiveConsumer() || contractDetails.details.state !== 'IN_DRAFT'" 
+                [(ngModel)]="contractDetails.negotiation.additionalAgreements">
+            </div>
+          </li>
+          
+  
+          <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
+            <c-form-check inline>
+              <input cFormCheckInput id="checkAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.consumerProviderTncAccepted" [disabled]="contractDetails.details.state !== 'IN_DRAFT'"/>
+              <label cFormCheckLabel for="checkAGB" style="padding-left: 10px;"><b>Anbieter AGB gelesen und akzeptiert*</b></label>
+            </c-form-check>
+          </li>
+          <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
+            <c-form-check inline>
+              <input cFormCheckInput id="checkSpecificAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.consumerOfferingTncAccepted" [disabled]="contractDetails.details.state !== 'IN_DRAFT'"/>
+              <label cFormCheckLabel for="checkSpecificAGB" style="padding-left: 10px;"><b>Service-Angebot-spezifische AGB gelesen und akzeptiert*</b></label>
+            </c-form-check>
+          </li>
+          <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
+            <c-form-check inline>
+              <input cFormCheckInput id="checkMerlotAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.consumerMerlotTncAccepted" [disabled]="contractDetails.details.state !== 'IN_DRAFT'"/>
+              <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Kunde: Merlot AGB gelesen und akzeptiert*</b></label>
+            </c-form-check>
+          </li>
+          <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+            <c-form-check inline>
+              <input cFormCheckInput id="checkMerlotAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.providerMerlotTncAccepted" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
+              <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Anbieter: Merlot AGB gelesen und akzeptiert*</b></label>
+            </c-form-check>
+          </li>
+          <strong *ngIf="showErrorMessage" style="color:red">Fehler beim Speichern der Vertragskonfiguration. ({{ errorDetails }})</strong>
+          <strong *ngIf="showSuccessMessage" style="color:green">Vertragskonfiguration gespeichert!</strong>
+          <strong *ngIf="showEdcStatusMessage" style="color:blue">{{edcStatusMessage}}</strong>
+        </ul>
+      </ng-container>
+    </c-modal-body>
+    <c-modal-footer>
+      <ng-container *ngIf="contractDetails">
+        <button cButton color="secondary" [cModalToggle]="modalViewContract.id">Schließen</button>
+        <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(saveContract, contractDetails)" *ngIf="contractDetails.details.state === 'IN_DRAFT' || (userIsActiveProvider() && contractDetails.details.state === 'SIGNED_CONSUMER')">Vertragsentwurf speichern</button>
+        <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(deleteContract, contractDetails)" *ngIf="contractDetails.details.state === 'IN_DRAFT'">Vertragsentwurf löschen</button> 
+        <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(purgeContract, contractDetails)" *ngIf="contractDetails.details.state === 'DELETED' && userIsActiveProvider()" [cModalToggle]="modalViewContract.id">Vertragsentwurf endgültig löschen</button> 
+        <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(orderContract, contractDetails)" *ngIf="contractDetails.details.state === 'IN_DRAFT' && userIsActiveConsumer()">Kostenpflichtig bestellen</button> 
+        <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(acceptOrderContract, contractDetails)" *ngIf="contractDetails.details.state === 'SIGNED_CONSUMER' && userIsActiveProvider()">Bestellung annehmen</button>
+        <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(revokeContract, contractDetails)" *ngIf="(contractDetails.details.type == 'DataDeliveryContractTemplate') && (contractDetails.details.state === 'SIGNED_CONSUMER' || contractDetails.details.state === 'RELEASED')">Vertrag widerrufen</button> 
+        <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(archiveContract, contractDetails)" *ngIf="contractDetails.details.state === 'RELEASED'">Vertrag archivieren</button>  
+        <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(regenerateContract, contractDetails)" *ngIf="contractDetails.details.state === 'ARCHIVED' || contractDetails.details.state === 'DELETED'">Vertrag neu erstellen</button> 
+        <button cButton color="primary" 
+          [disabled]="saveButtonDisabled || (serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:dataTransferType']['@value'] === 'Push' && userIsActiveConsumer()) || (serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:dataTransferType']['@value'] === 'Pull' && userIsActiveProvider())" 
+          (click)="initiateDataTransfer(contractDetails)" 
+          *ngIf="contractDetails.details.type === 'DataDeliveryContractTemplate' && contractDetails.details.state === 'RELEASED'">
+          Datentransfer starten
+        </button>
+      </ng-container>
+    </c-modal-footer>
+  </c-modal>

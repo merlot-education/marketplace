@@ -13,19 +13,19 @@
                 </li>
                 <li class="list-group-item" style="border: none">
                     <strong>Angebots-ID:</strong> <br />
-                    {{ contract.offeringId }}
+                    {{ contract.offering.selfDescription.verifiableCredential.credentialSubject['@id'] }}
                 </li>
-                <li class="list-group-item" style="border: none" *ngIf='contract.providerId !== authService.activeOrganizationRole.value.orgaData.id'>
+                <li class="list-group-item" style="border: none" *ngIf="contract.providerId !== authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']">
                   <strong>Serviceanbieter:</strong><br />
-                  {{ contract.providerId }}
+                  {{ contract.providerLegalName }}
                 </li>
-                <li class="list-group-item" style="border: none" *ngIf='contract.consumerId !== authService.activeOrganizationRole.value.orgaData.id'>
+                <li class="list-group-item" style="border: none" *ngIf="contract.consumerId !== authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']">
                     <strong>Kunde:</strong><br />
-                    {{ contract.consumerId }}
+                    {{ contract.consumerLegalName }}
                   </li>
                 <li class="list-group-item" style="border: none">
                     <strong>Servicename:</strong><br />
-                    {{ contract.offeringName }}
+                    {{ contract.offering.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:name']['@value'] }}
                 </li>
                 <li class="list-group-item" style="border: none">
                   <strong>Status:</strong><br />
@@ -49,10 +49,11 @@
     </c-col>
   </c-row>
 
-  <app-paging-footer [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE, authService.activeOrganizationRole.value.orgaData.id)"></app-paging-footer>
+  <app-paging-footer [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE, authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'])"></app-paging-footer>
 </div>
 
-<h1 *ngIf="this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.</h1>
+<h1 *ngIf="initialLoading">Verträge werden geladen...</h1>
+<h1 *ngIf="!initialLoading && this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.</h1> <!--- TODO wird geladen -->
 
 
-<app-contractview [offeringDetails]="selectedOfferingDetails" [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors" (buttonClickCallback)="buttonClicked()"></app-contractview>
+<app-contractview [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors" (buttonClickCallback)="buttonClicked()"></app-contractview>
