@@ -4,6 +4,9 @@
     </c-modal-header>
     <c-modal-body>
       <ng-container *ngIf="contractDetails">
+        <h3>Angebots-Details</h3>
+        <app-offeringdetailview [serviceOfferingData]="contractDetails.offering" [showVariableFields]="false"></app-offeringdetailview>
+        <h3>Vertrags-Details</h3>
         <ul class="list-group list-group-flush">
           <li class="list-group-item" style="border: none">
             <strong>Vertrags-ID:</strong> <br />

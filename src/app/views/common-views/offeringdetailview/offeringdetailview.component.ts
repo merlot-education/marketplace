@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IOfferings } from '../serviceofferings-data';
+import { IOfferings } from '../../serviceofferings/serviceofferings-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 
 @Component({

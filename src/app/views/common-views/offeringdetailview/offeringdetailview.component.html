@@ -16,10 +16,12 @@
       <strong>Erstelldatum:</strong><br />
       {{ serviceOfferingData.metadata.creationDate }}
     </li>
-    <li class="list-group-item" style="border: none">
-      <strong>Anbieter:</strong><br />
-      {{ serviceOfferingData.providerDetails.providerLegalName }}
-    </li>
+    <ng-container *ngIf="serviceOfferingData.providerDetails">
+      <li class="list-group-item" style="border: none">
+        <strong>Anbieter:</strong><br />
+        {{ serviceOfferingData.providerDetails.providerLegalName }}
+      </li>
+    </ng-container>
     <li class="list-group-item" style="border: none">
       <strong>Status:</strong><br />
       {{ serviceOfferingApiService.resolveFriendlyStatusName(serviceOfferingData.metadata.state) }}

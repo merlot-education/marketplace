@@ -52,13 +52,11 @@ import { IconModule } from '@coreui/icons-angular';
 
 // Components Routing
 import { ContractsRoutingModule } from './contracts-routing.module';
-import { ContractviewComponent } from './modals/contractview/contractview/contractview.component';
 import { CommonViewsModule } from '../common-views/common-views.module';
 
 @NgModule({
     declarations: [
-        ExploreComponent,
-        ContractviewComponent
+        ExploreComponent
     ],
     imports: [
         CommonModule,
@@ -91,9 +89,6 @@ import { CommonViewsModule } from '../common-views/common-views.module';
         PopoverModule,
         TableModule,
         ModalModule
-    ],
-    exports: [
-        ContractviewComponent
     ]
 })
 export class ContractsModule {}
