@@ -5,6 +5,7 @@ import { OrganizationsApiService } from 'src/app/services/organizations-api.serv
 import { ShaclFile } from '@models/shacl-file';
 import { Shape } from '@models/shape';
 import { FormfieldControlService } from '@services/form-field.service';
+import { WizardExtensionService } from 'src/app/services/wizard-extension.service';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -22,17 +23,18 @@ export class EditComponent implements OnInit {
 
   constructor(protected authService: AuthService, 
     protected organizationsApiService: OrganizationsApiService, 
-    private formFieldService: FormfieldControlService) {
+    private formFieldService: FormfieldControlService,
+    private wizardExtensionService: WizardExtensionService) {
     authService.activeOrganizationRole.subscribe(orga => {
       this.selectedOrganization = null;
       organizationsApiService.getOrgaById(orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']).then(result => {
+        this.selectShape();
         this.selectedOrganization = result;
       })
     })
   }
 
   ngOnInit(): void {
-    this.selectShape();
   }
 
 
@@ -45,6 +47,7 @@ export class EditComponent implements OnInit {
           console.log("too many shapes selected");
         }
         else {
+          this.wizardExtensionService.prefillFields(this.filteredShapes[0].fields, this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject);
           console.log("this here"+this.shaclFile);
           console.table(this.shaclFile);
           this.updateSelectedShape();
