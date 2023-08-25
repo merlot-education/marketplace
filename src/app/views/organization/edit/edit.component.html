@@ -78,20 +78,28 @@
                   [(ngModel)]="selectedOrganization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:postal-code']['@value']">
               </div>
             </li>
-
             <li class="list-group-item" style="border: none">
               <div class="mb-3">
                 <label class="form-label"><strong>Mail address:</strong></label>
                 <input class="form-control" placeholder="mymail@example.com" 
-                  [disabled]="false">
+                  [disabled]="false"
+                  [(ngModel)]="selectedOrganization.selfDescription.verifiableCredential.credentialSubject['merlot:mailAddress']['@value']">
               </div>
             </li>
-
             <li class="list-group-item" style="border: none">
               <div class="mb-3">
                 <label class="form-label"><strong>AGB Link:</strong></label>
                 <input class="form-control" placeholder="http://example.com" 
-                  [disabled]="false" >
+                  [disabled]="false"
+                  [(ngModel)]="selectedOrganization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:termsAndConditions']['gax-trust-framework:content']['@value']">
+              </div>
+            </li>
+            <li class="list-group-item" style="border: none">
+              <div class="mb-3">
+                <label class="form-label"><strong>AGB Link:</strong></label>
+                <input class="form-control" placeholder="http://example.com" 
+                  [disabled]="false"
+                  [(ngModel)]="selectedOrganization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:termsAndConditions']['gax-trust-framework:hash']['@value']">
               </div>
             </li>
             
