@@ -6,6 +6,39 @@
         <ng-container *ngIf="selectedOrganization">
           <ul class="list-group list-group-flush">
             <li class="list-group-item" style="border: none">
+              <strong>MERLOT ID:</strong> <br />
+              {{ selectedOrganization.selfDescription.verifiableCredential.credentialSubject['merlot:merlotId']['@value'] }}
+            </li>
+
+            <li class="list-group-item" style="border: none">
+              <div class="mb-3">
+                <label class="form-label"><strong>Organization Name:</strong></label>
+                <input class="form-control" placeholder="My Organization" 
+                  [disabled]="true" 
+                  [(ngModel)]="selectedOrganization.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value']">
+              </div>
+            </li>
+
+            <li class="list-group-item" style="border: none">
+              <div class="mb-3">
+                <label class="form-label"><strong>Organization Legal Name:</strong></label>
+                <input class="form-control" placeholder="My Organization Ltd." 
+                  [disabled]="true" 
+                  [(ngModel)]="selectedOrganization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value']">
+              </div>
+            </li>
+
+            <li class="list-group-item" style="border: none">
+              <div class="mb-3">
+                <label class="form-label"><strong>Local Registration Number:</strong></label>
+                <input class="form-control" placeholder="12345" 
+                  [disabled]="true" 
+                  [(ngModel)]="selectedOrganization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']['@value']">
+              </div>
+            </li>
+
+
+            <li class="list-group-item" style="border: none">
               <div class="mb-3">
                 <label class="form-label"><strong>Country Code:</strong></label>
                 <input class="form-control" placeholder="DE" 
@@ -45,17 +78,30 @@
                   [(ngModel)]="selectedOrganization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:postal-code']['@value']">
               </div>
             </li>
+
+            <li class="list-group-item" style="border: none">
+              <div class="mb-3">
+                <label class="form-label"><strong>Mail address:</strong></label>
+                <input class="form-control" placeholder="mymail@example.com" 
+                  [disabled]="false">
+              </div>
+            </li>
+
+            <li class="list-group-item" style="border: none">
+              <div class="mb-3">
+                <label class="form-label"><strong>AGB Link:</strong></label>
+                <input class="form-control" placeholder="http://example.com" 
+                  [disabled]="false" >
+              </div>
+            </li>
             
-            <li class="list-group-item" style="border: none">
-              <strong>Mail address:</strong> <br />
-            </li>
-            <li class="list-group-item" style="border: none">
-              <strong>AGB:</strong> <br />
-            </li>
           </ul>
         </ng-container>
         
       </c-card-body>
+      <c-card-footer>
+        <button cButton color="primary" (click)="saveOrganisationEdit(selectedOrganization)">Änderungen speichern</button>
+      </c-card-footer>
     </c-card>
   </c-col>
 </c-row>
