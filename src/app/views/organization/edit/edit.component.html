@@ -111,5 +111,13 @@
         <button cButton color="primary" (click)="saveOrganisationEdit(selectedOrganization)">Änderungen speichern</button>
       </c-card-footer>
     </c-card>
+    <c-card class="mb-4">
+      <c-card-header>Organisation bearbeiten</c-card-header>
+      <c-card-body>
+        <app-dynamic-form [file]="shaclFile"></app-dynamic-form>
+      </c-card-body>
+      <c-card-footer>
+      </c-card-footer>
+    </c-card>
   </c-col>
 </c-row>

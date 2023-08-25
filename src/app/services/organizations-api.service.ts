@@ -32,4 +32,8 @@ export class OrganizationsApiService {
       this.http.get(environment.organizations_api_url + "organization/" + id)
     )) as IOrganizationData;
   }
+
+  public async getMerlotParticipantShape(): Promise<any> {
+    return await lastValueFrom(this.http.get(environment.organizations_api_url + "shapes/merlotParticipant"));
+  }
 }
