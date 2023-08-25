@@ -120,7 +120,7 @@
               </button>
             </div>
 
-            <div *ngIf="i == 0" class="form-group flex-item-grow">
+            <div *ngIf="shape?.name !== 'MerlotOrganization' && i == 0" class="form-group flex-item-grow">
               <button
                 [disabled]="form.invalid || submitButtonsDisabled"
                 color="primary"
