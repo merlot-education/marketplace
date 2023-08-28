@@ -37,9 +37,9 @@ export class OrganizationsApiService {
     return await lastValueFrom(this.http.get(environment.organizations_api_url + "shapes/merlotParticipant"));
   }
 
-  public async saveOrganization(orgaSd: string) {
-    console.log(orgaSd);
+  public async saveOrganization(sdJson: string, orgaId: string) {
+    console.log(sdJson);
     const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
-    return await lastValueFrom(this.http.put(environment.organizations_api_url + "", orgaSd, {headers: headers}));
+    return await lastValueFrom(this.http.put(environment.organizations_api_url + "organization/" + orgaId, sdJson, {headers: headers}));
   }
 }

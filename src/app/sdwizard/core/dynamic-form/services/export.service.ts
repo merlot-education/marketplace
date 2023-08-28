@@ -197,7 +197,7 @@ export class ExportService {
       let jsonSd = this.convertTurtleToJsonLd(`${rdfStream}`);
       const jsonSdString = JSON.stringify(jsonSd, null, 2);
       if (jsonSd["@type"] === "merlot:MerlotOrganization") {
-        return await this.organizationsApiService.saveOrganization(jsonSdString);
+        return await this.organizationsApiService.saveOrganization(jsonSdString, jsonSd["@id"]);
       } else {
         return await this.serviceOfferingApiService.createServiceOffering(jsonSdString, jsonSd["@type"]);
       }
