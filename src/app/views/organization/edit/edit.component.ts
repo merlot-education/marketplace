@@ -47,6 +47,33 @@ export class EditComponent implements OnInit {
           console.log("too many shapes selected");
         }
         else {
+          // add a field containing the id to avoid creating a new offering
+          this.filteredShapes[0].fields.push({
+            id: 'user_prefix',
+            value: this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject["@id"],
+            key: '',
+            name: '',
+            datatype: {
+              prefix: '',
+              value: ''
+            },
+            required: false,
+            minCount: 0,
+            maxCount: 0,
+            order: 0,
+            group: '',
+            controlTypes: [],
+            in: [],
+            or: [],
+            validations: [],
+            componentType: '',
+            childrenFields: [],
+            childrenSchema: '',
+            prefix: '',
+            values: [],
+            description: '',
+            selfLoop: false
+          });
           this.wizardExtensionService.prefillFields(this.filteredShapes[0].fields, this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject);
           console.log("this here"+this.shaclFile);
           console.table(this.shaclFile);

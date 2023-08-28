@@ -281,7 +281,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
             values: [],
             description: '',
             selfLoop: false
-          })
+          });
           this.wizardExtensionService.prefillFields(this.filteredShapes[0].fields, this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject);
           console.log("this here"+this.shaclFile);
           console.table(this.shaclFile);

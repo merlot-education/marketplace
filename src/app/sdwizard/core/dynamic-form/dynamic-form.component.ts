@@ -295,7 +295,9 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
           this.submitButtonsDisabled = false;
         }
       });
-    this.patchRequiredFieldsOffering(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
+    if (this.shape?.name !== "MerlotOrganization") {
+      this.patchRequiredFieldsOffering(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
+    }
   }
 
   ngOnDestroy() {
