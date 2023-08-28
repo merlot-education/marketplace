@@ -89,9 +89,4 @@ export class EditComponent implements OnInit {
       this.shaclFile.shapes.find(x => x.name === shape.name).selected = true;
     }
   }
-
-  saveOrganisationEdit(orga: IOrganizationData) {
-    orga.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:headquarterAddress'] = orga.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress'];
-    console.log(orga);
-  }
 }
