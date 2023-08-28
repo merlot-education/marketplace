@@ -54,7 +54,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   protected hiddenFormFields = [];
 
   protected hiddenFormFieldsOffering = ["policy", "dataAccountExport", "aggregationOf", "dependsOn", "dataProtectionRegime", "keyword", "provisionType", "endpoint", "ServiceOfferingLocations"];
-  protected hiddenFormFieldsOrganization = ["description", "legalForm", "leiCode", "parentOrganization", "subOrganization"];
+  protected hiddenFormFieldsOrganization = ["description", "legalForm", "leiCode", "parentOrganization", "subOrganization", "headquarterAddress"];
 
   constructor(
     private formfieldService: FormfieldControlService,
