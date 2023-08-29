@@ -21,6 +21,10 @@
         <strong>Anbieter:</strong><br />
         {{ serviceOfferingData.providerDetails.providerLegalName }}
       </li>
+      <li class="list-group-item" style="border: none">
+        <strong>Anbieter AGB:</strong><br />
+        <a [href]="serviceOfferingData.providerDetails.providerTncContent">{{ serviceOfferingData.providerDetails.providerTncContent }}</a> (Hash: {{ serviceOfferingData.providerDetails.providerTncHash }})
+      </li>
     </ng-container>
     <li class="list-group-item" style="border: none">
       <strong>Status:</strong><br />
