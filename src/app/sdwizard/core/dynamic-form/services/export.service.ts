@@ -7,13 +7,16 @@ import {Utils} from '@shared/utils';
 import {FormfieldControlService} from './form-field.service';
 import { ServiceofferingApiService } from '../../../../services/serviceoffering-api.service';
 import {DownloadFormat} from '@shared/download-format.enum';
+import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExportService {
 
-  constructor(private formFieldService: FormfieldControlService, private serviceOfferingApiService: ServiceofferingApiService) {
+  constructor(private formFieldService: FormfieldControlService, 
+    private serviceOfferingApiService: ServiceofferingApiService,
+    private organizationsApiService: OrganizationsApiService) {
   }
 
   createRDFStream(file: ShaclFile) {
@@ -193,7 +196,12 @@ export class ExportService {
     } else if (selectedShape.downloadFormat === DownloadFormat.jsonld) {
       let jsonSd = this.convertTurtleToJsonLd(`${rdfStream}`);
       const jsonSdString = JSON.stringify(jsonSd, null, 2);
-      return await this.serviceOfferingApiService.createServiceOffering(jsonSdString, jsonSd["@type"]);
+      if (jsonSd["@type"] === "merlot:MerlotOrganization") {
+        return await this.organizationsApiService.saveOrganization(jsonSdString, jsonSd["@id"]);
+      } else {
+        return await this.serviceOfferingApiService.createServiceOffering(jsonSdString, jsonSd["@type"]);
+      }
+      
 
       //blob = new Blob([this.convertTurtleToJsonLd(`${rdfStream}`)], {type: 'application/json'});
       //fileName = selectedShape.name.concat('-instance.json');

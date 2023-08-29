@@ -47,17 +47,11 @@ export const navItems: IRoleNavData[] = [
     iconComponent: { name: 'cil-notes' },
     allowedRoles: ["visitor", "user", "principal", "admin"],
     children: [
-      // TODO readd this once needed
-      /*{
-        name: 'Meine Organisation registrieren',
-        url: '/organization/register',
-        allowedRoles: ["principal", "admin"],
-      },
       {
         name: 'Meine Organisation bearbeiten',
-        url: '/organization/edits',
+        url: '/organization/edit',
         allowedRoles: ["principal", "admin"],
-      },*/
+      },
       {
         name: 'Organisationen erkunden',
         url: '/organization/explore',

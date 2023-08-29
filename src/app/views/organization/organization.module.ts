@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ExploreComponent } from './explore/explore.component';
 
 // CoreUI Modules
@@ -54,6 +54,7 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 // Components Routing
 import { OrganizationRoutingModule } from './organization-routing.module';
 import { EditComponent } from './edit/edit.component';
+import { WizardAppModule } from "../../sdwizard/wizardapp.module";
 
 @NgModule({
   imports: [
@@ -79,12 +80,14 @@ import { EditComponent } from './edit/edit.component';
     TooltipModule,
     CarouselModule,
     FormModule,
+    FormsModule,
     ReactiveFormsModule,
     DropdownModule,
     PaginationModule,
     PopoverModule,
     TableModule,
     DocsComponentsModule,
+    WizardAppModule
   ],
   declarations: [
     ExploreComponent,

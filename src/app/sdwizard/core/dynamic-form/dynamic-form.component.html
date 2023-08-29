@@ -116,11 +116,11 @@
                 mat-raised-button
                 (click)="onSubmit(false)"
               >
-                {{ "form.save" | translate }}
+                {{ 'Änderungen speichern' }}
               </button>
             </div>
 
-            <div *ngIf="i == 0" class="form-group flex-item-grow">
+            <div *ngIf="shape?.name !== 'MerlotOrganization' && i == 0" class="form-group flex-item-grow">
               <button
                 [disabled]="form.invalid || submitButtonsDisabled"
                 color="primary"
@@ -133,8 +133,8 @@
           </div>
 
           <div *ngIf="i == 0" class="form-group">
-            <strong *ngIf="showErrorMessage" style="color:red">Fehler bei der Verarbeitung des Service Angebots. ({{ errorDetails }})</strong>
-            <strong *ngIf="showSuccessMessage" style="color:green">Service Angebot wurde erfolgreich gespeichert! <br/> 
+            <strong *ngIf="showErrorMessage" style="color:red">Fehler bei der Kommunikation mit dem GXFS-Katalog. ({{ errorDetails }})</strong>
+            <strong *ngIf="showSuccessMessage" style="color:green">Selbstbeschreibung erfolgreich gespeichert! <br/> 
               ID: {{ createdServiceOfferingId }}</strong>
           </div>
           <!--div class="all-errors"> 

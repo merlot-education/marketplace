@@ -51,8 +51,10 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   orgaSubscriptions: Subscription[] = [];
   submitButtonsDisabled = false;
 
+  protected hiddenFormFields = [];
 
-  protected hiddenFormFields = ["policy", "dataAccountExport", "aggregationOf", "dependsOn", "dataProtectionRegime", "keyword", "provisionType", "endpoint", "ServiceOfferingLocations"];
+  protected hiddenFormFieldsOffering = ["policy", "dataAccountExport", "aggregationOf", "dependsOn", "dataProtectionRegime", "keyword", "provisionType", "endpoint", "ServiceOfferingLocations"];
+  protected hiddenFormFieldsOrganization = ["description", "legalForm", "leiCode", "parentOrganization", "subOrganization", "headquarterAddress"];
 
   constructor(
     private formfieldService: FormfieldControlService,
@@ -85,6 +87,11 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   getFormFields(): void {
     this.shape = this.file?.shapes.find(shape => shape.selected);
+    if (this.shape?.name === "MerlotOrganization") {
+      this.hiddenFormFields = this.hiddenFormFieldsOrganization;
+    } else {
+      this.hiddenFormFields = this.hiddenFormFieldsOffering;
+    }
     this.reorderShapeFields();
     this.formFields = this.shape?.fields;
     this.form = this.formfieldService.toFormGroup(this.formFields);
@@ -100,10 +107,16 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       return;
     }
     console.log("shape fields", this.shape?.fields);
-
-    let beforeFieldsNames = ["name", "offeredBy", "providedBy", "creationDate"];
-    let afterFieldsNames = ["merlotTermsAndConditionsAccepted"];
-
+    let beforeFieldsNames = [];
+    let afterFieldsNames = [];
+    if (this.shape?.name === "MerlotOrganization") {
+      beforeFieldsNames = ["merlotId", "orgaName", "legalName", "mailAddress", "addressCode"];
+      afterFieldsNames = [];
+    } else {
+      beforeFieldsNames = ["name", "offeredBy", "providedBy", "creationDate"];
+      afterFieldsNames = ["merlotTermsAndConditionsAccepted"];
+    }
+    
     let shapeFieldCopy = this.shape?.fields;
     shapeFieldCopy.sort((a, b) => (a.key < b.key ? -1 : 1));
 
@@ -128,7 +141,11 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   groupFormFields(): void {
     this.groupedFormFields = Utils.groupBy(this.formFields, (formField) => formField.group);
-    this.patchRequiredFields(this.groupedFormFields);
+    if (this.shape?.name === "MerlotOrganization") {
+      this.patchRequiredFieldsOrganization(this.groupedFormFields);
+    } else {
+      this.patchRequiredFieldsOffering(this.groupedFormFields);
+    }
     this.groupsNumber = this.groupedFormFields.length;
   }
 
@@ -136,7 +153,19 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     formInput.patchValue(new Date().toLocaleString("de-DE", {timeZone: "Europe/Berlin", timeStyle: "short", dateStyle: "medium"}));
   }
 
-  private patchRequiredFields(groupedFormFields: FormField[][]) {
+  private patchRequiredFieldsOrganization(groupedFormFields: FormField[][]) {
+    let deactivatedFields = ["legalName", "orgaName", "merlotId", "registrationNumber"];
+    for (let group of groupedFormFields) {
+      for (let field of group) {
+        if (deactivatedFields.includes(field.key)) {
+          let formField = this.form.get(field.id);
+          formField.disable();
+        }
+      }
+    }
+  }
+
+  private patchRequiredFieldsOffering(groupedFormFields: FormField[][]) {
     // Automatically fill fields depending on selected Organization and time, also set required fields of gax-trust-framework that are hidden
     for (let group of groupedFormFields) {
       for (let field of group) {
@@ -278,7 +307,9 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
           this.submitButtonsDisabled = false;
         }
       });
-    this.patchRequiredFields(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
+    if (this.shape?.name !== "MerlotOrganization") {
+      this.patchRequiredFieldsOffering(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
+    }
   }
 
   ngOnDestroy() {
