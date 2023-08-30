@@ -17,6 +17,7 @@ export class ExpandedFieldsComponent implements OnInit {
   @Input() form: FormGroup = new FormGroup({});
   @Input() shapes: Shape[] = [];
   @Input() parentId: string = null;
+  @Input() hiddenFormFields: string[] = [];
   inputs: FormField[] = [];
   allformFields: FormField[];
   panelOpenState = false;
