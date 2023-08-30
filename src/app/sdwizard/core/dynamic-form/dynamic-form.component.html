@@ -97,6 +97,7 @@
               [input]="formField"
               [shapes]="file.shapes"
               [hidden]="hiddenFormFields.includes(formField.key)"
+              [hiddenFormFields]="hiddenFormFields"
             ></app-expanded-fields>
             <app-dynamic-self-loops
               *ngIf="formField.componentType == 'dynamicSelfLoop'"

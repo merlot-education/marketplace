@@ -54,7 +54,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   protected hiddenFormFields = [];
 
   protected hiddenFormFieldsOffering = ["policy", "dataAccountExport", "aggregationOf", "dependsOn", "dataProtectionRegime", "keyword", "provisionType", "endpoint", "ServiceOfferingLocations"];
-  protected hiddenFormFieldsOrganization = ["description", "legalForm", "leiCode", "parentOrganization", "subOrganization", "headquarterAddress"];
+  protected hiddenFormFieldsOrganization = ["description", "legalForm", "leiCode", "parentOrganization", "subOrganization", "headquarterAddress", "gps"];
 
   constructor(
     private formfieldService: FormfieldControlService,
@@ -280,16 +280,28 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
         didField.patchValue(result["id"]);
 
         if (publishAfterSave) {
-          this.serviceofferingApiService.releaseServiceOffering(result["id"]);
+          this.serviceofferingApiService.releaseServiceOffering(result["id"])
+          .catch((e: HttpErrorResponse) => {
+            this.showErrorMessage = true;
+            this.errorDetails = e.error.message;
+            this.submitButtonsDisabled = false;
+          })
+          .catch(e => {
+            this.showErrorMessage = true;
+            this.errorDetails = "Unbekannter Fehler.";
+            this.submitButtonsDisabled = false;
+          });
         }
       })
       .catch((e: HttpErrorResponse) => {
         this.showErrorMessage = true;
         this.errorDetails = e.error.message;
+        this.submitButtonsDisabled = false;
       })
       .catch(e => {
         this.showErrorMessage = true;
         this.errorDetails = "Unbekannter Fehler.";
+        this.submitButtonsDisabled = false;
       }).finally(() => {
         if (!publishAfterSave) {
           this.submitButtonsDisabled = false;
