@@ -1,6 +1,7 @@
 name: Quality Gateway
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
