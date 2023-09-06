@@ -2,6 +2,9 @@ name: Quality Gateway
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types:
+      - postsync_hook  
 
 jobs:
   gateway:
