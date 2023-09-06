@@ -1,7 +1,7 @@
 
 
 <c-row>
-  <c-col xs *ngFor="let organization of organizations" [sm]="4">
+  <c-col xs *ngFor="let organization of activeOrganizationsPage.value.content" [sm]="4">
     <c-card
       class="mb-4"
       [cBorder]="
@@ -79,3 +79,5 @@
     </c-card>
   </c-col>
 </c-row>
+
+<app-paging-footer [currentPage]="activeOrganizationsPage" (pageChangeEvent)="refreshOrganizations($event, ITEMS_PER_PAGE)"></app-paging-footer>

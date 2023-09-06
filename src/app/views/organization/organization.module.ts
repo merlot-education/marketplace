@@ -55,10 +55,12 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 import { OrganizationRoutingModule } from './organization-routing.module';
 import { EditComponent } from './edit/edit.component';
 import { WizardAppModule } from "../../sdwizard/wizardapp.module";
+import { CommonViewsModule } from '../common-views/common-views.module';
 
 @NgModule({
   imports: [
     CommonModule,
+    CommonViewsModule,
     OrganizationRoutingModule,
     AccordionModule,
     BadgeModule,
