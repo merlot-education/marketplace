@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 /*beforeEach(() => {
-  cy.visit('http://localhost:4200/')
+  cy.visit('/')
 })
 
 it('testuser can log in', () => {
