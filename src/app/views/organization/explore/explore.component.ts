@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ConnectorData, IOrganizationData, IPageOrganizations } from "../organization-data";
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { ISpringPage } from '../../common-views/paging-footer/page-data';
 import { BehaviorSubject } from 'rxjs';
 
 
