@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ConnectorData, IOrganizationData } from "../organization-data";
+import { ConnectorData, IOrganizationData, IPageOrganizations } from "../organization-data";
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { BehaviorSubject } from 'rxjs';
 
 
 @Component({
@@ -10,9 +11,31 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class ExploreComponent implements OnInit {
 
-  readonly ITEMS_PER_PAGE = 999;
+  readonly ITEMS_PER_PAGE = 9;
 
-  public organizations: IOrganizationData[] = [];
+  public activeOrganizationsPage: BehaviorSubject<IPageOrganizations> = new BehaviorSubject({
+    content: [],
+    empty: false,
+    first: false,
+    last: false,
+    number: 0,
+    numberOfElements: 0,
+    pageable: {
+      offset: 0,
+      pageNumber: 0,
+      pageSize: 0,
+      paged: false,
+      sort: {
+        empty: false,
+        sorted: false,
+        unsorted: false
+      },
+      unpaged: false
+    },
+    size: 0,
+    totalElements: 0,
+    totalPages: 0
+  });
 
   public connectorInfo: ConnectorData[] = [];
 
@@ -24,7 +47,7 @@ export class ExploreComponent implements OnInit {
   private updateOrgaRepresentation() {
     if (this.authService.isLoggedIn) {
       let representedOrgaIds = Object.values(this.authService.organizationRoles).map(orga => orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
-      for(let orga of this.organizations) {
+      for(let orga of this.activeOrganizationsPage.value.content) {
         if (orga.selfDescription.verifiableCredential.credentialSubject['@id'] === this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']) {
           orga.activeRepresentant = true;
           orga.passiveRepresentant = true;
@@ -44,11 +67,7 @@ export class ExploreComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.organizationsApiService.fetchOrganizations(0, this.ITEMS_PER_PAGE).then(result => {
-      this.organizations = result.content
-
-      this.updateOrgaRepresentation();
-    });
+    this.refreshOrganizations(0, this.ITEMS_PER_PAGE);
     this.authService.activeOrganizationRole.subscribe(_ => this.updateOrgaRepresentation());
   }
 
@@ -60,5 +79,12 @@ export class ExploreComponent implements OnInit {
     } else {
       return "";
     }
+  }
+
+  protected refreshOrganizations(page: number, size: number) {
+    this.organizationsApiService.fetchOrganizations(page, size).then(result => {
+      this.activeOrganizationsPage.next(result);
+      this.updateOrgaRepresentation();
+    });
   }
 }

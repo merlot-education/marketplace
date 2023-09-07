@@ -11,7 +11,7 @@ export class OrganizationsApiService {
 
   constructor(private http: HttpClient) {}
 
-  public async fetchOrganizations(page: number, size: number) {
+  public async fetchOrganizations(page: number, size: number): Promise<IPageOrganizations> {
     console.log("fetching organizations");
     // fetch data and cast it into interface
     let orgaData = (await lastValueFrom(
