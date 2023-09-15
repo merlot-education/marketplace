@@ -113,6 +113,10 @@ export class ContractviewComponent {
     return await contractApiService.regenerateContract(contractDetails.details.id);
   }
 
+  protected isDataTransferButtonVisible(contractDetails: IContract)
+  {
+    return contractDetails.type === 'DataDeliveryContractTemplate' && contractDetails.details.state === 'RELEASED';    
+  }  
   protected initiateDataTransfer(contractDetails: IContract) {
     this.saveButtonDisabled = true;
     this.showSuccessMessage = false;
