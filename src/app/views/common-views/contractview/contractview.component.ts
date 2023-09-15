@@ -115,7 +115,10 @@ export class ContractviewComponent {
 
   protected isDataTransferButtonVisible(contractDetails: IContract)
   {
-    return contractDetails.type === 'DataDeliveryContractTemplate' && contractDetails.details.state === 'RELEASED';    
+    return contractDetails.type === 'DataDeliveryContractTemplate' 
+           && contractDetails.details.state === 'RELEASED'    
+           && ((contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:dataTransferType']['@value'] === 'Pull' && this.userIsActiveConsumer()) 
+               || (contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:dataTransferType']['@value'] === 'Push' && this.userIsActiveProvider()));
   }  
   protected initiateDataTransfer(contractDetails: IContract) {
     this.saveButtonDisabled = true;
