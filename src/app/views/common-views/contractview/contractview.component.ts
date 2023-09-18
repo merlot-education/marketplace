@@ -113,12 +113,13 @@ export class ContractviewComponent {
     return await contractApiService.regenerateContract(contractDetails.details.id);
   }
 
-  protected isDataTransferButtonVisible(contractDetails: IContract)
-  {
+  protected isDataTransferDisabled(contractDetails: IContract) {
+    return (contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:dataTransferType']['@value'] === 'Push' && this.userIsActiveConsumer()) 
+           || (contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:dataTransferType']['@value'] === 'Pull' && this.userIsActiveProvider());
+  }  
+  protected isDataTransferButtonVisible(contractDetails: IContract) {
     return contractDetails.type === 'DataDeliveryContractTemplate' 
-           && contractDetails.details.state === 'RELEASED'    
-           && ((contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:dataTransferType']['@value'] === 'Pull' && this.userIsActiveConsumer()) 
-               || (contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:dataTransferType']['@value'] === 'Push' && this.userIsActiveProvider()));
+           && contractDetails.details.state === 'RELEASED';
   }  
   protected initiateDataTransfer(contractDetails: IContract) {
     this.saveButtonDisabled = true;

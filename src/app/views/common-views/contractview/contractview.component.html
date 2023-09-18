@@ -236,7 +236,7 @@
         <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(archiveContract, contractDetails)" *ngIf="contractDetails.details.state === 'RELEASED'">Vertrag archivieren</button>  
         <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(regenerateContract, contractDetails)" *ngIf="contractDetails.details.state === 'ARCHIVED' || contractDetails.details.state === 'DELETED'">Vertrag neu erstellen</button> 
         <button cButton color="primary" 
-          [disabled]="saveButtonDisabled" 
+          [disabled]="saveButtonDisabled || isDataTransferDisabled(contractDetails)" 
           (click)="initiateDataTransfer(contractDetails)" 
           *ngIf="isDataTransferButtonVisible(contractDetails)">
           Datentransfer starten
