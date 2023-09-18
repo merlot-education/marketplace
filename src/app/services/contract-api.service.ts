@@ -25,6 +25,10 @@ export class ContractApiService {
     return new HttpHeaders({'Active-Role' : this.authService.activeOrganizationRole.value.orgaRoleString });
   }
 
+  public getAvailableStatusNames() {
+    return Object.keys(this.friendlyStatusNames);
+  }
+
   public async createNewContract(offeringId: string, consumerId: string): Promise<IContract> {
     return await lastValueFrom(this.http.post(environment.contract_api_url, {
       offeringId: offeringId,

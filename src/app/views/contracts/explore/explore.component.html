@@ -1,5 +1,19 @@
 <div *ngIf="this.activePage.value.content.length !== 0">
-<c-row [xl]="3">
+  <div style="padding:10px">
+    <label for="roleSelect">Rolle: </label>
+    <select cSelect id="roleSelect">
+      <option  [value]="">-</option>
+      <option  *ngFor="let option of ['Anbieter', 'Kunde']" [value]="option">{{option}}</option>
+    </select>
+
+    <label for="statusSelect">Status: </label>
+    <select cSelect id="statusSelect">
+      <option  [value]="">-</option>
+      <option  *ngFor="let option of contractApiService.getAvailableStatusNames()" [value]="option">{{contractApiService.resolveFriendlyStatusName(option)}}</option>
+    </select>
+  </div>
+
+  <c-row [xl]="3">
     <c-col xs *ngFor="let contract of activePage.value.content">
       <c-card class="mb-4">
         <c-card-header><b>Vertrag</b>: {{ contract.id }}</c-card-header>
@@ -53,7 +67,7 @@
 </div>
 
 <h1 *ngIf="initialLoading">Verträge werden geladen...</h1>
-<h1 *ngIf="!initialLoading && this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.</h1> <!--- TODO wird geladen -->
+<h1 *ngIf="!initialLoading && this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.</h1>
 
 
 <app-contractview [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors" (buttonClickCallback)="buttonClicked()"></app-contractview>
