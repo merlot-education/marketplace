@@ -75,6 +75,18 @@ export class AuthService {
     };
   }
 
+  public getActiveOrgaId() {
+    return this.activeOrganizationRole.value.orgaData?.selfDescription.verifiableCredential.credentialSubject['@id'];
+  }
+
+  public getActiveOrgaName() {
+    return this.activeOrganizationRole.value.orgaData?.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'];
+  }
+
+  public getActiveOrgaLegalName() {
+    return this.activeOrganizationRole.value.orgaData?.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value'];
+  }
+
   public changeActiveOrgaRole(orgaRoleString: string) {
     this.activeOrganizationRole.next(this.organizationRoles[orgaRoleString]);
   }

@@ -13,7 +13,7 @@
   <c-row [xl]="3">
     <c-col xs *ngFor="let contract of activePage.value.content">
       <c-card class="mb-4">
-        <c-card-header><b>Vertrag</b>: {{ contract.id }}</c-card-header>
+        <c-card-header [style.background-color]="isActiveProvider(contract) ? '#ADD6FF' : ''"><b>Vertrag</b>: {{ contract.id }}</c-card-header> <!-- TODO load this from global scss instead -->
         <c-card-body>
           <c-row>
             <c-col>
@@ -26,11 +26,11 @@
                     <strong>Angebots-ID:</strong> <br />
                     {{ contract.offering.selfDescription.verifiableCredential.credentialSubject['@id'] }}
                 </li>
-                <li class="list-group-item" style="border: none" *ngIf="contract.providerId !== authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']">
+                <li class="list-group-item" style="border: none" *ngIf="!isActiveProvider(contract)">
                   <strong>Serviceanbieter:</strong><br />
                   {{ contract.providerLegalName }}
                 </li>
-                <li class="list-group-item" style="border: none" *ngIf="contract.consumerId !== authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']">
+                <li class="list-group-item" style="border: none" *ngIf="!isActiveConsumer(contract)">
                     <strong>Kunde:</strong><br />
                     {{ contract.consumerLegalName }}
                   </li>
@@ -60,7 +60,7 @@
     </c-col>
   </c-row>
 
-  <app-paging-footer [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE, authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'])"></app-paging-footer>
+  <app-paging-footer [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE, authService.getActiveOrgaId())"></app-paging-footer>
 </div>
 
 <h1 *ngIf="initialLoading">Verträge werden geladen...</h1>

@@ -63,19 +63,16 @@ export class ExploreComponent implements OnInit {
       this.organizationsApiService.getConnectorsOfOrganization(value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']).then(result => {
         this.orgaConnectors = result;
       });
-      this.refreshContracts(0, this.ITEMS_PER_PAGE, value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+      this.refreshContracts(0, this.ITEMS_PER_PAGE);
     }); 
   }
 
   protected filterByStatus(applyFilter: boolean, status: string) {
     if (applyFilter) { // if filter has been enabled, send the selected status to the api
-      this.refreshContracts(0, this.ITEMS_PER_PAGE, 
-        this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'], 
-        status);
+      this.refreshContracts(0, this.ITEMS_PER_PAGE);
       this.isCurrentlyFiltered = true;
     } else if (this.isCurrentlyFiltered) { // if filter has been disabled, query once without filter and ignore further changes of dropdown
-      this.refreshContracts(0, this.ITEMS_PER_PAGE, 
-        this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+      this.refreshContracts(0, this.ITEMS_PER_PAGE);
       this.isCurrentlyFiltered = false;
     }
   }
@@ -86,8 +83,10 @@ export class ExploreComponent implements OnInit {
     })
   }
 
-  protected refreshContracts(page: number, size: number, activeOrgaId: string, statusFilter: string = undefined) {
-    this.contractApiService.getOrgaContracts(page, size, activeOrgaId, statusFilter).then(result => {
+  protected refreshContracts(page: number, size: number) {
+    this.contractApiService.getOrgaContracts(page, size, 
+      this.authService.getActiveOrgaId(), 
+      this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
         this.activePage.next(result);
         this.initialLoading = false;
       });
@@ -95,8 +94,14 @@ export class ExploreComponent implements OnInit {
 
   public buttonClicked() {
     this.refreshContracts(this.activePage.value.pageable.pageNumber, 
-      this.activePage.value.pageable.pageSize,
-      this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+      this.activePage.value.pageable.pageSize);
   }
 
+  protected isActiveProvider(contract: IContractBasic): boolean {
+    return contract.providerId === this.authService.getActiveOrgaId();
+  }
+
+  protected isActiveConsumer(contract: IContractBasic): boolean {
+    return contract.consumerId === this.authService.getActiveOrgaId();
+  }
 }

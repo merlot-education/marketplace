@@ -303,7 +303,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   bookServiceOffering(offeringId: string): void {
     this.contractApiService.createNewContract(
       offeringId, 
-      this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'])
+      this.authService.getActiveOrgaId())
       .then(result => {
         console.log(result)
         this.contractTemplate = result;

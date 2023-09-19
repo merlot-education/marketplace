@@ -189,11 +189,11 @@ export class ContractviewComponent {
   }
 
   protected userIsActiveProvider(): boolean {
-    return this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'] == this.contractDetails.details.providerId;
+    return this.authService.getActiveOrgaId() == this.contractDetails.details.providerId;
   }
 
   protected userIsActiveConsumer(): boolean {
-    return this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'] == this.contractDetails.details.consumerId;
+    return this.authService.getActiveOrgaId() == this.contractDetails.details.consumerId;
   }
 
   protected addAttachment() {

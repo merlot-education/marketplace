@@ -219,7 +219,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       for (let field of group) {
         if (field.key === "offeredBy" || field.key === "providedBy" ) {
           let formField = this.form.get(field.id);
-          formField.patchValue(this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+          formField.patchValue(this.authService.getActiveOrgaId());
         }
       }
     }
