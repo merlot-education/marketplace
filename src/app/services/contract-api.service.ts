@@ -52,9 +52,12 @@ export class ContractApiService {
     return await lastValueFrom(this.http.patch(fullUrl, null, {headers: headers})) as IContract;
   }
 
-  public async getOrgaContracts(page: number, size: number, consumerId: string): Promise<IPageContracts> {
-    return await lastValueFrom(this.http.get(
-      environment.contract_api_url + "organization/" + consumerId + "?page=" + page + "&size=" + size)) as IPageContracts;
+  public async getOrgaContracts(page: number, size: number, consumerId: string, statusFilter: string = undefined): Promise<IPageContracts> {
+    let url = environment.contract_api_url + "organization/" + consumerId + "?page=" + page + "&size=" + size;
+    if (statusFilter !== undefined) {
+      url += "&status=" + statusFilter;
+    }
+    return await lastValueFrom(this.http.get(url)) as IPageContracts;
   }
 
   public async getContractDetails(contractId: string): Promise<IContract> {

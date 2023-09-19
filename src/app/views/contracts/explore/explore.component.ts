@@ -44,11 +44,18 @@ export class ExploreComponent implements OnInit {
 
   protected initialLoading: boolean = true;
 
+  protected selectedStatusFilter: string = '';
+
+  protected applyStatusFilter: boolean = false;
+
+  private isCurrentlyFiltered: boolean = false;
+
   constructor(
     protected organizationsApiService: OrganizationsApiService,
     protected authService: AuthService,
     protected contractApiService: ContractApiService
     ) {
+      this.selectedStatusFilter = this.contractApiService.getAvailableStatusNames()[0];
   }
 
   ngOnInit(): void {
@@ -60,14 +67,27 @@ export class ExploreComponent implements OnInit {
     }); 
   }
 
+  protected filterByStatus(applyFilter: boolean, status: string) {
+    if (applyFilter) { // if filter has been enabled, send the selected status to the api
+      this.refreshContracts(0, this.ITEMS_PER_PAGE, 
+        this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'], 
+        status);
+      this.isCurrentlyFiltered = true;
+    } else if (this.isCurrentlyFiltered) { // if filter has been disabled, query once without filter and ignore further changes of dropdown
+      this.refreshContracts(0, this.ITEMS_PER_PAGE, 
+        this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+      this.isCurrentlyFiltered = false;
+    }
+  }
+
   prepareEditContract(contract: IContractBasic) {
     this.contractApiService.getContractDetails(contract.id).then(result => {
       this.contractTemplate = result;
     })
   }
 
-  protected refreshContracts(page: number, size: number, activeOrgaId: string) {
-    this.contractApiService.getOrgaContracts(page, size, activeOrgaId).then(result => {
+  protected refreshContracts(page: number, size: number, activeOrgaId: string, statusFilter: string = undefined) {
+    this.contractApiService.getOrgaContracts(page, size, activeOrgaId, statusFilter).then(result => {
         this.activePage.next(result);
         this.initialLoading = false;
       });

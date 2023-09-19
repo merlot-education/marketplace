@@ -1,15 +1,12 @@
-<div *ngIf="this.activePage.value.content.length !== 0">
-  <div style="padding:10px">
-    <label for="roleSelect">Rolle: </label>
-    <select cSelect id="roleSelect">
-      <option  [value]="">-</option>
-      <option  *ngFor="let option of ['Anbieter', 'Kunde']" [value]="option">{{option}}</option>
-    </select>
+<div *ngIf="this.activePage.value.content.length !== 0 || applyStatusFilter">
 
-    <label for="statusSelect">Status: </label>
-    <select cSelect id="statusSelect">
-      <option  [value]="">-</option>
-      <option  *ngFor="let option of contractApiService.getAvailableStatusNames()" [value]="option">{{contractApiService.resolveFriendlyStatusName(option)}}</option>
+  <div style="padding:10px">
+    <c-form-check [inline]="true" switch sizing="xl">
+      <input cFormCheckInput id="filterCheck" type="checkbox" [(ngModel)]="applyStatusFilter" (change)="filterByStatus(applyStatusFilter, selectedStatusFilter)"/>
+      <label cFormCheckLabel for="filterCheck">Zeige nur Verträge mit Status: </label>
+    </c-form-check> <br/>
+    <select class="form-select" (change)="selectedStatusFilter = $event.target.value; filterByStatus(applyStatusFilter, selectedStatusFilter)">
+      <option *ngFor="let option of contractApiService.getAvailableStatusNames()" [value]="option">{{contractApiService.resolveFriendlyStatusName(option)}}</option>
     </select>
   </div>
 
