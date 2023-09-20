@@ -1,10 +1,10 @@
-name: Quality Gateway
+name: Cypress Smoke Tests
 
 on:
   workflow_dispatch:
   repository_dispatch:
     types:
-      - postsync_hook  
+      - postsync_hook
 
 jobs:
   gateway:
@@ -21,7 +21,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      
+
       - run: npm ci
 
       - name: Run full test suite
@@ -30,4 +30,4 @@ jobs:
           build: npm run build
           start: npm run qa
           config: baseUrl=https://marketplace.dev.merlot-education.eu
-      
+
