@@ -13,7 +13,7 @@
   <c-row [xl]="3">
     <c-col xs *ngFor="let contract of activePage.value.content">
       <c-card class="mb-4">
-        <c-card-header [class]="isActiveProvider(contract) ? 'background-merlot-blue' : ''"><b>Vertrag</b>: {{ contract.id }}</c-card-header> <!-- TODO load this from global scss instead -->
+        <c-card-header [class]="isActiveProvider(contract) ? 'background-merlot-blue' : ''"><b>Vertrag</b>: {{ contract.id }}</c-card-header>
         <c-card-body>
           <c-row>
             <c-col>
