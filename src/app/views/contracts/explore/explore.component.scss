@@ -1,11 +1,17 @@
 
+@import '../../../../scss/variables_light';
+
 .flex-container {
     display: flex;
     justify-content: left;
     align-items: left;
   }
   
-  .flex-item-grow {
+.flex-item-grow {
     flex-grow: 1;
     margin: 10px;
   }
+
+.background-merlot-blue {
+  background-color: $merlot-blue;
+}

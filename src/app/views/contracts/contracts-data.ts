@@ -6,7 +6,9 @@ export interface IContractBasic {
   creationDate: string,
   offering: IOfferings,
   providerLegalName: string,
+  providerId: string,
   consumerLegalName: string,
+  consumerId: string,
   state: string
 }
 

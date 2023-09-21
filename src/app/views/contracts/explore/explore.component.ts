@@ -44,11 +44,18 @@ export class ExploreComponent implements OnInit {
 
   protected initialLoading: boolean = true;
 
+  protected selectedStatusFilter: string = '';
+
+  protected applyStatusFilter: boolean = false;
+
+  private isCurrentlyFiltered: boolean = false;
+
   constructor(
     protected organizationsApiService: OrganizationsApiService,
     protected authService: AuthService,
     protected contractApiService: ContractApiService
     ) {
+      this.selectedStatusFilter = this.contractApiService.getAvailableStatusNames()[0];
   }
 
   ngOnInit(): void {
@@ -56,8 +63,18 @@ export class ExploreComponent implements OnInit {
       this.organizationsApiService.getConnectorsOfOrganization(value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']).then(result => {
         this.orgaConnectors = result;
       });
-      this.refreshContracts(0, this.ITEMS_PER_PAGE, value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+      this.refreshContracts(0, this.ITEMS_PER_PAGE);
     }); 
+  }
+
+  protected filterByStatus(applyFilter: boolean, status: string) {
+    if (applyFilter) { // if filter has been enabled, send the selected status to the api
+      this.refreshContracts(0, this.ITEMS_PER_PAGE);
+      this.isCurrentlyFiltered = true;
+    } else if (this.isCurrentlyFiltered) { // if filter has been disabled, query once without filter and ignore further changes of dropdown
+      this.refreshContracts(0, this.ITEMS_PER_PAGE);
+      this.isCurrentlyFiltered = false;
+    }
   }
 
   prepareEditContract(contract: IContractBasic) {
@@ -66,17 +83,25 @@ export class ExploreComponent implements OnInit {
     })
   }
 
-  protected refreshContracts(page: number, size: number, activeOrgaId: string) {
-    this.contractApiService.getOrgaContracts(page, size, activeOrgaId).then(result => {
+  protected refreshContracts(page: number, size: number) {
+    this.contractApiService.getOrgaContracts(page, size, 
+      this.authService.getActiveOrgaId(), 
+      this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
         this.activePage.next(result);
         this.initialLoading = false;
       });
   }
 
-  public buttonClicked() {
+  public buttonInContractViewClicked() {
     this.refreshContracts(this.activePage.value.pageable.pageNumber, 
-      this.activePage.value.pageable.pageSize,
-      this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+      this.activePage.value.pageable.pageSize);
   }
 
+  protected isActiveProvider(contract: IContractBasic): boolean {
+    return contract.providerId === this.authService.getActiveOrgaId();
+  }
+
+  protected isActiveConsumer(contract: IContractBasic): boolean {
+    return contract.consumerId === this.authService.getActiveOrgaId();
+  }
 }

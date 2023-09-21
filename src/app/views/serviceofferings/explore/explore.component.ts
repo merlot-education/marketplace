@@ -105,7 +105,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   private showingModal: boolean = false;
 
-  private isFiltered: boolean = false;
+  private isCurrentlyFiltered: boolean = false;
 
   constructor(
     protected serviceOfferingApiService : ServiceofferingApiService,
@@ -164,9 +164,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
     });
   }
 
-  private refreshOrgaOfferings(page: number, size: number) {
+  private refreshOrgaOfferings(page: number, size: number, statusFilter: string = undefined) {
     if (this.authService.isLoggedIn) {
-      this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
+      this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, statusFilter).then(result => {
       this.activeOrgaOfferingPage.next(result);
       this.initialLoading = false;
     });
@@ -176,11 +176,11 @@ export class ExploreComponent implements OnInit, OnDestroy {
   protected filterByStatus(applyFilter: boolean, status: string) {
     // either we should apply the filter and need to refresh, or we switched the filter off and should refresh just once
     if (applyFilter) {
+      this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE, status);
+      this.isCurrentlyFiltered = true;
+    } else if (this.isCurrentlyFiltered) {
       this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
-      this.isFiltered = true;
-    } else if (this.isFiltered) {
-      this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
-      this.isFiltered = false;
+      this.isCurrentlyFiltered = false;
     }
   }
 
@@ -303,7 +303,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   bookServiceOffering(offeringId: string): void {
     this.contractApiService.createNewContract(
       offeringId, 
-      this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'])
+      this.authService.getActiveOrgaId())
       .then(result => {
         console.log(result)
         this.contractTemplate = result;

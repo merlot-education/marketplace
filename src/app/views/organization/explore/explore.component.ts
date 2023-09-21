@@ -48,7 +48,7 @@ export class ExploreComponent implements OnInit {
     if (this.authService.isLoggedIn) {
       let representedOrgaIds = Object.values(this.authService.organizationRoles).map(orga => orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
       for(let orga of this.activeOrganizationsPage.value.content) {
-        if (orga.selfDescription.verifiableCredential.credentialSubject['@id'] === this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']) {
+        if (orga.selfDescription.verifiableCredential.credentialSubject['@id'] === this.authService.getActiveOrgaId()) {
           orga.activeRepresentant = true;
           orga.passiveRepresentant = true;
         } else if (representedOrgaIds.includes(orga.selfDescription.verifiableCredential.credentialSubject['@id'])) {
