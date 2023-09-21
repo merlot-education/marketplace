@@ -67,4 +67,4 @@
 <h1 *ngIf="!initialLoading && this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.</h1>
 
 
-<app-contractview [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors" (buttonClickCallback)="buttonClicked()"></app-contractview>
+<app-contractview [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors" (buttonClickCallback)="buttonInContractViewClicked()"></app-contractview>

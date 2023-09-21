@@ -92,7 +92,7 @@ export class ExploreComponent implements OnInit {
       });
   }
 
-  public buttonClicked() {
+  public buttonInContractViewClicked() {
     this.refreshContracts(this.activePage.value.pageable.pageNumber, 
       this.activePage.value.pageable.pageSize);
   }
