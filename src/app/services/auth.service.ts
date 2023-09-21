@@ -75,15 +75,15 @@ export class AuthService {
     };
   }
 
-  public getActiveOrgaId() {
+  public getActiveOrgaId() : string {
     return this.activeOrganizationRole.value.orgaData?.selfDescription.verifiableCredential.credentialSubject['@id'];
   }
 
-  public getActiveOrgaName() {
+  public getActiveOrgaName() : string {
     return this.activeOrganizationRole.value.orgaData?.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'];
   }
 
-  public getActiveOrgaLegalName() {
+  public getActiveOrgaLegalName() : string {
     return this.activeOrganizationRole.value.orgaData?.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value'];
   }
 
