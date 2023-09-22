@@ -69,16 +69,14 @@
             <strong>Laufzeit*:</strong><br />
             <select class="form-select" [(ngModel)]="contractDetails.negotiation.runtimeSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
               <option [value]="" *ngIf="contractDetails.negotiation.runtimeSelection === ''"></option>
-              <ng-container *ngFor="let rt of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:runtimeOption']">
-                <option [value]="rt['merlot:runtimeCount']['@value'] + ' ' + rt['merlot:runtimeMeasurement']['@value']">
-                  <ng-container *ngIf="rt['merlot:runtimeCount']['@value'] === 0 || rt['merlot:runtimeMeasurement']['@value'] === 'unlimited'; else notUnlimitedRuntime">
-                    Unbegrenzt
-                  </ng-container>
-                  <ng-template #notUnlimitedRuntime>
-                    {{ rt['merlot:runtimeCount']['@value'] }} {{ rt['merlot:runtimeMeasurement']['@value'] }}
-                  </ng-template>
-                </option>
-              </ng-container>
+              <option [ngValue]="rt['merlot:runtimeCount']['@value'] + ' ' + rt['merlot:runtimeMeasurement']['@value']" *ngFor="let rt of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:runtimeOption']">
+                <ng-container *ngIf="rt['merlot:runtimeCount']['@value'] === 0 || rt['merlot:runtimeMeasurement']['@value'] === 'unlimited'; else notUnlimitedRuntime">
+                  Unbegrenzt
+                </ng-container>
+                <ng-template #notUnlimitedRuntime>
+                  {{ rt['merlot:runtimeCount']['@value'] }} {{ rt['merlot:runtimeMeasurement']['@value'] }}
+                </ng-template>
+              </option>
             </select>
             
           </li>
@@ -87,16 +85,14 @@
               <strong>Anzahl erlaubter Benutzer*:</strong><br />
               <select class="form-select" [(ngModel)]="contractDetails.negotiation.userCountSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
                 <option [value]="" *ngIf="contractDetails.negotiation.userCountSelection === ''"></option>
-                <ng-container *ngFor="let auc of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:userCountOption']">
-                  <option [value]="auc['merlot:userCountUpTo']['@value']">
-                    <ng-container *ngIf="auc['merlot:userCountUpTo']['@value'] === 0; else notUnlimitedUserCount">
-                      Unbegrenzt
-                    </ng-container>
-                    <ng-template #notUnlimitedUserCount>
-                      Bis zu {{ auc['merlot:userCountUpTo']['@value'] }}
-                    </ng-template>
-                  </option>
-                </ng-container>
+                <option [ngValue]="'' + auc['merlot:userCountUpTo']['@value']" *ngFor="let auc of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:userCountOption']">
+                  <ng-container *ngIf="auc['merlot:userCountUpTo']['@value'] === 0; else notUnlimitedUserCount">
+                    Unbegrenzt
+                  </ng-container>
+                  <ng-template #notUnlimitedUserCount>
+                    Bis zu {{ auc['merlot:userCountUpTo']['@value'] }}
+                  </ng-template>
+                </option>
               </select>
             </li>
           </div>
@@ -105,16 +101,14 @@
               <strong>Anzahl erlaubter Datenaustausche*:</strong><br />
               <select class="form-select" [(ngModel)]="contractDetails.negotiation.exchangeCountSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
                 <option [value]="" *ngIf="contractDetails.negotiation.exchangeCountSelection === ''"></option>
-                <ng-container *ngFor="let dec of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:exchangeCountOption']">
-                  <option [value]="dec['merlot:exchangeCountUpTo']['@value']">
-                    <ng-container *ngIf="dec['merlot:exchangeCountUpTo']['@value'] === 0; else notUnlimitedExchangeCount">
-                      Unbegrenzt
-                    </ng-container>
-                    <ng-template #notUnlimitedExchangeCount>
-                      Bis zu {{ dec['merlot:exchangeCountUpTo']['@value'] }}
-                    </ng-template>
-                  </option>
-                </ng-container>
+                <option [ngValue]="'' + dec['merlot:exchangeCountUpTo']['@value']" *ngFor="let dec of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:exchangeCountOption']">
+                  <ng-container *ngIf="dec['merlot:exchangeCountUpTo']['@value'] === 0; else notUnlimitedExchangeCount">
+                    Unbegrenzt
+                  </ng-container>
+                  <ng-template #notUnlimitedExchangeCount>
+                    Bis zu {{ dec['merlot:exchangeCountUpTo']['@value'] }}
+                  </ng-template>
+                </option>
               </select>
             </li>
   
@@ -122,9 +116,9 @@
               <strong>Aktiver EDC Connector*:</strong><br />
               <select class="form-select" [(ngModel)]="contractDetails.provisioning.selectedProviderConnectorId" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
                 <option [value]="" *ngIf="contractDetails.provisioning.selectedProviderConnectorId === ''"></option>
-                <ng-container *ngFor="let connector of availableConnectors">
-                  <option [value]="connector.connectorId">{{ connector.connectorId }}</option>
-                </ng-container>
+                <option [value]="connector.connectorId" *ngFor="let connector of availableConnectors">
+                  {{ connector.connectorId }}
+                </option>
               </select>
             </li>
   
@@ -132,9 +126,9 @@
               <strong>IONOS-S3 Quell-Bucket*</strong><br />
               <select class="form-select" [(ngModel)]="contractDetails.provisioning.dataAddressSourceBucketName" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
                 <option [value]="" *ngIf="contractDetails.provisioning.dataAddressSourceBucketName === ''"></option>
-                <ng-container *ngFor="let bucket of getConnectorBuckets(contractDetails.provisioning.selectedProviderConnectorId)">
-                  <option [value]="bucket">{{ bucket }}</option>
-                </ng-container>
+                <option [value]="bucket" *ngFor="let bucket of getConnectorBuckets(contractDetails.provisioning.selectedProviderConnectorId)">
+                  {{ bucket }}
+                </option>
               </select>
             </li>
   
@@ -159,9 +153,9 @@
               <strong>Aktiver EDC Connector*:</strong><br />
               <select class="form-select" [(ngModel)]="contractDetails.provisioning.selectedConsumerConnectorId" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
                 <option [value]="" *ngIf="contractDetails.provisioning.selectedConsumerConnectorId === ''"></option>
-                <ng-container *ngFor="let connector of availableConnectors">
-                  <option [value]="connector.connectorId">{{ connector.connectorId }}</option>
-                </ng-container>
+                <option [value]="connector.connectorId" *ngFor="let connector of availableConnectors">
+                  {{ connector.connectorId }}
+                </option>
               </select>
             </li>
   
@@ -169,9 +163,9 @@
               <strong>IONOS-S3 Ziel-Bucket*</strong><br />
               <select class="form-select" [(ngModel)]="contractDetails.provisioning.dataAddressTargetBucketName" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
                 <option [value]="" *ngIf="contractDetails.provisioning.dataAddressTargetBucketName === ''"></option>
-                <ng-container *ngFor="let bucket of getConnectorBuckets(contractDetails.provisioning.selectedConsumerConnectorId)">
-                  <option [value]="bucket">{{ bucket }}</option>
-                </ng-container>
+                <option [value]="bucket" *ngFor="let bucket of getConnectorBuckets(contractDetails.provisioning.selectedConsumerConnectorId)">
+                  {{ bucket }}
+                </option>
               </select>
             </li>
   
