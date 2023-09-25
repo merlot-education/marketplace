@@ -26,9 +26,9 @@
       <strong>Status:</strong><br />
       {{ serviceOfferingApiService.resolveFriendlyStatusName(serviceOfferingData.metadata.state) }}
     </li>
-    <li class="list-group-item" style="border: none" *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:description']">
+    <li class="list-group-item" style="border: none" *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['dct:description']">
       <strong>Beschreibung:</strong><br />
-      {{ serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:description']['@value'] }}
+      {{ serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['dct:description']['@value'] }}
     </li>
     <li class="list-group-item" style="border: none">
       <strong>Letzte Änderung:</strong><br />
