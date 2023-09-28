@@ -57,7 +57,7 @@ export class ContractApiService {
     if (statusFilter !== undefined) {
       url += "&status=" + statusFilter;
     }
-    return await lastValueFrom(this.http.get(url)) as IPageContracts;
+    return await lastValueFrom(this.http.get(url, {headers: this.getActiveRoleHeaders()})) as IPageContracts;
   }
 
   public async getContractDetails(contractId: string): Promise<IContract> {
