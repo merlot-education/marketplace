@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IOfferings } from '../serviceofferings-data';
 import { AuthService } from 'src/app/services/auth.service';
-import { ApiService } from '@services/api.service';
 import { ShaclFile } from '@models/shacl-file';
 import { Shape } from '@models/shape';
 import { FormfieldControlService } from '@services/form-field.service';
@@ -44,6 +42,7 @@ export class EditComponent implements OnInit {
         }
       }
       this.serviceFiles=res?.Service;
+      this.serviceFiles.sort((a, b) => (serviceFileNameDict[a].name < serviceFileNameDict[b].name ? -1 : 1));
       this.select(this.serviceFiles[0]);
     });
   }
