@@ -1,0 +1,51 @@
+<style>
+    strong {
+        display: inline-block;
+        width: 180px;
+        text-align: left;
+    }
+</style>
+
+<c-row>
+    <c-col xs>
+        <c-card class="mb-4">
+            <c-card-body>
+                <img cImg height="200" cCardImg="top" src="../../../assets/img/brand/Merlot_Title.svg" />
+                <br /><br /><br /><br />
+
+                <h5 cCardTitle>Registrierung im MERLOT Portal für Organisationen</h5>
+                Um sich bei Merlot zu registrieren, laden Sie sich bitte auf der verlinkten Seite das Formular herunter
+                und füllen es aus. Auf der Seite finden Sie auch weitere Informationen zum Registrierungsprozess.
+                <a href="https://ticketsystem.dbildungscloud.de/browse/MER-35" target="_blank">Seite zum Download des
+                    Registrierungsformulars</a>
+
+                <br /><br />
+
+                <h5 cCardTitle>Federationsmitglied zur Bearbeitung der Bewerbung auswählen</h5>
+                Bitte wählen Sie einen Federator aus, mit dem Sie schon eine Geschäftsbeziehung oder einen persönlichen
+                Kontakt haben, der daher Ihre Bewerbung gut beurteilen kann. Wenn Sie noch mit keinem der Federator
+                persönlichen Kontakt hatten, wählen Sie die Option aus, dann wird sich einer der Federatoren um Ihre
+                Bewerbung kümmern.
+
+                <br />
+
+                <div style="padding:10px">
+                    <c-form-check>
+                        <input cFormCheckInput type="radio" value="Any Federator" name="flexRadioDefault"
+                            [(ngModel)]="selectedFederator" />
+                        <label cFormCheckLabel>Ich hatte noch keinen persönlichen Kontakt mit einem der Federator, daher
+                            ist es mir egal, welcher Federator meinen Antrag bearbeitet.</label>
+                    </c-form-check>
+                    <c-form-check *ngFor="let federator of sortedFederatorsList">
+                        <input cFormCheckInput type="radio" [value]="federator" name="flexRadioDefault"
+                            [(ngModel)]="selectedFederator" />
+                        <label cFormCheckLabel>{{ federator }}</label>
+                    </c-form-check>
+                </div>
+                <button cButton color="primary" [disabled]="!selectedFederator" (click)="openMailApp()">
+                    Federator bestätigen und Mailprogramm öffnen
+                </button>
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>
