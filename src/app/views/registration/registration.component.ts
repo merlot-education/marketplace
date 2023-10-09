@@ -35,7 +35,7 @@ export class RegistrationComponent {
     totalPages: 0
   });
 
-  public sortedFederatorsList: String[] = [];
+  public sortedFederatorsList: string[] = [];
 
   private federatorMap: Map<string, any> = new Map<string, any>();
 
