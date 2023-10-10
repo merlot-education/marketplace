@@ -46,7 +46,7 @@
               {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:country-name']['@value'] }}
             </li>
           </ul>
-          <table cTable *ngIf="organization.activeRepresentant">
+          <table cTable [responsive]="true" *ngIf="organization.activeRepresentant">
             <thead>
             <tr>
               <th scope="col">EDC Id</th>
@@ -56,7 +56,7 @@
             <tbody>              
             <tr *ngFor="let ci of connectorInfo">
               <td>{{ ci.connectorId }}</td>
-              <td>{{ ci.bucketNames }}</td>
+              <td>{{ ci.bucketNames.join(', ') }}</td>              
             </tr>
             </tbody>
           </table>
