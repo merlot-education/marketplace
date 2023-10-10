@@ -34,14 +34,26 @@
   <c-sidebar-header>
     <div *ngIf="authService.isLoggedIn === false; else loggedIn">
       <div style="padding: 10px" id="welcome-text">Willkommen, Besucher!</div>
-      <button
-        id="login-button"
-        cButton
-        color="primary"
-        (click)="authService.logIn()"
-      >
-        Login
-      </button>
+      <div style="padding: 10px">
+        <button
+          id="login-button"
+          cButton
+          color="primary"
+          style="margin: 10px;"
+          (click)="authService.logIn()"
+        >
+          Login
+        </button>
+        <button
+          id="register-button"
+          cButton
+          color="primary"
+          style="margin: 10px;"
+          routerLink="./registration"
+        >
+          Registrieren
+        </button>
+      </div>
     </div>
 
     <ng-template #loggedIn>
