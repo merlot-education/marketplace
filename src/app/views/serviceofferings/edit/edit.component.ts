@@ -6,6 +6,7 @@ import { FormfieldControlService } from '@services/form-field.service';
 import { ITermsAndConditions, serviceFileNameDict } from '../serviceofferings-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { WizardExtensionService } from 'src/app/services/wizard-extension.service';
+import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -26,7 +27,8 @@ export class EditComponent implements OnInit {
   constructor(private serviceofferingsApiService: ServiceofferingApiService, 
     protected authService : AuthService, 
     private formFieldService: FormfieldControlService,
-    private wizardExtensionService: WizardExtensionService) {
+    private wizardExtensionService: WizardExtensionService,
+    private organizationsApiService: OrganizationsApiService) {
   }
 
 
@@ -60,15 +62,7 @@ export class EditComponent implements OnInit {
           console.log("too many shapes selected");
         }
         else {
-          // TODO move to orga
-          let merlotTnC: ITermsAndConditions = {
-            "gax-trust-framework:content": {
-              "@value": "https://merlot-education.eu"
-            },
-            "gax-trust-framework:hash": {
-              "@value": "hash1234"
-            }
-          }
+          let merlotTnC = this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
           let providerTnC: ITermsAndConditions = this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
           this.wizardExtensionService.prefillFields(this.filteredShapes[0].fields, {
             "gax-trust-framework:termsAndConditions": [

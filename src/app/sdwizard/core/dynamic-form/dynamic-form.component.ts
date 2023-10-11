@@ -55,17 +55,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   protected hiddenFormFieldsOffering = ["policy", "dataAccountExport", "aggregationOf", "dependsOn", "dataProtectionRegime", "keyword", "provisionType", "endpoint", "ServiceOfferingLocations"];
   protected hiddenFormFieldsOrganization = ["description", "legalForm", "leiCode", "parentOrganization", "subOrganization", "headquarterAddress", "gps"];
-
-  // TODO move to orga
-  merlotTnC: ITermsAndConditions = {
-    "gax-trust-framework:content": {
-      "@value": "https://merlot-education.eu"
-    },
-    "gax-trust-framework:hash": {
-      "@value": "hash1234"
-    }
-  }
-
   
   constructor(
     private formfieldService: FormfieldControlService,
@@ -211,12 +200,13 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
             child.disable();
           }
         } else if (field.key === "termsAndConditions") {
+          let merlotTnC = this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
           let providerTnC = this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
           let formField = this.form.get(field.id) as FormGroup;
           let contentField = formField.controls[field.childrenFields.filter(cf => cf.key === "content")[0].id];
           let hashField = formField.controls[field.childrenFields.filter(cf => cf.key === "hash")[0].id];
-          if ((contentField.value === this.merlotTnC['gax-trust-framework:content']['@value'] 
-                && hashField.value === this.merlotTnC['gax-trust-framework:hash']['@value']) 
+          if ((contentField.value === merlotTnC['gax-trust-framework:content']['@value'] 
+                && hashField.value === merlotTnC['gax-trust-framework:hash']['@value']) 
               || (contentField.value === providerTnC['gax-trust-framework:content']['@value'] 
                   && hashField.value === providerTnC['gax-trust-framework:hash']['@value'])) {
               contentField.disable();
