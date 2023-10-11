@@ -198,7 +198,7 @@
               <label cFormCheckLabel for="checkAGB" style="padding-left: 10px;"><b>Allgemeine Geschäftsbedingungen des Service-Angebotes & des Merlot Marktplatzes gelesen und akzeptiert*</b></label>
             </c-form-check>
           </li>
-          <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
+          <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer() && contractDetails.negotiation.attachments.length > 0">
             <c-form-check inline>
               <input cFormCheckInput id="checkSpecificAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.consumerAttachmentsAccepted" [disabled]="contractDetails.details.state !== 'IN_DRAFT'"/>
               <label cFormCheckLabel for="checkSpecificAGB" style="padding-left: 10px;"><b>Anlagen des Vertrages gelesen und akzeptiert*</b></label>
