@@ -3,8 +3,9 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ShaclFile } from '@models/shacl-file';
 import { Shape } from '@models/shape';
 import { FormfieldControlService } from '@services/form-field.service';
-import { serviceFileNameDict } from '../serviceofferings-data';
+import { ITermsAndConditions, serviceFileNameDict } from '../serviceofferings-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
+import { WizardExtensionService } from 'src/app/services/wizard-extension.service';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -22,7 +23,10 @@ export class EditComponent implements OnInit {
 
   private ignoredServiceFiles: string[] = ["Merlot ServiceOffering.json"];
 
-  constructor(private serviceofferingsApiService: ServiceofferingApiService, protected authService : AuthService, private formFieldService: FormfieldControlService) {
+  constructor(private serviceofferingsApiService: ServiceofferingApiService, 
+    protected authService : AuthService, 
+    private formFieldService: FormfieldControlService,
+    private wizardExtensionService: WizardExtensionService) {
   }
 
 
@@ -56,6 +60,42 @@ export class EditComponent implements OnInit {
           console.log("too many shapes selected");
         }
         else {
+          // TODO move to orga
+          let merlotTnC: ITermsAndConditions = {
+            "gax-trust-framework:content": {
+              "@value": "https://merlot-education.eu"
+            },
+            "gax-trust-framework:hash": {
+              "@value": "hash1234"
+            }
+          }
+          let providerTnC: ITermsAndConditions = this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
+          this.wizardExtensionService.prefillFields(this.filteredShapes[0].fields, {
+            "gax-trust-framework:termsAndConditions": [
+              {
+                "@type": "gax-trust-framework:TermsAndConditions",
+                "gax-trust-framework:content": {
+                  "@value": merlotTnC['gax-trust-framework:content']['@value'],
+                  "@type": "xsd:anyURI"
+                },
+                "gax-trust-framework:hash": {
+                  "@value": merlotTnC['gax-trust-framework:hash']['@value'],
+                  "@type": "xsd:string"
+                }
+              },
+              {
+                "@type": "gax-trust-framework:TermsAndConditions",
+                "gax-trust-framework:content": {
+                  "@value": providerTnC['gax-trust-framework:content']['@value'],
+                  "@type": "xsd:anyURI"
+                },
+                "gax-trust-framework:hash": {
+                  "@value": providerTnC['gax-trust-framework:hash']['@value'],
+                  "@type": "xsd:string"
+                }
+              }
+            ]
+          });
           this.updateSelectedShape();
           //this.router.navigate(['/service-offerings/edit/form'], { state: { file: this.shaclFile } });
         }
@@ -69,9 +109,9 @@ export class EditComponent implements OnInit {
       let filteredShape = this.shaclFile.shapes.find(x => x.name === shape.name);
 
       // patch terms and conditions field to no longer be required since our backend will augment it with provider/merlot tnc
-      let tncField = shape?.fields.filter(f => f.key === "termsAndConditions")[0];
-      tncField.minCount = 0;
-      tncField.required = false;
+      //let tncField = shape?.fields.filter(f => f.key === "termsAndConditions")[0];
+      //tncField.minCount = 0;
+      //tncField.required = false;
 
       // select the shape
       filteredShape.selected = true;

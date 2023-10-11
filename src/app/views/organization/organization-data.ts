@@ -1,4 +1,5 @@
 import { ISpringPage } from "../common-views/paging-footer/page-data";
+import { ITermsAndConditions } from "../serviceofferings/serviceofferings-data";
 
 export interface IOrganizationData {
     metadata?: any,
@@ -12,7 +13,8 @@ export interface IOrganizationData {
           "gax-trust-framework:legalAddress": IVCardAddress,
           "gax-trust-framework:headquarterAddress": IVCardAddress,
           "merlot:orgaName": IStringTypeValue,
-          "merlot:addressCode": IStringTypeValue
+          "merlot:addressCode": IStringTypeValue,
+          "merlot:termsAndConditions": ITermsAndConditions
         }
       }
     }
