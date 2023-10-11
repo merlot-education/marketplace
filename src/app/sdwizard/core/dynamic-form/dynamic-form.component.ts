@@ -19,7 +19,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import {timer} from 'rxjs';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
-import { IOfferings } from 'src/app/views/serviceofferings/serviceofferings-data';
+import { IOfferings, ITermsAndConditions } from 'src/app/views/serviceofferings/serviceofferings-data';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -56,6 +56,17 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   protected hiddenFormFieldsOffering = ["policy", "dataAccountExport", "aggregationOf", "dependsOn", "dataProtectionRegime", "keyword", "provisionType", "endpoint", "ServiceOfferingLocations"];
   protected hiddenFormFieldsOrganization = ["description", "legalForm", "leiCode", "parentOrganization", "subOrganization", "headquarterAddress", "gps"];
 
+  // TODO move to orga
+  merlotTnC: ITermsAndConditions = {
+    "gax-trust-framework:content": {
+      "@value": "https://merlot-education.eu"
+    },
+    "gax-trust-framework:hash": {
+      "@value": "hash1234"
+    }
+  }
+
+  
   constructor(
     private formfieldService: FormfieldControlService,
     private router: Router,
@@ -199,6 +210,18 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
             child.patchValue("dummyValue");
             child.disable();
           }
+        } else if (field.key === "termsAndConditions") {
+          let providerTnC = this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
+          let formField = this.form.get(field.id) as FormGroup;
+          let contentField = formField.controls[field.childrenFields.filter(cf => cf.key === "content")[0].id];
+          let hashField = formField.controls[field.childrenFields.filter(cf => cf.key === "hash")[0].id];
+          if ((contentField.value === this.merlotTnC['gax-trust-framework:content']['@value'] 
+                && hashField.value === this.merlotTnC['gax-trust-framework:hash']['@value']) 
+              || (contentField.value === providerTnC['gax-trust-framework:content']['@value'] 
+                  && hashField.value === providerTnC['gax-trust-framework:hash']['@value'])) {
+              contentField.disable();
+              hashField.disable();
+            }
         }
       }
     }
