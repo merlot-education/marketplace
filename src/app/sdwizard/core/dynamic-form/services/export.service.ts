@@ -195,10 +195,15 @@ export class ExportService {
       //fileName = selectedShape.name.concat('-instance.ttl');
     } else if (selectedShape.downloadFormat === DownloadFormat.jsonld) {
       let jsonSd = this.convertTurtleToJsonLd(`${rdfStream}`);
-      const jsonSdString = JSON.stringify(jsonSd, null, 2);
       if (jsonSd["@type"] === "merlot:MerlotOrganization") {
+        const jsonSdString = JSON.stringify(jsonSd, null, 2);
         return await this.organizationsApiService.saveOrganization(jsonSdString, jsonSd["@id"]);
       } else {
+        // patch tnc into json-ld if it does not exist yet (i.e. user has not entered any additional tnc)
+        if (!("gax-trust-framework:termsAndConditions" in jsonSd)) {
+          jsonSd["gax-trust-framework:termsAndConditions"] = [];
+        }
+        const jsonSdString = JSON.stringify(jsonSd, null, 2);
         return await this.serviceOfferingApiService.createServiceOffering(jsonSdString, jsonSd["@type"]);
       }
       

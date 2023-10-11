@@ -56,9 +56,6 @@ export class EditComponent implements OnInit {
           console.log("too many shapes selected");
         }
         else {
-          console.log("this here"+this.shaclFile);
-          console.table(this.shaclFile);
-          //set description.input value depending on language
           this.updateSelectedShape();
           //this.router.navigate(['/service-offerings/edit/form'], { state: { file: this.shaclFile } });
         }
@@ -69,7 +66,15 @@ export class EditComponent implements OnInit {
   updateSelectedShape(): void {
     const shape = this.filteredShapes[0];
     if (shape !== undefined) {
-      this.shaclFile.shapes.find(x => x.name === shape.name).selected = true;
+      let filteredShape = this.shaclFile.shapes.find(x => x.name === shape.name);
+
+      // patch terms and conditions field to no longer be required since our backend will augment it with provider/merlot tnc
+      let tncField = shape?.fields.filter(f => f.key === "termsAndConditions")[0];
+      tncField.minCount = 0;
+      tncField.required = false;
+
+      // select the shape
+      filteredShape.selected = true;
     }
   }
 }
