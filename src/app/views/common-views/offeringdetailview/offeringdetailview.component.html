@@ -38,7 +38,7 @@
       <strong>Beispielkosten:</strong><br />
       {{ serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:exampleCosts']['@value'] }}
     </li>
-    <li class="list-group-item" style="border: none">
+    <li class="list-group-item" style="border: none"  *ngIf="showVariableFields">
       <strong>Serviceangebotspezifische Geschäftsbedingungen:</strong><br />
       <ul *ngFor="let tnc of serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:termsAndConditions']">
         <li>

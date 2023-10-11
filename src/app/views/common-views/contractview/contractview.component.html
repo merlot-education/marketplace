@@ -34,7 +34,7 @@
           </li>
           
           <li class="list-group-item" style="border: none">
-            <strong>Serviceangebotspezifische Geschäftsbedingungen:</strong>
+            <strong>Allgemeine Geschäftsbedingungen:</strong>
             <br />
             <ul *ngFor="let tnc of contractDetails.details.termsAndConditions">
               <li>
@@ -42,7 +42,7 @@
               </li>
             </ul>
           </li>
-          <li class="list-group-item" style="border: none">
+          <li class="list-group-item" style="border: none" *ngIf="(userIsActiveProvider() && contractDetails.details.state === 'IN_DRAFT') || (contractDetails.negotiation.attachments.length > 0)">
             <strong>Anhänge:</strong>
             <button cButton color="primary" variant="ghost" (click)="addAttachment()" size="sm" *ngIf="userIsActiveProvider() && contractDetails.details.state === 'IN_DRAFT'">
               <svg
@@ -68,10 +68,6 @@
                 </div>
               </li>
             </ul>
-          </li>
-          <li class="list-group-item" style="border: none">
-            <strong>Anbieter AGB:</strong><br />
-              <a [href]="contractDetails.details.providerTncUrl">{{ contractDetails.details.providerTncUrl }}</a>
           </li>
           <li class="list-group-item" style="border: none">
             <strong>Laufzeit*:</strong><br />
