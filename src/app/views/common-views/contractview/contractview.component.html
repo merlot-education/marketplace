@@ -33,7 +33,15 @@
             {{ contractDetails.details.consumerLegalName }}
           </li>
           
-  
+          <li class="list-group-item" style="border: none">
+            <strong>Serviceangebotspezifische Geschäftsbedingungen:</strong>
+            <br />
+            <ul *ngFor="let tnc of contractDetails.details.termsAndConditions">
+              <li>
+                <a [href]="tnc.content">{{ tnc.content }}</a> (Hash: {{ tnc.hash }})
+              </li>
+            </ul>
+          </li>
           <li class="list-group-item" style="border: none">
             <strong>Anhänge:</strong>
             <button cButton color="primary" variant="ghost" (click)="addAttachment()" size="sm" *ngIf="userIsActiveProvider() && contractDetails.details.state === 'IN_DRAFT'">
@@ -190,26 +198,20 @@
   
           <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
             <c-form-check inline>
-              <input cFormCheckInput id="checkAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.consumerProviderTncAccepted" [disabled]="contractDetails.details.state !== 'IN_DRAFT'"/>
-              <label cFormCheckLabel for="checkAGB" style="padding-left: 10px;"><b>Anbieter AGB gelesen und akzeptiert*</b></label>
+              <input cFormCheckInput id="checkAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.consumerTncAccepted" [disabled]="contractDetails.details.state !== 'IN_DRAFT'"/>
+              <label cFormCheckLabel for="checkAGB" style="padding-left: 10px;"><b>Allgemeine Geschäftsbedingungen des Service-Angebotes & des Merlot Marktplatzes gelesen und akzeptiert*</b></label>
             </c-form-check>
           </li>
           <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
             <c-form-check inline>
-              <input cFormCheckInput id="checkSpecificAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.consumerOfferingTncAccepted" [disabled]="contractDetails.details.state !== 'IN_DRAFT'"/>
-              <label cFormCheckLabel for="checkSpecificAGB" style="padding-left: 10px;"><b>Service-Angebot-spezifische AGB gelesen und akzeptiert*</b></label>
-            </c-form-check>
-          </li>
-          <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
-            <c-form-check inline>
-              <input cFormCheckInput id="checkMerlotAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.consumerMerlotTncAccepted" [disabled]="contractDetails.details.state !== 'IN_DRAFT'"/>
-              <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Kunde: Merlot AGB gelesen und akzeptiert*</b></label>
+              <input cFormCheckInput id="checkSpecificAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.consumerAttachmentsAccepted" [disabled]="contractDetails.details.state !== 'IN_DRAFT'"/>
+              <label cFormCheckLabel for="checkSpecificAGB" style="padding-left: 10px;"><b>Anlagen des Vertrages gelesen und akzeptiert*</b></label>
             </c-form-check>
           </li>
           <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
             <c-form-check inline>
-              <input cFormCheckInput id="checkMerlotAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.providerMerlotTncAccepted" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
-              <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Anbieter: Merlot AGB gelesen und akzeptiert*</b></label>
+              <input cFormCheckInput id="checkMerlotAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.providerTncAccepted" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
+              <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Allgemeine Geschäftsbedingungen des Service-Angebotes & des Merlot Marktplatzes gelesen und akzeptiert*</b></label>
             </c-form-check>
           </li>
           <strong *ngIf="showErrorMessage" style="color:red">Fehler beim Speichern der Vertragskonfiguration. ({{ errorDetails }})</strong>
