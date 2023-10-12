@@ -60,6 +60,10 @@ export class WizardExtensionService {
   }
 
   processFormArray(formArray: DynamicFormArrayComponent, prefillFields: any) {
+    if (formArray === undefined || prefillFields === undefined) {
+      return;
+    }
+
     let parentKey = formArray.input.prefix + ":" + formArray.input.key;
     if (!Object.keys(prefillFields).includes(parentKey)) {
       return;
@@ -84,6 +88,10 @@ export class WizardExtensionService {
   }
 
   processFormInput(formInput: DynamicFormInputComponent, prefillFields: any) {
+    if (formInput === undefined || prefillFields === undefined) {
+      return;
+    }
+
     let fullKey = formInput.input.prefix + ":" + formInput.input.key;
 
     if (["gax-core:offeredBy", "gax-trust-framework:providedBy"].includes(fullKey)) {
@@ -112,6 +120,10 @@ export class WizardExtensionService {
   }
 
   processExpandedField(expandedField: ExpandedFieldsComponent, prefillFields: any) {
+    if (expandedField === undefined || prefillFields === undefined) {
+      return;
+    }
+
     let parentKey = expandedField.input.prefix + ":" + expandedField.input.key;
     if (!Object.keys(prefillFields).includes(parentKey)) {
       return;
@@ -144,37 +156,18 @@ export class WizardExtensionService {
 
   processExpandedFieldChildrenFields(expandedField: ExpandedFieldsComponent, prefillFields: any) {
     let parentKey = expandedField.input.prefix + ":" + expandedField.input.key;
+
+    // since we are always working with a list of inputs, we need to adapt to that in the prefill as well (even if it is just one element)
+    if (!(prefillFields[parentKey] instanceof Array)) {
+      prefillFields[parentKey] = [prefillFields[parentKey]];
+    }
+
     let i = 0;
     for (let input of expandedField.inputs) {
-      
       for (let cf of input.childrenFields) {
-        let cfFormInput = expandedField.formInputViewChildren.find(f => f.input.id === cf.id);
-        if (cfFormInput !== undefined) {
-          if (prefillFields[parentKey] instanceof Array) {
-            this.processFormInput(cfFormInput, prefillFields[parentKey][i]);
-          } else {
-            this.processFormInput(cfFormInput, prefillFields[parentKey]);
-          }
-          continue;
-        }
-        let cfExpandedField = expandedField.expandedFieldsViewChildren.find(f => f.input.id === cf.id);
-        if (cfExpandedField !== undefined) {
-          if (prefillFields[parentKey] instanceof Array) {
-            this.processExpandedField(cfExpandedField, prefillFields[parentKey][i]);
-          } else {
-            this.processExpandedField(cfExpandedField, prefillFields[parentKey]);
-          }
-          continue;
-        }
-
-        let cfFormArray = expandedField.formArrayViewChildren.find(f => f.input.id === cf.id);
-        if (cfExpandedField !== undefined) {
-          if (prefillFields[parentKey] instanceof Array) {
-            this.processFormArray(cfFormArray, prefillFields[parentKey][i]);
-          } else {
-            this.processFormArray(cfFormArray, prefillFields[parentKey]);
-          }
-        }
+        this.processFormInput(expandedField.formInputViewChildren.find(f => f.input.id === cf.id), prefillFields[parentKey][i]);
+        this.processExpandedField(expandedField.expandedFieldsViewChildren.find(f => f.input.id === cf.id), prefillFields[parentKey][i]);
+        this.processFormArray(expandedField.formArrayViewChildren.find(f => f.input.id === cf.id), prefillFields[parentKey][i]);
       }
       i += 1;
     }
