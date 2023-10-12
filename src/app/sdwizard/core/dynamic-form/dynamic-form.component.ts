@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, OnDestroy, HostListener} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, HostListener, ViewChildren, QueryList, AfterViewInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FormField} from '@models/form-field.model';
 import {FormfieldControlService} from '@services/form-field.service';
@@ -21,6 +21,13 @@ import {timer} from 'rxjs';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { IOfferings, ITermsAndConditions } from 'src/app/views/serviceofferings/serviceofferings-data';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DynamicFormInputComponent } from '@components/dynamic-form-input/dynamic-form-input.component';
+import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynamic-form-array.component';
+import { DynamicFormOrComponent } from '@components/dynamic-form-or/dynamic-form-or.component';
+import { DynamicFormOrArrayComponent } from '@components/dynamic-form-or-array/dynamic-form-or-array.component';
+import { ExpandedFieldsComponent } from '@components/expanded-fields/expanded-fields.component';
+import { DynamicSelfLoopsComponent } from '@components/dynamic-self-loops/dynamic-self-loops.component';
+import { createNoSubstitutionTemplateLiteral } from 'typescript/lib/tsserverlibrary';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -50,6 +57,13 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   createDateTimer: NodeJS.Timer = undefined;
   orgaSubscriptions: Subscription[] = [];
   submitButtonsDisabled = false;
+
+  @ViewChildren('formInput') formInputViewChildren: QueryList<DynamicFormInputComponent>; 
+  @ViewChildren('formArray') formArrayViewChildren: QueryList<DynamicFormArrayComponent>; 
+  @ViewChildren('formOr') formOrViewChildren: QueryList<DynamicFormOrComponent>; 
+  @ViewChildren('formOrArray') formOrArrayViewChildren: QueryList<DynamicFormOrArrayComponent>; 
+  @ViewChildren('expandedFields') expandedFieldsViewChildren: QueryList<ExpandedFieldsComponent>; 
+  @ViewChildren('selfLoops') selfLoopsViewChildren: QueryList<DynamicSelfLoopsComponent>; 
 
   protected hiddenFormFields = [];
 

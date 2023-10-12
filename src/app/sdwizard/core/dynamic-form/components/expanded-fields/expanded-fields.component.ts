@@ -1,9 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {Utils} from '@shared/utils';
 import {FormField} from '@models/form-field.model';
 import {FormfieldControlService} from '@services/form-field.service';
 import {Shape} from '@models/shape';
+import { DynamicFormInputComponent } from '@components/dynamic-form-input/dynamic-form-input.component';
+import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynamic-form-array.component';
+import { DynamicFormOrComponent } from '@components/dynamic-form-or/dynamic-form-or.component';
+import { DynamicFormOrArrayComponent } from '@components/dynamic-form-or-array/dynamic-form-or-array.component';
+import { DynamicSelfLoopsComponent } from '@components/dynamic-self-loops/dynamic-self-loops.component';
 
 @Component({
   selector: 'app-expanded-fields',
@@ -27,6 +32,13 @@ export class ExpandedFieldsComponent implements OnInit {
   nestedFormGroup: FormGroup = new FormGroup({});
   enableButton = true;
   displayAddButton = true;
+
+  @ViewChildren('formInput') formInputViewChildren: QueryList<DynamicFormInputComponent>; 
+  @ViewChildren('formArray') formArrayViewChildren: QueryList<DynamicFormArrayComponent>; 
+  @ViewChildren('formOr') formOrViewChildren: QueryList<DynamicFormOrComponent>; 
+  @ViewChildren('formOrArray') formOrArrayViewChildren: QueryList<DynamicFormOrArrayComponent>; 
+  @ViewChildren('expandedFields') expandedFieldsViewChildren: QueryList<ExpandedFieldsComponent>; 
+  @ViewChildren('selfLoops') selfLoopsViewChildren: QueryList<DynamicSelfLoopsComponent>; 
 
   constructor(private formFieldService: FormfieldControlService) {
   }

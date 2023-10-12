@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {IBasicOffering, IOfferings, IPageBasicOfferings, IPageOfferings} from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { WizardExtensionService } from '../../../services/wizard-extension.service'
@@ -14,15 +14,19 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { IContract } from '../../contracts/contracts-data';
 import { ConnectorData } from '../../organization/organization-data';
 import { FormField } from '@models/form-field.model';
+import { ExpandedFieldsComponent } from '@components/expanded-fields/expanded-fields.component';
+import { FormControl, FormGroup } from '@angular/forms';
+import { DynamicFormInputComponent } from '@components/dynamic-form-input/dynamic-form-input.component';
+import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynamic-form-array.component';
+import { throws } from 'assert';
 
 
 @Component({
   templateUrl: './explore.component.html',
   styleUrls: ['./explore.component.scss']
 })
-export class ExploreComponent implements OnInit, OnDestroy {
-
-  @ViewChild(DynamicFormComponent, {static: false}) childRef: DynamicFormComponent;
+export class ExploreComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild("wizard") private wizard: DynamicFormComponent;
 
   readonly ITEMS_PER_PAGE = 9;
 
@@ -135,7 +139,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   protected handleEventEditModal(modalVisible: boolean) {
     this.showingModal = modalVisible;
     if (this.editModalPreviouslyVisible && !modalVisible) {
-      this.childRef.ngOnDestroy();
+      this.wizard.ngOnDestroy();
       this.refreshOfferings();
     }
     this.editModalPreviouslyVisible = modalVisible;
@@ -246,6 +250,137 @@ export class ExploreComponent implements OnInit, OnDestroy {
     
   }
 
+  ngAfterViewInit(): void {
+    this.wizard.expandedFieldsViewChildren.changes.subscribe(_ => {
+      for (let expandedField of this.wizard.expandedFieldsViewChildren) {
+        this.processExpandedField(expandedField, this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject);
+        console.log("update");
+      }
+    });
+
+    this.wizard.formInputViewChildren.changes.subscribe(_ => {
+      for (let formInput of this.wizard.formInputViewChildren) {
+        this.processFormInput(formInput, this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject);
+        console.log("update");
+      }
+    });
+
+    this.wizard.formArrayViewChildren.changes.subscribe(_ => {
+      for (let formArray of this.wizard.formArrayViewChildren) {
+        this.processFormArray(formArray, this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject);
+        console.log("update");
+      }
+    });
+  }
+
+  processFormArray(formArray: DynamicFormArrayComponent, prefillFields: any) {
+    let parentKey = formArray.input.prefix + ":" + formArray.input.key;
+    if (!Object.keys(prefillFields).includes(parentKey)) {
+      return;
+    }
+    // create more inputs for each prefill field after the first one
+    for (let i = formArray.input.minCount; i < prefillFields[parentKey].length; i++) {
+      formArray.addInput();
+    }
+
+    let i = 0;
+    for (let control of formArray.inputs.controls) {
+      control.patchValue(this.unpackValueFromField(prefillFields[parentKey][i]));
+      i += 1;
+    }
+  }
+
+  processFormInput(formInput: DynamicFormInputComponent, prefillFields: any) {
+    let fullKey = formInput.input.prefix + ":" + formInput.input.key;
+    if (!Object.keys(prefillFields).includes(fullKey)) {
+      return;
+    }
+
+    formInput.form.controls[formInput.input.id].patchValue(this.unpackValueFromField(prefillFields[fullKey]))
+  }
+
+  processExpandedField(expandedField: ExpandedFieldsComponent, prefillFields: any) {
+    let parentKey = expandedField.input.prefix + ":" + expandedField.input.key;
+    if (!Object.keys(prefillFields).includes(parentKey)) {
+      return;
+    }
+    // create more inputs for each prefill field after the first one
+    for (let i = expandedField.input.minCount; i < prefillFields[parentKey].length; i++) {
+      expandedField.addInput();
+    }
+
+    // if we created new inputs, wait for changes
+    if (prefillFields[parentKey].length > expandedField.input.minCount) {
+      let formInputSub = expandedField.formInputViewChildren.changes.subscribe(_ => {
+        this.processExpandedFieldChildrenFields(expandedField, prefillFields);
+        console.log("update");
+        formInputSub.unsubscribe();
+      });
+      let expandedFieldSub = expandedField.formArrayViewChildren.changes.subscribe(_ => {
+        this.processExpandedFieldChildrenFields(expandedField, prefillFields);
+        console.log("update");
+        expandedFieldSub.unsubscribe();
+      });
+      let formArraySub = expandedField.formArrayViewChildren.changes.subscribe(_ => {
+        this.processExpandedFieldChildrenFields(expandedField, prefillFields);
+        console.log("update");
+        formArraySub.unsubscribe();
+      });
+    } else { //otherwise just start immediately
+      this.processExpandedFieldChildrenFields(expandedField, prefillFields);
+    }
+  }
+
+  processExpandedFieldChildrenFields(expandedField: ExpandedFieldsComponent, prefillFields: any) {
+    let parentKey = expandedField.input.prefix + ":" + expandedField.input.key;
+    let i = 0;
+    for (let input of expandedField.inputs) {
+      
+      for (let cf of input.childrenFields) {
+        console.log("looking for", cf.id);
+        let cfFormInput = expandedField.formInputViewChildren.find(f => f.input.id === cf.id);
+        if (cfFormInput !== undefined) {
+          console.log("found", cfFormInput.input.id);
+          this.processFormInput(cfFormInput, prefillFields[parentKey][i]);
+          continue;
+        }
+        let cfExpandedField = expandedField.expandedFieldsViewChildren.find(f => f.input.id === cf.id);
+        if (cfExpandedField !== undefined) {
+          this.processExpandedField(cfExpandedField, prefillFields[parentKey][i]);
+          continue;
+        }
+
+        let cfFormArray = expandedField.formArrayViewChildren.find(f => f.input.id === cf.id);
+        if (cfExpandedField !== undefined) {
+          this.processFormArray(cfFormArray, prefillFields[parentKey][i]);
+          continue;
+        }
+      }
+      i += 1;
+    }
+  }
+
+
+  private unpackValueFromField(field) {
+    if (field instanceof Array) {
+      let unpackedArray = []
+      for (let f of field) {
+        unpackedArray.push(this.unpackValueFromField(f));
+      }
+      return unpackedArray;
+    } else if (!(field instanceof Object)) {
+      return field;
+    } else if ("@value" in field) {
+      // patch 0 fields to be actually filled since they are regarded as null...
+      if (field["@value"] === 0) {
+        return "0";
+      }
+      return field["@value"]
+    } else if ("@id" in field) {
+      return field["@id"]
+    }
+  }
+
   select(name: string): void {
     this.serviceOfferingApiService.fetchShape(name).then(
       res => {
@@ -255,6 +390,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
           console.log("too many shapes selected");
         }
         else {
+          
+          console.log("this here"+this.shaclFile);
+          console.table(this.shaclFile);
           // add a field containing the id to avoid creating a new offering
           this.filteredShapes[0].fields.push({
             id: 'user_prefix',
@@ -282,9 +420,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
             description: '',
             selfLoop: false
           });
-          this.wizardExtensionService.prefillFields(this.filteredShapes[0].fields, this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject);
-          console.log("this here"+this.shaclFile);
-          console.table(this.shaclFile);
           //set description.input value depending on language
           this.updateSelectedShape();
           //this.router.navigate(['/service-offerings/edit/form'], { state: { file: this.shaclFile } });

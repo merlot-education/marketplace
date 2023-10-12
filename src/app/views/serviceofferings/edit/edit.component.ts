@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { ShaclFile } from '@models/shacl-file';
 import { Shape } from '@models/shape';
@@ -7,12 +7,13 @@ import { ITermsAndConditions, serviceFileNameDict } from '../serviceofferings-da
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { WizardExtensionService } from 'src/app/services/wizard-extension.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
+import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
 
 @Component({
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent implements OnInit {
+export class EditComponent implements OnInit, AfterViewInit {
 
   serviceFileNameDict = serviceFileNameDict;
 
@@ -22,6 +23,8 @@ export class EditComponent implements OnInit {
   filteredShapes: Shape[];
   file: ShaclFile = new ShaclFile();
 
+  @ViewChild("wizard") private wizard: DynamicFormComponent;
+
   private ignoredServiceFiles: string[] = ["Merlot ServiceOffering.json"];
 
   constructor(private serviceofferingsApiService: ServiceofferingApiService, 
@@ -29,6 +32,13 @@ export class EditComponent implements OnInit {
     private formFieldService: FormfieldControlService,
     private wizardExtensionService: WizardExtensionService,
     private organizationsApiService: OrganizationsApiService) {
+  }
+  
+  ngAfterViewInit(): void {
+    this.wizard.expandedFieldsViewChildren.changes.subscribe(_ => {
+      console.log(this.wizard.formInputViewChildren.first);
+      console.log(this.wizard.expandedFieldsViewChildren.first);
+    });
   }
 
 
