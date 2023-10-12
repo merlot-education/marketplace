@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IOrganizationData } from "../organization-data";
 import { AuthService } from 'src/app/services/auth.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
@@ -8,7 +8,6 @@ import { FormfieldControlService } from '@services/form-field.service';
 import { WizardExtensionService } from 'src/app/services/wizard-extension.service';
 
 import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
-import { BehaviorSubject } from 'rxjs';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -19,8 +18,6 @@ export class EditComponent implements OnInit {
   protected selectedOrganization: IOrganizationData = undefined;
 
   @ViewChild("wizard") private wizard: DynamicFormComponent;
-
-  // TODO after an update, also update the organization in the auth service
 
   serviceFiles: string[];
   ecoSystem: string= "merlot";// pass this to getFiles Api

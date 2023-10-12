@@ -174,7 +174,6 @@ export class WizardExtensionService {
           } else {
             this.processFormArray(cfFormArray, prefillFields[parentKey]);
           }
-          continue;
         }
       }
       i += 1;

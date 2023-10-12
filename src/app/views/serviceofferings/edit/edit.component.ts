@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { ShaclFile } from '@models/shacl-file';
 import { Shape } from '@models/shape';
@@ -74,7 +74,6 @@ export class EditComponent implements OnInit, AfterViewInit {
         else {
           this.updateSelectedShape();
           this.patchWizardTnC();
-          //this.router.navigate(['/service-offerings/edit/form'], { state: { file: this.shaclFile } });
         }
       }
     );

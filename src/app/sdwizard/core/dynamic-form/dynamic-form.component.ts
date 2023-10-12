@@ -198,6 +198,10 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
         let didField = this.form.get("user_prefix");
         didField.patchValue(result["id"]);
 
+        if (this.shape?.name === "MerlotOrganization") {
+          this.authService.refreshActiveRoleOrgaData();
+        }
+
         if (publishAfterSave) {
           this.serviceofferingApiService.releaseServiceOffering(result["id"])
           .catch((e: HttpErrorResponse) => {

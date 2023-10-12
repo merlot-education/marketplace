@@ -55,6 +55,14 @@ export class AuthService {
     });
   }
 
+  public refreshActiveRoleOrgaData() {
+    this.organizationApiService.getOrgaById(this.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']).then(result => {
+      this.organizationRoles[this.activeOrganizationRole.value.orgaRoleString].orgaData = result;
+      this.changeActiveOrgaRole(this.activeOrganizationRole.value.orgaRoleString);
+    })
+    
+  }
+
   logOut() {
     this.keycloakService.logout(window.location.origin);
   }
