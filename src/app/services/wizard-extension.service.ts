@@ -94,10 +94,11 @@ export class WizardExtensionService {
       formInput.form.controls[formInput.input.id].disable();
       return;
     } else if (fullKey === "merlot:creationDate") {
-      this.updateDateField(formInput.form.controls[formInput.input.id] as FormControl); // initial update
-      this.createDateTimer = setInterval(() => this.updateDateField(formInput.form.controls[formInput.input.id] as FormControl), 1000); // set timer to refresh date field
+      if (!Object.keys(prefillFields).includes(fullKey)) {
+        this.updateDateField(formInput.form.controls[formInput.input.id] as FormControl); // initial update
+        this.createDateTimer = setInterval(() => this.updateDateField(formInput.form.controls[formInput.input.id] as FormControl), 1000); // set timer to refresh date field
+      }
       formInput.form.controls[formInput.input.id].disable();
-      return;
     }
 
     if (!Object.keys(prefillFields).includes(fullKey)) {

@@ -106,51 +106,12 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     } else {
       this.hiddenFormFields = this.hiddenFormFieldsOffering;
     }
-    this.reorderShapeFields();
     this.formFields = this.shape?.fields;
     this.form = this.formfieldService.toFormGroup(this.formFields);
     this.form.addControl('user_prefix', new FormControl());
     this.form.addControl('download_format', new FormControl(DownloadFormat.jsonld));
 
     this.groupFormFields();
-  }
-
-  reorderShapeFields(): void {
-    // TODO set order in SHACL instead
-    if (this.shape?.fields === undefined) {
-      return;
-    }
-    console.log("shape fields", this.shape?.fields);
-    let beforeFieldsNames = [];
-    let afterFieldsNames = [];
-    if (this.shape?.name === "MerlotOrganization") {
-      beforeFieldsNames = ["merlotId", "orgaName", "legalName", "mailAddress", "addressCode"];
-      afterFieldsNames = [];
-    } else {
-      beforeFieldsNames = ["name", "offeredBy", "providedBy", "creationDate"];
-      afterFieldsNames = ["merlotTermsAndConditionsAccepted"];
-    }
-    
-    let shapeFieldCopy = this.shape?.fields;
-    shapeFieldCopy.sort((a, b) => (a.key < b.key ? -1 : 1));
-
-    let beforeFields = [];
-    let afterFields = [];
-
-    for (let i = 0; i < shapeFieldCopy.length;) {
-      let f = shapeFieldCopy[i];
-      if (beforeFieldsNames.includes(f.key)) {
-        beforeFields.splice(beforeFields.indexOf(f.key), 0, f);
-        shapeFieldCopy.splice(i, 1);
-      } else if (afterFieldsNames.includes(f.key)) {
-        afterFields.splice(afterFields.indexOf(f.key), 0, f);
-        shapeFieldCopy.splice(i, 1);
-      } else {
-        i++;
-      }
-    }
-
-    this.shape.fields = beforeFields.concat(shapeFieldCopy.concat(afterFields));
   }
 
   groupFormFields(): void {
@@ -220,7 +181,8 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       charactersLength));
    }
    return result;
-}
+  }
+
   onSubmit(publishAfterSave: boolean): void {
     this.submitButtonsDisabled = true;
     this.showSuccessMessage = false;
