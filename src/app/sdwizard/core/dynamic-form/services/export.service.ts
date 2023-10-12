@@ -195,11 +195,10 @@ export class ExportService {
       //fileName = selectedShape.name.concat('-instance.ttl');
     } else if (selectedShape.downloadFormat === DownloadFormat.jsonld) {
       let jsonSd = this.convertTurtleToJsonLd(`${rdfStream}`);
+      const jsonSdString = JSON.stringify(jsonSd, null, 2);
       if (jsonSd["@type"] === "merlot:MerlotOrganization") {
-        const jsonSdString = JSON.stringify(jsonSd, null, 2);
         return await this.organizationsApiService.saveOrganization(jsonSdString, jsonSd["@id"]);
       } else {
-        const jsonSdString = JSON.stringify(jsonSd, null, 2);
         return await this.serviceOfferingApiService.createServiceOffering(jsonSdString, jsonSd["@type"]);
       }
       
