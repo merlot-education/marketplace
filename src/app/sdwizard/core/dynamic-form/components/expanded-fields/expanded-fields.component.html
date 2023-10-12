@@ -18,10 +18,10 @@
     </div>
     <mat-accordion *ngFor="let nestedShapeForm of formGroups; let i = index">
       <div class="flex-container">
-      <mat-expansion-panel (closed)="panelOpenState = false" (opened)="panelOpenState = true" class="flex-item-grow">
+      <mat-expansion-panel (closed)="panelOpenState = false" (opened)="panelOpenState = true" class="flex-item-grow" [expanded]="input.required && (i < input.minCount)">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            {{inputs[i].name}}<span *ngIf="input.required && i == 0" aria-required="true"
+            {{inputs[i].name}}<span *ngIf="input.required && (i < input.minCount)" aria-required="true"
                                                                     class="required"> * </span>
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -31,18 +31,18 @@
           </mat-error>
           <div *ngFor="let child of inputs[i].childrenFields">
             <app-dynamic-form-input *ngIf="child.componentType == 'dynamicFormInput'" [form]="nestedShapeForm"
-                                    [input]="child" [shapes]="shapes" [hidden]="hiddenFormFields.includes(child.key)"></app-dynamic-form-input>
+                                    [input]="child" [shapes]="shapes" [hidden]="hiddenFormFields.includes(child.key)" #formInput></app-dynamic-form-input>
             <app-dynamic-form-array *ngIf="child.componentType == 'dynamicFormArray'" [form]="nestedShapeForm"
-                                    [input]="child" [shapes]="shapes" [hidden]="hiddenFormFields.includes(child.key)"></app-dynamic-form-array>
+                                    [input]="child" [shapes]="shapes" [hidden]="hiddenFormFields.includes(child.key)" #formArray></app-dynamic-form-array>
             <app-dynamic-form-or *ngIf="child.componentType == 'dynamicFormOr'" [form]="nestedShapeForm" [input]="child"
-                                 [shapes]="shapes" [hidden]="hiddenFormFields.includes(child.key)"></app-dynamic-form-or>
+                                 [shapes]="shapes" [hidden]="hiddenFormFields.includes(child.key)" #formOr></app-dynamic-form-or>
             <app-dynamic-form-or-array *ngIf="child.componentType == 'dynamicFormOrArray'" [form]="nestedShapeForm"
-                                       [input]="child" [shapes]="shapes" [hidden]="hiddenFormFields.includes(child.key)"></app-dynamic-form-or-array>
+                                       [input]="child" [shapes]="shapes" [hidden]="hiddenFormFields.includes(child.key)" #formOrArray></app-dynamic-form-or-array>
             <app-expanded-fields *ngIf="child.componentType == 'dynamicExpanded' && !child.selfLoop"
                                  [form]="nestedShapeForm"
-                                 [input]="child" [parentId]="input.id" [shapes]="shapes" [hidden]="hiddenFormFields.includes(child.key)"></app-expanded-fields>
+                                 [input]="child" [parentId]="input.id" [shapes]="shapes" [hidden]="hiddenFormFields.includes(child.key)" #expandedFields></app-expanded-fields>
             <app-dynamic-self-loops *ngIf="child.selfLoop" [form]="nestedShapeForm" [input]="child"
-                                    [parentId]="input.id" [shapes]="shapes" [hidden]="hiddenFormFields.includes(child.key)">
+                                    [parentId]="input.id" [shapes]="shapes" [hidden]="hiddenFormFields.includes(child.key)" #selfLoops>
             </app-dynamic-self-loops>
           </div>
         </div>

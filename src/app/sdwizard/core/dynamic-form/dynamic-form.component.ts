@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, OnDestroy, HostListener} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, ViewChildren, QueryList} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FormField} from '@models/form-field.model';
 import {FormfieldControlService} from '@services/form-field.service';
@@ -10,17 +10,18 @@ import {ShaclFile} from '@models/shacl-file';
 import {DateHelper} from '@shared/date-helper';
 import {FilesProvider} from '@shared/files-provider';
 import {DownloadFormat} from '@shared/download-format.enum';
-import { Subscription, throwError } from 'rxjs';
 
 import { IconSetService } from '@coreui/icons-angular';
 import { brandSet, flagSet, freeSet } from '@coreui/icons';
-import { off } from 'process';
 import { AuthService } from 'src/app/services/auth.service';
-import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
-import {timer} from 'rxjs';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
-import { IOfferings, ITermsAndConditions } from 'src/app/views/serviceofferings/serviceofferings-data';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DynamicFormInputComponent } from '@components/dynamic-form-input/dynamic-form-input.component';
+import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynamic-form-array.component';
+import { DynamicFormOrComponent } from '@components/dynamic-form-or/dynamic-form-or.component';
+import { DynamicFormOrArrayComponent } from '@components/dynamic-form-or-array/dynamic-form-or-array.component';
+import { ExpandedFieldsComponent } from '@components/expanded-fields/expanded-fields.component';
+import { DynamicSelfLoopsComponent } from '@components/dynamic-self-loops/dynamic-self-loops.component';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -47,9 +48,14 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   errorDetails: string = "";
   createdServiceOfferingId: string = "";
 
-  createDateTimer: NodeJS.Timer = undefined;
-  orgaSubscriptions: Subscription[] = [];
   submitButtonsDisabled = false;
+
+  @ViewChildren('formInput') formInputViewChildren: QueryList<DynamicFormInputComponent>; 
+  @ViewChildren('formArray') formArrayViewChildren: QueryList<DynamicFormArrayComponent>; 
+  @ViewChildren('formOr') formOrViewChildren: QueryList<DynamicFormOrComponent>; 
+  @ViewChildren('formOrArray') formOrArrayViewChildren: QueryList<DynamicFormOrArrayComponent>; 
+  @ViewChildren('expandedFields') expandedFieldsViewChildren: QueryList<ExpandedFieldsComponent>; 
+  @ViewChildren('selfLoops') selfLoopsViewChildren: QueryList<DynamicSelfLoopsComponent>; 
 
   protected hiddenFormFields = [];
 
@@ -63,7 +69,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     private filesProvider: FilesProvider, 
     private iconSetService: IconSetService,
     private authService: AuthService,
-    private organizationsApiService: OrganizationsApiService,
     private serviceofferingApiService: ServiceofferingApiService
   ) {
     this.readObjectDataFromRoute();
@@ -92,7 +97,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     } else {
       this.hiddenFormFields = this.hiddenFormFieldsOffering;
     }
-    this.reorderShapeFields();
     this.formFields = this.shape?.fields;
     this.form = this.formfieldService.toFormGroup(this.formFields);
     this.form.addControl('user_prefix', new FormControl());
@@ -101,117 +105,18 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     this.groupFormFields();
   }
 
-  reorderShapeFields(): void {
-    // TODO set order in SHACL instead
-    if (this.shape?.fields === undefined) {
-      return;
-    }
-    console.log("shape fields", this.shape?.fields);
-    let beforeFieldsNames = [];
-    let afterFieldsNames = [];
-    if (this.shape?.name === "MerlotOrganization") {
-      beforeFieldsNames = ["merlotId", "orgaName", "legalName", "mailAddress", "addressCode"];
-      afterFieldsNames = [];
-    } else {
-      beforeFieldsNames = ["name", "offeredBy", "providedBy", "creationDate"];
-      afterFieldsNames = ["merlotTermsAndConditionsAccepted"];
-    }
-    
-    let shapeFieldCopy = this.shape?.fields;
-    shapeFieldCopy.sort((a, b) => (a.key < b.key ? -1 : 1));
-
-    let beforeFields = [];
-    let afterFields = [];
-
-    for (let i = 0; i < shapeFieldCopy.length;) {
-      let f = shapeFieldCopy[i];
-      if (beforeFieldsNames.includes(f.key)) {
-        beforeFields.splice(beforeFields.indexOf(f.key), 0, f);
-        shapeFieldCopy.splice(i, 1);
-      } else if (afterFieldsNames.includes(f.key)) {
-        afterFields.splice(afterFields.indexOf(f.key), 0, f);
-        shapeFieldCopy.splice(i, 1);
-      } else {
-        i++;
-      }
-    }
-
-    this.shape.fields = beforeFields.concat(shapeFieldCopy.concat(afterFields));
-  }
-
   groupFormFields(): void {
     this.groupedFormFields = Utils.groupBy(this.formFields, (formField) => formField.group);
-    if (this.shape?.name === "MerlotOrganization") {
-      this.patchRequiredFieldsOrganization(this.groupedFormFields);
-    } else {
-      this.patchRequiredFieldsOffering(this.groupedFormFields);
-    }
+    this.patchRequiredFieldsOffering(this.groupedFormFields);
     this.groupsNumber = this.groupedFormFields.length;
   }
 
-  private updateDateField(formInput: FormControl) {
-    formInput.patchValue(new Date().toLocaleString("de-DE", {timeZone: "Europe/Berlin", timeStyle: "short", dateStyle: "medium"}));
-  }
-
-  private patchRequiredFieldsOrganization(groupedFormFields: FormField[][]) {
-    let deactivatedFields = ["legalName", "orgaName", "merlotId", "registrationNumber"];
-    for (let group of groupedFormFields) {
-      for (let field of group) {
-        if (deactivatedFields.includes(field.key)) {
-          let formField = this.form.get(field.id);
-          formField.disable();
-        }
-      }
-    }
-  }
-
   private patchRequiredFieldsOffering(groupedFormFields: FormField[][]) {
-    // Automatically fill fields depending on selected Organization and time, also set required fields of gax-trust-framework that are hidden
     for (let group of groupedFormFields) {
       for (let field of group) {
-        if ((field.key === "offeredBy" || field.key === "providedBy")) {
+        if (field.key === "offeredBy" || field.key === "providedBy" ) {
           let formField = this.form.get(field.id);
-          this.orgaSubscriptions.push(this.authService.activeOrganizationRole.subscribe((value) => {
-            formField.patchValue(value.orgaData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value']);
-          }));
-          formField.disable();
-        } else if (field.key === "creationDate") {
-          let formField = this.form.get(field.id);
-          if (formField.value === undefined || formField.value === null) {
-            if (this.createDateTimer !== undefined) {
-              clearInterval(this.createDateTimer);
-            }
-            this.updateDateField(formField as FormControl); // initial update
-            this.createDateTimer = setInterval(() => this.updateDateField(formField as FormControl), 1000); // set timer to refresh date field
-          }
-
-          formField.disable();
-        }
-        else if (field.key === "policy") {
-          let formField = this.form.get(field.id);
-          formField.patchValue(["dummyPolicy"]);
-          formField.disable();
-        }
-        else if (field.key === "dataAccountExport") {
-          let formField = this.form.get(field.id) as FormGroup;
-          for (let childKey in formField.controls) {
-            let child = formField.controls[childKey];
-            child.patchValue("dummyValue");
-            child.disable();
-          }
-        } else if (field.key === "termsAndConditions") {
-          let merlotTnC = this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-          let providerTnC = this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-          let formField = this.form.get(field.id) as FormGroup;
-          let contentField = formField.controls[field.childrenFields.filter(cf => cf.key === "content")[0].id];
-          let hashField = formField.controls[field.childrenFields.filter(cf => cf.key === "hash")[0].id];
-          if ((contentField.value === merlotTnC['gax-trust-framework:content']['@value'] 
-                && hashField.value === merlotTnC['gax-trust-framework:hash']['@value']) 
-              || (contentField.value === providerTnC['gax-trust-framework:content']['@value'] 
-                  && hashField.value === providerTnC['gax-trust-framework:hash']['@value'])) {
-              contentField.disable();
-              hashField.disable();
-            }
+          formField.patchValue(this.authService.getActiveOrgaLegalName());
         }
       }
     }
@@ -267,7 +172,8 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       charactersLength));
    }
    return result;
-}
+  }
+
   onSubmit(publishAfterSave: boolean): void {
     this.submitButtonsDisabled = true;
     this.showSuccessMessage = false;
@@ -291,6 +197,10 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
         this.createdServiceOfferingId = result["id"];
         let didField = this.form.get("user_prefix");
         didField.patchValue(result["id"]);
+
+        if (this.shape?.name === "MerlotOrganization") {
+          this.authService.refreshActiveRoleOrgaData();
+        }
 
         if (publishAfterSave) {
           this.serviceofferingApiService.releaseServiceOffering(result["id"])
@@ -320,21 +230,11 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
           this.submitButtonsDisabled = false;
         }
       });
-    if (this.shape?.name !== "MerlotOrganization") {
-      this.patchRequiredFieldsOffering(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
-    }
+    this.patchRequiredFieldsOffering(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
   }
 
   ngOnDestroy() {
     console.log("Destroying dynamic form component"); 
-    if (this.createDateTimer)
-      clearInterval(this.createDateTimer);
-    
-    for (let orgaSub of this.orgaSubscriptions) {
-      orgaSub.unsubscribe();
-    }
-    this.orgaSubscriptions = [];
-
     this.showSuccessMessage = false;
     this.showErrorMessage = false;
     this.submitButtonsDisabled = false;
