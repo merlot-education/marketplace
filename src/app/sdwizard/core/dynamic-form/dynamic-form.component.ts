@@ -155,82 +155,19 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   groupFormFields(): void {
     this.groupedFormFields = Utils.groupBy(this.formFields, (formField) => formField.group);
-    if (this.shape?.name === "MerlotOrganization") {
-      this.patchRequiredFieldsOrganization(this.groupedFormFields);
-    } else {
-      this.patchRequiredFieldsOffering(this.groupedFormFields);
-    }
+    this.patchRequiredFieldsOffering(this.groupedFormFields);
     this.groupsNumber = this.groupedFormFields.length;
   }
 
-  private updateDateField(formInput: FormControl) {
-    formInput.patchValue(new Date().toLocaleString("de-DE", {timeZone: "Europe/Berlin", timeStyle: "short", dateStyle: "medium"}));
-  }
-
-  private patchRequiredFieldsOrganization(groupedFormFields: FormField[][]) {
-    /*let deactivatedFields = ["legalName", "orgaName", "merlotId", "registrationNumber"];
+  private patchRequiredFieldsOffering(groupedFormFields: FormField[][]) {
     for (let group of groupedFormFields) {
       for (let field of group) {
-        if (deactivatedFields.includes(field.key)) {
+        if (field.key === "offeredBy" || field.key === "providedBy" ) {
           let formField = this.form.get(field.id);
-          formField.disable();
+          formField.patchValue(this.authService.getActiveOrgaLegalName());
         }
       }
-    }*/
-    // TODO remove
-  }
-
-  private patchRequiredFieldsOffering(groupedFormFields: FormField[][]) {
-    // Automatically fill fields depending on selected Organization and time, also set required fields of gax-trust-framework that are hidden
-    /*for (let group of groupedFormFields) {
-      for (let field of group) {
-        if ((field.key === "offeredBy" || field.key === "providedBy")) {
-          let formField = this.form.get(field.id);
-          this.orgaSubscriptions.push(this.authService.activeOrganizationRole.subscribe((value) => {
-            formField.patchValue(value.orgaData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value']);
-          }));
-          formField.disable();
-        } else if (field.key === "creationDate") {
-          let formField = this.form.get(field.id);
-          if (formField.value === undefined || formField.value === null) {
-            if (this.createDateTimer !== undefined) {
-              clearInterval(this.createDateTimer);
-            }
-            this.updateDateField(formField as FormControl); // initial update
-            this.createDateTimer = setInterval(() => this.updateDateField(formField as FormControl), 1000); // set timer to refresh date field
-          }
-
-          formField.disable();
-        }
-        else if (field.key === "policy") {
-          let formField = this.form.get(field.id);
-          formField.patchValue(["dummyPolicy"]);
-          formField.disable();
-        }
-        else if (field.key === "dataAccountExport") {
-          let formField = this.form.get(field.id) as FormGroup;
-          for (let childKey in formField.controls) {
-            let child = formField.controls[childKey];
-            child.patchValue("dummyValue");
-            child.disable();
-          }
-        } else if (field.key === "termsAndConditions") {
-          let merlotTnC = this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-          let providerTnC = this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-          let formField = this.form.get(field.id) as FormGroup;
-          let contentField = formField.controls[field.childrenFields.filter(cf => cf.key === "content")[0].id];
-          let hashField = formField.controls[field.childrenFields.filter(cf => cf.key === "hash")[0].id];
-          if ((contentField.value === merlotTnC['gax-trust-framework:content']['@value'] 
-                && hashField.value === merlotTnC['gax-trust-framework:hash']['@value']) 
-              || (contentField.value === providerTnC['gax-trust-framework:content']['@value'] 
-                  && hashField.value === providerTnC['gax-trust-framework:hash']['@value'])) {
-              contentField.disable();
-              hashField.disable();
-            }
-        }
-      }
-    }*/
-    // TODO remove
+    }
     
     // set did to a dummy value that gets replaced by the orchestrator
     let didField = this.form.get("user_prefix");
@@ -336,9 +273,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
           this.submitButtonsDisabled = false;
         }
       });
-    if (this.shape?.name !== "MerlotOrganization") {
-      this.patchRequiredFieldsOffering(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
-    }
+    this.patchRequiredFieldsOffering(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
   }
 
   ngOnDestroy() {

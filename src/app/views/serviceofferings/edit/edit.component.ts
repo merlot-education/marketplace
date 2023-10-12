@@ -111,7 +111,25 @@ export class EditComponent implements OnInit, AfterViewInit {
             "disabled": true
           }
         }
-      ]
+      ],
+      "gax-trust-framework:policy": [{
+        "@value": "dummyValue",
+        "@type": "xsd:string",
+      }],
+      "gax-trust-framework:dataAccountExport": {
+        "gax-trust-framework:requestType": {
+          "@value": "dummyValue",
+          "@type": "xsd:string",
+        },
+        "gax-trust-framework:accessType": {
+          "@value": "dummyValue",
+          "@type": "xsd:string",
+        },
+        "gax-trust-framework:formatType": {
+          "@value": "dummyValue",
+          "@type": "xsd:string",
+        }
+      }
     }, forceImmediateRefresh);
   }
 

@@ -87,8 +87,8 @@ export class WizardExtensionService {
     let fullKey = formInput.input.prefix + ":" + formInput.input.key;
 
     if (["gax-core:offeredBy", "gax-trust-framework:providedBy"].includes(fullKey)) {
-      this.subscriptions.add(this.authService.activeOrganizationRole.subscribe(orgaRole => {
-        formInput.form.controls[formInput.input.id].patchValue(this.unpackValueFromField(orgaRole.orgaData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value']));
+      this.subscriptions.add(this.authService.activeOrganizationRole.subscribe(_ => {
+        formInput.form.controls[formInput.input.id].patchValue(this.authService.getActiveOrgaLegalName());
       }));
       console.log(this.authService.activeOrganizationRole.observers);
       formInput.form.controls[formInput.input.id].disable();
