@@ -18,10 +18,10 @@
     </div>
     <mat-accordion *ngFor="let nestedShapeForm of formGroups; let i = index">
       <div class="flex-container">
-      <mat-expansion-panel (closed)="panelOpenState = false" (opened)="panelOpenState = true" class="flex-item-grow" [expanded]="input.required">
+      <mat-expansion-panel (closed)="panelOpenState = false" (opened)="panelOpenState = true" class="flex-item-grow" [expanded]="input.required && (i < input.minCount)">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            {{inputs[i].name}}<span *ngIf="input.required && i == 0" aria-required="true"
+            {{inputs[i].name}}<span *ngIf="input.required && (i < input.minCount)" aria-required="true"
                                                                     class="required"> * </span>
           </mat-panel-title>
         </mat-expansion-panel-header>
