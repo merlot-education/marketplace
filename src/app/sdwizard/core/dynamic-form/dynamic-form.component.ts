@@ -168,7 +168,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   }
 
   private patchRequiredFieldsOrganization(groupedFormFields: FormField[][]) {
-    let deactivatedFields = ["legalName", "orgaName", "merlotId", "registrationNumber"];
+    /*let deactivatedFields = ["legalName", "orgaName", "merlotId", "registrationNumber"];
     for (let group of groupedFormFields) {
       for (let field of group) {
         if (deactivatedFields.includes(field.key)) {
@@ -176,12 +176,13 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
           formField.disable();
         }
       }
-    }
+    }*/
+    // TODO remove
   }
 
   private patchRequiredFieldsOffering(groupedFormFields: FormField[][]) {
     // Automatically fill fields depending on selected Organization and time, also set required fields of gax-trust-framework that are hidden
-    for (let group of groupedFormFields) {
+    /*for (let group of groupedFormFields) {
       for (let field of group) {
         if ((field.key === "offeredBy" || field.key === "providedBy")) {
           let formField = this.form.get(field.id);
@@ -228,7 +229,8 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
             }
         }
       }
-    }
+    }*/
+    // TODO remove
     
     // set did to a dummy value that gets replaced by the orchestrator
     let didField = this.form.get("user_prefix");
