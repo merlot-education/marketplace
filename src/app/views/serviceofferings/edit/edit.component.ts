@@ -140,7 +140,6 @@ export class EditComponent implements OnInit, AfterViewInit {
       // patch terms and conditions field to no longer be required since our backend will augment it with provider/merlot tnc
       let tncField = shape?.fields.filter(f => f.key === "termsAndConditions")[0];
       tncField.minCount = 2;
-      //tncField.required = false;
 
       // select the shape
       filteredShape.selected = true;
