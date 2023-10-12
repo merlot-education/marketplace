@@ -129,14 +129,20 @@ export class WizardExtensionService {
       return;
     }
     // create more inputs for each prefill field after the first one
-    let addedInput = false;
+    let updatedInput = false;
     for (let i = expandedField.inputs.length; i < prefillFields[parentKey].length; i++) {
       expandedField.addInput();
-      addedInput = true;
+      updatedInput = true;
+    }
+    if (expandedField.inputs.length > prefillFields[parentKey]) {
+      for (let i = expandedField.inputs.length; i > prefillFields[parentKey].length; i--) {
+        expandedField.deleteInput(-1);
+        updatedInput = true;
+      }
     }
 
     // if we created new inputs, wait for changes
-    if (addedInput) {
+    if (updatedInput) {
       let formInputSub = expandedField.formInputViewChildren.changes.subscribe(_ => {
         this.processExpandedFieldChildrenFields(expandedField, prefillFields);
         formInputSub.unsubscribe();
