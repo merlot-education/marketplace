@@ -297,7 +297,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
           });
           //set description.input value depending on language
           this.updateSelectedShape();
-          //this.router.navigate(['/service-offerings/edit/form'], { state: { file: this.shaclFile } });
         }
       }
     );

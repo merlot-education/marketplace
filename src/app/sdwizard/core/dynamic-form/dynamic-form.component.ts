@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, OnDestroy, HostListener, ViewChildren, QueryList, AfterViewInit} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, ViewChildren, QueryList} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FormField} from '@models/form-field.model';
 import {FormfieldControlService} from '@services/form-field.service';
@@ -10,16 +10,11 @@ import {ShaclFile} from '@models/shacl-file';
 import {DateHelper} from '@shared/date-helper';
 import {FilesProvider} from '@shared/files-provider';
 import {DownloadFormat} from '@shared/download-format.enum';
-import { Subscription, throwError } from 'rxjs';
 
 import { IconSetService } from '@coreui/icons-angular';
 import { brandSet, flagSet, freeSet } from '@coreui/icons';
-import { off } from 'process';
 import { AuthService } from 'src/app/services/auth.service';
-import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
-import {timer} from 'rxjs';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
-import { IOfferings, ITermsAndConditions } from 'src/app/views/serviceofferings/serviceofferings-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DynamicFormInputComponent } from '@components/dynamic-form-input/dynamic-form-input.component';
 import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynamic-form-array.component';
@@ -27,7 +22,6 @@ import { DynamicFormOrComponent } from '@components/dynamic-form-or/dynamic-form
 import { DynamicFormOrArrayComponent } from '@components/dynamic-form-or-array/dynamic-form-or-array.component';
 import { ExpandedFieldsComponent } from '@components/expanded-fields/expanded-fields.component';
 import { DynamicSelfLoopsComponent } from '@components/dynamic-self-loops/dynamic-self-loops.component';
-import { createNoSubstitutionTemplateLiteral } from 'typescript/lib/tsserverlibrary';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -54,8 +48,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   errorDetails: string = "";
   createdServiceOfferingId: string = "";
 
-  createDateTimer: NodeJS.Timer = undefined;
-  orgaSubscriptions: Subscription[] = [];
   submitButtonsDisabled = false;
 
   @ViewChildren('formInput') formInputViewChildren: QueryList<DynamicFormInputComponent>; 
@@ -77,7 +69,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     private filesProvider: FilesProvider, 
     private iconSetService: IconSetService,
     private authService: AuthService,
-    private organizationsApiService: OrganizationsApiService,
     private serviceofferingApiService: ServiceofferingApiService
   ) {
     this.readObjectDataFromRoute();
@@ -240,14 +231,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     console.log("Destroying dynamic form component"); 
-    if (this.createDateTimer)
-      clearInterval(this.createDateTimer);
-    
-    for (let orgaSub of this.orgaSubscriptions) {
-      orgaSub.unsubscribe();
-    }
-    this.orgaSubscriptions = [];
-
     this.showSuccessMessage = false;
     this.showErrorMessage = false;
     this.submitButtonsDisabled = false;
