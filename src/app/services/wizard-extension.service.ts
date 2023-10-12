@@ -134,11 +134,9 @@ export class WizardExtensionService {
       expandedField.addInput();
       updatedInput = true;
     }
-    if (expandedField.inputs.length > prefillFields[parentKey]) {
-      for (let i = expandedField.inputs.length; i > prefillFields[parentKey].length; i--) {
-        expandedField.deleteInput(-1);
-        updatedInput = true;
-      }
+    for (let i = expandedField.inputs.length; i > prefillFields[parentKey].length; i--) {
+      expandedField.deleteInput(-1);
+      updatedInput = true;
     }
 
     // if we created new inputs, wait for changes
