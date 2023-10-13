@@ -24,6 +24,7 @@ export interface IContractDetails {
   id: string,
   creationDate: string,
   providerId: string,
+  termsAndConditions: IContractTnc,
   providerLegalName: string,
   consumerId: string,
   consumerLegalName: string,
@@ -35,10 +36,14 @@ export interface IContractNegotiation {
   runtimeSelection?: string,
   additionalAgreements?: string,
   attachments: string[],
-  consumerMerlotTncAccepted: boolean,
-  consumerOfferingTncAccepted: boolean,
-  consumerProviderTncAccepted: boolean,
-  providerMerlotTncAccepted: boolean
+  consumerTncAccepted: boolean,
+  consumerAttachmentsAccepted: boolean,
+  providerTncAccepted: boolean
+}
+
+export interface IContractTnc {
+  content: string,
+  hash: string,
 }
 
 export interface IContractProvisioning {

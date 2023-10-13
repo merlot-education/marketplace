@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {IBasicOffering, IOfferings, IPageBasicOfferings, IPageOfferings} from '../serviceofferings-data'
+import { IBasicOffering, IOfferings, IPageBasicOfferings, ITermsAndConditions } from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { WizardExtensionService } from '../../../services/wizard-extension.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
@@ -13,7 +13,6 @@ import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { IContract } from '../../contracts/contracts-data';
 import { ConnectorData } from '../../organization/organization-data';
-import { FormField } from '@models/form-field.model';
 
 
 @Component({
@@ -21,8 +20,7 @@ import { FormField } from '@models/form-field.model';
   styleUrls: ['./explore.component.scss']
 })
 export class ExploreComponent implements OnInit, OnDestroy {
-
-  @ViewChild(DynamicFormComponent, {static: false}) childRef: DynamicFormComponent;
+  @ViewChild("wizard") private wizard: DynamicFormComponent;
 
   readonly ITEMS_PER_PAGE = 9;
 
@@ -135,7 +133,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   protected handleEventEditModal(modalVisible: boolean) {
     this.showingModal = modalVisible;
     if (this.editModalPreviouslyVisible && !modalVisible) {
-      this.childRef.ngOnDestroy();
+      this.wizard.ngOnDestroy();
       this.refreshOfferings();
     }
     this.editModalPreviouslyVisible = modalVisible;
@@ -242,8 +240,20 @@ export class ExploreComponent implements OnInit, OnDestroy {
   updateServiceOfferingEdit(offering: IBasicOffering) {
     this.requestDetails(offering.id).then(() => {
       this.select(this.findFilenameByShapeType(offering.type));
+      let merlotTnC = this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
+      let providerTnC: ITermsAndConditions = this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
+
+      for (let tnc of this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:termsAndConditions']) {
+        if ((tnc['gax-trust-framework:content']['@value'] === merlotTnC['gax-trust-framework:content']['@value'] 
+              && tnc['gax-trust-framework:hash']['@value'] === merlotTnC['gax-trust-framework:hash']['@value'])
+              || (tnc['gax-trust-framework:content']['@value'] === providerTnC['gax-trust-framework:content']['@value'] 
+                && tnc['gax-trust-framework:hash']['@value'] === providerTnC['gax-trust-framework:hash']['@value'])) {
+          tnc['gax-trust-framework:content']['disabled'] = true;
+          tnc['gax-trust-framework:hash']['disabled'] = true;
+        }
+      }
+      this.wizardExtensionService.prefillFields(this.wizard, this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject);
     });
-    
   }
 
   select(name: string): void {
@@ -255,6 +265,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
           console.log("too many shapes selected");
         }
         else {
+          
+          console.log("this here"+this.shaclFile);
+          console.table(this.shaclFile);
           // add a field containing the id to avoid creating a new offering
           this.filteredShapes[0].fields.push({
             id: 'user_prefix',
@@ -282,12 +295,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
             description: '',
             selfLoop: false
           });
-          this.wizardExtensionService.prefillFields(this.filteredShapes[0].fields, this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject);
-          console.log("this here"+this.shaclFile);
-          console.table(this.shaclFile);
           //set description.input value depending on language
           this.updateSelectedShape();
-          //this.router.navigate(['/service-offerings/edit/form'], { state: { file: this.shaclFile } });
         }
       }
     );
@@ -296,6 +305,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
   updateSelectedShape(): void {
     const shape = this.filteredShapes[0];
     if (shape !== undefined) {
+      let tncField = shape?.fields.filter(f => f.key === "termsAndConditions")[0];
+      tncField.minCount = 2;
       this.shaclFile.shapes.find(x => x.name === shape.name).selected = true;
     }
   }

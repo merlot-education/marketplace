@@ -9,7 +9,17 @@ import { environment } from 'src/environments/environment';
 })
 export class OrganizationsApiService {
 
-  constructor(private http: HttpClient) {}
+  private merlotFederationOrga: IOrganizationData = undefined;
+
+  constructor(private http: HttpClient) {
+    this.getOrgaById("Participant:99").then(result => {
+      this.merlotFederationOrga = result;
+    });
+  }
+
+  public getMerlotFederationOrga() {
+    return this.merlotFederationOrga;
+  }
 
   public async fetchOrganizations(page: number, size: number): Promise<IPageOrganizations> {
     console.log("fetching organizations");
