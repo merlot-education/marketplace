@@ -145,7 +145,7 @@ export class WizardExtensionService {
         this.processExpandedFieldChildrenFields(expandedField, prefillFields);
         formInputSub.unsubscribe();
       });
-      let expandedFieldSub = expandedField.formArrayViewChildren.changes.subscribe(_ => {
+      let expandedFieldSub = expandedField.expandedFieldsViewChildren.changes.subscribe(_ => {
         this.processExpandedFieldChildrenFields(expandedField, prefillFields);
         expandedFieldSub.unsubscribe();
       });
