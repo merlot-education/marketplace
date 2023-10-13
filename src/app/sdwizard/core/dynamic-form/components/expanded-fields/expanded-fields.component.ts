@@ -49,7 +49,7 @@ export class ExpandedFieldsComponent implements OnInit {
     this.groupFormFields();
 
     // when the main shape is required then we add it to the main form, otherwise we remove it and display the add button.
-    if (this.input.required) {
+    /*if (this.input.required) {
       this.inputs.push(this.input);
       if (this.form.controls[this.input.id] !== undefined) {
         this.formGroups.push(this.form.controls[this.input.id]);
@@ -67,6 +67,10 @@ export class ExpandedFieldsComponent implements OnInit {
     } else {
       // remove the main input from the form
       this.form.removeControl(this.input.id);
+    }*/
+    this.form.removeControl(this.input.id);
+    for (let i = 0; i < this.input.minCount; i++) {
+      this.addInput();
     }
   }
 

@@ -86,6 +86,7 @@ export class EditComponent implements OnInit, AfterViewInit {
       "gax-trust-framework:termsAndConditions": [
         {
           "@type": "gax-trust-framework:TermsAndConditions",
+          "overrideName": "Merlot AGB",
           "gax-trust-framework:content": {
             "@value": merlotTnC['gax-trust-framework:content']['@value'],
             "@type": "xsd:anyURI",
@@ -99,6 +100,7 @@ export class EditComponent implements OnInit, AfterViewInit {
         },
         {
           "@type": "gax-trust-framework:TermsAndConditions",
+          "overrideName": "Anbieter AGB",
           "gax-trust-framework:content": {
             "@value": providerTnC['gax-trust-framework:content']['@value'],
             "@type": "xsd:anyURI",

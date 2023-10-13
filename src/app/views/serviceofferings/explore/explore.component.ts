@@ -244,10 +244,15 @@ export class ExploreComponent implements OnInit, OnDestroy {
       let providerTnC: ITermsAndConditions = this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
 
       for (let tnc of this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:termsAndConditions']) {
-        if ((tnc['gax-trust-framework:content']['@value'] === merlotTnC['gax-trust-framework:content']['@value'] 
-              && tnc['gax-trust-framework:hash']['@value'] === merlotTnC['gax-trust-framework:hash']['@value'])
-              || (tnc['gax-trust-framework:content']['@value'] === providerTnC['gax-trust-framework:content']['@value'] 
-                && tnc['gax-trust-framework:hash']['@value'] === providerTnC['gax-trust-framework:hash']['@value'])) {
+        if (tnc['gax-trust-framework:content']['@value'] === merlotTnC['gax-trust-framework:content']['@value'] 
+              && tnc['gax-trust-framework:hash']['@value'] === merlotTnC['gax-trust-framework:hash']['@value']) {
+          tnc["overrideName"] = "Merlot AGB";
+          tnc['gax-trust-framework:content']['disabled'] = true;
+          tnc['gax-trust-framework:hash']['disabled'] = true;
+        }
+        else if (tnc['gax-trust-framework:content']['@value'] === providerTnC['gax-trust-framework:content']['@value'] 
+                && tnc['gax-trust-framework:hash']['@value'] === providerTnC['gax-trust-framework:hash']['@value']) {
+          tnc["overrideName"] = "Anbieter AGB";
           tnc['gax-trust-framework:content']['disabled'] = true;
           tnc['gax-trust-framework:hash']['disabled'] = true;
         }

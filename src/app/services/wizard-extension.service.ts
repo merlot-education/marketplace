@@ -6,6 +6,7 @@ import { ExpandedFieldsComponent } from '@components/expanded-fields/expanded-fi
 import { AuthService } from './auth.service';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { ContractsRoutingModule } from '../views/contracts/contracts-routing.module';
 
 @Injectable({
   providedIn: 'root'
@@ -168,6 +169,12 @@ export class WizardExtensionService {
 
     let i = 0;
     for (let input of expandedField.inputs) {
+      console.log(expandedField);
+      if (prefillFields[parentKey][i] instanceof Object && Object.keys(prefillFields[parentKey][i]).includes("overrideName")) {
+        input.name = prefillFields[parentKey][i]["overrideName"];
+      } else if (parentKey === "gax-trust-framework:termsAndConditions") {
+        input.name = "Serviceangebotsspezifische Geschäftsbedingungen";
+      }
       for (let cf of input.childrenFields) {
         this.processFormInput(expandedField.formInputViewChildren.find(f => f.input.id === cf.id), prefillFields[parentKey][i]);
         this.processExpandedField(expandedField.expandedFieldsViewChildren.find(f => f.input.id === cf.id), prefillFields[parentKey][i]);
