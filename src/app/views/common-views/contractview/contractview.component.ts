@@ -6,6 +6,7 @@ import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.
 import { AuthService } from 'src/app/services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
+import { IRuntime } from '../../serviceofferings/serviceofferings-data';
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -206,4 +207,87 @@ export class ContractviewComponent {
     this.contractDetails.negotiation.attachments.splice(index, 1);
   }
 
+  protected isContractInDraft(contractDetails: IContract): boolean {
+    return contractDetails.details.state === 'IN_DRAFT';
+  }
+
+  protected isContractReleased(contractDetails: IContract): boolean {
+    return contractDetails.details.state === 'RELEASED';
+  }
+
+  protected isContractSignedConsumer(contractDetails: IContract): boolean {
+    return contractDetails.details.state === 'SIGNED_CONSUMER';
+  }
+
+  protected isContractDeleted(contractDetails: IContract): boolean {
+    return contractDetails.details.state === 'DELETED';
+  }
+
+  protected isContractArchived(contractDetails: IContract): boolean {
+    return contractDetails.details.state === 'ARCHIVED';
+  }
+
+  protected shouldShowAttachments(contractDetails: IContract): boolean {
+    return this.userIsActiveProvider() && this.isContractInDraft(contractDetails) || (contractDetails.negotiation.attachments.length > 0);
+  }
+
+  protected canAddAttachments(contractDetails: IContract): boolean {
+    return this.userIsActiveProvider() && this.isContractInDraft(contractDetails);
+  }
+
+  protected shouldShowAttachmentAsLink(contractDetails: IContract): boolean {
+    return this.userIsActiveConsumer() || !this.isContractInDraft(contractDetails);
+  }
+
+  protected shouldShowAttachmentAsTextbox(contractDetails: IContract): boolean {
+    return this.userIsActiveProvider() && this.isContractInDraft(contractDetails);
+  }
+
+  protected isRuntimeUnlimited(runtime: IRuntime): boolean {
+    return runtime['merlot:runtimeCount']['@value'] === 0 || runtime['merlot:runtimeMeasurement']['@value'] === 'unlimited'
+  }
+
+  protected isSaasContract(contractDetails: IContract): boolean {
+    return contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['@type'] === 'merlot:MerlotServiceOfferingSaaS';
+  }
+
+  protected isDataDeliveryContract(contractDetails: IContract): boolean {
+    return contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['@type'] === 'merlot:MerlotServiceOfferingDataDelivery';
+  }
+
+  protected hasContractAttachments(contractDetails: IContract): boolean {
+    return contractDetails.negotiation.attachments.length > 0;
+  }
+
+  protected shouldShowSaveButton(contractDetails: IContract): boolean {
+    return this.isContractInDraft(contractDetails) || (this.userIsActiveProvider() && this.isContractSignedConsumer(contractDetails));
+  }
+
+  protected shouldShowDeleteButton(contractDetails: IContract): boolean {
+    return this.isContractInDraft(contractDetails);
+  }
+
+  protected shouldShowPurgeButton(contractDetails: IContract): boolean {
+    return this.isContractDeleted(contractDetails) && this.userIsActiveProvider();
+  }
+
+  protected shouldShowOrderButton(contractDetails: IContract): boolean {
+    return this.isContractInDraft(contractDetails) && this.userIsActiveConsumer();
+  }
+
+  protected shouldShowAcceptButton(contractDetails: IContract): boolean {
+    return this.isContractSignedConsumer(contractDetails) && this.userIsActiveProvider()
+  }
+
+  protected shouldShowRevokeButton(contractDetails: IContract): boolean {
+    return this.isDataDeliveryContract(contractDetails) && (this.isContractSignedConsumer(contractDetails) || this.isContractReleased(contractDetails));
+  }
+
+  protected shouldShowArchiveButton(contractDetails: IContract): boolean {
+    return this.isContractReleased(contractDetails);
+  }
+
+  protected shouldShowRegenerateButton(contractDetails: IContract): boolean {
+    return this.isContractArchived(contractDetails) || this.isContractDeleted(contractDetails);
+  }
 }
