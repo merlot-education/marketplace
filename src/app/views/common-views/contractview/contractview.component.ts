@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IContract, IEdcIdResponse, IEdcNegotiationStatus, IEdcTransferStatus } from '../../contracts/contracts-data';
+import { IContract, IDataDeliveryContract, IDataDeliveryContractProvisioning, IEdcIdResponse, IEdcNegotiationStatus, IEdcTransferStatus, ISaasContract } from '../../contracts/contracts-data';
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
@@ -15,6 +15,9 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   styleUrls: ['./contractview.component.scss']
 })
 export class ContractviewComponent {
+
+  protected asDataDeliveryContract(val): IDataDeliveryContract { return val };
+  protected asSaasContract(val): ISaasContract { return val };
 
   @Input() contractDetails: IContract = undefined;
   @Input() availableConnectors : ConnectorData[] = [];

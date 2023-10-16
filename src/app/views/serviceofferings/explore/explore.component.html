@@ -4,10 +4,10 @@
 
 <div style="padding:10px">
   <c-form-check [inline]="true" switch sizing="xl">
-    <input cFormCheckInput id="filterCheck" type="checkbox" [(ngModel)]="applyStatusFilter" (change)="filterByStatus(applyStatusFilter, selectedStatusFilter)"/>
+    <input cFormCheckInput id="filterCheck" type="checkbox" [(ngModel)]="applyStatusFilter" (change)="filterByStatus(undefined, applyStatusFilter, selectedStatusFilter)"/>
     <label cFormCheckLabel for="filterCheck">Zeige nur Angebote mit Status: </label>
   </c-form-check> <br/>
-  <select class="form-select" (change)="selectedStatusFilter = $event.target.value; filterByStatus(applyStatusFilter, selectedStatusFilter)">
+  <select class="form-select" (change)="filterByStatus($event.target, applyStatusFilter, selectedStatusFilter)">
     <option *ngFor="let option of objectKeys(friendlyStatusNames)" [value]="option">{{friendlyStatusNames[option]}}</option>
   </select>
 </div>

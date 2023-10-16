@@ -162,7 +162,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
     });
   }
 
-  private refreshOrgaOfferings(page: number, size: number, statusFilter: string = undefined) {
+  protected refreshOrgaOfferings(page: number, size: number, statusFilter: string = undefined) {
     if (this.authService.isLoggedIn) {
       this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, statusFilter).then(result => {
       this.activeOrgaOfferingPage.next(result);
@@ -171,7 +171,10 @@ export class ExploreComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected filterByStatus(applyFilter: boolean, status: string) {
+  protected filterByStatus(eventTarget: EventTarget, applyFilter: boolean, status: string) {
+    if (eventTarget !== undefined) {
+      this.selectedStatusFilter = (eventTarget as HTMLSelectElement).value;
+    }
     // either we should apply the filter and need to refresh, or we switched the filter off and should refresh just once
     if (applyFilter) {
       this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE, status);

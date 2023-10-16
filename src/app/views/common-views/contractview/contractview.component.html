@@ -87,8 +87,8 @@
           <div *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['@type'] === 'merlot:MerlotServiceOfferingSaaS'">
             <li class="list-group-item" style="border: none" *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:userCountOption'] !== null">
               <strong>Anzahl erlaubter Benutzer*:</strong><br />
-              <select class="form-select" [(ngModel)]="contractDetails.negotiation.userCountSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
-                <option [value]="" *ngIf="contractDetails.negotiation.userCountSelection === ''"></option>
+              <select class="form-select" [(ngModel)]="asSaasContract(contractDetails).negotiation.userCountSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
+                <option [value]="" *ngIf="asSaasContract(contractDetails).negotiation.userCountSelection === ''"></option>
                 <option [ngValue]="'' + auc['merlot:userCountUpTo']['@value']" *ngFor="let auc of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:userCountOption']">
                   <ng-container *ngIf="auc['merlot:userCountUpTo']['@value'] === 0; else notUnlimitedUserCount">
                     Unbegrenzt
@@ -103,8 +103,8 @@
           <div *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['@type'] === 'merlot:MerlotServiceOfferingDataDelivery'">
             <li class="list-group-item" style="border: none" *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:exchangeCountOption'] !== null">
               <strong>Anzahl erlaubter Datenaustausche*:</strong><br />
-              <select class="form-select" [(ngModel)]="contractDetails.negotiation.exchangeCountSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
-                <option [value]="" *ngIf="contractDetails.negotiation.exchangeCountSelection === ''"></option>
+              <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).negotiation.exchangeCountSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
+                <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).negotiation.exchangeCountSelection === ''"></option>
                 <option [ngValue]="'' + dec['merlot:exchangeCountUpTo']['@value']" *ngFor="let dec of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:exchangeCountOption']">
                   <ng-container *ngIf="dec['merlot:exchangeCountUpTo']['@value'] === 0; else notUnlimitedExchangeCount">
                     Unbegrenzt
@@ -118,8 +118,8 @@
   
             <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
               <strong>Aktiver EDC Connector*:</strong><br />
-              <select class="form-select" [(ngModel)]="contractDetails.provisioning.selectedProviderConnectorId" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
-                <option [value]="" *ngIf="contractDetails.provisioning.selectedProviderConnectorId === ''"></option>
+              <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.selectedProviderConnectorId" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
+                <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).provisioning.selectedProviderConnectorId === ''"></option>
                 <option [value]="connector.connectorId" *ngFor="let connector of availableConnectors">
                   {{ connector.connectorId }}
                 </option>
@@ -128,9 +128,9 @@
   
             <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
               <strong>IONOS-S3 Quell-Bucket*</strong><br />
-              <select class="form-select" [(ngModel)]="contractDetails.provisioning.dataAddressSourceBucketName" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
-                <option [value]="" *ngIf="contractDetails.provisioning.dataAddressSourceBucketName === ''"></option>
-                <option [value]="bucket" *ngFor="let bucket of getConnectorBuckets(contractDetails.provisioning.selectedProviderConnectorId)">
+              <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.dataAddressSourceBucketName" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
+                <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).provisioning.dataAddressSourceBucketName === ''"></option>
+                <option [value]="bucket" *ngFor="let bucket of getConnectorBuckets(asDataDeliveryContract(contractDetails).provisioning.selectedProviderConnectorId)">
                   {{ bucket }}
                 </option>
               </select>
@@ -140,14 +140,14 @@
               <div class="mb-3">
                 <label class="form-label"><strong>Quell-Dateipfad im IONOS-S3 Bucket*</strong></label>
                 <input class="form-control" placeholder="MyFile1.json" 
-                  [(ngModel)]="contractDetails.provisioning.dataAddressSourceFileName" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
+                  [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.dataAddressSourceFileName" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
               </div>
             </li>
   
             <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
               <strong>Typ der Datenadresse*</strong><br />
-              <select class="form-select" [(ngModel)]="contractDetails.provisioning.dataAddressType" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
-                <option [value]="" *ngIf="contractDetails.provisioning.dataAddressType === ''"></option>
+              <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.dataAddressType" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
+                <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).provisioning.dataAddressType === ''"></option>
                 <option [value]="'IonosS3'">IonosS3</option>
               </select>
             </li>
@@ -155,8 +155,8 @@
   
             <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
               <strong>Aktiver EDC Connector*:</strong><br />
-              <select class="form-select" [(ngModel)]="contractDetails.provisioning.selectedConsumerConnectorId" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
-                <option [value]="" *ngIf="contractDetails.provisioning.selectedConsumerConnectorId === ''"></option>
+              <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.selectedConsumerConnectorId" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
+                <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).provisioning.selectedConsumerConnectorId === ''"></option>
                 <option [value]="connector.connectorId" *ngFor="let connector of availableConnectors">
                   {{ connector.connectorId }}
                 </option>
@@ -165,9 +165,9 @@
   
             <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
               <strong>IONOS-S3 Ziel-Bucket*</strong><br />
-              <select class="form-select" [(ngModel)]="contractDetails.provisioning.dataAddressTargetBucketName" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
-                <option [value]="" *ngIf="contractDetails.provisioning.dataAddressTargetBucketName === ''"></option>
-                <option [value]="bucket" *ngFor="let bucket of getConnectorBuckets(contractDetails.provisioning.selectedConsumerConnectorId)">
+              <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.dataAddressTargetBucketName" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
+                <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).provisioning.dataAddressTargetBucketName === ''"></option>
+                <option [value]="bucket" *ngFor="let bucket of getConnectorBuckets(asDataDeliveryContract(contractDetails).provisioning.selectedConsumerConnectorId)">
                   {{ bucket }}
                 </option>
               </select>
@@ -177,7 +177,7 @@
               <div class="mb-3">
                 <label class="form-label"><strong>Ziel-Dateipfad im IONOS-S3 Bucket*</strong></label>
                 <input class="form-control" placeholder="MyFile1.json" 
-                  [(ngModel)]="contractDetails.provisioning.dataAddressTargetFileName" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
+                  [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.dataAddressTargetFileName" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
               </div>
             </li>
   
