@@ -8,7 +8,7 @@
     </mat-select>
   </mat-form-field>
   <mat-error>
-    <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+    <app-show-errors [ctrl]="$any(form.get(input.id))" [label]="input.name"></app-show-errors>
   </mat-error>
 
   <mat-form-field *ngIf='isArray' class="full-width-input">
