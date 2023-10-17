@@ -42,7 +42,7 @@
       <strong>Serviceangebotspezifische Geschäftsbedingungen:</strong><br />
       <ul *ngFor="let tnc of serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:termsAndConditions']">
         <li>
-          <a [href]="tnc['gax-trust-framework:content']">{{ tnc['gax-trust-framework:content']['@value'] }}</a> (Hash: {{ tnc['gax-trust-framework:hash']['@value'] }})
+          <a [href]="tnc['gax-trust-framework:content']['@value']">{{ tnc['gax-trust-framework:content']['@value'] }}</a> (Hash: {{ tnc['gax-trust-framework:hash']['@value'] }})
         </li>
       </ul>
     </li>
