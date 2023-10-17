@@ -2,10 +2,10 @@
 
   <div style="padding:10px">
     <c-form-check [inline]="true" switch sizing="xl">
-      <input cFormCheckInput id="filterCheck" type="checkbox" [(ngModel)]="applyStatusFilter" (change)="filterByStatus(applyStatusFilter, selectedStatusFilter)"/>
+      <input cFormCheckInput id="filterCheck" type="checkbox" [(ngModel)]="applyStatusFilter" (change)="filterByStatus(undefined, applyStatusFilter, selectedStatusFilter)"/>
       <label cFormCheckLabel for="filterCheck">Zeige nur Verträge mit Status: </label>
     </c-form-check> <br/>
-    <select class="form-select" (change)="selectedStatusFilter = $event.target.value; filterByStatus(applyStatusFilter, selectedStatusFilter)">
+    <select class="form-select" (change)="filterByStatus($event.target, applyStatusFilter, selectedStatusFilter)">
       <option *ngFor="let option of contractApiService.getAvailableStatusNames()" [value]="option">{{contractApiService.resolveFriendlyStatusName(option)}}</option>
     </select>
   </div>
@@ -60,7 +60,7 @@
     </c-col>
   </c-row>
 
-  <app-paging-footer [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE, authService.getActiveOrgaId())"></app-paging-footer>
+  <app-paging-footer [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE)"></app-paging-footer>
 </div>
 
 <h1 *ngIf="initialLoading">Verträge werden geladen...</h1>

@@ -20,11 +20,20 @@ export interface IContract {
   offering: IOfferings
 }
 
+export interface IDataDeliveryContract extends IContract {
+  negotiation: IDataDeliveryContractNegotiation,
+  provisioning: IDataDeliveryContractProvisioning
+}
+
+export interface ISaasContract extends IContract {
+  negotiation: ISaasContractNegotiation
+}
+
 export interface IContractDetails {
   id: string,
   creationDate: string,
   providerId: string,
-  termsAndConditions: IContractTnc,
+  termsAndConditions: IContractTnc[],
   providerLegalName: string,
   consumerId: string,
   consumerLegalName: string,
@@ -50,6 +59,24 @@ export interface IContractProvisioning {
   validUntil: string
 }
 
+export interface IDataDeliveryContractProvisioning extends IContractProvisioning {
+  dataAddressType: string,
+  dataAddressSourceBucketName: string,
+  dataAddressSourceFileName: string,
+  selectedProviderConnectorId: string,
+  dataAddressTargetBucketName: string,
+  dataAddressTargetFileName: string,
+  selectedConsumerConnectorId: string
+}
+
+export interface IDataDeliveryContractNegotiation extends IContractNegotiation {
+  exchangeCountSelection: string
+}
+
+export interface ISaasContractNegotiation extends IContractNegotiation {
+  userCountSelection: string
+}
+
 export class IEdcIdResponse {
   id: string;
 }
@@ -66,5 +93,5 @@ export class IEdcTransferStatus {
 }
 
 export interface IPageContracts extends ISpringPage {
-    content: IContract[];
+    content: IContractBasic[];
 }

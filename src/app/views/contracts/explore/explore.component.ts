@@ -67,7 +67,11 @@ export class ExploreComponent implements OnInit {
     }); 
   }
 
-  protected filterByStatus(applyFilter: boolean, status: string) {
+  protected filterByStatus(eventTarget: EventTarget, applyFilter: boolean, status: string) {
+    if (eventTarget !== undefined) {
+      this.selectedStatusFilter = (eventTarget as HTMLSelectElement).value; 
+    }
+
     if (applyFilter) { // if filter has been enabled, send the selected status to the api
       this.refreshContracts(0, this.ITEMS_PER_PAGE);
       this.isCurrentlyFiltered = true;

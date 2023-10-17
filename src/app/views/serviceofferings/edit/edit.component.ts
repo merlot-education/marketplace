@@ -63,7 +63,14 @@ export class EditComponent implements OnInit, AfterViewInit {
     });
   }
 
-  select(name: string): void {
+
+  select(input: string | EventTarget): void {
+    let name = "";
+    if (typeof input === "string") {
+      name = input;
+    } else if (input instanceof EventTarget) {
+      name = (input as HTMLSelectElement).value;
+    }
     this.serviceofferingsApiService.fetchShape(name).then(
       res => {
         this.shaclFile = this.formFieldService.readShaclFile(res);

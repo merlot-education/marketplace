@@ -32,7 +32,7 @@
                 <mat-icon>delete icon</mat-icon>
               </button>
               <mat-error>
-                <app-show-errors [ctrl]="form.get(formField.id)" [label]="formField.name"></app-show-errors>
+                <app-show-errors [ctrl]="$any(form.get(formField.id))" [label]="formField.name"></app-show-errors>
               </mat-error>
             </div>
           </div>
@@ -56,7 +56,7 @@
                 <mat-icon>delete icon</mat-icon>
               </button>
               <mat-error>
-                <app-show-errors [ctrl]="form.get(formField.id)" [label]="formField.name"></app-show-errors>
+                <app-show-errors [ctrl]="$any(form.get(formField.id))" [label]="formField.name"></app-show-errors>
               </mat-error>
             </div>
 
@@ -69,7 +69,7 @@
                 <mat-label>{{formField.name}} <span *ngIf="formField.required" aria-required="true" class="required"> *
                   </span>
                 </mat-label>
-                <input [formControlName]="formField.id" [matTooltip]="formField.description[this.translate.currentLang]" placeholder="{{formField.description[this.translate.currentLang]}}" appNumeric decimals="2"
+                <input [formControlName]="formField.id" [matTooltip]="formField.description[this.translate.currentLang]" placeholder="{{formField.description[this.translate.currentLang]}}" appNumeric
                        matInput type="number">
               </mat-form-field>
               <button (click)="addInput()" *ngIf="i==0 && displayAddButton" [disabled]="!enableButton" color="primary"
@@ -81,7 +81,7 @@
                 <mat-icon>delete icon</mat-icon>
               </button>
               <mat-error>
-                <app-show-errors [ctrl]="form.get(formField.id)" [label]="formField.name"></app-show-errors>
+                <app-show-errors [ctrl]="$any(form.get(formField.id))" [label]="formField.name"></app-show-errors>
               </mat-error>
             </div>
 
@@ -105,7 +105,7 @@
                 <mat-icon>delete icon</mat-icon>
               </button>
               <mat-error>
-                <app-show-errors [ctrl]="form.get(formField.id)" [label]="formField.name"></app-show-errors>
+                <app-show-errors [ctrl]="$any(form.get(formField.id))" [label]="formField.name"></app-show-errors>
               </mat-error>
             </div>
           </div>
@@ -130,7 +130,7 @@
                 <mat-icon>delete icon</mat-icon>
               </button>
               <mat-error>
-                <app-show-errors [ctrl]="form.get(formField.id)" [label]="formField.name"></app-show-errors>
+                <app-show-errors [ctrl]="$any(form.get(formField.id))" [label]="formField.name"></app-show-errors>
               </mat-error>
             </div>
 
@@ -144,7 +144,7 @@
                   </span>
                 </mat-label>
                 <input [formControlName]="formField.id" [ngxMatDatetimePicker]="picker" matInput>
-                <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+                <mat-datepicker-toggle [for]="$any(picker)" matSuffix></mat-datepicker-toggle>
                 <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
               </mat-form-field>
               <button (click)="addInput()" *ngIf="i==0 && displayAddButton" [disabled]="!enableButton" color="primary"
@@ -156,7 +156,7 @@
                 <mat-icon>delete icon</mat-icon>
               </button>
               <mat-error>
-                <app-show-errors [ctrl]="form.get(formField.id)" [label]="formField.name"></app-show-errors>
+                <app-show-errors [ctrl]="$any(form.get(formField.id))" [label]="formField.name"></app-show-errors>
               </mat-error>
             </div>
 
@@ -176,7 +176,7 @@
                 </mat-select>
               </mat-form-field>
               <mat-error>
-                <app-show-errors [ctrl]="form.get(formField.id)" [label]="formField.name"></app-show-errors>
+                <app-show-errors [ctrl]="$any(form.get(formField.id))" [label]="formField.name"></app-show-errors>
               </mat-error>
             </div>
           </div>

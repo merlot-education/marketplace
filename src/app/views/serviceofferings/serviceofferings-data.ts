@@ -44,7 +44,7 @@ export interface IBasicOffering {
   state: string,
   name: string,
   creationDate: string,
-  providerLegalname: string
+  providerLegalName: string
 }
 
 export interface IStringTypeValue {
