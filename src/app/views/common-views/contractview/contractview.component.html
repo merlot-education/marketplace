@@ -71,6 +71,8 @@
                 </div>
               </li>
             </ul>
+            <strong *ngIf="showAttachmentErrorMessage" style="color:red">Fehler beim Speichern des Anhangs. ({{ attachmentErrorDetails }})</strong>
+            <strong *ngIf="showAttachmentSuccessMessage" style="color:green">Anhänge erfolgreich aktualisiert.</strong>
           </li>
           <li class="list-group-item" style="border: none">
             <strong>Laufzeit*:</strong><br />

@@ -30,9 +30,12 @@ export class ContractviewComponent {
 
   protected showErrorMessage: boolean = false;
   protected showSuccessMessage: boolean = false;
+  protected showAttachmentErrorMessage: boolean = false;
+  protected showAttachmentSuccessMessage: boolean = false;
   protected showEdcStatusMessage: boolean = false;
 
   protected errorDetails: string = "";
+  protected attachmentErrorDetails: string = "";
   protected edcStatusMessage: string = "";
 
   protected fileName = "";
@@ -289,6 +292,9 @@ export class ContractviewComponent {
   }
 
   protected addAttachment(event: Event) {
+    this.showAttachmentSuccessMessage = false;
+    this.showAttachmentErrorMessage = false;
+
     const file:File = (event.target as HTMLInputElement).files[0];
     if (!file) {
       return;
@@ -296,11 +302,15 @@ export class ContractviewComponent {
 
     if (file.type !== 'application/pdf') {
       console.log("not pdf");
+      this.attachmentErrorDetails = "Ausgewählte Datei ist keine PDF.";
+      this.showAttachmentErrorMessage = true;
       return;
     }
 
     if (file.size > 2 * 1000 * 1000) { // size is in bytes
       console.log("file too large");
+      this.attachmentErrorDetails = "Ausgewählte Datei ist zu groß, max. 2 MB erlaubt.";
+      this.showAttachmentErrorMessage = true;
       return;
     }
     
@@ -310,16 +320,25 @@ export class ContractviewComponent {
 
     this.contractApiService.addAttachment(this.contractDetails.details.id, formData).then(result => {
       this.contractDetails = result;
+      this.showAttachmentSuccessMessage = true;
+    }).catch((e: HttpErrorResponse) => {
+      this.attachmentErrorDetails = e.error.message;
+      this.showAttachmentErrorMessage = true;
     });
   }
 
   protected deleteAttachment(attachmentName: string) {
+    this.showAttachmentSuccessMessage = false;
+    this.showAttachmentErrorMessage = false;
     this.contractApiService.deleteAttachment(this.contractDetails.details.id, attachmentName).then(result => {
       this.contractDetails = result;
+      this.showAttachmentSuccessMessage = true;
     });
   }
 
   protected downloadAttachment(attachmentName: string) {
+    this.showAttachmentSuccessMessage = false;
+    this.showAttachmentErrorMessage = false;
     this.contractApiService.downloadAttachment(this.contractDetails.details.id, attachmentName).then(result => {
       saveAs(result, attachmentName);
     });
