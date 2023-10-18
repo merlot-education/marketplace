@@ -95,9 +95,9 @@ export class ContractApiService {
       environment.contract_api_url + "contract/" + contractId + "/attachment/" + attachmentName, {headers: this.getActiveRoleHeaders()})) as IContract;
   }
 
-  public downloadAttachment(contractId: string, attachmentName: string): Observable<any> {
-    return this.http.get(environment.contract_api_url + "contract/" + contractId + "/attachment/" + attachmentName, 
-    {headers: this.getActiveRoleHeaders(), responseType: 'blob'});
+  public async downloadAttachment(contractId: string, attachmentName: string): Promise<any> {
+    return await lastValueFrom(this.http.get(environment.contract_api_url + "contract/" + contractId + "/attachment/" + attachmentName, 
+    {headers: this.getActiveRoleHeaders(), responseType: 'blob'}));
   }
 
   public resolveFriendlyStatusName(contractStatus: string) {

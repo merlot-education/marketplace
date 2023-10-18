@@ -44,7 +44,7 @@
           </li>
           <li class="list-group-item" style="border: none" *ngIf="shouldShowAttachments(contractDetails)">
             <strong>Anhänge:</strong>
-            <input type="file" class="file-input"
+            <input type="file" class="file-input" [accept]="'application/pdf'"
               (change)="addAttachment($event)" [hidden]="true" #fileUpload>
 
             <div class="file-upload">

@@ -290,18 +290,17 @@ export class ContractviewComponent {
 
   protected addAttachment(event: Event) {
     const file:File = (event.target as HTMLInputElement).files[0];
+    if (file && file.name.endsWith(".pdf")) {
+        this.fileName = file.name;
+        const formData = new FormData();
+        formData.append("file", file);
 
-        if (file) {
-            this.fileName = file.name;
-            const formData = new FormData();
-            formData.append("file", file);
-
-            this.contractApiService.addAttachment(this.contractDetails.details.id, formData).then(result => {
-              if (result !== undefined) {
-                this.contractDetails = result;
-              }
-            });
-        }
+        this.contractApiService.addAttachment(this.contractDetails.details.id, formData).then(result => {
+          if (result !== undefined) {
+            this.contractDetails = result;
+          }
+        });
+    }
   }
 
   protected deleteAttachment(attachmentName: string) {
@@ -313,7 +312,7 @@ export class ContractviewComponent {
   }
 
   protected downloadAttachment(attachmentName: string) {
-    this.contractApiService.downloadAttachment(this.contractDetails.details.id, attachmentName).subscribe(result => {
+    this.contractApiService.downloadAttachment(this.contractDetails.details.id, attachmentName).then(result => {
       console.log(result);
       saveAs(result, attachmentName);
     });
