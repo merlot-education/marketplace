@@ -7,6 +7,8 @@ import { AuthService } from 'src/app/services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
 import { IRuntime } from '../../serviceofferings/serviceofferings-data';
+import { saveAs } from 'file-saver';
+
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -32,6 +34,8 @@ export class ContractviewComponent {
 
   protected errorDetails: string = "";
   protected edcStatusMessage: string = "";
+
+  protected fileName = "";
 
   constructor(
     protected contractApiService: ContractApiService,
@@ -199,13 +203,6 @@ export class ContractviewComponent {
     return this.authService.getActiveOrgaId() == this.contractDetails.details.consumerId;
   }
 
-  protected addAttachment() {
-    this.contractDetails.negotiation.attachments.push("");
-  }
-
-  protected deleteAttachment(index: number) {
-    this.contractDetails.negotiation.attachments.splice(index, 1);
-  }
 
   protected isContractInDraft(contractDetails: IContract): boolean {
     return contractDetails.details.state === 'IN_DRAFT';
@@ -289,5 +286,36 @@ export class ContractviewComponent {
 
   protected shouldShowRegenerateButton(contractDetails: IContract): boolean {
     return this.isContractArchived(contractDetails) || this.isContractDeleted(contractDetails);
+  }
+
+  protected addAttachment(event: Event) {
+    const file:File = (event.target as HTMLInputElement).files[0];
+
+        if (file) {
+            this.fileName = file.name;
+            const formData = new FormData();
+            formData.append("file", file);
+
+            this.contractApiService.addAttachment(this.contractDetails.details.id, formData).then(result => {
+              if (result !== undefined) {
+                this.contractDetails = result;
+              }
+            });
+        }
+  }
+
+  protected deleteAttachment(attachmentName: string) {
+    this.contractApiService.deleteAttachment(this.contractDetails.details.id, attachmentName).then(result => {
+      if (result !== undefined) {
+        this.contractDetails = result;
+      }
+    });
+  }
+
+  protected downloadAttachment(attachmentName: string) {
+    this.contractApiService.downloadAttachment(this.contractDetails.details.id, attachmentName).subscribe(result => {
+      console.log(result);
+      saveAs(result, attachmentName);
+    });
   }
 }

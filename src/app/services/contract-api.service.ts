@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
-import { lastValueFrom } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
 import { IContract, IEdcIdResponse, IEdcNegotiationStatus, IEdcTransferStatus, IPageContracts } from '../views/contracts/contracts-data';
 
 @Injectable({
@@ -83,6 +83,21 @@ export class ContractApiService {
   public async getEdcTransferStatus(contractId: string, transferId: string): Promise<IEdcTransferStatus> {
     return await lastValueFrom(this.http.get(
       environment.contract_api_url + "transfers/contract/" + contractId + "/transfer/" + transferId + "/status", {headers: this.getActiveRoleHeaders()})) as IEdcTransferStatus;
+  }
+
+  public async addAttachment(contractId: string, formData: FormData): Promise<IContract> {
+    return await lastValueFrom(this.http.patch(
+      environment.contract_api_url + "contract/" + contractId + "/attachment", formData, {headers: this.getActiveRoleHeaders()})) as IContract;
+  }
+
+  public async deleteAttachment(contractId: string, attachmentName: string): Promise<IContract> {
+    return await lastValueFrom(this.http.delete(
+      environment.contract_api_url + "contract/" + contractId + "/attachment/" + attachmentName, {headers: this.getActiveRoleHeaders()})) as IContract;
+  }
+
+  public downloadAttachment(contractId: string, attachmentName: string): Observable<any> {
+    return this.http.get(environment.contract_api_url + "contract/" + contractId + "/attachment/" + attachmentName, 
+    {headers: this.getActiveRoleHeaders(), responseType: 'blob'});
   }
 
   public resolveFriendlyStatusName(contractStatus: string) {
