@@ -71,8 +71,12 @@
                 </div>
               </li>
             </ul>
-            <strong *ngIf="showAttachmentErrorMessage" style="color:red">Fehler beim Speichern des Anhangs. ({{ attachmentErrorDetails }})</strong>
-            <strong *ngIf="showAttachmentSuccessMessage" style="color:green">Anhänge erfolgreich aktualisiert.</strong>
+            <app-status-message 
+              [successMessage]="'Anhänge erfolgreich aktualisiert.'"
+              [errorMessage]="'Fehler beim Speichern des Anhangs.'"
+              [infoMessage]="''"
+              #attachmentStatusMessage>
+            </app-status-message>
           </li>
           <li class="list-group-item" style="border: none">
             <strong>Laufzeit*:</strong><br />
@@ -215,9 +219,18 @@
               <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Allgemeine Geschäftsbedingungen des Service-Angebotes & des Merlot Marktplatzes gelesen und akzeptiert*</b></label>
             </c-form-check>
           </li>
-          <strong *ngIf="showErrorMessage" style="color:red">Fehler beim Speichern der Vertragskonfiguration. ({{ errorDetails }})</strong>
-          <strong *ngIf="showSuccessMessage" style="color:green">Vertragskonfiguration gespeichert!</strong>
-          <strong *ngIf="showEdcStatusMessage" style="color:blue">{{edcStatusMessage}}</strong>
+          <app-status-message 
+              [successMessage]="'Vertragskonfiguration gespeichert.'"
+              [errorMessage]="'Fehler beim Speichern der Vertragskonfiguration.'"
+              [infoMessage]="''"
+              #contractStatusMessage>
+          </app-status-message>
+          <app-status-message 
+              [successMessage]="'EDC-Übertragung erfolgreich.'"
+              [errorMessage]="'Fehler bei der EDC-Übertragung.'"
+              [infoMessage]="'EDC-Übertragung läuft.'"
+              #edcStatusMessage>
+          </app-status-message>
         </ul>
       </ng-container>
     </c-modal-body>

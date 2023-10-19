@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { IContract, IDataDeliveryContract, IEdcIdResponse, IEdcNegotiationStatus, IEdcTransferStatus, ISaasContract } from '../../contracts/contracts-data';
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
@@ -8,6 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
 import { IRuntime } from '../../serviceofferings/serviceofferings-data';
 import { saveAs } from 'file-saver';
+import { StatusMessageComponent } from '../status-message/status-message.component';
 
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -26,17 +27,11 @@ export class ContractviewComponent {
   @Input() availableConnectors : ConnectorData[] = [];
   @Output() buttonClickCallback: EventEmitter<any> = new EventEmitter();
 
+  @ViewChild('attachmentStatusMessage') private attachmentStatusMessage: StatusMessageComponent;
+  @ViewChild('contractStatusMessage') private contractStatusMessage: StatusMessageComponent;
+  @ViewChild('edcStatusMessage') private edcStatusMessage: StatusMessageComponent;
+
   protected saveButtonDisabled: boolean = false;
-
-  protected showErrorMessage: boolean = false;
-  protected showSuccessMessage: boolean = false;
-  protected showAttachmentErrorMessage: boolean = false;
-  protected showAttachmentSuccessMessage: boolean = false;
-  protected showEdcStatusMessage: boolean = false;
-
-  protected errorDetails: string = "";
-  protected attachmentErrorDetails: string = "";
-  protected edcStatusMessage: string = "";
 
   protected fileName = "";
 
@@ -62,27 +57,21 @@ export class ContractviewComponent {
   protected handleButtonClick(targetFunction: (contractApiService: ContractApiService, contractDetails: IContract) => Promise<IContract>, contractDetails: IContract) {
     console.log("sent", contractDetails);
     this.saveButtonDisabled = true;
-    this.showSuccessMessage = false;
-    this.showErrorMessage = false;
-    this.showEdcStatusMessage = false;
-    this.edcStatusMessage = "";
-    this.errorDetails = "";
+    this.contractStatusMessage.hideAllMessages();
 
     targetFunction(this.contractApiService, contractDetails).then(result => {
         this.contractDetails = result;
-        this.showSuccessMessage = true;
+        this.contractStatusMessage.showSuccessMessage("", 5000);
         console.log("received", result);
         this.buttonClickCallback.emit();
       })
       .catch((e: HttpErrorResponse) => {
         console.log(e);
-        this.errorDetails = e.error.message;
-        this.showErrorMessage = true;
+        this.contractStatusMessage.showErrorMessage(e.error.message);
       })
       .catch(e => {
         console.log(e);
-        this.errorDetails = "Unbekannter Fehler.";
-        this.showErrorMessage = true;
+        this.contractStatusMessage.showErrorMessage("Unbekannter Fehler.");
       })
       .finally(() => {
         this.saveButtonDisabled = false;
@@ -133,11 +122,7 @@ export class ContractviewComponent {
   }  
   protected initiateDataTransfer(contractDetails: IContract) {
     this.saveButtonDisabled = true;
-    this.showSuccessMessage = false;
-    this.showErrorMessage = false;
-    this.errorDetails = "";
-    this.showEdcStatusMessage = true;
-    this.edcStatusMessage = "Starte EDC Verhandlung...";
+    this.edcStatusMessage.showInfoMessage("Starte EDC Verhandlung...");
     console.log("Initiate transfer");
     this.contractApiService.initiateEdcNegotiation(contractDetails.details.id).then(async (negotiationId: IEdcIdResponse) => {
       console.log(negotiationId);
@@ -149,13 +134,13 @@ export class ContractviewComponent {
         }
         while (negotiationState.state !== "FINALIZED") {
           negotiationState = await this.contractApiService.getEdcNegotiationStatus(contractDetails.details.id, negotiationId.id);
-          this.edcStatusMessage = "EDC Verhandlung gestartet. Aktueller Status: " + negotiationState.state;
+          this.edcStatusMessage.showInfoMessage("EDC Verhandlung gestartet. Aktueller Status: " + negotiationState.state);
           console.log(negotiationState);
           await sleep(1000);
         }
-        this.edcStatusMessage = "EDC Verhandlung abgeschlossen! Starte EDC Datentransfer..."; 
+        this.edcStatusMessage.showInfoMessage("EDC Verhandlung abgeschlossen. Starte EDC Datentransfer...");
       } catch (e) {
-        this.edcStatusMessage = "Fehler bei der EDC Verhandlung. (" + e.message + ")";
+        this.edcStatusMessage.showErrorMessage("Verhandlungsfehler: " + e.message);
         this.saveButtonDisabled = false;
       }
 
@@ -168,22 +153,22 @@ export class ContractviewComponent {
           }
           while (transferState.state !== "COMPLETED") {
             transferState = await this.contractApiService.getEdcTransferStatus(contractDetails.details.id, transferId.id);
-            this.edcStatusMessage = "EDC Datentransfer gestartet. Aktueller Status: " + transferState.state;
+            this.edcStatusMessage.showInfoMessage("EDC Datentransfer gestartet. Aktueller Status: " + transferState.state);
             console.log(transferState);
             await sleep(1000);
           }
-          this.edcStatusMessage = "EDC Datentransfer abgeschlossen!";
+          this.edcStatusMessage.showSuccessMessage("", 5000);
         } catch (e) {
-          this.edcStatusMessage = "Fehler beim EDC Dateitransfer. (" + e.message + ")";
+          this.edcStatusMessage.showErrorMessage("Transferfehler: " + e.message);
         }
         
         this.saveButtonDisabled = false;
       })
     }).catch((e: HttpErrorResponse) => {
-      this.edcStatusMessage = "Fehler bei der EDC Kommunikation. (" + e.error.message + ")";
+      this.edcStatusMessage.showErrorMessage("Kommunikationsfehler: " + e.error.message);
       this.saveButtonDisabled = false;
     }).catch(e => {
-      this.edcStatusMessage = "Fehler bei der EDC Kommunikation. (Unbekannter Fehler)";
+      this.edcStatusMessage.showErrorMessage("Unbekannter Fehler");
       this.saveButtonDisabled = false;
     })
   }
@@ -191,9 +176,9 @@ export class ContractviewComponent {
   protected handleEventContractModal(isVisible: boolean) {
     if (!isVisible) {
       this.saveButtonDisabled = false;
-      this.showErrorMessage = false;
-      this.showSuccessMessage = false;
-      this.showEdcStatusMessage = false;
+      this.contractStatusMessage.hideAllMessages();
+      this.edcStatusMessage.hideAllMessages();
+      this.attachmentStatusMessage.hideAllMessages();
       // TODO clear contract on close again
     }
   }
@@ -292,8 +277,7 @@ export class ContractviewComponent {
   }
 
   protected addAttachment(event: Event) {
-    this.showAttachmentSuccessMessage = false;
-    this.showAttachmentErrorMessage = false;
+    this.attachmentStatusMessage.hideAllMessages();
 
     const file:File = (event.target as HTMLInputElement).files[0];
     if (!file) {
@@ -302,15 +286,13 @@ export class ContractviewComponent {
 
     if (file.type !== 'application/pdf') {
       console.log("not pdf");
-      this.attachmentErrorDetails = "Ausgewählte Datei ist keine PDF.";
-      this.showAttachmentErrorMessage = true;
+      this.attachmentStatusMessage.showErrorMessage("Ausgewählte Datei ist keine PDF.");
       return;
     }
 
     if (file.size > 2 * 1000 * 1000) { // size is in bytes
       console.log("file too large");
-      this.attachmentErrorDetails = "Ausgewählte Datei ist zu groß, max. 2 MB erlaubt.";
-      this.showAttachmentErrorMessage = true;
+      this.attachmentStatusMessage.showErrorMessage("Ausgewählte Datei ist zu groß, max. 2 MB erlaubt.");
       return;
     }
     
@@ -320,25 +302,22 @@ export class ContractviewComponent {
 
     this.contractApiService.addAttachment(this.contractDetails.details.id, formData).then(result => {
       this.contractDetails = result;
-      this.showAttachmentSuccessMessage = true;
+      this.attachmentStatusMessage.showSuccessMessage("", 5000);
     }).catch((e: HttpErrorResponse) => {
-      this.attachmentErrorDetails = e.error.message;
-      this.showAttachmentErrorMessage = true;
+      this.attachmentStatusMessage.showErrorMessage(e.error.message);
     });
   }
 
   protected deleteAttachment(attachmentName: string) {
-    this.showAttachmentSuccessMessage = false;
-    this.showAttachmentErrorMessage = false;
+    this.attachmentStatusMessage.hideAllMessages();
     this.contractApiService.deleteAttachment(this.contractDetails.details.id, attachmentName).then(result => {
       this.contractDetails = result;
-      this.showAttachmentSuccessMessage = true;
+      this.attachmentStatusMessage.showSuccessMessage("", 5000);
     });
   }
 
   protected downloadAttachment(attachmentName: string) {
-    this.showAttachmentSuccessMessage = false;
-    this.showAttachmentErrorMessage = false;
+    this.attachmentStatusMessage.hideAllMessages();
     this.contractApiService.downloadAttachment(this.contractDetails.details.id, attachmentName).then(result => {
       saveAs(result, attachmentName);
     });

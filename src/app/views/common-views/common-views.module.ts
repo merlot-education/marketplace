@@ -33,11 +33,12 @@ import {
 } from '@coreui/angular';
 
 import { IconModule } from '@coreui/icons-angular';
+import { StatusMessageComponent } from './status-message/status-message.component';
 
 
 
 @NgModule({
-  declarations: [PagingFooterComponent, ContractviewComponent, OfferingdetailviewComponent],
+  declarations: [PagingFooterComponent, ContractviewComponent, OfferingdetailviewComponent, StatusMessageComponent],
   imports: [
     CommonModule,
     AccordionModule,
