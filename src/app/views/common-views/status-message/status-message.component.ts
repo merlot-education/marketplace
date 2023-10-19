@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { runInThisContext } from 'vm';
 
 @Component({
   selector: 'app-status-message',
@@ -32,6 +31,7 @@ export class StatusMessageComponent {
     }
     this.messageTimeout = setTimeout(() => {
       this.hideAllMessages();
+      this.messageTimeout = undefined;
     }, 5000);
   }
 
