@@ -58,7 +58,7 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.repository }}:${{ env.tag }},ghcr.io/${{ env.repository }}:latest
           secrets: |
-            key=string, NODE_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
+            key=string, ${{ secrets.GITHUB_TOKEN }}=NODE_AUTH_TOKEN
           build-args: |
             ENVIRONMENT=${{ env.environment }}
 
