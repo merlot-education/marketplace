@@ -45,20 +45,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@merlot-education'
-
-      - run: npm config list -l
-
-      - run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -76,9 +62,16 @@ jobs:
           build-args: |
             ENVIRONMENT=${{ env.environment }}
 
-      - name: Dispatch update
-        run: |
-          curl -H "Accept: application/vnd.github+json" \
-          -H "Authorization: token ${{ secrets.GIT_OPS_TOKEN }}" \
-          --request POST \
-          --data '{"event_type": "image_update", "client_payload": { "environment": "${{ env.environment }}", "tag": "${{ env.tag }}", "key": ".image.tag", "app": "marketplace" }}' https://api.github.com/repos/merlot-education/gitops/dispatches
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@merlot-education'
+
+      - run: npm config list -l
+
+      - run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
