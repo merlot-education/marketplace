@@ -26,3 +26,5 @@ jobs:
       - run: npm config list -l
 
       - run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
