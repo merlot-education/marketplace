@@ -217,7 +217,7 @@ export class ContractviewComponent {
   }
 
   protected canAddAttachments(contractDetails: IContract): boolean {
-    return this.userIsActiveProvider() && this.isContractInDraft(contractDetails);
+    return this.userIsActiveProvider() && this.isContractInDraft(contractDetails) && (contractDetails.negotiation.attachments.length <= 10);
   }
 
   protected shouldShowAttachmentAsLink(contractDetails: IContract): boolean {
