@@ -8,6 +8,7 @@ RUN npm config list -l
 RUN echo '@merlot-education:registry = "https://npm.pkg.github.com/"' >> ~/.npmrc
 RUN echo '//npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN' >> ~/.npmrc
 RUN npm config list -l
+RUN ls /run/secrets
 RUN cat /run/secrets/github_token
 RUN --mount=type=secret,id=github_token NODE_AUTH_TOKEN=$(cat /run/secrets/github_token) npm ci
 RUN npm run ng -- build --configuration $ENVIRONMENT
