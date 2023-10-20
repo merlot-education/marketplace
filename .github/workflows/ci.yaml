@@ -2,6 +2,11 @@ name: Continuous Integration
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - "main"
+    tags:
+      - "*"
 
 jobs:
   build-and-push:
@@ -15,16 +20,51 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Demo image tag
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash {0}
+        run: |
+          tag=$(git describe --tags HEAD)
+          echo "tag=$tag" >> $GITHUB_ENV
+          echo "environment=demo" >> $GITHUB_ENV
+
+      - name: Dev image tag
+        if: startsWith(github.ref, 'refs/heads/')
+        shell: bash {0}
+        run: |
+          tag="$(awk -F'"' '/"version": ".+"/{ print $4; exit; }' package.json)-$(git rev-parse --short HEAD)"
+          echo "tag=$tag" >> $GITHUB_ENV
+          echo "environment=dev" >> $GITHUB_ENV
+
+      - name: Repo environment variable
+        run: echo "repository=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@merlot-education'
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: npm config list -l
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ghcr.io/${{ env.repository }}:${{ env.tag }},ghcr.io/${{ env.repository }}:latest
+          secrets: |
+            "github_token=${{ secrets.GITHUB_TOKEN }}"
+          build-args: |
+            ENVIRONMENT=${{ env.environment }}
 
-      - run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Dispatch update
+        run: |
+          curl -H "Accept: application/vnd.github+json" \
+          -H "Authorization: token ${{ secrets.GIT_OPS_TOKEN }}" \
+          --request POST \
+          --data '{"event_type": "image_update", "client_payload": { "environment": "${{ env.environment }}", "tag": "${{ env.tag }}", "key": ".image.tag", "app": "marketplace" }}' https://api.github.com/repos/merlot-education/gitops/dispatches
