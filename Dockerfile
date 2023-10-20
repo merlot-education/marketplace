@@ -4,6 +4,7 @@ ARG ENVIRONMENT
 WORKDIR /app
 
 COPY . .
+RUN echo //npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN >> ~/.npmrc
 RUN npm ci
 RUN npm run ng -- build --configuration $ENVIRONMENT
 
