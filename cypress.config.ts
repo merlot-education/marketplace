@@ -5,7 +5,7 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
-    baseUrl: 'https://marketplace.dev.merlot-education.eu/',
+    baseUrl: 'http://localhost:4200',
   },
 
   component: {
