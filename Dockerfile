@@ -4,8 +4,9 @@ ARG ENVIRONMENT
 WORKDIR /app
 
 COPY . .
-RUN cat ~/.npmrc
+RUN npm config list
 RUN echo //npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN >> ~/.npmrc
+RUN npm config list
 RUN cat ~/.npmrc
 RUN echo $NODE_AUTH_TOKEN
 RUN npm ci
