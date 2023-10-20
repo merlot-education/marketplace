@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - "main"
+      - ui-package-test
     tags:
       - "*"
 
@@ -19,19 +20,19 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@merlot-education'
-
-      - run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
+#
+#      - name: Use Node.js ${{ matrix.node-version }}
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: ${{ matrix.node-version }}
+#          cache: 'npm'
+#          registry-url: 'https://npm.pkg.github.com'
+#          scope: '@merlot-education'
+#
+#      - run: npm ci
+#        env:
+#          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+#
       - run: md5sum <<<${{secrets.GITHUB_TOKEN}}
 
       - name: Demo image tag
@@ -76,7 +77,6 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.repository }}:${{ env.tag }},ghcr.io/${{ env.repository }}:latest
           secrets: |
-            "github_token=${{ secrets.GITHUB_TOKEN }}"
             "test=${{ env.repository }}"
           build-args: |
             ENVIRONMENT=${{ env.environment }}
