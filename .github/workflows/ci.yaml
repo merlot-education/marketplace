@@ -34,6 +34,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
+      - run: md5sum <<<${{secrets.GITHUB_TOKEN}}
+
       - name: Demo image tag
         if: startsWith(github.ref, 'refs/tags/')
         shell: bash {0}
