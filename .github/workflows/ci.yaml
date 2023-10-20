@@ -76,7 +76,7 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.repository }}:${{ env.tag }},ghcr.io/${{ env.repository }}:latest
           secrets: |
-            "github_token=${{ secrets.GITHUB_TOKEN }}",
+            "github_token=${{ secrets.GITHUB_TOKEN }}"
             "test=${{ env.repository }}"
           build-args: |
             ENVIRONMENT=${{ env.environment }}
