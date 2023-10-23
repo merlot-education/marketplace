@@ -277,22 +277,26 @@ export class ContractviewComponent {
   }
 
   protected addAttachment(event: Event) {
-    this.attachmentStatusMessage.hideAllMessages();
+    this.saveButtonDisabled = true;
+    this.attachmentStatusMessage.showInfoMessage("Anhang wird hochgeladen...");
 
     const file:File = (event.target as HTMLInputElement).files[0];
     if (!file) {
+      this.saveButtonDisabled = false;
       return;
     }
 
     if (file.type !== 'application/pdf') {
       console.log("not pdf");
       this.attachmentStatusMessage.showErrorMessage("Ausgewählte Datei ist keine PDF.");
+      this.saveButtonDisabled = false;
       return;
     }
 
     if (file.size > 2 * 1000 * 1000) { // size is in bytes
       console.log("file too large");
       this.attachmentStatusMessage.showErrorMessage("Ausgewählte Datei ist zu groß, max. 2 MB erlaubt.");
+      this.saveButtonDisabled = false;
       return;
     }
     
@@ -303,16 +307,23 @@ export class ContractviewComponent {
     this.contractApiService.addAttachment(this.contractDetails.details.id, formData).then(result => {
       this.contractDetails = result;
       this.attachmentStatusMessage.showSuccessMessage("", 5000);
+      this.saveButtonDisabled = false;
     }).catch((e: HttpErrorResponse) => {
       this.attachmentStatusMessage.showErrorMessage(e.error.message);
+      this.saveButtonDisabled = false;
     });
   }
 
   protected deleteAttachment(attachmentName: string) {
-    this.attachmentStatusMessage.hideAllMessages();
+    this.saveButtonDisabled = true;
+    this.attachmentStatusMessage.showInfoMessage("Anhang wird gelöscht...");
     this.contractApiService.deleteAttachment(this.contractDetails.details.id, attachmentName).then(result => {
       this.contractDetails = result;
       this.attachmentStatusMessage.showSuccessMessage("", 5000);
+      this.saveButtonDisabled = false;
+    }).catch((e: HttpErrorResponse) => {
+      this.attachmentStatusMessage.showErrorMessage(e.error.message);
+      this.saveButtonDisabled = false;
     });
   }
 

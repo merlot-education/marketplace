@@ -48,7 +48,7 @@
 
             <div class="file-upload">
               <strong>Anhänge:</strong>
-              <button cButton color="primary" variant="ghost" (click)="fileUpload.click()" size="sm" *ngIf="canAddAttachments(contractDetails)">
+              <button cButton color="primary" variant="ghost" [disabled]="saveButtonDisabled" (click)="fileUpload.click()" size="sm" *ngIf="canAddAttachments(contractDetails)">
                 <svg
                 class=""
                 cIcon
@@ -60,7 +60,7 @@
               <li>
                 <div>
                   <a href="javascript:void(0);" (click)="downloadAttachment(attachment)">{{ attachment }}</a>
-                  <button cButton variant="ghost" (click)="deleteAttachment(attachment)" color="primary" size="sm" *ngIf="userIsActiveProvider() && isContractInDraft(contractDetails)">
+                  <button cButton variant="ghost" [disabled]="saveButtonDisabled" (click)="deleteAttachment(attachment)" color="primary" size="sm" *ngIf="userIsActiveProvider() && isContractInDraft(contractDetails)">
                     <svg
                     class=""
                     cIcon
@@ -73,7 +73,7 @@
             <app-status-message 
               [successMessage]="'Anhänge erfolgreich aktualisiert.'"
               [errorMessage]="'Fehler beim Speichern des Anhangs.'"
-              [infoMessage]="''"
+              [infoMessage]="'Anhänge werden aktualisiert.'"
               #attachmentStatusMessage>
             </app-status-message>
           </li>
