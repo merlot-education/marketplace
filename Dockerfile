@@ -18,7 +18,7 @@ RUN npm config ls
 #RUN --mount=type=secret,id=NPM_CONFIG md5sum <(cat /run/secrets/NPM_CONFIG)
 #RUN --mount=type=secret,id=NPM_CONFIG npm ci --userconfig /run/secrets/NPM_CONFIG
 #RUN npm ci
-RUN --mount=type=secret,id=GIT_AUTH_TOKEN env NPM_CONFIG_TOKEN=$(cat /run/secrets/GIT_AUTH_TOKEN) bash -c 'npm ci'
+RUN --mount=type=secret,id=GIT_AUTH_TOKEN env NPM_CONFIG_TOKEN=$(cat /run/secrets/GIT_AUTH_TOKEN) sh -c 'npm ci'
 RUN npm run ng -- build --configuration $ENVIRONMENT
 
 FROM nginx:stable-alpine
