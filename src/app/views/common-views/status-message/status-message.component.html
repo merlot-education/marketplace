@@ -1,6 +1,6 @@
 <div>
-    <strong *ngIf="successMessageVisible" style="color:green">{{ successMessage }} {{ (successDetails === '') ? '' : '(' + successDetails + ')' }}</strong>
-    <strong *ngIf="errorMessageVisible" style="color:red">{{ errorMessage }} {{ (errorDetails === '') ? '' : '(' + errorDetails + ')' }}</strong>
-    <strong *ngIf="infoMessageVisible" style="color:blue">{{ infoMessage }} {{ (infoDetails === '') ? '' : '(' + infoDetails + ')' }}</strong>
+    <strong *ngIf="successMessageVisible" class="success-message">{{ successMessage }} {{ (successDetails === '') ? '' : '(' + successDetails + ')' }}</strong>
+    <strong *ngIf="errorMessageVisible" class="error-message">{{ errorMessage }} {{ (errorDetails === '') ? '' : '(' + errorDetails + ')' }}</strong>
+    <strong *ngIf="infoMessageVisible" class="info-message">{{ infoMessage }} {{ (infoDetails === '') ? '' : '(' + infoDetails + ')' }}</strong>
 </div>
 
