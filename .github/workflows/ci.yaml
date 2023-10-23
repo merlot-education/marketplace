@@ -85,7 +85,7 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.repository }}:${{ env.tag }},ghcr.io/${{ env.repository }}:latest
           secrets: |
-            "test=${{ env.repository }}"
+            "PACKAGES_RO_TOKEN=${{ secrets.PACKAGES_RO_TOKEN }}"
           secret-files: |
             "NPM_CONFIG=/home/runner/work/_temp/.npmrc"
           build-args: |
