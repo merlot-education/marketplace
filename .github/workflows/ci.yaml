@@ -39,7 +39,7 @@ jobs:
 
       - run: md5sum <<<${{secrets.GITHUB_TOKEN}}
 
-      - run: md5sum <(cat /run/secrets/NPM_CONFIG)
+      - run: md5sum <(cat /home/runner/work/_temp/.npmrc)
 
       - name: Demo image tag
         if: startsWith(github.ref, 'refs/tags/')
