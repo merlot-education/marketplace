@@ -24,6 +24,7 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
+          token: ${{ secrets.PACKAGES_RO_TOKEN }}
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
           registry-url: 'https://npm.pkg.github.com'
