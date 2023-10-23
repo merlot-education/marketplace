@@ -20,29 +20,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-#
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          token: ${{ secrets.PACKAGES_RO_TOKEN }}
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@merlot-education'
-
-#      - run: npm ci
-#        env:
-#          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-      - run: npm ci
-
-      - run: npm config ls
-
-      - run: npm config ls -l
-
-      - run: md5sum <<<${{secrets.GITHUB_TOKEN}}
-
-      - run: md5sum <(cat /home/runner/work/_temp/.npmrc)
 
       - name: Demo image tag
         if: startsWith(github.ref, 'refs/tags/')
