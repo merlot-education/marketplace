@@ -29,10 +29,14 @@ jobs:
 #          registry-url: 'https://npm.pkg.github.com'
 #          scope: '@merlot-education'
 #
-#      - run: npm ci
-#        env:
-#          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-#
+      - run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - run: npm config ls
+
+      - run: npm config ls -l
+
       - run: md5sum <<<${{secrets.GITHUB_TOKEN}}
 
       - name: Demo image tag
