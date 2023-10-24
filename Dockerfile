@@ -2,7 +2,7 @@ FROM node:18-alpine AS build
 ARG ENVIRONMENT
 
 RUN echo '@merlot-education:registry = "https://npm.pkg.github.com/"' >> ~/.npmrc
-RUN --mount=type=secret,id=GIT_AUTH_TOKEN echo '//npm.pkg.github.com/:_authToken=${NPM_CONFIG_TOKEN}' >> ~/.npmrc
+RUN echo '//npm.pkg.github.com/:_authToken=${NPM_CONFIG_TOKEN}' >> ~/.npmrc
 
 WORKDIR /app
 
