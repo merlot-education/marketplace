@@ -19,10 +19,9 @@ jobs:
           fetch-depth: 0
 
       - uses: actions/setup-node@v3
-     #   with:
-     #     cache: 'npm'
-     #     registry-url: 'https://npm.pkg.github.com'
-     #     scope: '@merlot-education'
+        with:
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@merlot-education'
 
       - run: npm ci
         env:
