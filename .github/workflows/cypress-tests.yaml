@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 18
 
-      - run: npm ci
+      - run: NPM_CONFIG_TOKEN=${{ secrets.GITHUB_TOKEN }} npm ci
 
       - name: Run full test suite
         uses: cypress-io/github-action@v5.5.1
