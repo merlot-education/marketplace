@@ -1,0 +1,4 @@
+{
+    "presets": ["@babel/preset-angular"],
+    "plugins": ["transform-class-properties", "istanbul"]
+  }
