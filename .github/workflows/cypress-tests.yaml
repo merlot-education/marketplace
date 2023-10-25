@@ -19,19 +19,14 @@ jobs:
           fetch-depth: 0
 
       - uses: actions/setup-node@v3
-        with:
-          cache: 'npm'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@merlot-education'
-          token: ${{ secrets.PACKAGES_RW_TOKEN }}
-
-      #- run: |
-      #    echo '@merlot-education:registry = "https://npm.pkg.github.com/"' >> ~/.npmrc
-      #    echo //npm.pkg.github.com/:_authToken=${{ secrets.PACKAGES_RW_TOKEN }} >> ~/.npmrc
+     #   with:
+     #     cache: 'npm'
+     #     registry-url: 'https://npm.pkg.github.com'
+     #     scope: '@merlot-education'
 
       - run: npm ci
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_RW_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run full test suite
         uses: cypress-io/github-action@v5.5.1
