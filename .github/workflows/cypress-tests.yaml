@@ -25,6 +25,10 @@ jobs:
           scope: '@merlot-education'
           token: ${{ secrets.PACKAGES_RW_TOKEN }}
 
+      - run: |
+          echo '@merlot-education:registry = "https://npm.pkg.github.com/"' >> ~/.npmrc
+          echo //npm.pkg.github.com/:_authToken=${{ secrets.PACKAGES_RW_TOKEN }} >> ~/.npmrc
+
       - run: npm ci
 
       - name: Run full test suite
