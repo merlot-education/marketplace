@@ -67,5 +67,17 @@ it('create service offering', () => {
     });
 
     cy.contains("Änderungen speichern").should("not.be.disabled").click();
-    cy.contains("Selbstbeschreibung erfolgreich gespeichert!", {timeout: 30000}).should("include.text", "ServiceOffering:");
+    cy.contains("Selbstbeschreibung erfolgreich gespeichert!", {timeout: 30000}).should("include.text", "ServiceOffering:").then((result) => {
+        let offeringId = result.get(0).innerText.match(/ServiceOffering:\S+/)[0];
+        cy.contains("Service Angebote erkunden").click();
+        cy.contains(offeringId).parent().parent().parent().within(() => {
+            cy.contains("Details").click({force: true});
+        });
+        cy.contains("Details zum Service Angebot").parent().parent().within(() => {
+            cy.contains("Schließen");
+            cy.contains("Veröffentlichen");
+            cy.contains("Löschen").scrollIntoView().click({force: true});
+            cy.contains("Endgültig löschen").scrollIntoView().click({force: true});
+        });
+    });
 })
