@@ -25,11 +25,13 @@ jobs:
           scope: '@merlot-education'
           token: ${{ secrets.PACKAGES_RW_TOKEN }}
 
-      - run: |
-          echo '@merlot-education:registry = "https://npm.pkg.github.com/"' >> ~/.npmrc
-          echo //npm.pkg.github.com/:_authToken=${{ secrets.PACKAGES_RW_TOKEN }} >> ~/.npmrc
+      #- run: |
+      #    echo '@merlot-education:registry = "https://npm.pkg.github.com/"' >> ~/.npmrc
+      #    echo //npm.pkg.github.com/:_authToken=${{ secrets.PACKAGES_RW_TOKEN }} >> ~/.npmrc
 
       - run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_RW_TOKEN }}
 
       - name: Run full test suite
         uses: cypress-io/github-action@v5.5.1
