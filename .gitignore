@@ -48,3 +48,6 @@ Thumbs.db
 
 *.css
 *.css.map
+
+cypress/videos
+.nyc_output
