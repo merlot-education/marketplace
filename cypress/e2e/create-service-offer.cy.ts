@@ -12,7 +12,7 @@ it('create service offering', () => {
     cy.contains('Service Angebote').click()
     cy.contains('Service Angebot erstellen').click()
     cy.url().should('include', 'service-offerings/edit')
-    cy.contains('Art des Service Angebots').next().select("Webanwendung");
+    cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Webanwendung");
     cy.contains("Füllen Sie das MerlotServiceOfferingSaaS Formular aus");
 
     cy.contains("Änderungen speichern").should("be.disabled");
