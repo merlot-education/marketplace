@@ -22,14 +22,11 @@ jobs:
         with:
           node-version: 18
 
-      - run: NPM_CONFIG_TOKEN=${{ secrets.GITHUB_TOKEN }} npm ci
+      - run: npm ci
 
       - name: Run full test suite
         uses: cypress-io/github-action@v5.5.1
         with:
-          build: NPM_CONFIG_TOKEN=${{ secrets.GITHUB_TOKEN }} npm run build
-          start: NPM_CONFIG_TOKEN=${{ secrets.GITHUB_TOKEN }} npm run qa
+          build: npm run build
+          start: npm run qa
           config: baseUrl=https://marketplace.dev.merlot-education.eu
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
