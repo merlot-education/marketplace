@@ -23,7 +23,7 @@ jobs:
           cache: 'npm'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@merlot-education'
-          token: ${{ secrets.PACKAGES_RO_TOKEN }}
+          token: ${{ secrets.PACKAGES_RW_TOKEN }}
 
       - run: npm ci
 
