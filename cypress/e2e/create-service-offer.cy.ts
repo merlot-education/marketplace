@@ -33,7 +33,7 @@ it('create service offering', () => {
     cy.contains("Service Bereitsteller").next().invoke('val').should("not.be.empty");
     cy.contains("Service Anbieter").next().invoke('val').should("not.be.empty");
 
-    cy.contains("Detaillierte Beschreibung des Services").next().type(offeringDescription, {force: true});
+    cy.contains("Detaillierte Beschreibung des Services").scrollIntoView().next().type(offeringDescription, {force: true});
     cy.contains("Merlot AGB").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
         cy.get("button").click({force: true});
     });
@@ -77,6 +77,24 @@ it('create service offering', () => {
         let offeringId = result.get(0).innerText.match(/ServiceOffering:\S+/)[0];
         cy.contains("Service Angebote erkunden").click();
         cy.contains(offeringId).parent().parent().parent().within(() => {
+            cy.contains("Status").parent().should("include.text", "In Bearbeitung");
+            cy.contains("Bearbeiten").click({force: true});
+        });
+
+        cy.contains("Service Angebot \"" + offeringName + "\" bearbeiten").parent().parent().within(() => {
+            offeringName = "Lernplattform (LMS) für betriebliche Weiterbildung (SaaS)";
+            cy.contains("Servicename").next().clear({force: true});
+            cy.contains("Servicename").next().type(offeringName, {force: true});
+            cy.contains("Veröffentlichen").scrollIntoView().click({force: true});
+            cy.contains("Selbstbeschreibung erfolgreich gespeichert!");
+            cy.contains("Schließen").click();
+        });
+
+        cy.contains("Zeige nur Angebote mit Status").parent().next().next().select("Veröffentlicht", {force: true});
+        cy.contains("Zeige nur Angebote mit Status").prev().click({force: true});
+
+        cy.contains(offeringId).parent().parent().parent().within(() => {
+            cy.contains("Status").parent().should("include.text", "Veröffentlicht");
             cy.contains("Details").click({force: true});
         });
         cy.contains("Details zum Service Angebot").parent().parent().within(() => {
@@ -85,7 +103,7 @@ it('create service offering', () => {
             cy.contains("Name").parent().should("include.text", offeringName);
             cy.contains("Erstelldatum");
             cy.contains("Anbieter");
-            cy.contains("Status").parent().should("include.text", "In Bearbeitung");
+            cy.contains("Status").parent().should("include.text", "Veröffentlicht");
             cy.contains("Beschreibung").parent().should("include.text", offeringDescription);
             cy.contains("Letzte Änderung");
             cy.contains("Beispielkosten").parent().should("include.text", offeringCosts);
@@ -107,11 +125,14 @@ it('create service offering', () => {
                 }
             }
             
-
             cy.contains("Schließen");
-            cy.contains("Veröffentlichen");
+            cy.contains("Angebot neu erstellen");
+            cy.contains("Widerrufen").scrollIntoView().click({force: true});
+            cy.contains("Status").parent().should("include.text", "Widerrufen");
             cy.contains("Löschen").scrollIntoView().click({force: true});
+            cy.contains("Status").parent().should("include.text", "Gelöscht");
             cy.contains("Endgültig löschen").scrollIntoView().click({force: true});
         });
+        cy.get("c-card-body").contains(offeringId).should("not.exist");
     });
 })
