@@ -117,6 +117,28 @@ function deleteOffering(offeringId: string) {
     cy.get("c-card-body").contains(offeringId).should("not.exist");
 }
 
+function openOfferingForEdit(offeringId: string) {
+    // search for offering in list
+    cy.contains(offeringId).parent().parent().parent().within(() => {
+        //check status of created offer equals "In Bearbeitung"
+        cy.contains("Status").parent().should("include.text", "In Bearbeitung");
+        // click on button Bearbeiten of the created offer
+        cy.contains("Bearbeiten").click({force: true});
+    });
+}
+
+function openOfferingDetails(offeringId: string, expectedStatus: string) {
+    // search for offering in list
+    cy.contains(offeringId).parent().parent().parent().within(() => {
+        if (expectedStatus) {
+            // check status of published offer equals expected status
+            cy.contains("Status").parent().should("include.text", expectedStatus);
+        }
+        // click on button Bearbeiten of the created offer
+        cy.contains("Details").click({force: true});
+    });
+}
+
 
 beforeEach(() => {
     cy.visit('/')
@@ -186,13 +208,7 @@ it('create saas service offering', () => {
         // click on navigation entry Angebote erkunden, the created offer is shown on top of the page
         cy.contains("Service Angebote erkunden").click();
 
-        // search for offering in list
-        cy.contains(offeringId).parent().parent().parent().within(() => {
-            //check status of created offer equals "In Bearbeitung"
-            cy.contains("Status").parent().should("include.text", "In Bearbeitung");
-            // click on button Bearbeiten of the created offer
-            cy.contains("Bearbeiten").click({force: true});
-        });
+       openOfferingForEdit(offeringId);
 
         // a popup opens with the form to modify offer (here data could be checked with entered ones)
         cy.contains("Service Angebot \"" + offeringName + "\" bearbeiten").parent().parent().within(() => {
@@ -213,13 +229,7 @@ it('create saas service offering', () => {
         cy.contains("Zeige nur Angebote mit Status").parent().next().next().select("Veröffentlicht", {force: true});
         cy.contains("Zeige nur Angebote mit Status").prev().click({force: true});
 
-        // search for offering in list
-        cy.contains(offeringId).parent().parent().parent().within(() => {
-            // check status of published offer equals "Veröffentlicht"
-            cy.contains("Status").parent().should("include.text", "Veröffentlicht");
-            // click on the card button "Details" to open the detail page
-            cy.contains("Details").click({force: true});
-        });
+        openOfferingDetails(offeringId, "Veröffentlicht");
 
         //double-check the saved values with the expected ones
         cy.contains("Details zum Service Angebot").should("be.visible", {timeout: 10000}).parent().parent().within(() => {
@@ -273,13 +283,7 @@ it('create saas service offering', () => {
         cy.contains('Service Angebote erkunden').click()
         cy.url().should('include', 'service-offerings/explore')
 
-        // search for offering in list
-        cy.contains(offeringId).parent().parent().parent().within(() => {
-            // check status of published offer equals "Veröffentlicht"
-            cy.contains("Status").parent().should("include.text", "Veröffentlicht");
-            // click on the card button "Details" to open the detail page
-            cy.contains("Details").click({force: true});
-        });
+        openOfferingDetails(offeringId, "Veröffentlicht");
 
         // revoke the offering
         cy.contains("Details zum Service Angebot").parent().parent().within(() => {
@@ -346,13 +350,7 @@ it('create data delivery service offering', () => {
         // click on navigation entry Angebote erkunden, the created offer is shown on top of the page
         cy.contains("Service Angebote erkunden").click();
 
-        // search for offering in list
-        cy.contains(offeringId).parent().parent().parent().within(() => {
-            //check status of created offer equals "In Bearbeitung"
-            cy.contains("Status").parent().should("include.text", "In Bearbeitung");
-            // click on button Bearbeiten of the created offer
-            cy.contains("Bearbeiten").click({force: true});
-        });
+        openOfferingForEdit(offeringId);
 
         // a popup opens with the form to modify offer (here data could be checked with entered ones)
         cy.contains("Service Angebot \"" + offeringName + "\" bearbeiten").parent().parent().within(() => {
@@ -374,13 +372,7 @@ it('create data delivery service offering', () => {
         cy.contains("Zeige nur Angebote mit Status").parent().next().next().select("Veröffentlicht", {force: true});
         cy.contains("Zeige nur Angebote mit Status").prev().click({force: true});
 
-        // search for offering in list
-        cy.contains(offeringId).parent().parent().parent().within(() => {
-            // check status of published offer equals "Veröffentlicht"
-            cy.contains("Status").parent().should("include.text", "Veröffentlicht");
-            // click on the card button "Details" to open the detail page
-            cy.contains("Details").click({force: true});
-        });
+        openOfferingDetails(offeringId, "Veröffentlicht");
 
         //double-check the saved values with the expected ones
         cy.contains("Details zum Service Angebot").parent().parent().within(() => {
@@ -441,13 +433,7 @@ it('create data delivery service offering', () => {
         cy.contains('Service Angebote erkunden').click()
         cy.url().should('include', 'service-offerings/explore')
 
-        // search for offering in list
-        cy.contains(offeringId).parent().parent().parent().within(() => {
-            // check status of published offer equals "Veröffentlicht"
-            cy.contains("Status").parent().should("include.text", "Veröffentlicht");
-            // click on the card button "Details" to open the detail page
-            cy.contains("Details").click({force: true});
-        });
+        openOfferingDetails(offeringId, "Veröffentlicht");
 
         // revoke the offering
         cy.contains("Details zum Service Angebot").parent().parent().within(() => {
@@ -502,13 +488,7 @@ it('create coop contract service offering', () => {
         // click on navigation entry Angebote erkunden, the created offer is shown on top of the page
         cy.contains("Service Angebote erkunden").click();
 
-        // search for offering in list
-        cy.contains(offeringId).parent().parent().parent().within(() => {
-            // check status of published offer equals "Veröffentlicht"
-            cy.contains("Status").parent().should("include.text", "Veröffentlicht");
-            // click on the card button "Details" to open the detail page
-            cy.contains("Details").click({force: true});
-        });
+        openOfferingDetails(offeringId, "Veröffentlicht");
 
         //double-check the saved values with the expected ones
         cy.contains("Details zum Service Angebot").parent().parent().within(() => {
@@ -528,7 +508,7 @@ it('create coop contract service offering', () => {
             cy.contains("Schließen").scrollIntoView().click({force: true});
         });
 
-        cy.wait(500); // TODO check why we need to wait here
+        cy.wait(500);
 
         logout();
         deleteOffering(offeringId);
