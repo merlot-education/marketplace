@@ -1,3 +1,123 @@
+function loginAsTestuser() {
+    // click login will redirect to keycloak, use testuser to login
+    cy.get("#login-button").click();
+
+    cy.get("#username").type("testuser");
+    cy.get("#password").type("testuser");
+    cy.get("#kc-login").click();
+
+    // make sure welcome text changed
+    cy.get("#welcome-text").contains('Willkommen, Test User!');
+}
+
+function logout() {
+    cy.get("#logout-button").click();
+    //open merlot marketplace landing page, user is not logged in, use the welcome text to check that user is a visitor
+    cy.get("#welcome-text").contains('Willkommen, Besucher!');
+}
+
+function fillGeneralOfferingFields(offeringName: string, offeringDescription: string, 
+    offeringTncLink: string, offeringTncHash: string, 
+    offeringCosts: string, runtimeOptions: number[], 
+    runtimeOptionsSelect: string[]) {
+    cy.contains("Servicename").next().type(offeringName, {force: true});
+    cy.contains("Service Bereitsteller").next().invoke('val').should("not.be.empty");
+    cy.contains("Service Anbieter").next().invoke('val').should("not.be.empty");
+    if (offeringDescription) {
+        cy.contains("Detaillierte Beschreibung des Services").scrollIntoView().next().type(offeringDescription, {force: true});
+    }
+    if (offeringTncLink && offeringTncHash) {
+        cy.contains("Merlot AGB").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
+            cy.get("button").click({force: true});
+        });
+        cy.contains("Anbieter AGB");
+        cy.contains("Serviceangebotspezifische Geschäftsbedingungen").scrollIntoView().click({force: true}).parent().parent().parent().parent().parent().within(() => {
+            cy.contains("Link zum Inhalt").next().type(offeringTncLink, {force: true});
+            cy.contains("Hash des Dokuments").next().type(offeringTncHash, {force: true});
+        });
+    }
+    if (offeringCosts) {
+        cy.contains("Beispielkosten").next().type(offeringCosts, {force: true});
+    }
+    
+    cy.contains("Laufzeit-Option").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
+        for (let i = 1; i < runtimeOptions.length; i++) {
+            cy.get("button").click({force: true});
+        }
+    });
+    cy.get('mat-expansion-panel-header:visible:contains("Laufzeit-Option")').should("have.length", runtimeOptions.length).each(($el, index, $list) => {
+        if (index !== 0) {
+            cy.wrap($el).click({force: true});
+        } 
+        cy.wrap($el).parent().parent().parent().contains("Anzahl-Teil der Laufzeit").next().type(runtimeOptions[index] + "", {force: true});
+        cy.wrap($el).parent().parent().parent().contains("Maß-Teil der Laufzeit").next().select(runtimeOptionsSelect[index]);
+    });
+    cy.contains("Erstelldatum").next().invoke('val').should("not.be.empty");
+    cy.contains("Merlot AGB akzeptieren").parent().within(() => {
+        cy.get("input").check();
+    });
+}
+
+function checkGeneralOfferingFields(offeringName: string, offeringDescription: string, 
+    offeringTncLink: string, offeringTncHash: string, 
+    offeringCosts: string, runtimeOptions: number[], 
+    runtimeOptionsSelect: string[]) {
+    cy.contains("Name").parent().should("include.text", offeringName);
+    cy.contains("Erstelldatum");
+    cy.contains("Anbieter");
+    if (offeringDescription) {
+        cy.contains("Beschreibung").parent().should("include.text", offeringDescription);
+    }
+    cy.contains("Letzte Änderung");
+    if (offeringCosts) {
+        cy.contains("Beispielkosten").parent().should("include.text", offeringCosts);
+    }
+    
+    if (offeringTncLink && offeringTncHash) {
+        cy.contains("Serviceangebotspezifische Geschäftsbedingungen").parent().should("include.text", offeringTncLink).should("include.text", offeringTncHash);
+    }
+
+    for (let runtimeOptIdx = 0; runtimeOptIdx < runtimeOptions.length; runtimeOptIdx++) {
+        if (runtimeOptions[runtimeOptIdx] !== 0 && runtimeOptionsSelect[runtimeOptIdx] !== "unlimited") {
+            cy.contains("Laufzeitoptionen").parent().should("include.text", runtimeOptions[runtimeOptIdx] + " " + runtimeOptionsSelect[runtimeOptIdx]);
+        } else {
+            cy.contains("Laufzeitoptionen").parent().should("include.text", "Unbegrenzt");
+        }
+    }
+}
+
+function deleteOffering(offeringId: string) {
+    // assumes contract is in draft or revoked state
+    loginAsTestuser()
+
+    // click on navigation entry Serviceangebote,  the submenu is extended
+    cy.contains('Service Angebote').click()
+
+    // click on navigation entry Serviceangebot erkunden, the form will be displayed on the right side of the screen
+    cy.contains('Service Angebote erkunden').click()
+    cy.url().should('include', 'service-offerings/explore')
+
+    // search for offering in list
+    cy.contains(offeringId).parent().parent().parent().within(() => {
+        // click on the card button "Details" to open the detail page
+        cy.contains("Details").click({force: true});
+    });
+
+    cy.contains("Details zum Service Angebot").parent().parent().within(() => {
+        cy.contains("Löschen").scrollIntoView().click({force: true});
+    });
+
+    // delete the offering
+    cy.contains("Details zum Service Angebot").parent().parent().within(() => {
+        cy.contains("Status").parent().should("include.text", "Gelöscht");
+        cy.contains("Endgültig löschen").scrollIntoView().click({force: true});
+    });
+
+    // make sure the offering is no longer in the list
+    cy.get("c-card-body").contains(offeringId).should("not.exist");
+}
+
+
 beforeEach(() => {
     cy.visit('/')
 
@@ -43,19 +163,7 @@ it('create saas service offering', () => {
     cy.contains("Änderungen speichern").should("be.disabled");
 
     // fill the form fields as specified above
-    cy.contains("Servicename").next().type(offeringName, {force: true});
-    cy.contains("Service Bereitsteller").next().invoke('val').should("not.be.empty");
-    cy.contains("Service Anbieter").next().invoke('val').should("not.be.empty");
-    cy.contains("Detaillierte Beschreibung des Services").scrollIntoView().next().type(offeringDescription, {force: true});
-    cy.contains("Merlot AGB").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
-        cy.get("button").click({force: true});
-    });
-    cy.contains("Anbieter AGB");
-    cy.contains("Serviceangebotspezifische Geschäftsbedingungen").scrollIntoView().click({force: true}).parent().parent().parent().parent().parent().within(() => {
-        cy.contains("Link zum Inhalt").next().type(offeringTncLink, {force: true});
-        cy.contains("Hash des Dokuments").next().type(offeringTncHash, {force: true});
-    });
-    cy.contains("Beispielkosten").next().type(offeringCosts, {force: true});
+    fillGeneralOfferingFields(offeringName, offeringDescription, offeringTncLink, offeringTncHash, offeringCosts, runtimeOptions, runtimeOptionsSelect);
     cy.contains("Anforderungen an die Hardware").next().type(offeringHWRequirements, {force: true});
     cy.contains("Nutzeranzahl-Option").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
         cy.get("button").click({force: true}).click({force: true}).click({force: true});
@@ -66,21 +174,6 @@ it('create saas service offering', () => {
         } 
         cy.wrap($el).parent().parent().parent().contains("Option für maximale Nutzerzahl").next().type(userCountOptions[index] + "", {force: true});
     });
-    cy.contains("Laufzeit-Option").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
-        cy.get("button").click({force: true}).click({force: true});
-    });
-    cy.get('mat-expansion-panel-header:visible:contains("Laufzeit-Option")').should("have.length", runtimeOptions.length).each(($el, index, $list) => {
-        if (index !== 0) {
-            cy.wrap($el).click({force: true});
-        } 
-        cy.wrap($el).parent().parent().parent().contains("Anzahl-Teil der Laufzeit").next().type(runtimeOptions[index] + "", {force: true});
-        cy.wrap($el).parent().parent().parent().contains("Maß-Teil der Laufzeit").next().select(runtimeOptionsSelect[index]);
-    });
-    cy.contains("Erstelldatum").next().invoke('val').should("not.be.empty");
-    cy.contains("Merlot AGB akzeptieren").parent().within(() => {
-        cy.get("input").check();
-    });
-
 
     // make sure save button is no longer disabled
     // click on button "Änderungen speichern", the response that the offer is stored will be shown
@@ -114,6 +207,8 @@ it('create saas service offering', () => {
             cy.contains("Schließen").click();
         });
 
+        cy.wait(500);
+
         // activate filter, select Veröffentlicht, the offer should be the first entry of the list of published offers
         cy.contains("Zeige nur Angebote mit Status").parent().next().next().select("Veröffentlicht", {force: true});
         cy.contains("Zeige nur Angebote mit Status").prev().click({force: true});
@@ -127,17 +222,11 @@ it('create saas service offering', () => {
         });
 
         //double-check the saved values with the expected ones
-        cy.contains("Details zum Service Angebot").parent().parent().within(() => {
+        cy.contains("Details zum Service Angebot").should("be.visible", {timeout: 10000}).parent().parent().within(() => {
             cy.contains("Angebotstyp").parent().should("include.text", "Webanwendung");
             cy.contains("Service ID").parent().should("include.text", offeringId);
-            cy.contains("Name").parent().should("include.text", offeringName);
-            cy.contains("Erstelldatum");
-            cy.contains("Anbieter");
             cy.contains("Status").parent().should("include.text", "Veröffentlicht");
-            cy.contains("Beschreibung").parent().should("include.text", offeringDescription);
-            cy.contains("Letzte Änderung");
-            cy.contains("Beispielkosten").parent().should("include.text", offeringCosts);
-            cy.contains("Serviceangebotspezifische Geschäftsbedingungen").parent().should("include.text", offeringTncLink).should("include.text", offeringTncHash);
+            checkGeneralOfferingFields(offeringName, offeringDescription, offeringTncLink, offeringTncHash, offeringCosts, runtimeOptions, runtimeOptionsSelect);
             cy.contains("Hardware-Anforderungen").parent().should("include.text", offeringHWRequirements);
             for (let userOpt of userCountOptions) {
                 if (userOpt !== 0) {
@@ -146,21 +235,12 @@ it('create saas service offering', () => {
                     cy.contains("Optionen für Anzahl erlaubter Benutzer").parent().should("include.text", "Unbegrenzt");
                 }
             }
-
-            for (let runtimeOptIdx = 0; runtimeOptIdx < runtimeOptions.length; runtimeOptIdx++) {
-                if (runtimeOptions[runtimeOptIdx] !== 0 && runtimeOptionsSelect[runtimeOptIdx] !== "unlimited") {
-                    cy.contains("Laufzeitoptionen").parent().should("include.text", runtimeOptions[runtimeOptIdx] + " " + runtimeOptionsSelect[runtimeOptIdx]);
-                } else {
-                    cy.contains("Laufzeitoptionen").parent().should("include.text", "Unbegrenzt");
-                }
-            }
             
             cy.contains("Schließen").scrollIntoView().click({force: true});;
         });
 
         // click on logout, the user is redirected to the MPO landingpage, use the welcome text to check that user is a visitor
-        cy.get("#logout-button").click();
-        cy.get("#welcome-text").contains('Willkommen, Besucher!');
+        logout();
 
         // click on navigation entry Serviceangebote,  the submenu is extended
         cy.contains('Service Angebote').click()
@@ -184,14 +264,7 @@ it('create saas service offering', () => {
 
         // log back in as testuser
         // click login will redirect to keycloak, use testuser to login
-        cy.get("#login-button").click();
-
-        cy.get("#username").type("testuser");
-        cy.get("#password").type("testuser");
-        cy.get("#kc-login").click();
-
-        // make sure welcome text changed
-        cy.get("#welcome-text").contains('Willkommen, Test User!');
+        loginAsTestuser();
 
         // click on navigation entry Serviceangebote,  the submenu is extended
         cy.contains('Service Angebote').click()
@@ -208,23 +281,21 @@ it('create saas service offering', () => {
             cy.contains("Details").click({force: true});
         });
 
-        // delete the offering
+        // revoke the offering
         cy.contains("Details zum Service Angebot").parent().parent().within(() => {
             cy.contains("Angebot neu erstellen");
             cy.contains("Widerrufen").scrollIntoView().click({force: true});
             cy.contains("Status").parent().should("include.text", "Widerrufen");
-            cy.contains("Löschen").scrollIntoView().click({force: true});
-            cy.contains("Status").parent().should("include.text", "Gelöscht");
-            cy.contains("Endgültig löschen").scrollIntoView().click({force: true});
+            cy.contains("Schließen").scrollIntoView().click({force: true});
         });
 
-        // make sure the offering is no longer in the list
-        cy.get("c-card-body").contains(offeringId).should("not.exist");
+        logout();
+
+        deleteOffering(offeringId);
     });
 });
 
 it('create data delivery service offering', () => {
-
     // prepare some data to fill in the form
     let offeringName = "Brandneue Jobangebote";
     let offeringDescription = "Ob Praktika, Ausbildungen, Werkstudentenjobs oder Festanstellungen... Wir schicken Ihnen immer die neusten Stellenanzeigen bei ChemPoint für Ihre Plattform, um Ihren Nutzern offene Jobangebote mit tollen Perspektiven und Entwicklungsmöglichkeiten in der chemischen Industrie zu bieten und ein “perfect Match” zu finden. Lösungen sind unser Job!";
@@ -250,11 +321,7 @@ it('create data delivery service offering', () => {
     cy.contains("Änderungen speichern").should("be.disabled");
 
     // fill the form fields as specified above
-    cy.contains("Servicename").next().type(offeringName, {force: true});
-    cy.contains("Service Bereitsteller").next().invoke('val').should("not.be.empty");
-    cy.contains("Service Anbieter").next().invoke('val').should("not.be.empty");
-    cy.contains("Detaillierte Beschreibung des Services").scrollIntoView().next().type(offeringDescription, {force: true});
-    cy.contains("Beispielkosten").next().type(offeringCosts, {force: true});
+    fillGeneralOfferingFields(offeringName, offeringDescription, null, null, offeringCosts, runtimeOptions, runtimeOptionsSelect);
     cy.contains("Datentransferart").next().select(dataTransfertype, {force: true});
     cy.contains("Datenzugriffsart").next().select(dataAccessType, {force: true});
     cy.contains("Datenaustauschanzahl-Option").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
@@ -266,21 +333,7 @@ it('create data delivery service offering', () => {
         } 
         cy.wrap($el).parent().parent().parent().contains("Option für maximale Anzahl an Datenaustauschen").next().type(dataExchangeOptions[index] + "", {force: true});
     });
-    cy.contains("Laufzeit-Option").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
-        cy.get("button").click({force: true}).click({force: true});
-    });
-    cy.get('mat-expansion-panel-header:visible:contains("Laufzeit-Option")').should("have.length", runtimeOptions.length).each(($el, index, $list) => {
-        if (index !== 0) {
-            cy.wrap($el).click({force: true});
-        } 
-        cy.wrap($el).parent().parent().parent().contains("Anzahl-Teil der Laufzeit").next().type(runtimeOptions[index] + "", {force: true});
-        cy.wrap($el).parent().parent().parent().contains("Maß-Teil der Laufzeit").next().select(runtimeOptionsSelect[index]);
-    });
-    cy.contains("Erstelldatum").next().invoke('val').should("not.be.empty");
-    cy.contains("Merlot AGB akzeptieren").parent().within(() => {
-        cy.get("input").check();
-    });
-
+    
 
     // make sure save button is no longer disabled
     // click on button "Änderungen speichern", the response that the offer is stored will be shown
@@ -333,13 +386,8 @@ it('create data delivery service offering', () => {
         cy.contains("Details zum Service Angebot").parent().parent().within(() => {
             cy.contains("Angebotstyp").parent().should("include.text", "Datenlieferung");
             cy.contains("Service ID").parent().should("include.text", offeringId);
-            cy.contains("Name").parent().should("include.text", offeringName);
-            cy.contains("Erstelldatum");
-            cy.contains("Anbieter");
             cy.contains("Status").parent().should("include.text", "Veröffentlicht");
-            cy.contains("Beschreibung").parent().should("include.text", offeringDescription);
-            cy.contains("Letzte Änderung");
-            cy.contains("Beispielkosten").parent().should("include.text", offeringCosts);
+            checkGeneralOfferingFields(offeringName, offeringDescription, null, null, offeringCosts, runtimeOptions, runtimeOptionsSelect);
             cy.contains("Datentransferart").parent().should("include.text", dataTransfertype);
             cy.contains("Datenzugriffsart").parent().should("include.text", dataAccessType);
             for (let dataOpt of dataExchangeOptions) {
@@ -361,8 +409,7 @@ it('create data delivery service offering', () => {
         });
 
         // click on logout, the user is redirected to the MPO landingpage, use the welcome text to check that user is a visitor
-        cy.get("#logout-button").click();
-        cy.get("#welcome-text").contains('Willkommen, Besucher!');
+        logout();
 
         // click on navigation entry Serviceangebote,  the submenu is extended
         cy.contains('Service Angebote').click()
@@ -385,15 +432,7 @@ it('create data delivery service offering', () => {
         });
 
         // log back in as testuser
-        // click login will redirect to keycloak, use testuser to login
-        cy.get("#login-button").click();
-
-        cy.get("#username").type("testuser");
-        cy.get("#password").type("testuser");
-        cy.get("#kc-login").click();
-
-        // make sure welcome text changed
-        cy.get("#welcome-text").contains('Willkommen, Test User!');
+        loginAsTestuser();
 
         // click on navigation entry Serviceangebote,  the submenu is extended
         cy.contains('Service Angebote').click()
@@ -410,18 +449,17 @@ it('create data delivery service offering', () => {
             cy.contains("Details").click({force: true});
         });
 
-        // delete the offering
+        // revoke the offering
         cy.contains("Details zum Service Angebot").parent().parent().within(() => {
             cy.contains("Angebot neu erstellen");
             cy.contains("Widerrufen").scrollIntoView().click({force: true});
             cy.contains("Status").parent().should("include.text", "Widerrufen");
-            cy.contains("Löschen").scrollIntoView().click({force: true});
-            cy.contains("Status").parent().should("include.text", "Gelöscht");
-            cy.contains("Endgültig löschen").scrollIntoView().click({force: true});
+            cy.contains("Schließen").scrollIntoView().click({force: true});
         });
 
-        // make sure the offering is no longer in the list
-        cy.get("c-card-body").contains(offeringId).should("not.exist");
+        logout();
+
+        deleteOffering(offeringId);
     });
 });
 
@@ -449,25 +487,7 @@ it('create coop contract service offering', () => {
     cy.contains("Änderungen speichern").should("be.disabled");
 
     // fill the form fields as specified above
-    cy.contains("Servicename").next().type(offeringName, {force: true});
-    cy.contains("Service Bereitsteller").next().invoke('val').should("not.be.empty");
-    cy.contains("Service Anbieter").next().invoke('val').should("not.be.empty");
-    cy.contains("Detaillierte Beschreibung des Services").scrollIntoView().next().type(offeringDescription, {force: true});
-    cy.contains("Beispielkosten").next().type(offeringCosts, {force: true});
-    cy.contains("Laufzeit-Option").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
-        cy.get("button").click({force: true}).click({force: true});
-    });
-    cy.get('mat-expansion-panel-header:visible:contains("Laufzeit-Option")').should("have.length", runtimeOptions.length).each(($el, index, $list) => {
-        if (index !== 0) {
-            cy.wrap($el).click({force: true});
-        } 
-        cy.wrap($el).parent().parent().parent().contains("Anzahl-Teil der Laufzeit").next().type(runtimeOptions[index] + "", {force: true});
-        cy.wrap($el).parent().parent().parent().contains("Maß-Teil der Laufzeit").next().select(runtimeOptionsSelect[index]);
-    });
-    cy.contains("Erstelldatum").next().invoke('val').should("not.be.empty");
-    cy.contains("Merlot AGB akzeptieren").parent().within(() => {
-        cy.get("input").check();
-    });
+    fillGeneralOfferingFields(offeringName, offeringDescription, null, null, offeringCosts, runtimeOptions, runtimeOptionsSelect);
 
 
     // make sure save button is no longer disabled
@@ -494,20 +514,8 @@ it('create coop contract service offering', () => {
         cy.contains("Details zum Service Angebot").parent().parent().within(() => {
             cy.contains("Angebotstyp").parent().should("include.text", "Kooperationsvertrag");
             cy.contains("Service ID").parent().should("include.text", offeringId);
-            cy.contains("Name").parent().should("include.text", offeringName);
-            cy.contains("Erstelldatum");
-            cy.contains("Anbieter");
             cy.contains("Status").parent().should("include.text", "Veröffentlicht");
-            cy.contains("Beschreibung").parent().should("include.text", offeringDescription);
-            cy.contains("Letzte Änderung");
-            cy.contains("Beispielkosten").parent().should("include.text", offeringCosts);
-            for (let runtimeOptIdx = 0; runtimeOptIdx < runtimeOptions.length; runtimeOptIdx++) {
-                if (runtimeOptions[runtimeOptIdx] !== 0 && runtimeOptionsSelect[runtimeOptIdx] !== "unlimited") {
-                    cy.contains("Laufzeitoptionen").parent().should("include.text", runtimeOptions[runtimeOptIdx] + " " + runtimeOptionsSelect[runtimeOptIdx]);
-                } else {
-                    cy.contains("Laufzeitoptionen").parent().should("include.text", "Unbegrenzt");
-                }
-            }
+            checkGeneralOfferingFields(offeringName, offeringDescription, null, null, offeringCosts, runtimeOptions, runtimeOptionsSelect);
             
             cy.contains("Widerrufen").scrollIntoView().click({force: true});
             cy.contains("Status").parent().should("include.text", "Widerrufen");
@@ -522,28 +530,7 @@ it('create coop contract service offering', () => {
 
         cy.wait(500); // TODO check why we need to wait here
 
-        // search for offering in list
-        cy.contains(offeringId).parent().parent().parent().parent().parent().contains(offeringName);
-        cy.contains(offeringId).parent().parent().parent().within(() => {
-            // click on the card button "Details" to open the detail page
-            cy.contains("Details").click({force: true});
-        });
-
-        // delete the offering
-        cy.contains("Details zum Service Angebot").should("be.visible").parent().parent().within(() => {
-            cy.contains("Löschen").scrollIntoView().click({force: true});
-        });
-        // reload DOM element and fully delete offering
-        cy.contains("Details zum Service Angebot").should("be.visible").parent().parent().within(() => {
-            cy.contains("Status").parent().should("include.text", "Gelöscht");
-            cy.contains("Endgültig löschen").scrollIntoView().click({force: true});
-        });
-
-        // make sure the offering is no longer in the list
-        cy.get("c-card-body").contains(offeringId).should("not.exist");
-
-        // click on logout, the user is redirected to the MPO landingpage, use the welcome text to check that user is a visitor
-        cy.get("#logout-button").click();
-        cy.get("#welcome-text").contains('Willkommen, Besucher!');
+        logout();
+        deleteOffering(offeringId);
     });
 });
