@@ -108,4 +108,9 @@ export class ExploreComponent implements OnInit {
   protected isActiveConsumer(contract: IContractBasic): boolean {
     return contract.consumerId === this.authService.getActiveOrgaId();
   }
+
+  protected getLocalDate(utcDateTime: string) {
+    let date = new Date(utcDateTime);
+    return date.toLocaleString();
+  }
 }

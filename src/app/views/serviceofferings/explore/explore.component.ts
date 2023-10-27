@@ -328,4 +328,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
         this.contractTemplate = result;
       });
   }
+
+  protected getLocalDate(utcDateTime: string) {
+    let date = new Date(utcDateTime);
+    return date.toLocaleString();
+  }
 }

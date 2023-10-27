@@ -14,7 +14,7 @@
     </li>
     <li class="list-group-item" style="border: none">
       <strong>Erstelldatum:</strong><br />
-      {{ serviceOfferingData.metadata.creationDate }}
+      {{ getLocalDate(serviceOfferingData.metadata.creationDate) }}
     </li>
     <ng-container *ngIf="serviceOfferingData.providerDetails">
       <li class="list-group-item" style="border: none">
@@ -32,7 +32,7 @@
     </li>
     <li class="list-group-item" style="border: none">
       <strong>Letzte Änderung:</strong><br />
-      {{ serviceOfferingData.metadata.modifiedDate }}
+      {{ getLocalDate(serviceOfferingData.metadata.modifiedDate) }}
     </li>
     <li class="list-group-item" style="border: none" *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:exampleCosts']">
       <strong>Beispielkosten:</strong><br />

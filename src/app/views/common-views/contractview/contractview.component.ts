@@ -335,4 +335,9 @@ export class ContractviewComponent {
       saveAs(result, attachmentName);
     });
   }
+
+  protected getLocalDate(utcDateTime: string) {
+    let date = new Date(utcDateTime);
+    return date.toLocaleString();
+  }
 }

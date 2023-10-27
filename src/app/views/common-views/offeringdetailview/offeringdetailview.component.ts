@@ -16,4 +16,9 @@ export class OfferingdetailviewComponent {
     protected serviceOfferingApiService : ServiceofferingApiService) {
   }
 
+  protected getLocalDate(utcDateTime: string) {
+    let date = new Date(utcDateTime);
+    return date.toLocaleString();
+  }
+
 }
