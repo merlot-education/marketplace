@@ -14,7 +14,7 @@
           </li>
           <li class="list-group-item" style="border: none">
             <strong>Erstelldatum des Vertrags:</strong> <br />
-            {{ getLocalDate(contractDetails.details.creationDate) }}
+            {{ contractDetails.details.creationDate | date:"medium"  }}
           </li>
           <li class="list-group-item" style="border: none" *ngIf="isContractReleased(contractDetails)">
             <strong>Gültig bis:</strong> <br />

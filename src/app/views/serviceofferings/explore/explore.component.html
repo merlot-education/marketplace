@@ -26,7 +26,7 @@
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Erstelldatum:</strong><br />
-                {{ getLocalDate(offering.creationDate) }}
+                {{ offering.creationDate | date:"medium"  }}
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Anbieter:</strong><br />
@@ -74,7 +74,7 @@
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Erstelldatum:</strong><br />
-                {{ getLocalDate(offering.creationDate) }}
+                {{ offering.creationDate | date:"medium"  }}
               </li>
               <li class="list-group-item" style="border: none">
                 <strong>Anbieter:</strong><br />

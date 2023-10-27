@@ -15,10 +15,4 @@ export class OfferingdetailviewComponent {
   constructor(
     protected serviceOfferingApiService : ServiceofferingApiService) {
   }
-
-  protected getLocalDate(utcDateTime: string) {
-    let date = new Date(utcDateTime);
-    return date.toLocaleString();
-  }
-
 }
