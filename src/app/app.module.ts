@@ -1,7 +1,8 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 import {
   HashLocationStrategy,
   LocationStrategy,
+  registerLocaleData,
 } from '@angular/common';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -54,6 +55,10 @@ import {
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { environment } from 'src/environments/environment';
+
+import localeDe from '@angular/common/locales/de';
+
+registerLocaleData(localeDe);
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -137,6 +142,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     },
     IconSetService,
     Title,
+    {provide: LOCALE_ID, useValue: 'de'},
   ],
   bootstrap: [AppComponent],
 })
