@@ -33,8 +33,6 @@ export class ContractviewComponent {
 
   protected saveButtonDisabled: boolean = false;
 
-  protected fileName = "";
-
   constructor(
     protected contractApiService: ContractApiService,
     private authService: AuthService,
@@ -277,14 +275,20 @@ export class ContractviewComponent {
   }
 
   protected addAttachment(event: Event) {
+
     this.saveButtonDisabled = true;
-    this.attachmentStatusMessage.showInfoMessage("Anhang wird hochgeladen...");
 
     const file:File = (event.target as HTMLInputElement).files[0];
     if (!file) {
       this.saveButtonDisabled = false;
       return;
     }
+
+    (event.target as HTMLInputElement).value = null;
+
+    let fileName = file.name;
+    const formData = new FormData();
+    formData.append("file", file);
 
     if (file.type !== 'application/pdf') {
       console.log("not pdf");
@@ -299,14 +303,12 @@ export class ContractviewComponent {
       this.saveButtonDisabled = false;
       return;
     }
-    
-    this.fileName = file.name;
-    const formData = new FormData();
-    formData.append("file", file);
+
+    this.attachmentStatusMessage.showInfoMessage("Anhang wird hochgeladen...");
 
     this.contractApiService.addAttachment(this.contractDetails.details.id, formData).then(result => {
       this.contractDetails = result;
-      this.attachmentStatusMessage.showSuccessMessage("", 5000);
+      this.attachmentStatusMessage.showSuccessMessage(fileName + " wurde hochgeladen.", 5000);
       this.saveButtonDisabled = false;
     }).catch((e: HttpErrorResponse) => {
       this.attachmentStatusMessage.showErrorMessage(e.error.message);
@@ -319,7 +321,7 @@ export class ContractviewComponent {
     this.attachmentStatusMessage.showInfoMessage("Anhang wird gelöscht...");
     this.contractApiService.deleteAttachment(this.contractDetails.details.id, attachmentName).then(result => {
       this.contractDetails = result;
-      this.attachmentStatusMessage.showSuccessMessage("", 5000);
+      this.attachmentStatusMessage.showSuccessMessage(attachmentName + " wurde gelöscht.", 5000);
       this.saveButtonDisabled = false;
     }).catch((e: HttpErrorResponse) => {
       this.attachmentStatusMessage.showErrorMessage(e.error.message);
