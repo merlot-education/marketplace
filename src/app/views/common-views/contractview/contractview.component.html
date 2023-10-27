@@ -43,31 +43,39 @@
             </ul>
           </li>
           <li class="list-group-item" style="border: none" *ngIf="shouldShowAttachments(contractDetails)">
-            <strong>Anhänge:</strong>
-            <button cButton color="primary" variant="ghost" (click)="addAttachment()" size="sm" *ngIf="canAddAttachments(contractDetails)">
-              <svg
-              class=""
-              cIcon
-              name="cib-addthis"
-              size="xl"
-            ></svg></button>
-            <br />
+            <input type="file" class="file-input" [accept]="'application/pdf'"
+              (change)="addAttachment($event)" [hidden]="true" #fileUpload>
+
+            <div class="file-upload">
+              <strong>Anhänge:</strong>
+              <button cButton color="primary" variant="ghost" [disabled]="saveButtonDisabled" (click)="fileUpload.click()" size="sm" *ngIf="canAddAttachments(contractDetails)">
+                <svg
+                class=""
+                cIcon
+                name="cib-addthis"
+                size="xl"
+              ></svg></button>
+            </div>
             <ul *ngFor="let attachment of contractDetails.negotiation.attachments;let index = index;trackBy: trackByFn">
               <li>
-                <a [href]="attachment" *ngIf="shouldShowAttachmentAsLink(contractDetails)">{{ attachment }}</a>
-                <div *ngIf="shouldShowAttachmentAsTextbox(contractDetails)" class="mb-3 flex-container">
-                  <input class="form-control" placeholder="Anhang" 
-                    [(ngModel)]="contractDetails.negotiation.attachments[index]">
-                    <button cButton variant="ghost" (click)="deleteAttachment(index)" color="primary" size="sm" *ngIf="isContractInDraft(contractDetails)">
-                      <svg
-                      class=""
-                      cIcon
-                      name="cil-trash"
-                      size="xl"
-                    ></svg></button>
+                <div>
+                  <a href="javascript:void(0);" (click)="downloadAttachment(attachment)">{{ attachment }}</a>
+                  <button cButton variant="ghost" [disabled]="saveButtonDisabled" (click)="deleteAttachment(attachment)" color="primary" size="sm" *ngIf="userIsActiveProvider() && isContractInDraft(contractDetails)">
+                    <svg
+                    class=""
+                    cIcon
+                    name="cil-trash"
+                    size="xl"
+                  ></svg></button>
                 </div>
               </li>
             </ul>
+            <app-status-message 
+              [successMessage]="'Anhänge erfolgreich aktualisiert.'"
+              [errorMessage]="'Fehler beim Speichern des Anhangs.'"
+              [infoMessage]="'Anhänge werden aktualisiert.'"
+              #attachmentStatusMessage>
+            </app-status-message>
           </li>
           <li class="list-group-item" style="border: none">
             <strong>Laufzeit*:</strong><br />
@@ -210,9 +218,18 @@
               <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Allgemeine Geschäftsbedingungen des Service-Angebotes & des Merlot Marktplatzes gelesen und akzeptiert*</b></label>
             </c-form-check>
           </li>
-          <strong *ngIf="showErrorMessage" style="color:red">Fehler beim Speichern der Vertragskonfiguration. ({{ errorDetails }})</strong>
-          <strong *ngIf="showSuccessMessage" style="color:green">Vertragskonfiguration gespeichert!</strong>
-          <strong *ngIf="showEdcStatusMessage" style="color:blue">{{edcStatusMessage}}</strong>
+          <app-status-message 
+              [successMessage]="'Vertragskonfiguration gespeichert.'"
+              [errorMessage]="'Fehler beim Speichern der Vertragskonfiguration.'"
+              [infoMessage]="''"
+              #contractStatusMessage>
+          </app-status-message>
+          <app-status-message 
+              [successMessage]="'EDC-Übertragung erfolgreich.'"
+              [errorMessage]="'Fehler bei der EDC-Übertragung.'"
+              [infoMessage]="'EDC-Übertragung läuft.'"
+              #edcStatusMessage>
+          </app-status-message>
         </ul>
       </ng-container>
     </c-modal-body>
