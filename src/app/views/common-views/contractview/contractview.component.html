@@ -47,7 +47,7 @@
               (change)="addAttachment($event)" [hidden]="true" #fileUpload>
 
             <div class="file-upload">
-              <strong>Anhänge:</strong>
+              <strong>Vertragsspezifische Anhänge:</strong>
               <button cButton color="primary" variant="ghost" [disabled]="saveButtonDisabled" (click)="fileUpload.click()" size="sm" *ngIf="canAddAttachments(contractDetails)">
                 <svg
                 class=""
