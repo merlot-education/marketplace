@@ -1,8 +1,5 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import {
-  HashLocationStrategy,
-  LocationStrategy,
-} from '@angular/common';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -78,10 +75,10 @@ function initializeKeycloak(keycloak: KeycloakService) {
           onLoad: 'check-sso',
           silentCheckSsoRedirectUri:
             window.location.origin + '/assets/silent-check-sso.html',
-        }
+        },
       });
     } catch (error) {
-      console.log("failed to reach SSO server");
+      console.log('failed to reach SSO server');
     }
   };
 }

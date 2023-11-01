@@ -27,11 +27,10 @@ import {
   TabsModule,
   TooltipModule,
   UtilitiesModule,
-  ModalModule
+  ModalModule,
 } from '@coreui/angular';
 
 import { IconModule } from '@coreui/icons-angular';
-
 
 // // views
 // import { AccordionsComponent } from './accordion/accordions.component';
@@ -53,42 +52,42 @@ import { IconModule } from '@coreui/icons-angular';
 // Components Routing
 import { ContractsRoutingModule } from './contracts-routing.module';
 import { CommonViewsModule } from '../common-views/common-views.module';
+import { PaginatorComponent } from '@merlot-education/m-basic-ui';
 
 @NgModule({
-    declarations: [
-        ExploreComponent
-    ],
-    imports: [
-        CommonModule,
-        CommonViewsModule,
-        ContractsRoutingModule,
-        AccordionModule,
-        BadgeModule,
-        BreadcrumbModule,
-        ButtonModule,
-        CardModule,
-        CollapseModule,
-        GridModule,
-        UtilitiesModule,
-        SharedModule,
-        ListGroupModule,
-        IconModule,
-        ListGroupModule,
-        PlaceholderModule,
-        ProgressModule,
-        SpinnerModule,
-        TabsModule,
-        NavModule,
-        TooltipModule,
-        CarouselModule,
-        FormModule,
-        FormsModule,
-        ReactiveFormsModule,
-        DropdownModule,
-        PaginationModule,
-        PopoverModule,
-        TableModule,
-        ModalModule
-    ]
+  declarations: [ExploreComponent],
+  imports: [
+    CommonModule,
+    CommonViewsModule,
+    ContractsRoutingModule,
+    AccordionModule,
+    BadgeModule,
+    BreadcrumbModule,
+    ButtonModule,
+    CardModule,
+    CollapseModule,
+    GridModule,
+    UtilitiesModule,
+    SharedModule,
+    ListGroupModule,
+    IconModule,
+    ListGroupModule,
+    PlaceholderModule,
+    ProgressModule,
+    SpinnerModule,
+    TabsModule,
+    NavModule,
+    TooltipModule,
+    CarouselModule,
+    FormModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DropdownModule,
+    PaginationModule,
+    PopoverModule,
+    TableModule,
+    ModalModule,
+    PaginatorComponent,
+  ],
 })
 export class ContractsModule {}

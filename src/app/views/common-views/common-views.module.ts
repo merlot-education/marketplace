@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PagingFooterComponent } from './paging-footer/paging-footer.component'
 import { ContractviewComponent } from './contractview/contractview.component';
 import { OfferingdetailviewComponent } from './offeringdetailview/offeringdetailview.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -29,15 +28,13 @@ import {
   TabsModule,
   TooltipModule,
   UtilitiesModule,
-  ModalModule
+  ModalModule,
 } from '@coreui/angular';
 
 import { IconModule } from '@coreui/icons-angular';
 
-
-
 @NgModule({
-  declarations: [PagingFooterComponent, ContractviewComponent, OfferingdetailviewComponent],
+  declarations: [ContractviewComponent, OfferingdetailviewComponent],
   imports: [
     CommonModule,
     AccordionModule,
@@ -66,10 +63,8 @@ import { IconModule } from '@coreui/icons-angular';
     PaginationModule,
     PopoverModule,
     TableModule,
-    ModalModule
+    ModalModule,
   ],
-  exports: [
-    PagingFooterComponent, ContractviewComponent, OfferingdetailviewComponent
-  ]
+  exports: [ContractviewComponent, OfferingdetailviewComponent],
 })
-export class CommonViewsModule { }
+export class CommonViewsModule {}

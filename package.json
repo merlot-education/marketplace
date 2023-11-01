@@ -51,7 +51,7 @@
     "tslib": "^2.6.1",
     "url": "^0.11.1",
     "zone.js": "^0.12.0",
-    "@merlot-education/m-basic-ui": "0.0.0-04482f6"
+    "@merlot-education/m-basic-ui": "file:~/Documents/Projects/Merlot/ng_projects/angular-ui-libs/dist/m-basic-ui"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.2.9",
