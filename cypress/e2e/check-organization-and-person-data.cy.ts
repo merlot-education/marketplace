@@ -1,5 +1,5 @@
 beforeEach(() => {
-    cy.visit('/')
+    cy.visit('/');
 })
 
 it('testuser can log in, check organization and assigned person data, edit organization data', () => {
@@ -18,18 +18,18 @@ it('testuser can log in, check organization and assigned person data, edit organ
     cy.get("#role-select").should("be.visible");
 
     // make sure there is "Organisationsverwaltung" and click on it
-    cy.contains('Organisationsverwaltung').click()
+    cy.contains('Organisationsverwaltung').click();
     // make sure there is "Organisationen erkunden" and click on it
-    cy.contains('Organisationen erkunden').click()
+    cy.contains('Organisationen erkunden').click();
     // url should have updated
-    cy.url().should('include', 'organization/explore')
+    cy.url().should('include', 'organization/explore');
 
     // the organization of testuser, "Gaia-X AISBL", should be visible on page 1
     cy.get('c-card-header').filter(':contains("Gaia-X AISBL")').parent().within(() => {
         // this organization should be marked with "Aktive Rolle"        
         cy.get('c-card-footer').should('have.text', "Aktive Rolle");
 
-        // the pool edcs ("edc1" or "edc2") are connected and the corresponding S3 buckets belong to the organization ("merlot-edc-gaiax")
+        // the pool edcs ("edc1", "edc2") are connected and the corresponding S3 buckets belong to the organization ("merlot-edc-gaiax")
         cy.get('c-card-body').scrollIntoView().within(() => {
             cy.get('table > tbody > tr').then((rows) => {
                 for (let row of rows) {
@@ -65,13 +65,12 @@ it('testuser can log in, check organization and assigned person data, edit organ
 
     // click on navigation entry "Benutzerverwaltung", the submenu is extended
     cy.contains('Benutzerverwaltung').click();
-
-    // click on navigation entry "Nutzer meiner Organisation anzeigen", the person cards are shown
+    // click on navigation entry "Nutzer meiner Organisation anzeigen"
     cy.contains('Nutzer meiner Organisation anzeigen').click();
     // url should have updated
-    cy.url().should('include', 'users/explore')
+    cy.url().should('include', 'users/explore');
 
-    // check if all expected person cards are shown, we expect 7 persons: "Jérôme Estienne", "Jan Larwig", "Lilli Karliczek", "Marc Buskies", "Martin Jürgens", "Sebastian Hoyer", "Test User"
+    // check if all expected persons are shown, we expect following 7 persons: "Jérôme Estienne", "Jan Larwig", "Lilli Karliczek", "Marc Buskies", "Martin Jürgens", "Sebastian Hoyer", "Test User"
     cy.get('c-card-header').should("have.length", 7).then((headers) => {
 
         let personNames: string[] = ["Jérôme Estienne", "Jan Larwig", "Lilli Karliczek", "Marc Buskies", "Martin Jürgens", "Sebastian Hoyer", "Test User"];
@@ -86,6 +85,7 @@ it('testuser can log in, check organization and assigned person data, edit organ
         }
 
         // check if persons are sorted alphabetically by first name
+        // the seem to be sorted alphabetically, but with modification, e.g. é < a here
         //let headerNamesSorted: string[] = [...headerNames].sort((a, b) => a.localeCompare(b));
 
         //for (let i = 0; i < headerNames.length; i++) {
@@ -99,14 +99,32 @@ it('testuser can log in, check organization and assigned person data, edit organ
 
     // click on button register, the registration page is visible
     cy.get("#register-button").click();
-    cy.url().should('include', 'registration')
+    // url should have updated
+    cy.url().should('include', 'registration');
 
-    //select imc AG as federator and click on button Federator bestätigen und Mailprogramm öffnen
-
-    cy.contains("Gaia-X AISBL").parent().within(()=>{cy.get('input').click()});
+    //select "Gaia-X AISBL" as federator and click on button "Federator bestätigen und Mailprogramm öffnen"
+    cy.contains("Gaia-X AISBL").parent().within(() => { cy.get('input').click() });
     cy.contains("Federator bestätigen und Mailprogramm öffnen").click();
 
-//check the mail address of the receiver, it should have the value as saved above
+    //check the mail address of the receiver via the mailTo link, it should contain the mail as saved above 
+    const recipient = 'funktionspostfach@merlot.de';
+    const cc = email; //mail address that was used above
+    const subject = 'Registrierung im MERLOT Portal für Organisationen';
+    const body = 'Bitte füllen Sie  das im Knowledge Transfer Center heruntergeladene Formular aus und hängen es dieser Mail an.';
 
+    const mailtoURL = `mailto:${recipient}?cc=${cc}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-})
+    cy.window().then(win => {
+        cy.stub(win, 'alert').as('Alert');
+    })
+
+    cy.on('window:before:load', (win) => {
+        cy.stub(win, 'open').as('Open');
+    })
+
+    cy.contains("Gaia-X AISBL").parent().within(() => { cy.get('input').click() });
+    cy.contains("Federator bestätigen und Mailprogramm öffnen").click()
+
+    cy.get('@Open').should('have.been.calledWithExactly', mailtoURL, '_blank')
+    cy.get("@Alert").should("have.been.calledWithExactly", "Es konnte kein Mailprogramm geöffnet werden.")
+});
