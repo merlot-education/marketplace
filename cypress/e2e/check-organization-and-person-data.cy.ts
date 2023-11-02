@@ -102,10 +102,6 @@ it('testuser can log in, check organization and assigned person data, edit organ
     // url should have updated
     cy.url().should('include', 'registration');
 
-    //select "Gaia-X AISBL" as federator and click on button "Federator bestätigen und Mailprogramm öffnen"
-    cy.contains("Gaia-X AISBL").parent().within(() => { cy.get('input').click() });
-    cy.contains("Federator bestätigen und Mailprogramm öffnen").click();
-
     //check the mail address of the receiver via the mailTo link, it should contain the mail as saved above 
     const recipient = 'funktionspostfach@merlot.de';
     const cc = email; //mail address that was used above
@@ -116,15 +112,16 @@ it('testuser can log in, check organization and assigned person data, edit organ
 
     cy.window().then(win => {
         cy.stub(win, 'alert').as('Alert');
-    })
+    });
 
     cy.on('window:before:load', (win) => {
         cy.stub(win, 'open').as('Open');
-    })
+    });
 
+    //select "Gaia-X AISBL" as federator and click on button "Federator bestätigen und Mailprogramm öffnen"
     cy.contains("Gaia-X AISBL").parent().within(() => { cy.get('input').click() });
-    cy.contains("Federator bestätigen und Mailprogramm öffnen").click()
+    cy.contains("Federator bestätigen und Mailprogramm öffnen").click();
 
-    cy.get('@Open').should('have.been.calledWithExactly', mailtoURL, '_blank')
-    cy.get("@Alert").should("have.been.calledWithExactly", "Es konnte kein Mailprogramm geöffnet werden.")
+    cy.get('@Open').should('have.been.calledOnceWithExactly', mailtoURL, '_blank');
+    cy.get("@Alert").should("have.been.calledOnceWithExactly", "Es konnte kein Mailprogramm geöffnet werden.");
 });
