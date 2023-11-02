@@ -33,7 +33,7 @@ it('testuser can log in, check organization and assigned person data, edit organ
         cy.get('c-card-body').scrollIntoView().within(() => {
             cy.get('table > tbody > tr').then((rows) => {
                 for (let row of rows) {
-                    cy.wrap(row).contains(new RegExp('^edc(1|2){1}$')).next().should('have.text', 'merlot-edc-gaiax');
+                    cy.wrap(row).contains(/^edc[1|2]$/).next().should('have.text', 'merlot-edc-gaiax');
                 }
             });
 
@@ -85,7 +85,7 @@ it('testuser can log in, check organization and assigned person data, edit organ
         }
 
         // check if persons are sorted alphabetically by first name
-        // the seem to be sorted alphabetically, but with modification, e.g. é < a here
+        // the names seem to be sorted alphabetically, but somehow with modification, e.g. é < a 
         //let headerNamesSorted: string[] = [...headerNames].sort((a, b) => a.localeCompare(b));
 
         //for (let i = 0; i < headerNames.length; i++) {
@@ -102,7 +102,7 @@ it('testuser can log in, check organization and assigned person data, edit organ
     // url should have updated
     cy.url().should('include', 'registration');
 
-    //check the mail address of the receiver via the mailTo link, it should contain the mail as saved above 
+    // check the mail address of the receiver via the mailTo link, it should contain the mail as saved above 
     const recipient = 'funktionspostfach@merlot.de';
     const cc = email; //mail address that was used above
     const subject = 'Registrierung im MERLOT Portal für Organisationen';
