@@ -72,7 +72,10 @@ it('testuser can log in, check organization and assigned person data, edit organ
 
     // check if all expected persons are shown, we expect following 7 persons: "Jérôme Estienne", "Jan Larwig", "Lilli Karliczek", "Marc Buskies", "Martin Jürgens", "Sebastian Hoyer", "Test User"
     cy.get('c-card-header').should("have.length", 7).then((headers) => {
+        // check if persons are sorted alphabetically by first name -> this check is left out for now
+        // the names seem to be sorted alphabetically, but somehow with modification, e.g. é < a
 
+        // check if all expected persons are shown (in no particular order)
         let personNames: string[] = ["Jérôme Estienne", "Jan Larwig", "Lilli Karliczek", "Marc Buskies", "Martin Jürgens", "Sebastian Hoyer", "Test User"];
         let headerNames: string[] = [];
 
@@ -83,14 +86,6 @@ it('testuser can log in, check organization and assigned person data, edit organ
         for (let p of personNames) {
             expect(p).to.be.oneOf(headerNames)
         }
-
-        // check if persons are sorted alphabetically by first name
-        // the names seem to be sorted alphabetically, but somehow with modification, e.g. é < a 
-        //let headerNamesSorted: string[] = [...headerNames].sort((a, b) => a.localeCompare(b));
-
-        //for (let i = 0; i < headerNames.length; i++) {
-        //    cy.wrap(headerNames[i]).should("equal", headerNamesSorted[i]).should("equal", personNames[i]);
-        //}
     });
 
     // logout again, after this the welcome text should be for a visitor again
