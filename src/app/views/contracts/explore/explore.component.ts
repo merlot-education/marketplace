@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { BehaviorSubject } from 'rxjs';
 import { ConnectorData } from '../../organization/organization-data';
+import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 
 @Component({
   templateUrl: './explore.component.html',
@@ -52,6 +53,7 @@ export class ExploreComponent implements OnInit {
 
   constructor(
     protected organizationsApiService: OrganizationsApiService,
+    protected serviceOfferingApiService: ServiceofferingApiService,
     protected authService: AuthService,
     protected contractApiService: ContractApiService
     ) {
