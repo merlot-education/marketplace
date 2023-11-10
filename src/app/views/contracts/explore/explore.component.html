@@ -13,7 +13,7 @@
   <c-row [xl]="3">
     <c-col xs *ngFor="let contract of activePage.value.content">
       <c-card class="mb-4">
-        <c-card-header [class]="isActiveProvider(contract) ? 'background-merlot-blue' : ''"><b>Vertrag</b>: {{ serviceOfferingApiService.resolveFriendlyTypeName(contract.offering.selfDescription.verifiableCredential.credentialSubject['@type']) }} <br/> ID: {{ contract.id.replace("Contract:", "") }}</c-card-header>
+        <c-card-header [class]="isActiveProvider(contract) ? 'background-merlot-blue' : ''"><b>Vertrag</b>: {{ getContractTypeName(contract) }} <br/> ID: {{ contract.id.replace("Contract:", "") }}</c-card-header>
         <c-card-body>
           <c-row>
             <c-col>

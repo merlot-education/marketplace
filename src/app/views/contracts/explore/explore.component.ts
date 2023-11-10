@@ -52,8 +52,8 @@ export class ExploreComponent implements OnInit {
   private isCurrentlyFiltered: boolean = false;
 
   constructor(
-    protected organizationsApiService: OrganizationsApiService,
-    protected serviceOfferingApiService: ServiceofferingApiService,
+    private organizationsApiService: OrganizationsApiService,
+    private serviceOfferingApiService: ServiceofferingApiService,
     protected authService: AuthService,
     protected contractApiService: ContractApiService
     ) {
@@ -109,5 +109,10 @@ export class ExploreComponent implements OnInit {
 
   protected isActiveConsumer(contract: IContractBasic): boolean {
     return contract.consumerId === this.authService.getActiveOrgaId();
+  }
+
+  protected getContractTypeName(contract: IContractBasic): string {
+    return this.serviceOfferingApiService.resolveFriendlyTypeName(
+      contract.offering.selfDescription.verifiableCredential.credentialSubject['@type']);
   }
 }
