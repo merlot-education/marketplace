@@ -61,4 +61,9 @@ export class OrganizationsApiService {
     )) as IPageOrganizations;
     return orgaData;
   }
+
+  public async addOrganization(formData: FormData) {
+    return await lastValueFrom(this.http.post(
+      environment.organizations_api_url + "organization", formData))as IOrganizationData;
+  }
 }

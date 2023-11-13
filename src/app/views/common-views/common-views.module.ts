@@ -70,7 +70,7 @@ import { StatusMessageComponent } from './status-message/status-message.componen
     ModalModule
   ],
   exports: [
-    PagingFooterComponent, ContractviewComponent, OfferingdetailviewComponent
+    PagingFooterComponent, ContractviewComponent, OfferingdetailviewComponent, StatusMessageComponent
   ]
 })
 export class CommonViewsModule { }

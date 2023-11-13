@@ -1,4 +1,16 @@
-
+<c-row *ngIf="(authService.isLoggedIn === true)">
+  <c-col>
+    <button
+    id="import-button"
+    cButton
+    color="primary"
+    style="margin-bottom: 10px;"
+    routerLink="../membership"
+    >
+      Neue Organisation hinzufügen
+    </button>
+  </c-col>
+</c-row>
 
 <c-row>
   <c-col xs *ngFor="let organization of activeOrganizationsPage.value.content" [sm]="4">

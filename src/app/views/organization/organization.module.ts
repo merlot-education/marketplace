@@ -56,6 +56,7 @@ import { OrganizationRoutingModule } from './organization-routing.module';
 import { EditComponent } from './edit/edit.component';
 import { WizardAppModule } from "../../sdwizard/wizardapp.module";
 import { CommonViewsModule } from '../common-views/common-views.module';
+import { MembershipComponent } from './membership/membership.component';
 
 @NgModule({
   imports: [
@@ -93,7 +94,8 @@ import { CommonViewsModule } from '../common-views/common-views.module';
   ],
   declarations: [
     ExploreComponent,
-    EditComponent
+    EditComponent, 
+    MembershipComponent
   ],
 })
 export class OrganizationModule {}
