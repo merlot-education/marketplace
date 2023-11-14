@@ -328,4 +328,34 @@ export class ExploreComponent implements OnInit, OnDestroy {
         this.contractTemplate = result;
       });
   }
+
+  protected shouldShowInDraftButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+    return !isPublicOffering && offering.metadata.state === 'REVOKED';
+  }
+
+  protected shouldShowReleaseButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+    return !isPublicOffering && (offering.metadata.state === 'IN_DRAFT') || (offering.metadata.state === 'REVOKED');
+  }
+
+  protected shouldShowRevokeButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+    return !isPublicOffering && offering.metadata.state === 'RELEASED';
+  }
+
+  protected shouldShowDeleteButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+    return !isPublicOffering && (offering.metadata.state === 'IN_DRAFT') || (offering.metadata.state === 'REVOKED');
+  }
+
+  protected shouldShowPurgeButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+    return !isPublicOffering && offering.metadata.state === 'DELETED';
+  }
+
+  protected shouldShowRegenerateButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+    return !isPublicOffering && ((offering.metadata.state === 'RELEASED') 
+                                  || (offering.metadata.state === 'ARCHIVED') 
+                                  || (offering.metadata.state === 'DELETED'));
+  }
+
+  protected shouldShowBookButton(offering: IOfferings): boolean {
+    return this.authService.isLoggedIn && (offering.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] !== this.authService.getActiveOrgaId())
+  }
 }
