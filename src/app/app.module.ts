@@ -22,11 +22,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // Import containers
-import {
-  DefaultFooterComponent,
-  DefaultHeaderComponent,
-  DefaultLayoutComponent,
-} from './containers';
+import { DefaultLayoutComponent } from './containers';
 
 import {
   AvatarModule,
@@ -51,16 +47,13 @@ import {
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { environment } from 'src/environments/environment';
+import { LayoutModule } from '@merlot-education/m-dashboard-ui';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
 };
 
-const APP_CONTAINERS = [
-  DefaultFooterComponent,
-  DefaultHeaderComponent,
-  DefaultLayoutComponent,
-];
+const APP_CONTAINERS = [DefaultLayoutComponent];
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return async () => {
@@ -116,6 +109,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     HttpClientModule,
     FormsModule,
     WizardAppModule,
+    LayoutModule,
   ],
   providers: [
     {

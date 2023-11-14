@@ -57,7 +57,11 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 import { ServiceofferingsRoutingModule } from './serviceofferings-routing.module';
 import { WizardAppModule } from '../../sdwizard/wizardapp.module';
 import { CommonViewsModule } from '../common-views/common-views.module';
-import { PaginatorComponent } from '@merlot-education/m-basic-ui';
+import {
+  CardComponent,
+  GridComponent,
+  PaginatorComponent,
+} from '@merlot-education/m-basic-ui';
 
 @NgModule({
   declarations: [ExploreComponent, EditComponent],
@@ -96,6 +100,8 @@ import { PaginatorComponent } from '@merlot-education/m-basic-ui';
     ModalModule,
 
     PaginatorComponent,
+    CardComponent,
+    GridComponent,
   ],
 })
 export class ServiceofferingsModule {}

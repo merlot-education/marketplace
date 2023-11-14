@@ -9,7 +9,8 @@
       <label cFormCheckLabel for="filterCheck">Zeige nur Angebote mit Status: </label>
     </c-form-check> <br />
     <select class="form-select" (change)="filterByStatus($event.target, applyStatusFilter, selectedStatusFilter)">
-      <option *ngFor="let option of objectKeys(friendlyStatusNames)" [value]="option">{{friendlyStatusNames[option]}}
+      <option *ngFor="let option of objectKeys(friendlyStatusNames)" [value]="option">
+        {{friendlyStatusNames[option]}}
       </option>
     </select>
   </div>
@@ -17,7 +18,8 @@
   <c-row [xl]="3">
     <c-col xs *ngFor="let offering of this.activeOrgaOfferingPage.value.content">
       <c-card class="mb-4">
-        <c-card-header><b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{ offering.name
+        <c-card-header><b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{
+          offering.name
           }}</c-card-header>
         <c-card-body>
           <c-row>
@@ -69,9 +71,7 @@
 
   <c-row [xl]="3">
     <c-col xs *ngFor="let offering of this.activePublicOfferingPage.value.content">
-      <c-card class="mb-4">
-        <c-card-header><b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{ offering.name
-          }}</c-card-header>
+      <m-card class="mb-4" title="<b>Regular</b> Card">
         <c-card-body>
           <c-row>
             <c-col>
@@ -99,7 +99,7 @@
             </c-col>
           </c-row>
         </c-card-body>
-      </c-card>
+      </m-card>
     </c-col>
   </c-row>
 
