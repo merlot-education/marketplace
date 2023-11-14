@@ -18,10 +18,6 @@ export class MembershipComponent {
     private organizationsApiService: OrganizationsApiService
   ) {}
 
-  ngOnInit(): void {
-    
-  }
-
   protected hideAllMessages(){
     this.importStatusMessage.hideAllMessages();
     this.addStatusMessage.hideAllMessages();
