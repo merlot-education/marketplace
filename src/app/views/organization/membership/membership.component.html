@@ -15,10 +15,9 @@
                 <br /><br /><br /><br />
 
                 <h5 cCardTitle>Neue Organisation als Mitglied hinzufügen</h5>
-                Um die Aufnahme einer Organisation als Mitglied zu genehmigen, importieren Sie bitte den Aufnahmeantrag
+                Um die Mitgliedschaft einer Organisation zu genehmigen, importieren Sie bitte den Aufnahmeantrag
                 (PDF-Datei) und bestätigen Sie die Aufnahme der Organisation.
                 <br /><br />
-
 
                 <c-row>
                     <input type="file" class="file-input" [accept]="'application/pdf'"
@@ -28,7 +27,7 @@
                             (click)="fileUpload.click(); hideAllMessages()">
                             Aufnahmeantrag importieren
                         </button>
-                        <div style="margin: 10px;"><strong>Ausgewählte Datei: </strong>{{currentFile===null ? 'Keine
+                        <div style="margin: 10px;"><strong>Ausgewählte Datei: </strong>{{currentFile === null ? 'Keine
                             Datei ausgewählt.' : currentFile.name}}
                             <app-status-message 
                                 [successMessage]="'Aufnahmeantrag erfolgreich importiert.'"
@@ -39,8 +38,6 @@
                         </div>
                     </c-col>
                 </c-row>
-                <c-row><c-col></c-col></c-row>
-
                 <c-row>
                     <c-col>
                         <button id="add-button" cButton color="primary" style="margin: 10px;"
@@ -48,7 +45,7 @@
                             Organisation aufnehmen
                         </button>
                         <div style="margin: 10px;"><app-status-message
-                                [successMessage]="'Organisation erfolgreich hinzugefügt'"
+                                [successMessage]="'Organisation erfolgreich hinzugefügt.'"
                                 [errorMessage]="'Fehler beim Hinzufügen der Organisation.'"
                                 [infoMessage]="'Organisation wird hinzugefügt.'" 
                                 #addStatusMessage>
