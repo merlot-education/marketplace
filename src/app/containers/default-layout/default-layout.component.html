@@ -1,117 +1,13 @@
-<!--sidebar-->
-<c-sidebar
-  #sidebar="cSidebar"
-  class="d-print-none sidebar sidebar-fixed"
-  id="sidebar"
-  visible
->
-  <!--src: 'assets/img/brand/merlot-mono-cropped.png',-->
-  <!--src: 'assets/img/brand/MERLOT_Logo_RGB.png',-->
-  <!-- height: 93 if we want to align with the bottom bar of the header -->
-  <c-sidebar-brand
-    style="padding-top: 10px; padding-bottom: 10px"
-    [brandFull]="{
-      src: 'assets/img/brand/MERLOT_Logo_RGB.png',
-      width: 130,
-      height: 42,
-      alt: 'Merlot Logo'
-    }"
-    [brandNarrow]="{
-      src: 'assets/img/brand/MERLOT_Logo_RGB.nurLogo.png',
-      width: 46,
-      height: 46,
-      alt: 'Merlot Logo'
-    }"
-    routerLink="./"
-  >
-  </c-sidebar-brand>
-  <!--c-card color="secondary" class="text-center mb-4">
-    <c-card-body>
-      <h5 cCardTitle>Willkommen, Besucher!</h5>
-      <button cButton color="primary">Go somewhere</button>
-    </c-card-body>
-  </c-card-->
-  <c-sidebar-header>
-    <div *ngIf="authService.isLoggedIn === false; else loggedIn">
-      <div style="padding: 10px" id="welcome-text">Willkommen, Besucher!</div>
-      <div style="padding: 10px">
-        <button
-          id="login-button"
-          cButton
-          color="primary"
-          style="margin: 10px;"
-          (click)="authService.logIn()"
-        >
-          Login
-        </button>
-        <button
-          id="register-button"
-          cButton
-          color="primary"
-          style="margin: 10px;"
-          routerLink="./registration"
-        >
-          Registrieren
-        </button>
-      </div>
-    </div>
-
-    <ng-template #loggedIn>
-      <div style="padding: 10px" id="welcome-text">
-        Willkommen, {{ authService.userProfile["firstName"] }}
-        {{ authService.userProfile["lastName"] }}!<br /><br />
-        <b>Aktive Rolle:</b>
-        <select
-          (change)="selectedRoleChanged($event.target)"
-          id="role-select"
-          aria-label="Default select example"
-          cSelect
-        >
-          <option
-            class="text-center"
-            *ngFor="let orgaRole of objectKeys(authService.organizationRoles)"
-            value="{{ orgaRole }}"
-          >
-            {{ authService.organizationRoles[orgaRole].roleFriendlyName }} für
-            {{ authService.organizationRoles[orgaRole].orgaData?.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'] }}
-          </option>
-        </select>
-      </div>
-      <button
-        id="logout-button"
-        cButton
-        color="primary"
-        (click)="authService.logOut()"
-      >
-        Logout
-      </button>
-    </ng-template>
-  </c-sidebar-header>
-  <perfect-scrollbar [config]="perfectScrollbarConfig">
-    <!--  [perfectScrollbar]="perfectScrollbarConfig"-->
-    <c-sidebar-nav [navItems]="navItems" dropdownMode="close"> </c-sidebar-nav>
-  </perfect-scrollbar>
-  <c-sidebar-toggler
-    *ngIf="!sidebar.narrow"
-    toggle="unfoldable"
-    cSidebarToggle="sidebar"
-  ></c-sidebar-toggler>
-</c-sidebar>
-
-<!--main-->
-<div class="wrapper d-flex flex-column min-vh-100 bg-light dark:bg-transparent">
-  <!--app-header-->
-  <app-default-header
-    class="mb-4 d-print-none header header-sticky"
-    position="sticky"
-    sidebarId="sidebar"
-  ></app-default-header>
-  <!--app-body-->
-  <div class="body flex-grow-1 px-3">
-    <c-container breakpoint="lg" class="h-auto">
-      <router-outlet></router-outlet>
-    </c-container>
-  </div>
-  <!--app footer-->
-  <app-default-footer></app-default-footer>
-</div>
+<m-layout logoUrlWide="assets/img/brand/MERLOT_Logo_RGB.png"
+  logoUrlNarrow="assets/img/brand/MERLOT_Logo_RGB.nurLogo.png"
+  userAvatarUrl="/assets/img/avatars/default-user.png"
+  (loginClicked)="authService.logIn()"
+  (logoutClicked)="authService.logOut()"
+  [navItems]="navItems"
+  [isLoggedIn]="authService.isLoggedIn"
+  [displayName]="authService.userProfile['firstName'] + ' ' + authService.userProfile['lastName']"
+  [organizationRoles]="organizationRolesForLayout"
+  (selectedRoleChanged)="selectedRoleChanged($event.target)"
+  [activeRole]="selectedRoleOption">
+  <router-outlet></router-outlet>
+</m-layout>

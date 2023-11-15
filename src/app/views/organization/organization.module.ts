@@ -26,7 +26,7 @@ import {
   TableModule,
   TabsModule,
   TooltipModule,
-  UtilitiesModule
+  UtilitiesModule,
 } from '@coreui/angular';
 
 import { IconModule } from '@coreui/icons-angular';
@@ -54,8 +54,9 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 // Components Routing
 import { OrganizationRoutingModule } from './organization-routing.module';
 import { EditComponent } from './edit/edit.component';
-import { WizardAppModule } from "../../sdwizard/wizardapp.module";
+import { WizardAppModule } from '../../sdwizard/wizardapp.module';
 import { CommonViewsModule } from '../common-views/common-views.module';
+import { CardComponent, GridComponent, PaginatorComponent } from '@merlot-education/m-basic-ui';
 
 @NgModule({
   imports: [
@@ -89,11 +90,11 @@ import { CommonViewsModule } from '../common-views/common-views.module';
     PopoverModule,
     TableModule,
     DocsComponentsModule,
-    WizardAppModule
+    WizardAppModule,
+    CardComponent,
+    GridComponent,
+    PaginatorComponent,
   ],
-  declarations: [
-    ExploreComponent,
-    EditComponent
-  ],
+  declarations: [ExploreComponent, EditComponent],
 })
 export class OrganizationModule {}
