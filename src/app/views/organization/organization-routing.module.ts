@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EditComponent } from './edit/edit.component';
 import { ExploreComponent } from './explore/explore.component';
-import { MembershipComponent } from './membership/membership.component';
+import { ImportComponent } from './import/import.component';
 import { KeycloakGuard } from 'src/app/keycloak.guard';
 
 
@@ -34,8 +34,8 @@ const routes: Routes = [
         canActivate: [KeycloakGuard]
       },
       {
-        path: 'membership', 
-        component: MembershipComponent,
+        path: 'import', 
+        component: ImportComponent,
         data: {
           title: 'Organisation hinzufügen',
         },

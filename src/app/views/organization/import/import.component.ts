@@ -4,11 +4,11 @@ import { StatusMessageComponent } from '../../common-views/status-message/status
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-membership',
-  templateUrl: './membership.component.html',
-  styleUrls: ['./membership.component.scss']
+  selector: 'app-import',
+  templateUrl: './import.component.html',
+  styleUrls: ['./import.component.scss']
 })
-export class MembershipComponent {
+export class ImportComponent {
   @ViewChild('importStatusMessage') private importStatusMessage: StatusMessageComponent;
   @ViewChild('addStatusMessage') private addStatusMessage: StatusMessageComponent;
   currentFile: File = null;
@@ -24,8 +24,6 @@ export class MembershipComponent {
   }
   
   protected importRegistrationForm(event: Event){
-    this.importStatusMessage.showInfoMessage();
-
     const file:File = (event.target as HTMLInputElement).files[0];
 
     if (!file) {
@@ -44,9 +42,6 @@ export class MembershipComponent {
 
     this.currentFile = file;
     this.isFileValid = true;
-
-    this.importStatusMessage.showSuccessMessage();
-
   }
   protected addOrganization(){
     this.addStatusMessage.showInfoMessage();
