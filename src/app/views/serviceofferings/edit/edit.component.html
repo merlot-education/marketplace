@@ -1,27 +1,22 @@
 <c-row>
-    <c-col xs>
-      <c-card class="mb-4">
-        <c-card-header>Service Angebot erstellen</c-card-header>
-        <c-card-body>
-        <div fxLayout="row wrap" fxLayoutGap="16px grid">
+  <c-col xs>
+    <m-card class="mb-4" title="Service Angebot erstellen">
+      <div fxLayout="row wrap" fxLayoutGap="16px grid">
 
-          
-          <div class="mb-3" fxFlex="70%"
-          fxFlex.sm="100%"
-          fxFlex.xs="100%">
 
-            <label class="form-label"><b>Art des Service Angebots</b></label>
-            <select class="form-select" (change)="select($event.target)">
-              <option *ngFor="let option of serviceFiles" [value]="option">{{serviceFileNameDict[option].name}}</option>
-            </select>
-            
-          </div>
+        <div class="mb-3" fxFlex="70%" fxFlex.sm="100%" fxFlex.xs="100%">
+
+          <label class="form-label"><b>Art des Service Angebots</b></label>
+          <select class="form-select" (change)="select($event.target)">
+            <option *ngFor="let option of serviceFiles" [value]="option">{{serviceFileNameDict[option].name}}</option>
+          </select>
+
         </div>
-          
-          <hr class="hr hr-blurry" />
+      </div>
 
-          <app-dynamic-form [file]="shaclFile" #wizard></app-dynamic-form>
-        </c-card-body>
-      </c-card>
-    </c-col>
-  </c-row>
+      <hr class="hr hr-blurry" />
+
+      <app-dynamic-form [file]="shaclFile" #wizard></app-dynamic-form>
+    </m-card>
+  </c-col>
+</c-row>

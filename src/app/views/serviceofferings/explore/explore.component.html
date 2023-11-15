@@ -15,50 +15,44 @@
     </select>
   </div>
 
-  <c-row [xl]="3">
-    <c-col xs *ngFor="let offering of this.activeOrgaOfferingPage.value.content">
-      <c-card class="mb-4">
-        <c-card-header><b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{
+  <m-grid>
+    <m-card class="mb-4" *ngFor="let offering of this.activeOrgaOfferingPage.value.content" title="<b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{
           offering.name
-          }}</c-card-header>
-        <c-card-body>
-          <c-row>
-            <c-col>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item" style="border: none">
-                  <strong>Service ID:</strong> <br />
-                  {{ offering.id }}
-                </li>
-                <li class="list-group-item" style="border: none">
-                  <strong>Erstelldatum:</strong><br />
-                  {{ offering.creationDate }}
-                </li>
-                <li class="list-group-item" style="border: none">
-                  <strong>Anbieter:</strong><br />
-                  {{ offering.providerLegalName }}
-                </li>
-                <li class="list-group-item" style="border: none">
-                  <strong>Status:</strong><br />
-                  {{ serviceOfferingApiService.resolveFriendlyStatusName(offering.state) }}
-                </li>
-              </ul>
-              <div style="padding: 10px">
-                <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalViewDetails.id"
-                  (click)="selectedOfferingPublic = false; requestDetails(offering.id)">
-                  Details
-                </button>
-                <button type="button" class="btn btn-primary flex-item-grow"
-                  [cModalToggle]="modalEditServiceOffering.id" (click)="updateServiceOfferingEdit(offering)"
-                  *ngIf="offering.state === 'IN_DRAFT'">
-                  Bearbeiten
-                </button>
-              </div>
-            </c-col>
-          </c-row>
-        </c-card-body>
-      </c-card>
-    </c-col>
-  </c-row>
+          }}">
+      <c-row>
+        <c-col>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" style="border: none">
+              <strong>Service ID:</strong> <br />
+              {{ offering.id }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Erstelldatum:</strong><br />
+              {{ offering.creationDate }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Anbieter:</strong><br />
+              {{ offering.providerLegalName }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Status:</strong><br />
+              {{ serviceOfferingApiService.resolveFriendlyStatusName(offering.state) }}
+            </li>
+          </ul>
+          <div style="padding: 10px">
+            <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalViewDetails.id"
+              (click)="selectedOfferingPublic = false; requestDetails(offering.id)">
+              Details
+            </button>
+            <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalEditServiceOffering.id"
+              (click)="updateServiceOfferingEdit(offering)" *ngIf="offering.state === 'IN_DRAFT'">
+              Bearbeiten
+            </button>
+          </div>
+        </c-col>
+      </c-row>
+    </m-card>
+  </m-grid>
 
   <m-paginator [currentPage]="activeOrgaOfferingPage"
     (pageChangeEvent)="refreshOrgaOfferings($event, ITEMS_PER_PAGE)"></m-paginator>
@@ -69,39 +63,35 @@
 <div *ngIf="this.activePublicOfferingPage.value.content.length > 0">
   <h1>Öffentliche Service Angebote</h1>
 
-  <c-row [xl]="3">
-    <c-col xs *ngFor="let offering of this.activePublicOfferingPage.value.content">
-      <m-card class="mb-4" title="<b>Regular</b> Card">
-        <c-card-body>
-          <c-row>
-            <c-col>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item" style="border: none">
-                  <strong>Service ID:</strong> <br />
-                  {{ offering.id }}
-                </li>
-                <li class="list-group-item" style="border: none">
-                  <strong>Erstelldatum:</strong><br />
-                  {{ offering.creationDate }}
-                </li>
-                <li class="list-group-item" style="border: none">
-                  <strong>Anbieter:</strong><br />
-                  {{ offering.providerLegalName }}
-                </li>
-              </ul>
-              <div style="padding: 10px">
-                <button type="button" class="btn btn-primary flex-item-grow" *ngIf="authService.isLoggedIn"
-                  [cModalToggle]="modalViewDetails.id"
-                  (click)="selectedOfferingPublic = true; requestDetails(offering.id)">
-                  Details
-                </button>
-              </div>
-            </c-col>
-          </c-row>
-        </c-card-body>
-      </m-card>
-    </c-col>
-  </c-row>
+  <m-grid>
+    <m-card *ngFor="let offering of this.activePublicOfferingPage.value.content"
+      title="<b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{ offering.name }}">
+      <c-row>
+        <c-col>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" style="border: none">
+              <strong>Service ID:</strong> <br />
+              {{ offering.id }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Erstelldatum:</strong><br />
+              {{ offering.creationDate }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Anbieter:</strong><br />
+              {{ offering.providerLegalName }}
+            </li>
+          </ul>
+          <div style="padding: 10px">
+            <button type="button" class="btn btn-primary flex-item-grow" *ngIf="authService.isLoggedIn"
+              [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = true; requestDetails(offering.id)">
+              Details
+            </button>
+          </div>
+        </c-col>
+      </c-row>
+    </m-card>
+  </m-grid>
 
   <m-paginator [currentPage]="activePublicOfferingPage"
     (pageChangeEvent)="refreshPublicOfferings($event, ITEMS_PER_PAGE)"></m-paginator>

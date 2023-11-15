@@ -27,7 +27,7 @@ import {
   TableModule,
   TabsModule,
   TooltipModule,
-  UtilitiesModule
+  UtilitiesModule,
 } from '@coreui/angular';
 
 import { IconModule } from '@coreui/icons-angular';
@@ -54,6 +54,7 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 
 // Components Routing
 import { UsersRoutingModule } from './users-routing.module';
+import { CardComponent, GridComponent } from '@merlot-education/m-basic-ui';
 
 @NgModule({
   imports: [
@@ -86,9 +87,10 @@ import { UsersRoutingModule } from './users-routing.module';
     TableModule,
     AvatarModule,
     DocsComponentsModule,
+
+    GridComponent,
+    CardComponent,
   ],
-  declarations: [
-    ExploreComponent
-  ],
+  declarations: [ExploreComponent],
 })
 export class UsersModule {}

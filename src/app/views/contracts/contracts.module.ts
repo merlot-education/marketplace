@@ -52,7 +52,11 @@ import { IconModule } from '@coreui/icons-angular';
 // Components Routing
 import { ContractsRoutingModule } from './contracts-routing.module';
 import { CommonViewsModule } from '../common-views/common-views.module';
-import { PaginatorComponent } from '@merlot-education/m-basic-ui';
+import {
+  CardComponent,
+  GridComponent,
+  PaginatorComponent,
+} from '@merlot-education/m-basic-ui';
 
 @NgModule({
   declarations: [ExploreComponent],
@@ -88,6 +92,9 @@ import { PaginatorComponent } from '@merlot-education/m-basic-ui';
     TableModule,
     ModalModule,
     PaginatorComponent,
+
+    GridComponent,
+    CardComponent,
   ],
 })
 export class ContractsModule {}
