@@ -85,6 +85,21 @@ export class ContractApiService {
       environment.contract_api_url + "transfers/contract/" + contractId + "/transfer/" + transferId + "/status", {headers: this.getActiveRoleHeaders()})) as IEdcTransferStatus;
   }
 
+  public async addAttachment(contractId: string, formData: FormData): Promise<IContract> {
+    return await lastValueFrom(this.http.patch(
+      environment.contract_api_url + "contract/" + contractId + "/attachment", formData, {headers: this.getActiveRoleHeaders()})) as IContract;
+  }
+
+  public async deleteAttachment(contractId: string, attachmentName: string): Promise<IContract> {
+    return await lastValueFrom(this.http.delete(
+      environment.contract_api_url + "contract/" + contractId + "/attachment/" + attachmentName, {headers: this.getActiveRoleHeaders()})) as IContract;
+  }
+
+  public async downloadAttachment(contractId: string, attachmentName: string): Promise<any> {
+    return await lastValueFrom(this.http.get(environment.contract_api_url + "contract/" + contractId + "/attachment/" + attachmentName, 
+    {headers: this.getActiveRoleHeaders(), responseType: 'blob'}));
+  }
+
   public resolveFriendlyStatusName(contractStatus: string) {
     return this.friendlyStatusNames[contractStatus] ? this.friendlyStatusNames[contractStatus] : "Unbekannt";
   }
