@@ -6,14 +6,11 @@
   }
 </style>
 
-<c-row>
-  <c-col xs *ngFor="let user of users"  [sm]="4">
-    <c-card class="mb-4">
-      <c-card-header>{{ user.firstName }} {{ user.lastName }}</c-card-header>
-      <c-card-body>
-        <c-row>
-          <c-col>
-            <!--div class="center" style="display: flex;
+<m-grid>
+  <m-card class="mb-4" *ngFor="let user of users" title="{{ user.firstName }} {{ user.lastName }}">
+    <c-row>
+      <c-col>
+        <!--div class="center" style="display: flex;
             justify-content: center;">
               <c-avatar
                 size="xl"
@@ -22,26 +19,24 @@
               ></c-avatar>
             </div>
             <hr class="hr hr-blurry" /--> <!-- TODO readd this once user images are implemented -->
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item" style="border: none">
-                <strong>Registriert seit:</strong> <br />
-                {{ user.createdTimestamp | date: 'dd.MM.yyyy' }}
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Rolle:</strong> <br />
-                {{ user.orgaRole }}
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>E-Mail:</strong> <br />
-                {{ user.email }}
-              </li>
-            </ul>
-            <div class="row" style="padding: 10px">
-              <a type="button" class="btn btn-primary" href="mailto:{{user.email}}">Kontaktieren</a>
-            </div>
-          </c-col>
-        </c-row>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" style="border: none">
+            <strong>Registriert seit:</strong> <br />
+            {{ user.createdTimestamp | date: 'dd.MM.yyyy' }}
+          </li>
+          <li class="list-group-item" style="border: none">
+            <strong>Rolle:</strong> <br />
+            {{ user.orgaRole }}
+          </li>
+          <li class="list-group-item" style="border: none">
+            <strong>E-Mail:</strong> <br />
+            {{ user.email }}
+          </li>
+        </ul>
+        <div class="row" style="padding: 10px">
+          <a type="button" class="btn btn-primary" href="mailto:{{user.email}}">Kontaktieren</a>
+        </div>
+      </c-col>
+    </c-row>
+  </m-card>
+</m-grid>

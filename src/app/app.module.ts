@@ -26,11 +26,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // Import containers
-import {
-  DefaultFooterComponent,
-  DefaultHeaderComponent,
-  DefaultLayoutComponent,
-} from './containers';
+import { DefaultLayoutComponent } from './containers';
 
 import {
   AvatarModule,
@@ -55,6 +51,7 @@ import {
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { environment } from 'src/environments/environment';
+import { LayoutModule } from '@merlot-education/m-dashboard-ui';
 
 import localeDe from '@angular/common/locales/de';
 
@@ -64,11 +61,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
 };
 
-const APP_CONTAINERS = [
-  DefaultFooterComponent,
-  DefaultHeaderComponent,
-  DefaultLayoutComponent,
-];
+const APP_CONTAINERS = [DefaultLayoutComponent];
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return async () => {
@@ -83,10 +76,10 @@ function initializeKeycloak(keycloak: KeycloakService) {
           onLoad: 'check-sso',
           silentCheckSsoRedirectUri:
             window.location.origin + '/assets/silent-check-sso.html',
-        }
+        },
       });
     } catch (error) {
-      console.log("failed to reach SSO server");
+      console.log('failed to reach SSO server');
     }
   };
 }
@@ -124,6 +117,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     HttpClientModule,
     FormsModule,
     WizardAppModule,
+    LayoutModule,
   ],
   providers: [
     {
