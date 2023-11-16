@@ -66,6 +66,6 @@ import { StatusMessageComponent } from './status-message/status-message.componen
     TableModule,
     ModalModule,
   ],
-  exports: [ContractviewComponent, OfferingdetailviewComponent],
+  exports: [ContractviewComponent, OfferingdetailviewComponent, StatusMessageComponent],
 })
 export class CommonViewsModule {}
