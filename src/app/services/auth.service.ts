@@ -24,6 +24,8 @@ export class AuthService {
     [orgaRoleKey: string]: OrganizationRole;
   } = {};
 
+  public finishedLoadingRoles = false;
+
   public activeOrganizationRole: BehaviorSubject<OrganizationRole> =
     new BehaviorSubject<OrganizationRole>({
       orgaRoleString: '',
@@ -132,5 +134,7 @@ export class AuthService {
         this.organizationRoles[orgaRoleKey].orgaData = orga;
       });
     }
+
+    this.finishedLoadingRoles = true;
   }
 }
