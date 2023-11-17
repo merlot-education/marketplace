@@ -50,7 +50,7 @@ export class DefaultLayoutComponent {
       this.authService.activeOrganizationRole.getValue().orgaRoleString;
 
     let tries = 0;
-    while (true) {
+    while (this.authService.isLoggedIn) {
       console.log('waiting for roles to load');
       await this.wait(100);
 
