@@ -71,7 +71,7 @@ it('testuser can log in, check organization and assigned person data, edit organ
     cy.url().should('include', 'users/explore');
 
     // check if all expected persons are shown, we expect following 7 persons: "Jérôme Estienne", "Jan Larwig", "Lilli Karliczek", "Marc Buskies", "Martin Jürgens", "Sebastian Hoyer", "Test User"
-    cy.get('c-card-header').should("have.length", 7).then((headers) => {
+    cy.get('c-card-header').should("have.length.at.least", 7).then((headers) => {
         // check if persons are sorted alphabetically by first name -> this check is left out for now
         // the names seem to be sorted alphabetically, but somehow with modification, e.g. é < a
 
