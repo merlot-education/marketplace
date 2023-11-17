@@ -126,15 +126,21 @@ export class AuthService {
       }
     }
 
+    let numOfOrgsToLoad = Object.keys(this.organizationRoles).length;
+
     // update organization data after building the list
     for (let orgaRoleKey in this.organizationRoles) {
       // try finding the organization of this role
       let orgaId: string = orgaRoleKey.split('_').slice(1).join('_'); // everything after the first part is the organization ID (which may include underscores again)
       this.organizationApiService.getOrgaById(orgaId).then((orga) => {
         this.organizationRoles[orgaRoleKey].orgaData = orga;
+
+        numOfOrgsToLoad--;
+
+        if (numOfOrgsToLoad == 0) {
+          this.finishedLoadingRoles = true;
+        }
       });
     }
-
-    this.finishedLoadingRoles = true;
   }
 }
