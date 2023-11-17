@@ -21,6 +21,8 @@ export class DefaultLayoutComponent {
 
   public selectedRoleOption: string = '';
 
+  wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
   objectKeys = Object.keys;
 
   organizationRolesForLayout: OrganizationRoleLayoutData[] = [];
@@ -39,7 +41,7 @@ export class DefaultLayoutComponent {
     this.navItems = this.buildAllowedNavItems(globalNavItems);
   }
 
-  public ngOnInit(): void {
+  public async ngOnInit() {
     //this.authService.user.subscribe(x => {
     let globalNavItems = structuredClone(navItems);
     this.navItems = this.buildAllowedNavItems(globalNavItems);
@@ -47,6 +49,27 @@ export class DefaultLayoutComponent {
     this.selectedRoleOption =
       this.authService.activeOrganizationRole.getValue().orgaRoleString;
 
+    let tries = 0;
+    while (this.authService.isLoggedIn) {
+      console.log('waiting for roles to load');
+      await this.wait(100);
+
+      if (this.authService.finishedLoadingRoles) {
+        this.loadRolesForMenu();
+        break;
+      }
+
+      // TODO: remove this if there are no regular problems with roles (don't forget the tries variable above)
+      tries++;
+      if (tries > 10) {
+        console.warn(
+          'still trying to load roles from the auth service, if you keep seeing this warning, check in `buildOrganizationRoles`'
+        );
+      }
+    }
+  }
+
+  private loadRolesForMenu() {
     for (let role in this.authService.organizationRoles) {
       this.organizationRolesForLayout.push({
         orgaRoleString: this.authService.organizationRoles[role].orgaRoleString,
