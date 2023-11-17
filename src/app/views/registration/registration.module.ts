@@ -3,8 +3,14 @@ import { CommonModule } from '@angular/common';
 
 import { RegistrationRoutingModule } from './registration-routing.module';
 import { RegistrationComponent } from './registration.component';
-import { ButtonModule, CardModule, FormModule, GridModule} from '@coreui/angular';
-import { FormsModule} from '@angular/forms';
+import {
+  ButtonModule,
+  CardModule,
+  FormModule,
+  GridModule,
+} from '@coreui/angular';
+import { FormsModule } from '@angular/forms';
+import { CardComponent } from '@merlot-education/m-basic-ui';
 
 @NgModule({
   imports: [
@@ -14,8 +20,10 @@ import { FormsModule} from '@angular/forms';
     GridModule,
     FormModule,
     FormsModule,
-    ButtonModule
+    ButtonModule,
+
+    CardComponent,
   ],
-  declarations: [RegistrationComponent]
+  declarations: [RegistrationComponent],
 })
-export class RegistrationModule { }
+export class RegistrationModule {}

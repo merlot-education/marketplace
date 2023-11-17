@@ -5,7 +5,11 @@ import { KeycloakProfile } from 'keycloak-js';
 import { AuthService } from 'src/app/services/auth.service';
 import { AaamApiService } from 'src/app/services/aaam-api.service';
 
-import { IRoleNavData, navItems } from './_nav';
+import {
+  IRoleNavData,
+  OrganizationRoleLayoutData,
+} from '@merlot-education/m-dashboard-ui';
+import { navItems } from './_nav';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 
 @Component({
@@ -17,7 +21,11 @@ export class DefaultLayoutComponent {
 
   public selectedRoleOption: string = '';
 
+  wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
   objectKeys = Object.keys;
+
+  organizationRolesForLayout: OrganizationRoleLayoutData[] = [];
 
   public perfectScrollbarConfig = {
     suppressScrollX: true,
@@ -33,12 +41,48 @@ export class DefaultLayoutComponent {
     this.navItems = this.buildAllowedNavItems(globalNavItems);
   }
 
-  public ngOnInit(): void {
+  public async ngOnInit() {
     //this.authService.user.subscribe(x => {
     let globalNavItems = structuredClone(navItems);
     this.navItems = this.buildAllowedNavItems(globalNavItems);
     //});
-    this.selectedRoleOption = this.authService.activeOrganizationRole.getValue().orgaRoleString;
+    this.selectedRoleOption =
+      this.authService.activeOrganizationRole.getValue().orgaRoleString;
+
+    let tries = 0;
+    while (this.authService.isLoggedIn) {
+      console.log('waiting for roles to load');
+      await this.wait(100);
+
+      if (this.authService.finishedLoadingRoles) {
+        this.loadRolesForMenu();
+        break;
+      }
+
+      // TODO: remove this if there are no regular problems with roles (don't forget the tries variable above)
+      tries++;
+      if (tries > 10) {
+        console.warn(
+          'still trying to load roles from the auth service, if you keep seeing this warning, check in `buildOrganizationRoles`'
+        );
+      }
+    }
+  }
+
+  private loadRolesForMenu() {
+    for (let role in this.authService.organizationRoles) {
+      this.organizationRolesForLayout.push({
+        orgaRoleString: this.authService.organizationRoles[role].orgaRoleString,
+        roleName: this.authService.organizationRoles[role].roleName,
+        roleFriendlyName:
+          this.authService.organizationRoles[role].roleFriendlyName,
+        orgaName:
+          this.authService.organizationRoles[role].orgaData?.selfDescription
+            .verifiableCredential.credentialSubject['merlot:orgaName'][
+            '@value'
+          ],
+      });
+    }
   }
 
   private buildAllowedNavItems(navItems: IRoleNavData[]) {

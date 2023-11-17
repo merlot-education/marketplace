@@ -24,11 +24,14 @@ export class AuthService {
     [orgaRoleKey: string]: OrganizationRole;
   } = {};
 
-  public activeOrganizationRole: BehaviorSubject<OrganizationRole> = new BehaviorSubject<OrganizationRole>({
-    orgaRoleString: '',
-    roleName: '',
-    roleFriendlyName: ''
-  });
+  public finishedLoadingRoles = false;
+
+  public activeOrganizationRole: BehaviorSubject<OrganizationRole> =
+    new BehaviorSubject<OrganizationRole>({
+      orgaRoleString: '',
+      roleName: '',
+      roleFriendlyName: '',
+    });
 
   private roleFriendlyNameMapper: { [key: string]: string } = {
     OrgRep: 'Repräsentant',
@@ -56,11 +59,19 @@ export class AuthService {
   }
 
   public refreshActiveRoleOrgaData() {
-    this.organizationApiService.getOrgaById(this.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']).then(result => {
-      this.organizationRoles[this.activeOrganizationRole.value.orgaRoleString].orgaData = result;
-      this.changeActiveOrgaRole(this.activeOrganizationRole.value.orgaRoleString);
-    })
-    
+    this.organizationApiService
+      .getOrgaById(
+        this.activeOrganizationRole.value.orgaData.selfDescription
+          .verifiableCredential.credentialSubject['@id']
+      )
+      .then((result) => {
+        this.organizationRoles[
+          this.activeOrganizationRole.value.orgaRoleString
+        ].orgaData = result;
+        this.changeActiveOrgaRole(
+          this.activeOrganizationRole.value.orgaRoleString
+        );
+      });
   }
 
   logOut() {
@@ -69,7 +80,7 @@ export class AuthService {
 
   logIn() {
     this.keycloakService.login({
-      redirectUri: window.location.origin
+      redirectUri: window.location.origin,
     });
   }
 
@@ -79,20 +90,25 @@ export class AuthService {
     return {
       orgaRoleString: orgaRoleString,
       roleName: roleName,
-      roleFriendlyName: this.roleFriendlyNameMapper[roleName]
+      roleFriendlyName: this.roleFriendlyNameMapper[roleName],
     };
   }
 
-  public getActiveOrgaId() : string {
-    return this.activeOrganizationRole.value.orgaData?.selfDescription.verifiableCredential.credentialSubject['@id'];
+  public getActiveOrgaId(): string {
+    return this.activeOrganizationRole.value.orgaData?.selfDescription
+      .verifiableCredential.credentialSubject['@id'];
   }
 
-  public getActiveOrgaName() : string {
-    return this.activeOrganizationRole.value.orgaData?.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'];
+  public getActiveOrgaName(): string {
+    return this.activeOrganizationRole.value.orgaData?.selfDescription
+      .verifiableCredential.credentialSubject['merlot:orgaName']['@value'];
   }
 
-  public getActiveOrgaLegalName() : string {
-    return this.activeOrganizationRole.value.orgaData?.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value'];
+  public getActiveOrgaLegalName(): string {
+    return this.activeOrganizationRole.value.orgaData?.selfDescription
+      .verifiableCredential.credentialSubject['gax-trust-framework:legalName'][
+      '@value'
+    ];
   }
 
   public changeActiveOrgaRole(orgaRoleString: string) {
@@ -110,12 +126,20 @@ export class AuthService {
       }
     }
 
+    let numOfOrgsToLoad = Object.keys(this.organizationRoles).length;
+
     // update organization data after building the list
     for (let orgaRoleKey in this.organizationRoles) {
       // try finding the organization of this role
       let orgaId: string = orgaRoleKey.split('_').slice(1).join('_'); // everything after the first part is the organization ID (which may include underscores again)
-      this.organizationApiService.getOrgaById(orgaId).then(orga => {
+      this.organizationApiService.getOrgaById(orgaId).then((orga) => {
         this.organizationRoles[orgaRoleKey].orgaData = orga;
+
+        numOfOrgsToLoad--;
+
+        if (numOfOrgsToLoad == 0) {
+          this.finishedLoadingRoles = true;
+        }
       });
     }
   }

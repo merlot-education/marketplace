@@ -1,113 +1,119 @@
 <div *ngIf="this.activeOrgaOfferingPage.value.content.length > 0 || applyStatusFilter">
 
-<h1>Service Angebote meiner Organisation</h1>
+  <h1>Service Angebote meiner Organisation</h1>
 
-<div style="padding:10px">
-  <c-form-check [inline]="true" switch sizing="xl">
-    <input cFormCheckInput id="filterCheck" type="checkbox" [(ngModel)]="applyStatusFilter" (change)="filterByStatus(undefined, applyStatusFilter, selectedStatusFilter)"/>
-    <label cFormCheckLabel for="filterCheck">Zeige nur Angebote mit Status: </label>
-  </c-form-check> <br/>
-  <select class="form-select" (change)="filterByStatus($event.target, applyStatusFilter, selectedStatusFilter)">
-    <option *ngFor="let option of objectKeys(friendlyStatusNames)" [value]="option">{{friendlyStatusNames[option]}}</option>
-  </select>
-</div>
+  <div style="padding:10px">
+    <c-form-check [inline]="true" switch sizing="xl">
+      <input cFormCheckInput id="filterCheck" type="checkbox" [(ngModel)]="applyStatusFilter"
+        (change)="filterByStatus(undefined, applyStatusFilter, selectedStatusFilter)" />
+      <label cFormCheckLabel for="filterCheck">Zeige nur Angebote mit Status: </label>
+    </c-form-check> <br />
+    <select class="form-select" (change)="filterByStatus($event.target, applyStatusFilter, selectedStatusFilter)">
+      <option *ngFor="let option of objectKeys(friendlyStatusNames)" [value]="option">
+        {{friendlyStatusNames[option]}}
+      </option>
+    </select>
+  </div>
 
-<c-row [xl]="3">
-  <c-col xs *ngFor="let offering of this.activeOrgaOfferingPage.value.content">
-    <c-card class="mb-4">
-      <c-card-header><b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
-      <c-card-body>
-        <c-row>
-          <c-col>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item" style="border: none">
-                <strong>Service ID:</strong> <br />
-                {{ offering.id }}
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Erstelldatum:</strong><br />
-                {{ offering.creationDate | date:"medium"  }}
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Anbieter:</strong><br />
-                {{ offering.providerLegalName }}
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Status:</strong><br />
-                {{ serviceOfferingApiService.resolveFriendlyStatusName(offering.state) }}
-              </li>
-            </ul>
-            <div style="padding: 10px">
-              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = false; requestDetails(offering.id)">
-                Details
-              </button>
-              <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalEditServiceOffering.id" (click)="updateServiceOfferingEdit(offering)" *ngIf="offering.state === 'IN_DRAFT'">
-                Bearbeiten
-              </button>
-            </div>
-          </c-col>
-        </c-row>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+  <m-grid>
+    <m-card class="mb-4" *ngFor="let offering of this.activeOrgaOfferingPage.value.content" title="<b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{
+          offering.name
+          }}">
+      <c-row>
+        <c-col>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" style="border: none">
+              <strong>Service ID:</strong> <br />
+              {{ offering.id }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Erstelldatum:</strong><br />
+              {{ offering.creationDate }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Anbieter:</strong><br />
+              {{ offering.providerLegalName }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Status:</strong><br />
+              {{ serviceOfferingApiService.resolveFriendlyStatusName(offering.state) }}
+            </li>
+          </ul>
+          <div style="padding: 10px">
+            <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalViewDetails.id"
+              (click)="selectedOfferingPublic = false; requestDetails(offering.id)">
+              Details
+            </button>
+            <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalEditServiceOffering.id"
+              (click)="updateServiceOfferingEdit(offering)" *ngIf="offering.state === 'IN_DRAFT'">
+              Bearbeiten
+            </button>
+          </div>
+        </c-col>
+      </c-row>
+    </m-card>
+  </m-grid>
 
-<app-paging-footer [currentPage]="activeOrgaOfferingPage" (pageChangeEvent)="refreshOrgaOfferings($event, ITEMS_PER_PAGE)"></app-paging-footer>
+  <m-paginator [currentPage]="activeOrgaOfferingPage"
+    (pageChangeEvent)="refreshOrgaOfferings($event, ITEMS_PER_PAGE)"></m-paginator>
 
 </div>
 
 
 <div *ngIf="this.activePublicOfferingPage.value.content.length > 0">
-<h1>Öffentliche Service Angebote</h1>
+  <h1>Öffentliche Service Angebote</h1>
 
-<c-row [xl]="3">
-  <c-col xs *ngFor="let offering of this.activePublicOfferingPage.value.content">
-    <c-card class="mb-4">
-      <c-card-header><b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{ offering.name }}</c-card-header>
-      <c-card-body>
-        <c-row>
-          <c-col>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item" style="border: none">
-                <strong>Service ID:</strong> <br />
-                {{ offering.id }}
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Erstelldatum:</strong><br />
-                {{ offering.creationDate | date:"medium"  }}
-              </li>
-              <li class="list-group-item" style="border: none">
-                <strong>Anbieter:</strong><br />
-                {{ offering.providerLegalName }}
-              </li>
-            </ul>
-            <div style="padding: 10px">
-              <button type="button" class="btn btn-primary flex-item-grow" *ngIf="authService.isLoggedIn" [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = true; requestDetails(offering.id)">
-                Details
-              </button>
-            </div>
-          </c-col>
-        </c-row>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+  <m-grid>
+    <m-card *ngFor="let offering of this.activePublicOfferingPage.value.content"
+      title="<b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{ offering.name }}">
+      <c-row>
+        <c-col>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" style="border: none">
+              <strong>Service ID:</strong> <br />
+              {{ offering.id }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Erstelldatum:</strong><br />
+              {{ offering.creationDate }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Anbieter:</strong><br />
+              {{ offering.providerLegalName }}
+            </li>
+          </ul>
+          <div style="padding: 10px">
+            <button type="button" class="btn btn-primary flex-item-grow" *ngIf="authService.isLoggedIn"
+              [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = true; requestDetails(offering.id)">
+              Details
+            </button>
+          </div>
+        </c-col>
+      </c-row>
+    </m-card>
+  </m-grid>
 
-<app-paging-footer [currentPage]="activePublicOfferingPage" (pageChangeEvent)="refreshPublicOfferings($event, ITEMS_PER_PAGE)"></app-paging-footer>
+  <m-paginator [currentPage]="activePublicOfferingPage"
+    (pageChangeEvent)="refreshPublicOfferings($event, ITEMS_PER_PAGE)"></m-paginator>
 
 </div>
 
 <h1 *ngIf="initialLoading">Service Angebote werden geladen...</h1>
 
-<h1 *ngIf="!initialLoading && this.activeOrgaOfferingPage.value.content.length === 0 && this.activePublicOfferingPage.value.content.length === 0">Es konnten keine Service Angebote gefunden werden.</h1>
+<h1
+  *ngIf="!initialLoading && this.activeOrgaOfferingPage.value.content.length === 0 && this.activePublicOfferingPage.value.content.length === 0">
+  Es konnten keine Service Angebote gefunden werden.</h1>
 
-<c-modal #modalViewDetails id="modalViewDetails" size="xl" alignment="center" (visibleChange)="handleEventDetailsModal($event)">
+<c-modal #modalViewDetails id="modalViewDetails" size="xl" alignment="center"
+  (visibleChange)="handleEventDetailsModal($event)">
   <ng-container *ngIf="selectedOfferingDetails !== null">
     <c-modal-header>
-      <h5 cModalTitle>Details zum Service Angebot "{{ selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'] }}"</h5>
+      <h5 cModalTitle>Details zum Service Angebot "{{
+        selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'] }}"</h5>
     </c-modal-header>
     <c-modal-body>
-      <app-offeringdetailview [serviceOfferingData]="selectedOfferingDetails" [showVariableFields]="true"></app-offeringdetailview>
+      <app-offeringdetailview [serviceOfferingData]="selectedOfferingDetails"
+        [showVariableFields]="true"></app-offeringdetailview>
     </c-modal-body>
     <c-modal-footer>
       <button cButton color="secondary" [cModalToggle]="modalViewDetails.id">Schließen</button>
@@ -158,16 +164,19 @@
   </ng-container>
 </c-modal>
 
-<c-modal #modalEditServiceOffering id="modalEditServiceOffering" size="xl" alignment="center" (visibleChange)="handleEventEditModal($event)">
-    <c-modal-header>
-      <h5 cModalTitle>Service Angebot "{{ selectedOfferingDetails?.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:name']['@value'] }}" bearbeiten</h5>
-    </c-modal-header>
-    <c-modal-body>
-      <app-dynamic-form [file]="shaclFile" #wizard></app-dynamic-form>
-    </c-modal-body>
-    <c-modal-footer>
-      <button cButton color="secondary" [cModalToggle]="modalEditServiceOffering.id">Schließen</button>
-    </c-modal-footer>
+<c-modal #modalEditServiceOffering id="modalEditServiceOffering" size="xl" alignment="center"
+  (visibleChange)="handleEventEditModal($event)">
+  <c-modal-header>
+    <h5 cModalTitle>Service Angebot "{{
+      selectedOfferingDetails?.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:name']['@value']
+      }}" bearbeiten</h5>
+  </c-modal-header>
+  <c-modal-body>
+    <app-dynamic-form [file]="shaclFile" #wizard></app-dynamic-form>
+  </c-modal-body>
+  <c-modal-footer>
+    <button cButton color="secondary" [cModalToggle]="modalEditServiceOffering.id">Schließen</button>
+  </c-modal-footer>
 </c-modal>
 
 <app-contractview [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors"></app-contractview>

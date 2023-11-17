@@ -1,20 +1,23 @@
-
-
-<c-row>
-  <c-col xs *ngFor="let organization of activeOrganizationsPage.value.content" [sm]="4">
-    <c-card
-      class="mb-4"
-      [cBorder]="
-        organization.activeRepresentant
-          ? { top: { color: 'primary', width: 5 } }
-          : (organization.passiveRepresentant
-          ? { top: { color: 'secondary', width: 5 } }
-          : '')
-      "
+<c-row *ngIf="(authService.isLoggedIn === true)">
+  <c-col>
+    <button
+    id="import-button"
+    cButton
+    color="primary"
+    style="margin-bottom: 10px;"
+    routerLink="../import"
     >
-      <c-card-header>{{ organization.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'] }} </c-card-header>
-      <c-card-body>
-        <!--div class="center" style="display: flex;
+      Neue Organisation hinzufügen
+    </button>
+  </c-col>
+</c-row>
+
+<m-grid>
+  <m-card *ngFor="let organization of activeOrganizationsPage.value.content"
+    [markAs]="organization.activeRepresentant ? 'primary' : (organization.passiveRepresentant ? 'secondary' : '')"
+    [title]="organization.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value']"
+    class="mb-4">
+    <!--div class="center" style="display: flex;
         justify-content: center;">
           <svg
             class=""
@@ -23,61 +26,69 @@
             size="5xl"
             style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.25))"
           ></svg>
-        </div> 
-        <hr class="hr hr-blurry" /--> <!-- TODO readd this once organization logos are implemented-->
-        <div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item" style="border: none">
-              <strong>Merlot ID:</strong><br />
-              {{ organization.selfDescription.verifiableCredential.credentialSubject['merlot:merlotId']['@value'] }}
-            </li>
-            <li class="list-group-item" style="border: none">
-              <strong>Registrierungsnummer:</strong><br />
-              {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']['@value'] }}
-            </li>
-            <li class="list-group-item" style="border: none">
-              <strong>Name der Organisation:</strong><br />
-              {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value'] }}
-            </li>
-            <li class="list-group-item" style="border: none">
-              <strong>Adresse:</strong><br />
-              {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:street-address']['@value'] }} <br />
-              {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:postal-code']['@value'] }} {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:locality']['@value'] }} <br />
-              {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:country-name']['@value'] }}
-            </li>
-          </ul>
-          <table cTable [responsive]="true" *ngIf="organization.activeRepresentant">
-            <thead>
-            <tr>
-              <th scope="col">EDC Id</th>
-              <th scope="col">S3 Buckets</th>
-            </tr>
-            </thead>
-            <tbody>              
-            <tr *ngFor="let ci of connectorInfo">
-              <td>{{ ci.connectorId }}</td>
-              <td>{{ ci.bucketNames.join(', ') }}</td>              
-            </tr>
-            </tbody>
-          </table>
         </div>
-      </c-card-body>
-      <c-card-footer
-        *ngIf="
-          organization.activeRepresentant || organization.passiveRepresentant
-        "
-      >
-        <small
-          *ngIf="organization.activeRepresentant; else passive_repr_footer"
-          class="text-medium-emphasis"
-          >Aktive Rolle</small
-        >
-        <ng-template #passive_repr_footer>
-          <small class="text-medium-emphasis">Inaktive Rolle</small>
-        </ng-template>
-      </c-card-footer>
-    </c-card>
-  </c-col>
-</c-row>
+        <hr class="hr hr-blurry" /--> <!-- TODO readd this once organization logos are implemented-->
+    <div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item" style="border: none">
+          <strong>Merlot ID:</strong><br />
+          {{ organization.selfDescription.verifiableCredential.credentialSubject['merlot:merlotId']['@value']
+          }}
+        </li>
+        <li class="list-group-item" style="border: none">
+          <strong>Registrierungsnummer:</strong><br />
+          {{
+          organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']['@value']
+          }}
+        </li>
+        <li class="list-group-item" style="border: none">
+          <strong>Name der Organisation:</strong><br />
+          {{
+          organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value']
+          }}
+        </li>
+        <li class="list-group-item" style="border: none">
+          <strong>Adresse:</strong><br />
+          {{
+          organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:street-address']['@value']
+          }} <br />
+          {{
+          organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:postal-code']['@value']
+          }} {{
+          organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:locality']['@value']
+          }} <br />
+          {{
+          organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:country-name']['@value']
+          }}
+        </li>
+      </ul>
+      <table cTable [responsive]="true" *ngIf="organization.activeRepresentant">
+        <thead>
+          <tr>
+            <th scope="col">EDC Id</th>
+            <th scope="col">S3 Buckets</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ci of connectorInfo">
+            <td>{{ ci.connectorId }}</td>
+            <td>{{ ci.bucketNames.join(', ') }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-<app-paging-footer [currentPage]="activeOrganizationsPage" (pageChangeEvent)="refreshOrganizations($event, ITEMS_PER_PAGE)"></app-paging-footer>
+    <div card-footer *ngIf="
+          organization.activeRepresentant || organization.passiveRepresentant
+        ">
+      <small *ngIf="organization.activeRepresentant; else passive_repr_footer" class="text-medium-emphasis">Aktive
+        Rolle</small>
+      <ng-template #passive_repr_footer>
+        <small class="text-medium-emphasis">Inaktive Rolle</small>
+      </ng-template>
+    </div>
+  </m-card>
+</m-grid>
+
+<m-paginator [currentPage]="activeOrganizationsPage"
+  (pageChangeEvent)="refreshOrganizations($event, ITEMS_PER_PAGE)"></m-paginator>
