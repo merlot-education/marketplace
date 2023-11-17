@@ -52,7 +52,7 @@ it('open organizations overview', () => {
     });
 
     // switch to page 2
-    cy.get('app-paging-footer a').contains('2').click();
+    cy.get('m-paginator a').contains('2').click();
 
     // wait until we switched pages
     cy.get('c-card-header').first().should("not.contain", "AWSi");
