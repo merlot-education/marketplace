@@ -1,0 +1,46 @@
+<c-row>
+    <c-col xs>
+        <c-card class="mb-4">
+            <c-card-body>
+                <img cImg height="200" cCardImg="top" src="../../../assets/img/brand/Merlot_Title.svg"
+                    alt="MERLOT Title" />
+                <br /><br /><br /><br />
+
+                <h5 cCardTitle>Neue Organisation als Mitglied hinzufügen</h5>
+                Um die Mitgliedschaft einer Organisation zu genehmigen, wählen Sie bitte den Aufnahmeantrag aus
+                (PDF-Datei) und bestätigen Sie die Aufnahme der Organisation.
+                <br /><br />
+
+                <c-row>
+                    <input type="file" class="file-input" [accept]="'application/pdf'"
+                        (change)="importRegistrationForm($event)" [hidden]="true" #fileUpload>
+                    <c-col>
+                        <button id="import-button" cButton color="primary" style="margin: 10px;"
+                            (click)="fileUpload.click(); hideAllMessages()">
+                            Aufnahmeantrag auswählen
+                        </button>
+                        <div style="margin: 10px;"><strong>Ausgewählte Datei: </strong>{{currentFile === null ? 'Keine
+                            Datei ausgewählt.' : currentFile.name}}
+                            <app-status-message 
+                                [successMessage]="'Aufnahmeantrag erfolgreich ausgewählt.'"
+                                [errorMessage]="'Fehler beim Auswählen des Aufnahmeantrags.'"
+                                [infoMessage]="'Aufnahmeantrag wird ausgewählt.'" 
+                                #importStatusMessage>
+                            </app-status-message>
+                        </div>
+                    </c-col>
+                </c-row>
+                <c-row>
+                    <c-col>
+                        <button id="add-button" cButton color="primary" style="margin: 10px;"
+                            (click)="addOrganization()" [disabled]="!isFileValid">
+                            Organisation aufnehmen
+                        </button>
+                        <div style="margin: 10px;"><app-status-message
+                                [successMessage]="'Organisation erfolgreich hinzugefügt.'"
+                                [errorMessage]="'Fehler beim Hinzufügen der Organisation.'"
+                                [infoMessage]="'Organisation wird hinzugefügt.'" 
+                                #addStatusMessage>
+                            </app-status-message></div>
+                    </c-col>
+                </c-row>

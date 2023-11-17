@@ -41,7 +41,7 @@ export class ExploreComponent implements OnInit {
 
   constructor(
     private organizationsApiService: OrganizationsApiService,
-    private authService: AuthService
+    protected authService: AuthService
   ) {}
 
   private updateOrgaRepresentation() {
