@@ -244,6 +244,7 @@
         <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(revokeContract, contractDetails)" *ngIf="shouldShowRevokeButton(contractDetails)">Vertrag widerrufen</button> 
         <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(archiveContract, contractDetails)" *ngIf="shouldShowArchiveButton(contractDetails)">Vertrag archivieren</button>  
         <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(regenerateContract, contractDetails)" *ngIf="shouldShowRegenerateButton(contractDetails)">Vertrag neu erstellen</button> 
+        <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="downloadContractPdf(contractDetails)" *ngIf="hasContractPdfDownload(contractDetails)">Vertrag herunterladen</button> 
         <button cButton color="primary" 
           [disabled]="saveButtonDisabled || isDataTransferDisabled(contractDetails)" 
           (click)="initiateDataTransfer(contractDetails)" 

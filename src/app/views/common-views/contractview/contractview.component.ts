@@ -335,4 +335,14 @@ export class ContractviewComponent {
       saveAs(result, attachmentName);
     });
   }
+
+  protected hasContractPdfDownload(contract: IContract): boolean {
+    return (!!contract.details.consumerSignature && !!contract.details.providerSignature);
+  }
+
+  protected downloadContractPdf(contract: IContract) {
+    this.contractApiService.downloadContractPdf(this.contractDetails.details.id).then(result => {
+      saveAs(result, contract.details.id + ".pdf");
+    });
+  }
 }

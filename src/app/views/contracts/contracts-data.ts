@@ -38,7 +38,10 @@ export interface IContractDetails {
   consumerId: string;
   consumerLegalName: string;
   state: string;
-  providerTncUrl: string;
+  providerSignerUser: string;
+  providerSignature: string;
+  consumerSignerUser: string;
+  consumerSignature: string;
 }
 
 export interface IContractNegotiation {
