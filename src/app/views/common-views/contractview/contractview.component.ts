@@ -178,6 +178,7 @@ export class ContractviewComponent {
       this.contractStatusMessage.hideAllMessages();
       this.edcStatusMessage.hideAllMessages();
       this.attachmentStatusMessage.hideAllMessages();
+      this.contractPdfDownloadMessage.hideAllMessages();
       // TODO clear contract on close again
     }
   }
