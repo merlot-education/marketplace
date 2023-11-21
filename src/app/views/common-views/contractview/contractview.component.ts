@@ -30,6 +30,7 @@ export class ContractviewComponent {
   @ViewChild('attachmentStatusMessage') private attachmentStatusMessage: StatusMessageComponent;
   @ViewChild('contractStatusMessage') private contractStatusMessage: StatusMessageComponent;
   @ViewChild('edcStatusMessage') private edcStatusMessage: StatusMessageComponent;
+  @ViewChild('contractPdfDownloadMessage') private contractPdfDownloadMessage: StatusMessageComponent;
 
   protected saveButtonDisabled: boolean = false;
 
@@ -341,8 +342,16 @@ export class ContractviewComponent {
   }
 
   protected downloadContractPdf(contract: IContract) {
+    this.saveButtonDisabled = true;
     this.contractApiService.downloadContractPdf(this.contractDetails.details.id).then(result => {
       saveAs(result, "Vertrag_" + contract.details.id.replace("Contract:", "") + ".pdf");
+      this.saveButtonDisabled = false;
+    }).catch((e: HttpErrorResponse) => {
+      this.contractPdfDownloadMessage.showErrorMessage(e.error.message);
+      this.saveButtonDisabled = false;
+    }).catch(_ => {
+      this.contractPdfDownloadMessage.showErrorMessage("Unbekannter Fehler.");
+      this.saveButtonDisabled = false;
     });
   }
 }

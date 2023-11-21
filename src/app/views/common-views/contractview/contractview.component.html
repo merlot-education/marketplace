@@ -230,6 +230,12 @@
               [infoMessage]="'EDC-Übertragung läuft.'"
               #edcStatusMessage>
           </app-status-message>
+          <app-status-message 
+              [successMessage]="''"
+              [errorMessage]="'Vertrag konnte nicht heruntergeladen werden.'"
+              [infoMessage]="''"
+              #contractPdfDownloadMessage>
+          </app-status-message>
         </ul>
       </ng-container>
     </c-modal-body>
