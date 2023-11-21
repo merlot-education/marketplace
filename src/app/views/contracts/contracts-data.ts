@@ -40,8 +40,10 @@ export interface IContractDetails {
   state: string;
   providerSignerUser: string;
   providerSignature: string;
+  providerSignatureDate: string;
   consumerSignerUser: string;
   consumerSignature: string;
+  consumerSignatureDate: string;
 }
 
 export interface IContractNegotiation {
