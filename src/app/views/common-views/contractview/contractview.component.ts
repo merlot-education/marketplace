@@ -342,7 +342,7 @@ export class ContractviewComponent {
 
   protected downloadContractPdf(contract: IContract) {
     this.contractApiService.downloadContractPdf(this.contractDetails.details.id).then(result => {
-      saveAs(result, contract.details.id + ".pdf");
+      saveAs(result, "Vertrag_" + contract.details.id.replace("Contract:", "") + ".pdf");
     });
   }
 }
