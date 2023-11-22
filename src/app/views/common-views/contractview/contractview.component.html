@@ -230,6 +230,12 @@
               [infoMessage]="'EDC-Übertragung läuft.'"
               #edcStatusMessage>
           </app-status-message>
+          <app-status-message 
+              [successMessage]="''"
+              [errorMessage]="'Vertrag konnte nicht heruntergeladen werden.'"
+              [infoMessage]="''"
+              #contractPdfDownloadMessage>
+          </app-status-message>
         </ul>
       </ng-container>
     </c-modal-body>
@@ -244,6 +250,7 @@
         <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(revokeContract, contractDetails)" *ngIf="shouldShowRevokeButton(contractDetails)">Vertrag widerrufen</button> 
         <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(archiveContract, contractDetails)" *ngIf="shouldShowArchiveButton(contractDetails)">Vertrag archivieren</button>  
         <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="handleButtonClick(regenerateContract, contractDetails)" *ngIf="shouldShowRegenerateButton(contractDetails)">Vertrag neu erstellen</button> 
+        <button cButton color="primary" [disabled]="saveButtonDisabled" (click)="downloadContractPdf(contractDetails)" *ngIf="hasContractPdfDownload(contractDetails)">Vertrag herunterladen</button> 
         <button cButton color="primary" 
           [disabled]="saveButtonDisabled || isDataTransferDisabled(contractDetails)" 
           (click)="initiateDataTransfer(contractDetails)" 

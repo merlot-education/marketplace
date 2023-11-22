@@ -100,6 +100,11 @@ export class ContractApiService {
     {headers: this.getActiveRoleHeaders(), responseType: 'blob'}));
   }
 
+  public async downloadContractPdf(contractId: string): Promise<any> {
+    return await lastValueFrom(this.http.get(environment.contract_api_url + "contract/" + contractId + "/contractPdf", 
+    {headers: this.getActiveRoleHeaders(), responseType: 'blob'}));
+  }
+
   public resolveFriendlyStatusName(contractStatus: string) {
     return this.friendlyStatusNames[contractStatus] ? this.friendlyStatusNames[contractStatus] : "Unbekannt";
   }

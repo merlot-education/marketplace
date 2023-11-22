@@ -30,6 +30,7 @@ export class ContractviewComponent {
   @ViewChild('attachmentStatusMessage') private attachmentStatusMessage: StatusMessageComponent;
   @ViewChild('contractStatusMessage') private contractStatusMessage: StatusMessageComponent;
   @ViewChild('edcStatusMessage') private edcStatusMessage: StatusMessageComponent;
+  @ViewChild('contractPdfDownloadMessage') private contractPdfDownloadMessage: StatusMessageComponent;
 
   protected saveButtonDisabled: boolean = false;
 
@@ -177,6 +178,7 @@ export class ContractviewComponent {
       this.contractStatusMessage.hideAllMessages();
       this.edcStatusMessage.hideAllMessages();
       this.attachmentStatusMessage.hideAllMessages();
+      this.contractPdfDownloadMessage.hideAllMessages();
       // TODO clear contract on close again
     }
   }
@@ -333,6 +335,24 @@ export class ContractviewComponent {
     this.attachmentStatusMessage.hideAllMessages();
     this.contractApiService.downloadAttachment(this.contractDetails.details.id, attachmentName).then(result => {
       saveAs(result, attachmentName);
+    });
+  }
+
+  protected hasContractPdfDownload(contract: IContract): boolean {
+    return (!!contract.details.consumerSignature && !!contract.details.providerSignature);
+  }
+
+  protected downloadContractPdf(contract: IContract) {
+    this.saveButtonDisabled = true;
+    this.contractApiService.downloadContractPdf(this.contractDetails.details.id).then(result => {
+      saveAs(result, "Vertrag_" + contract.details.id.replace("Contract:", "") + ".pdf");
+      this.saveButtonDisabled = false;
+    }).catch((e: HttpErrorResponse) => {
+      this.contractPdfDownloadMessage.showErrorMessage(e.error.message);
+      this.saveButtonDisabled = false;
+    }).catch(_ => {
+      this.contractPdfDownloadMessage.showErrorMessage("Unbekannter Fehler.");
+      this.saveButtonDisabled = false;
     });
   }
 }
