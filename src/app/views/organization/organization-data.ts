@@ -13,7 +13,6 @@ export interface IOrganizationData {
         'gax-trust-framework:legalAddress': IVCardAddress;
         'gax-trust-framework:headquarterAddress': IVCardAddress;
         'merlot:orgaName': IStringTypeValue;
-        'merlot:addressCode': IStringTypeValue;
         'merlot:termsAndConditions': ITermsAndConditions;
       };
     };
