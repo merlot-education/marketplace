@@ -3,6 +3,7 @@ import { ConnectorData, IOrganizationData, IPageOrganizations } from "../organiz
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -41,7 +42,8 @@ export class ExploreComponent implements OnInit {
 
   constructor(
     private organizationsApiService: OrganizationsApiService,
-    protected authService: AuthService
+    protected authService: AuthService,
+    private router: Router
   ) {}
 
   private updateOrgaRepresentation() {
@@ -86,5 +88,9 @@ export class ExploreComponent implements OnInit {
       this.activeOrganizationsPage.next(result);
       this.updateOrgaRepresentation();
     });
+  }
+
+  protected editOrganization(orga: IOrganizationData) {
+    this.router.navigate(["organization/edit/", orga.selfDescription.verifiableCredential.credentialSubject['@id']]);
   }
 }

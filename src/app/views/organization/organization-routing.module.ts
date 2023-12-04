@@ -34,6 +34,14 @@ const routes: Routes = [
         canActivate: [KeycloakGuard]
       },
       {
+        path: 'edit/:orgaId',
+        component: EditComponent,
+        data: {
+          title: 'Organisation bearbeiten',
+        },
+        canActivate: [KeycloakGuard]
+      },
+      {
         path: 'import', 
         component: ImportComponent,
         data: {

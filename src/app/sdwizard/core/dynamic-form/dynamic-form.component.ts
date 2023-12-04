@@ -144,15 +144,9 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   }
 
   readObjectDataFromRoute(): void {
-    if (this.router.getCurrentNavigation().extras.state) {
-      this.routeState = this.router.getCurrentNavigation().extras.state;
-      if (this.routeState) {
-        this.requestSuccess = true;
-        this.file = this.routeState.file;
-      }
-    } else {
-      this.file = undefined;
-    }
+    this.routeState = this.router.getCurrentNavigation().extras.state;
+    this.requestSuccess = true;
+    this.file = undefined;
     this.multipleShapes = this.formfieldService.updateFilteredShapes(this.file)?.length > 1;
   }
 

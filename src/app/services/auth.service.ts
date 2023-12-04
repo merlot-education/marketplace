@@ -34,8 +34,8 @@ export class AuthService {
     });
 
   private roleFriendlyNameMapper: { [key: string]: string } = {
-    OrgRep: 'Repräsentant',
     OrgLegRep: 'Prokurist',
+    FedAdmin: 'Föderator',
   };
 
   constructor(
@@ -117,7 +117,7 @@ export class AuthService {
 
   private buildOrganizationRoles(userRoles: string[]) {
     for (let r of userRoles) {
-      if (r.startsWith('OrgRep_') || r.startsWith('OrgLegRep_')) {
+      if (r.startsWith('OrgLegRep_') || r.startsWith('FedAdmin_')) {
         this.organizationRoles[r] = this.getOrganizationRole(r);
         // if the active Role is not set, set its initial value to the first role we see
         if (this.activeOrganizationRole.getValue().orgaRoleString === '') {

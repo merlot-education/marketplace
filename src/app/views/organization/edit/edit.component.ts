@@ -8,6 +8,7 @@ import { FormfieldControlService } from '@services/form-field.service';
 import { WizardExtensionService } from 'src/app/services/wizard-extension.service';
 
 import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -28,30 +29,42 @@ export class EditComponent implements OnInit {
   constructor(protected authService: AuthService, 
     protected organizationsApiService: OrganizationsApiService, 
     private formFieldService: FormfieldControlService,
-    private wizardExtensionService: WizardExtensionService) {
-    authService.activeOrganizationRole.subscribe(orga => {
-      this.selectedOrganization = undefined;
-      organizationsApiService.getOrgaById(orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']).then(result => {
-
-        result.selfDescription.verifiableCredential.credentialSubject['merlot:merlotId']['disabled'] = true;
-        result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['disabled'] = true;
-        result.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['disabled'] = true;
-        result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']['disabled'] = true;
-        // TODO allow other types of registration number
-        result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EUID'] = {'@value': "", '@type': "", 'disabled': true};
-        result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EORI'] = {'@value': "", '@type': "", 'disabled': true};
-        result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:vatID'] = {'@value': "", '@type': "", 'disabled': true};
-        result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:leiCode'] = {'@value': "", '@type': "", 'disabled': true};
-        console.log(result);
-
-        this.selectedOrganization = result;
-        this.wizardExtensionService.prefillFields(this.wizard, result.selfDescription.verifiableCredential.credentialSubject);
-        this.selectShape();
-      })
-    })
+    private wizardExtensionService: WizardExtensionService,
+    private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
+    let selectedOrgaId = this.route.snapshot.paramMap.get('orgaId');
+    console.log("selected orga: ", selectedOrgaId);
+    if (selectedOrgaId) {
+      this.selectOrganization(selectedOrgaId);
+    } else {
+      this.authService.activeOrganizationRole.subscribe(orga => {
+        this.selectOrganization(orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+      });
+    }
+  }
+
+  private selectOrganization(orgaId: string) {
+    this.selectedOrganization = undefined;
+    this.organizationsApiService.getOrgaById(orgaId).then(result => {
+
+      result.selfDescription.verifiableCredential.credentialSubject['merlot:merlotId']['disabled'] = true;
+      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['disabled'] = true;
+      result.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['disabled'] = true;
+      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']['disabled'] = true;
+      // TODO allow other types of registration number
+      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EUID'] = {'@value': "", '@type': "", 'disabled': true};
+      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EORI'] = {'@value': "", '@type': "", 'disabled': true};
+      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:vatID'] = {'@value': "", '@type': "", 'disabled': true};
+      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:leiCode'] = {'@value': "", '@type': "", 'disabled': true};
+      console.log(result);
+
+      this.selectedOrganization = result;
+      this.wizardExtensionService.prefillFields(this.wizard, result.selfDescription.verifiableCredential.credentialSubject);
+      console.log("start select shape");
+      this.selectShape();
+    });
   }
 
 
