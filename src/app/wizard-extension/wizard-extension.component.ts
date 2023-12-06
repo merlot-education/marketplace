@@ -104,8 +104,6 @@ export class WizardExtensionComponent {
 
 
   public prefillFields(selfDescriptionFields: any) {
-    this.saveStatusMessage.hideAllMessages();
-    this.submitButtonsDisabled = false;
     if (this.createDateTimer) {
       clearInterval(this.createDateTimer);
     }
@@ -123,7 +121,8 @@ export class WizardExtensionComponent {
               console.log("Wizard not yet ready, waiting for init.");
             } else {
               console.log("Wizard initialized");
-              console.log("start prefillFields")
+              console.log("start prefillFields");
+
               for (let expandedField of this.wizard.expandedFieldsViewChildren) {
                 this.processExpandedField(expandedField, selfDescriptionFields);
                 }
@@ -345,5 +344,7 @@ export class WizardExtensionComponent {
 
   public ngOnDestroy() {
     this.wizard.ngOnDestroy();
+    this.saveStatusMessage.hideAllMessages();
+    this.submitButtonsDisabled = false;
   }
 }
