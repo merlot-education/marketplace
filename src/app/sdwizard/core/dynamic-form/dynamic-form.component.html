@@ -113,37 +113,6 @@
               #selfLoops
             ></app-dynamic-self-loops>
           </div>
-          <br />
-
-          <div class="flex-container">
-            <div *ngIf="i == 0" class="form-group flex-item-grow">
-              <button
-                [disabled]="form.invalid || submitButtonsDisabled"
-                color="primary"
-                mat-raised-button
-                (click)="onSubmit(false)"
-              >
-                {{ 'Änderungen speichern' }}
-              </button>
-            </div>
-
-            <div *ngIf="shape?.name !== 'MerlotOrganization' && i == 0" class="form-group flex-item-grow">
-              <button
-                [disabled]="form.invalid || submitButtonsDisabled"
-                color="primary"
-                mat-raised-button
-                (click)="onSubmit(true)"
-              >
-                Veröffentlichen
-              </button>
-            </div>
-          </div>
-
-          <div *ngIf="i == 0" class="form-group">
-            <strong *ngIf="showErrorMessage" style="color:red">Fehler bei der Kommunikation mit dem GXFS-Katalog. ({{ errorDetails }})</strong>
-            <strong *ngIf="showSuccessMessage" style="color:green">Selbstbeschreibung erfolgreich gespeichert! <br/> 
-              ID: {{ createdServiceOfferingId }}</strong>
-          </div>
           <!--div class="all-errors"> 
       <div *ngFor="let formField of group" class="alert alert-danger ">
         <app-show-errors [displayAll]="true" [formField]="formField" [form]="form" [label]="formField.name">
@@ -151,29 +120,6 @@
       </div>
     </div-->
           <!-- TODO re-add error messages -->
-          <div *ngIf="hasStaticFiles">
-            <button
-              (click)="goToFiles()"
-              class="back-button"
-              color="primary"
-              mat-stroked-button
-            >
-              <mat-icon>arrow_back</mat-icon>
-              {{ "form.goBack" | translate }}
-            </button>
-          </div>
-
-          <div *ngIf="multipleShapes" fxLayout="row wrap">
-            <button
-              (click)="goToShapes()"
-              class="back-button"
-              color="primary"
-              mat-stroked-button
-            >
-              <mat-icon>arrow_back</mat-icon>
-              {{ "form.goBack" | translate }}
-            </button>
-          </div>
         </div>
       </div>
     </form>

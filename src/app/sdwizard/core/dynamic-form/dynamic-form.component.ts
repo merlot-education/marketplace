@@ -157,65 +157,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy, AfterViewChecked
    return result;
   }
 
-  onSubmit(publishAfterSave: boolean): void {
-    this.submitButtonsDisabled = true;
-    this.showSuccessMessage = false;
-    this.showErrorMessage = false;
-    this.createdServiceOfferingId = "";
-    this.errorDetails = "";
-
-    this.shape.userPrefix = this.form.get('user_prefix').value;
-
-    this.patchFieldsForSubmit(this.groupedFormFields);
-
-    this.shape.downloadFormat = this.form.get('download_format').value;
-    console.log("shape fields pre update/empty", this.shape.fields);  
-    this.shape.fields = this.updateFormFieldsValues(this.formFields, this.form);
-    this.shape.fields = this.emptyChildrenFields(this.shape.fields);
-    console.log("shape fields pre save", this.shape.fields);
-    this.exportService.saveFile(this.file)
-      .then(result => {
-        console.log(result);
-        this.showSuccessMessage = true;
-        this.createdServiceOfferingId = result["id"];
-        let didField = this.form.get("user_prefix");
-        didField.patchValue(result["id"]);
-
-        if (this.shape?.name === "MerlotOrganization") {
-          this.authService.refreshActiveRoleOrgaData();
-        }
-
-        if (publishAfterSave) {
-          this.serviceofferingApiService.releaseServiceOffering(result["id"])
-          .catch((e: HttpErrorResponse) => {
-            this.showErrorMessage = true;
-            this.errorDetails = e.error.message;
-            this.submitButtonsDisabled = false;
-          })
-          .catch(e => {
-            this.showErrorMessage = true;
-            this.errorDetails = "Unbekannter Fehler.";
-            this.submitButtonsDisabled = false;
-          });
-        }
-      })
-      .catch((e: HttpErrorResponse) => {
-        this.showErrorMessage = true;
-        this.errorDetails = e.error.message;
-        this.submitButtonsDisabled = false;
-      })
-      .catch(e => {
-        this.showErrorMessage = true;
-        this.errorDetails = "Unbekannter Fehler.";
-        this.submitButtonsDisabled = false;
-      }).finally(() => {
-        if (!publishAfterSave) {
-          this.submitButtonsDisabled = false;
-        }
-      });
-    //this.patchRequiredFieldsOffering(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
-  }
-
   ngOnDestroy() {
     console.log("Destroying dynamic form component"); 
     this.showSuccessMessage = false;
