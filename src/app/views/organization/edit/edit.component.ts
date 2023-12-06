@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { IOrganizationData } from "../organization-data";
 import { AuthService } from 'src/app/services/auth.service';
+import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { WizardExtensionComponent } from 'src/app/wizard-extension/wizard-extension.component';
@@ -16,6 +17,7 @@ export class EditComponent implements OnInit, AfterViewInit {
   @ViewChild("wizardExtension") private wizardExtensionComponent: WizardExtensionComponent;
 
   constructor(protected authService: AuthService, 
+    protected activeOrgRoleService: ActiveOrganizationRoleService,
     protected organizationsApiService: OrganizationsApiService, 
     private route: ActivatedRoute) {
   }
@@ -24,7 +26,7 @@ export class EditComponent implements OnInit, AfterViewInit {
     if (selectedOrgaId) {
       this.selectOrganization(selectedOrgaId);
     } else {
-      this.authService.activeOrganizationRole.subscribe(orga => {
+      this.activeOrgRoleService.activeOrganizationRole.subscribe(orga => {
         this.selectOrganization(orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
       });
       this.wizardExtensionComponent.submitCompleteEvent.subscribe(_ => {

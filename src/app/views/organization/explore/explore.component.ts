@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConnectorData, IOrganizationData, IPageOrganizations } from "../organization-data";
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -43,6 +44,7 @@ export class ExploreComponent implements OnInit {
   constructor(
     private organizationsApiService: OrganizationsApiService,
     protected authService: AuthService,
+    protected activeOrgRoleService: ActiveOrganizationRoleService,
     private router: Router
   ) {}
 
@@ -70,7 +72,7 @@ export class ExploreComponent implements OnInit {
 
   ngOnInit(): void {
     this.refreshOrganizations(0, this.ITEMS_PER_PAGE);
-    this.authService.activeOrganizationRole.subscribe(_ => this.updateOrgaRepresentation());
+    this.activeOrgRoleService.activeOrganizationRole.subscribe(_ => this.updateOrgaRepresentation());
   }
 
   checkRepresentant(organization: IOrganizationData): string {

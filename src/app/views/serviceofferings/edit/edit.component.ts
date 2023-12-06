@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService, OrganizationRole } from 'src/app/services/auth.service';
+import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { ITermsAndConditions, serviceFileNameDict } from '../serviceofferings-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
@@ -21,12 +22,13 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   constructor(private serviceofferingsApiService: ServiceofferingApiService, 
     protected authService : AuthService, 
+    protected activeOrgRoleService: ActiveOrganizationRoleService,
     private organizationsApiService: OrganizationsApiService) {
   }
   
   ngAfterViewInit(): void {
     this.requestShapes();
-    this.authService.activeOrganizationRole.subscribe(role => {
+    this.activeOrgRoleService.activeOrganizationRole.subscribe(role => {
       this.patchWizardTnC();
     });
   }
@@ -67,7 +69,7 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   patchWizardTnC() {
     let merlotTnC = this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-    let providerTnC: ITermsAndConditions = this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
+    let providerTnC: ITermsAndConditions = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
     this.wizardExtension.prefillFields({
       "gax-core:offeredBy": {
         "@id": this.authService.getActiveOrgaLegalName(),

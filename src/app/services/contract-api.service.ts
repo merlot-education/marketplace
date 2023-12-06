@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
+import { ActiveOrganizationRoleService } from './active-organization-role.service';
 import { environment } from 'src/environments/environment';
 import { lastValueFrom } from 'rxjs';
 import { IContract, IEdcIdResponse, IEdcNegotiationStatus, IEdcTransferStatus, IPageContracts } from '../views/contracts/contracts-data';
@@ -19,10 +20,10 @@ export class ContractApiService {
     "ARCHIVED": "Archiviert"
   }
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private authService: AuthService, protected activeOrgRoleService: ActiveOrganizationRoleService) {}
 
   private getActiveRoleHeaders() : HttpHeaders {
-    return new HttpHeaders({'Active-Role' : this.authService.activeOrganizationRole.value.orgaRoleString });
+    return new HttpHeaders({'Active-Role' : this.activeOrgRoleService.activeOrganizationRole.value.orgaRoleString });
   }
 
   public getAvailableStatusNames() {

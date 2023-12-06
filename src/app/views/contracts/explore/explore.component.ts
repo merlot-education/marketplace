@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IContract, IContractBasic, IPageContracts } from '../contracts-data';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { BehaviorSubject } from 'rxjs';
 import { ConnectorData } from '../../organization/organization-data';
@@ -55,13 +56,14 @@ export class ExploreComponent implements OnInit {
     private organizationsApiService: OrganizationsApiService,
     private serviceOfferingApiService: ServiceofferingApiService,
     protected authService: AuthService,
+    protected activeOrgRoleService: ActiveOrganizationRoleService,
     protected contractApiService: ContractApiService
     ) {
       this.selectedStatusFilter = this.contractApiService.getAvailableStatusNames()[0];
   }
 
   ngOnInit(): void {
-    this.authService.activeOrganizationRole.subscribe(value => {
+    this.activeOrgRoleService.activeOrganizationRole.subscribe(value => {
       this.organizationsApiService.getConnectorsOfOrganization(value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']).then(result => {
         this.orgaConnectors = result;
       });

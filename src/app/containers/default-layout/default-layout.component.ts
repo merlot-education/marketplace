@@ -3,6 +3,7 @@ import { INavData } from '@coreui/angular';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { AuthService } from 'src/app/services/auth.service';
+import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { AaamApiService } from 'src/app/services/aaam-api.service';
 
 import {
@@ -33,6 +34,7 @@ export class DefaultLayoutComponent {
 
   constructor(
     protected authService: AuthService,
+    protected activeOrgRoleService: ActiveOrganizationRoleService,
     protected keycloakService: KeycloakService,
     private aaamApiService: AaamApiService,
     private organizationsApiService: OrganizationsApiService
@@ -47,7 +49,7 @@ export class DefaultLayoutComponent {
     this.navItems = this.buildAllowedNavItems(globalNavItems);
     //});
     this.selectedRoleOption =
-      this.authService.activeOrganizationRole.getValue().orgaRoleString;
+      this.activeOrgRoleService.activeOrganizationRole.getValue().orgaRoleString;
 
     let tries = 0;
     while (this.authService.isLoggedIn) {

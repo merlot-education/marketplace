@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { OrganizationsApiService } from './organizations-api.service';
+import { ActiveOrganizationRoleService } from './active-organization-role.service';
 import { IOrganizationData } from '../views/organization/organization-data';
 
 export interface OrganizationRole {
@@ -19,6 +20,7 @@ export class AuthService {
   private token: string = '';
 
   public isLoggedIn: boolean = false;
+  public isActiveAsFederatorAdmin = false;
   public userProfile: KeycloakProfile = {};
   public organizationRoles: {
     [orgaRoleKey: string]: OrganizationRole;
@@ -26,12 +28,9 @@ export class AuthService {
 
   public finishedLoadingRoles = false;
 
-  public activeOrganizationRole: BehaviorSubject<OrganizationRole> =
-    new BehaviorSubject<OrganizationRole>({
-      orgaRoleString: '',
-      roleName: '',
-      roleFriendlyName: '',
-    });
+private getActiveOrganizationRole(): BehaviorSubject<OrganizationRole>{
+ return this.activeOrganizationRoleService.activeOrganizationRole;
+}
 
   private roleFriendlyNameMapper: { [key: string]: string } = {
     OrgLegRep: 'Prokurist',
@@ -40,7 +39,8 @@ export class AuthService {
 
   constructor(
     private keycloakService: KeycloakService,
-    private organizationApiService: OrganizationsApiService
+    private organizationApiService: OrganizationsApiService,
+    private activeOrganizationRoleService: ActiveOrganizationRoleService
   ) {
     this.keycloakService.isLoggedIn().then((result) => {
       this.isLoggedIn = result;
@@ -61,15 +61,15 @@ export class AuthService {
   public refreshActiveRoleOrgaData() {
     this.organizationApiService
       .getOrgaById(
-        this.activeOrganizationRole.value.orgaData.selfDescription
+        this.getActiveOrganizationRole().value.orgaData.selfDescription
           .verifiableCredential.credentialSubject['@id']
       )
       .then((result) => {
         this.organizationRoles[
-          this.activeOrganizationRole.value.orgaRoleString
+          this.getActiveOrganizationRole().value.orgaRoleString
         ].orgaData = result;
         this.changeActiveOrgaRole(
-          this.activeOrganizationRole.value.orgaRoleString
+          this.getActiveOrganizationRole().value.orgaRoleString
         );
       });
   }
@@ -94,25 +94,30 @@ export class AuthService {
     };
   }
 
+  private isFederatorAdmin(roleName: string): boolean{
+    return roleName === "FedAdmin";
+  }
+
   public getActiveOrgaId(): string {
-    return this.activeOrganizationRole.value.orgaData?.selfDescription
+    return this.getActiveOrganizationRole().value.orgaData?.selfDescription
       .verifiableCredential.credentialSubject['@id'];
   }
 
   public getActiveOrgaName(): string {
-    return this.activeOrganizationRole.value.orgaData?.selfDescription
+    return this.getActiveOrganizationRole().value.orgaData?.selfDescription
       .verifiableCredential.credentialSubject['merlot:orgaName']['@value'];
   }
 
   public getActiveOrgaLegalName(): string {
-    return this.activeOrganizationRole.value.orgaData?.selfDescription
+    return this.getActiveOrganizationRole().value.orgaData?.selfDescription
       .verifiableCredential.credentialSubject['gax-trust-framework:legalName'][
       '@value'
     ];
   }
 
   public changeActiveOrgaRole(orgaRoleString: string) {
-    this.activeOrganizationRole.next(this.organizationRoles[orgaRoleString]);
+    this.getActiveOrganizationRole().next(this.organizationRoles[orgaRoleString]);
+    this.isActiveAsFederatorAdmin = this.isFederatorAdmin(this.getActiveOrganizationRole().value.roleName);
   }
 
   private buildOrganizationRoles(userRoles: string[]) {
@@ -120,8 +125,9 @@ export class AuthService {
       if (r.startsWith('OrgLegRep_') || r.startsWith('FedAdmin_')) {
         this.organizationRoles[r] = this.getOrganizationRole(r);
         // if the active Role is not set, set its initial value to the first role we see
-        if (this.activeOrganizationRole.getValue().orgaRoleString === '') {
-          this.activeOrganizationRole.next(this.organizationRoles[r]);
+        if (this.getActiveOrganizationRole().getValue().orgaRoleString === '') {
+          this.getActiveOrganizationRole().next(this.organizationRoles[r]);
+          this.isActiveAsFederatorAdmin = this.isFederatorAdmin(this.getActiveOrganizationRole().value.roleName);
         }
       }
     }

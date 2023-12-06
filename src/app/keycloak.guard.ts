@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
+  Route,
   Router,
   RouterStateSnapshot
 } from '@angular/router';
 import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
+import { AuthService } from './services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +14,7 @@ import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
 export class KeycloakGuard extends KeycloakAuthGuard {
   constructor(
     protected override readonly router: Router,
+    protected readonly authService: AuthService,
     protected readonly keycloak: KeycloakService
   ) {
     super(router, keycloak);
@@ -30,6 +33,15 @@ export class KeycloakGuard extends KeycloakAuthGuard {
 
     // Get the roles required from the route.
     const requiredRoles = route.data['roles'];
+
+    const { routeConfig } = route; 
+    const { path } = routeConfig as Route;
+
+    // If the user is trying to access the import page, but the current role is not federator admin, deny access.
+    if (path?.includes('import') && this.authService.isActiveAsFederatorAdmin===false) {
+      
+        return false;
+      }
 
     // Allow the user to proceed if no additional roles are required to access the route.
     if (!(requiredRoles instanceof Array) || requiredRoles.length === 0) {

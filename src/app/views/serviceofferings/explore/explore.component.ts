@@ -4,6 +4,7 @@ import { ServiceofferingApiService } from '../../../services/serviceoffering-api
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { serviceFileNameDict } from '../serviceofferings-data';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { IContract } from '../../contracts/contracts-data';
@@ -102,12 +103,13 @@ export class ExploreComponent implements OnInit, OnDestroy {
     protected serviceOfferingApiService : ServiceofferingApiService,
     protected organizationsApiService: OrganizationsApiService,
     private contractApiService: ContractApiService,
-    protected authService: AuthService) {
+    protected authService: AuthService,
+    protected activeOrgRoleService: ActiveOrganizationRoleService) {
   }
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn) {
-      this.activeOrgaSubscription = this.authService.activeOrganizationRole.subscribe(value => {
+      this.activeOrgaSubscription = this.activeOrgRoleService.activeOrganizationRole.subscribe(value => {
         this.organizationsApiService.getConnectorsOfOrganization(value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']).then(result => {
         this.orgaConnectors = result;
         this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
@@ -234,7 +236,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   updateServiceOfferingEdit(offering: IBasicOffering) {
     this.requestDetails(offering.id).then(() => {
       let merlotTnC = this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-      let providerTnC: ITermsAndConditions = this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
+      let providerTnC: ITermsAndConditions = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
 
       for (let tnc of this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:termsAndConditions']) {
         if (tnc['gax-trust-framework:content']['@value'] === merlotTnC['gax-trust-framework:content']['@value'] 
