@@ -172,7 +172,7 @@
       }}" bearbeiten</h5>
   </c-modal-header>
   <c-modal-body>
-    <app-dynamic-form [file]="shaclFile" #wizard></app-dynamic-form>
+    <app-wizard-extension #wizardExtension></app-wizard-extension>
   </c-modal-body>
   <c-modal-footer>
     <button cButton color="secondary" [cModalToggle]="modalEditServiceOffering.id">Schließen</button>

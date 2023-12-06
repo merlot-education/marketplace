@@ -104,6 +104,11 @@ export class WizardExtensionComponent {
 
 
   public prefillFields(selfDescriptionFields: any) {
+    this.saveStatusMessage.hideAllMessages();
+    this.submitButtonsDisabled = false;
+    if (this.createDateTimer) {
+      clearInterval(this.createDateTimer);
+    }
     this.shapeInitialized
       .pipe(takeWhile(shapeInitialized => !shapeInitialized, true)) // subscribe until shapeInitialized is true for first time (inclusive), then unsubscribe
       .subscribe(shapeInitialized => {
@@ -336,5 +341,9 @@ export class WizardExtensionComponent {
         this.submitButtonsDisabled = false;
       }
     });
+  }
+
+  public ngOnDestroy() {
+    this.wizard.ngOnDestroy();
   }
 }
