@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, ViewChild } from '@angular/core';
 import { ShaclFile } from '@models/shacl-file';
 import { Shape } from '@models/shape';
 import { OrganizationsApiService } from '../services/organizations-api.service';
@@ -9,7 +9,10 @@ import { ExpandedFieldsComponent } from '@components/expanded-fields/expanded-fi
 import { FormControl } from '@angular/forms';
 import { DynamicFormInputComponent } from '@components/dynamic-form-input/dynamic-form-input.component';
 import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynamic-form-array.component';
-import { takeWhile } from 'rxjs';
+import { BehaviorSubject, takeWhile } from 'rxjs';
+import { ExportService } from '@services/export.service';
+import { StatusMessageComponent } from '../views/common-views/status-message/status-message.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-wizard-extension',
@@ -17,14 +20,19 @@ import { takeWhile } from 'rxjs';
   styleUrls: ['./wizard-extension.component.scss']
 })
 export class WizardExtensionComponent {
-  @ViewChild("wizard") private wizard: DynamicFormComponent;
-  private ecoSystem: string= "merlot";// pass this to getFiles Api
+  @ViewChild("wizard") protected wizard: DynamicFormComponent;
+  @ViewChild("saveStatusMessage") private saveStatusMessage: StatusMessageComponent;
   protected shaclFile: ShaclFile;
-  private filteredShapes: Shape[];
+  protected submitButtonsDisabled: boolean = false;
+  protected filteredShapes: Shape[];
+  submitCompleteEvent: EventEmitter<any> = new EventEmitter();
+
+  private shapeInitialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(private formFieldService: FormfieldControlService,
     private organizationsApiService: OrganizationsApiService,
-    private serviceofferingApiService: ServiceofferingApiService) {}
+    private serviceofferingApiService: ServiceofferingApiService,
+    private exportService: ExportService) {}
 
   private selectShape(shaclFile: ShaclFile, credentialSubjectId: string): void {
     this.shaclFile = shaclFile;
@@ -74,39 +82,55 @@ export class WizardExtensionComponent {
   }
 
   public loadShape(shapeName: string, id: string): void {
-    if (shapeName === "Participant") {
-      this.organizationsApiService.getMerlotParticipantShape().then(shape => {
-        this.selectShape(this.formFieldService.readShaclFile(shape), id);
-      })
+    this.shapeInitialized.next(false);
+    console.log("Loading shape", shapeName);
+    let shapeResult: Promise<any>;
+    if (shapeName === "MerlotOrganization") {
+      shapeResult = this.organizationsApiService.getMerlotParticipantShape();
+    } else {
+      shapeResult = this.serviceofferingApiService.fetchShape(shapeName);
     }
+    shapeResult.then(shape => {
+      this.selectShape(this.formFieldService.readShaclFile(shape), id);
+      this.shapeInitialized.next(true);
+    });
   }
 
   private createDateTimer: NodeJS.Timer = undefined;
 
 
   public prefillFields(selfDescriptionFields: any) {
-    this.wizard.finishedLoading
-      .pipe(takeWhile(finishedLoading => !finishedLoading, true)) // subscribe until finishedLoading is true for first time (inclusive), then unsubscribe
-      .subscribe(finishedLoading => {
-      if (!finishedLoading) {
-        console.log("Wizard not yet ready, waiting for init.");
-      } else {
-        console.log("Wizard initialized");
-        console.log("start prefillFields")
-        for (let expandedField of this.wizard.expandedFieldsViewChildren) {
-          this.processExpandedField(expandedField, selfDescriptionFields);
-          }
-        for (let formInput of this.wizard.formInputViewChildren) {
-          this.processFormInput(formInput, selfDescriptionFields);
+    this.shapeInitialized
+      .pipe(takeWhile(shapeInitialized => !shapeInitialized, true)) // subscribe until shapeInitialized is true for first time (inclusive), then unsubscribe
+      .subscribe(shapeInitialized => {
+        if (!shapeInitialized) {
+          console.log("Shape not yet initialized, waiting for init.");
+        } else {
+          console.log("Shape initialized");
+          this.wizard.finishedLoading
+            .pipe(takeWhile(finishedLoading => !finishedLoading, true)) // subscribe until finishedLoading is true for first time (inclusive), then unsubscribe
+            .subscribe(finishedLoading => {
+            if (!finishedLoading) {
+              console.log("Wizard not yet ready, waiting for init.");
+            } else {
+              console.log("Wizard initialized");
+              console.log("start prefillFields")
+              for (let expandedField of this.wizard.expandedFieldsViewChildren) {
+                this.processExpandedField(expandedField, selfDescriptionFields);
+                }
+              for (let formInput of this.wizard.formInputViewChildren) {
+                this.processFormInput(formInput, selfDescriptionFields);
+              }
+              for (let formArray of this.wizard.formArrayViewChildren) {
+                this.processFormArray(formArray, selfDescriptionFields);
+              }
+            }
+          });
         }
-        for (let formArray of this.wizard.formArrayViewChildren) {
-          this.processFormArray(formArray, selfDescriptionFields);
-        }
-      }
-    });
+      });
   }
 
-  processFormArray(formArray: DynamicFormArrayComponent, prefillFields: any) {
+  private processFormArray(formArray: DynamicFormArrayComponent, prefillFields: any) {
     if (formArray === undefined || prefillFields === undefined) {
       return;
     }
@@ -134,7 +158,7 @@ export class WizardExtensionComponent {
     formControl.patchValue(new Date().toLocaleString("de-DE", {timeZone: "Europe/Berlin", timeStyle: "short", dateStyle: "medium"}));
   }
 
-  processFormInput(formInput: DynamicFormInputComponent, prefillFields: any) {
+  private processFormInput(formInput: DynamicFormInputComponent, prefillFields: any) {
     if (formInput === undefined || prefillFields === undefined) {
       return;
     }
@@ -166,7 +190,7 @@ export class WizardExtensionComponent {
     }
   }
 
-  processExpandedField(expandedField: ExpandedFieldsComponent, prefillFields: any) {
+  private processExpandedField(expandedField: ExpandedFieldsComponent, prefillFields: any) {
     if (expandedField === undefined || prefillFields === undefined) {
       return;
     }
@@ -205,7 +229,7 @@ export class WizardExtensionComponent {
     }
   }
 
-  processExpandedFieldChildrenFields(expandedField: ExpandedFieldsComponent, prefillFields: any) {
+  private processExpandedFieldChildrenFields(expandedField: ExpandedFieldsComponent, prefillFields: any) {
     let parentKey = expandedField.input.prefix + ":" + expandedField.input.key;
 
     // since we are always working with a list of inputs, we need to adapt to that in the prefill as well (even if it is just one element)
@@ -247,5 +271,62 @@ export class WizardExtensionComponent {
     } else if ("@id" in field) {
       return field["@id"]
     }
+  }
+
+  private async saveSelfDescription(jsonSd: any) {
+    if (this.filteredShapes[0].name === "MerlotOrganization") {
+      return await this.organizationsApiService.saveOrganization(JSON.stringify(jsonSd, null, 2), jsonSd["@id"]);
+    } else {
+      return await this.serviceofferingApiService.createServiceOffering(JSON.stringify(jsonSd, null, 2), jsonSd["@type"]);
+    }
+  }
+
+  protected onSubmit(publishAfterSave: boolean): void {
+    this.submitButtonsDisabled = true;
+    this.saveStatusMessage.hideAllMessages();
+
+    this.wizard.shape.userPrefix = this.wizard.form.get('user_prefix').value;
+    this.wizard.shape.downloadFormat = this.wizard.form.get('download_format').value;
+    this.wizard.shape.fields = this.wizard.updateFormFieldsValues(this.wizard.formFields, this.wizard.form);
+    this.wizard.shape.fields = this.wizard.emptyChildrenFields(this.wizard.shape.fields);
+    //this.patchFieldsForSubmit(this.wizard.groupedFormFields);
+    let jsonSd = this.exportService.saveFile(this.wizard.file);
+    this.saveSelfDescription(jsonSd).then(result => {
+      console.log(result);
+      let didField = this.wizard.form.get("user_prefix");
+      didField.patchValue(result["id"]);
+      this.saveStatusMessage.showSuccessMessage("ID: " + result["id"]);
+
+      if (publishAfterSave) {
+        this.serviceofferingApiService.releaseServiceOffering(result["id"])
+        .then(_ => {
+          this.submitCompleteEvent.emit(null);
+        })
+        .catch((e: HttpErrorResponse) => {
+          this.saveStatusMessage.showErrorMessage(e.error.message);
+          this.submitButtonsDisabled = false;
+        })
+        .catch(_ => {
+          this.saveStatusMessage.showErrorMessage("Unbekannter Fehler");
+          this.submitButtonsDisabled = false;
+        });
+      } else {
+        this.submitCompleteEvent.emit(null);
+      }
+    }).catch((e: HttpErrorResponse) => {
+      this.saveStatusMessage.showErrorMessage(e.error.message);
+      this.submitButtonsDisabled = false;
+    })
+    .catch(_ => {
+      this.saveStatusMessage.showErrorMessage("Unbekannter Fehler");
+      this.submitButtonsDisabled = false;
+    }).finally(() => {
+      if (!publishAfterSave) {
+        this.submitButtonsDisabled = false;
+      }
+    });
+        /*if (this.shape?.name === "MerlotOrganization") {
+          this.authService.refreshActiveRoleOrgaData();
+        }*/
   }
 }

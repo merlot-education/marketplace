@@ -84,6 +84,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy, AfterViewChecked
   ngAfterViewChecked(): void {
     if (this.groupsNumber) {
       this.finishedLoading.next(true);
+      this.finishedLoading.next(false); // immediately reset
     } else {
       this.finishedLoading.next(false);
     }
@@ -116,28 +117,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy, AfterViewChecked
 
   groupFormFields(): void {
     this.groupedFormFields = Utils.groupBy(this.formFields, (formField) => formField.group);
-    this.patchRequiredFieldsOffering(this.groupedFormFields);
     this.groupsNumber = this.groupedFormFields.length;
-  }
-
-  private patchRequiredFieldsOffering(groupedFormFields: FormField[][]) {
-    for (let group of groupedFormFields) {
-      for (let field of group) {
-        if (field.key === "offeredBy" || field.key === "providedBy" ) {
-          let formField = this.form.get(field.id);
-          formField.patchValue(this.authService.getActiveOrgaLegalName());
-        }
-      }
-    }
-    
-    // set did to a dummy value that gets replaced by the orchestrator
-    let didField = this.form.get("user_prefix");
-
-    if (didField.value === undefined || didField.value === null) {
-      didField.patchValue("ServiceOffering:TBR");
-    }
-    
-    didField.disable();
   }
 
   private patchFieldsForSubmit(groupedFormFields: FormField[][]) {
@@ -233,7 +213,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy, AfterViewChecked
           this.submitButtonsDisabled = false;
         }
       });
-    this.patchRequiredFieldsOffering(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
+    //this.patchRequiredFieldsOffering(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
   }
 
   ngOnDestroy() {

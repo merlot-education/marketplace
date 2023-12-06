@@ -8,6 +8,7 @@ import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.
 import { WizardExtensionService } from 'src/app/services/wizard-extension.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
+import { WizardExtensionComponent } from 'src/app/wizard-extension/wizard-extension.component';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -18,12 +19,8 @@ export class EditComponent implements OnInit, AfterViewInit {
   serviceFileNameDict = serviceFileNameDict;
 
   serviceFiles: string[];
-  ecoSystem: string= "merlot";// pass this to getFiles Api
-  shaclFile: ShaclFile;
-  filteredShapes: Shape[];
-  file: ShaclFile = new ShaclFile();
 
-  @ViewChild("wizard") private wizard: DynamicFormComponent;
+  @ViewChild("wizardExtension") private wizardExtension: WizardExtensionComponent;
 
   private ignoredServiceFiles: string[] = ["Merlot ServiceOffering.json"];
 
@@ -35,21 +32,20 @@ export class EditComponent implements OnInit, AfterViewInit {
   }
   
   ngAfterViewInit(): void {
+    this.requestShapes();
     this.authService.activeOrganizationRole.subscribe(role => {
-      console.log(role);
-      this.patchWizardTnC(true);
+      this.patchWizardTnC();
     });
   }
 
 
   ngOnInit(): void {
-    this.requestShapes(this.ecoSystem);
   }
   
 
-  requestShapes(system:string){
+  requestShapes(){
     //pass the system string down here
-    this.serviceofferingsApiService.fetchAvailableShapes(system).then(res => {
+    this.serviceofferingsApiService.fetchAvailableShapes("merlot").then(res => {
       for (let i = 0; i < res?.Service.length;) {
         if (this.ignoredServiceFiles.includes(res?.Service[i])) {
           res?.Service.splice(i, 1);
@@ -71,25 +67,15 @@ export class EditComponent implements OnInit, AfterViewInit {
     } else if (input instanceof EventTarget) {
       name = (input as HTMLSelectElement).value;
     }
-    this.serviceofferingsApiService.fetchShape(name).then(
-      res => {
-        this.shaclFile = this.formFieldService.readShaclFile(res);
-        this.filteredShapes = this.formFieldService.updateFilteredShapes(this.shaclFile);
-        if (this.filteredShapes.length > 1) {
-          console.log("too many shapes selected");
-        }
-        else {
-          this.updateSelectedShape();
-          this.patchWizardTnC();
-        }
-      }
-    );
+    this.wizardExtension.loadShape(name, "ServiceOffering:TBR");
+    this.patchWizardTnC();
+    // todo adjust tnc field to include at least 2 values
   }
 
-  patchWizardTnC(forceImmediateRefresh: boolean = false) {
+  patchWizardTnC() {
     let merlotTnC = this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
     let providerTnC: ITermsAndConditions = this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-    this.wizardExtensionService.prefillFields(this.wizard, {
+    this.wizardExtension.prefillFields({
       "gax-trust-framework:termsAndConditions": [
         {
           "@type": "gax-trust-framework:TermsAndConditions",
@@ -138,20 +124,6 @@ export class EditComponent implements OnInit, AfterViewInit {
           "@type": "xsd:string",
         }
       }
-    }, forceImmediateRefresh);
-  }
-
-  updateSelectedShape(): void {
-    const shape = this.filteredShapes[0];
-    if (shape !== undefined) {
-      let filteredShape = this.shaclFile.shapes.find(x => x.name === shape.name);
-
-      // patch terms and conditions field to no longer be required since our backend will augment it with provider/merlot tnc
-      let tncField = shape?.fields.filter(f => f.key === "termsAndConditions")[0];
-      tncField.minCount = 2;
-
-      // select the shape
-      filteredShape.selected = true;
-    }
+    });
   }
 }
