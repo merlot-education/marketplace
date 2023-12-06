@@ -58,6 +58,7 @@ import { WizardAppModule } from '../../sdwizard/wizardapp.module';
 import { CommonViewsModule } from '../common-views/common-views.module';
 import { ImportComponent } from './import/import.component';
 import { CardComponent, GridComponent, PaginatorComponent } from '@merlot-education/m-basic-ui';
+import { WizardExtensionModule } from 'src/app/wizard-extension/wizard-extension.module';
 
 @NgModule({
   imports: [
@@ -95,6 +96,7 @@ import { CardComponent, GridComponent, PaginatorComponent } from '@merlot-educat
     CardComponent,
     GridComponent,
     PaginatorComponent,
+    WizardExtensionModule
   ],
   declarations: [ExploreComponent, EditComponent, ImportComponent],
 })

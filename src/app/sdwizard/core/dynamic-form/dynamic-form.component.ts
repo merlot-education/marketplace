@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, OnDestroy, ViewChildren, QueryList} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, ViewChildren, QueryList, AfterViewChecked, AfterViewInit, AfterContentChecked} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FormField} from '@models/form-field.model';
 import {FormfieldControlService} from '@services/form-field.service';
@@ -22,13 +22,14 @@ import { DynamicFormOrComponent } from '@components/dynamic-form-or/dynamic-form
 import { DynamicFormOrArrayComponent } from '@components/dynamic-form-or-array/dynamic-form-or-array.component';
 import { ExpandedFieldsComponent } from '@components/expanded-fields/expanded-fields.component';
 import { DynamicSelfLoopsComponent } from '@components/dynamic-self-loops/dynamic-self-loops.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['./dynamic-form.component.scss']
 })
-export class DynamicFormComponent implements OnInit, OnDestroy {
+export class DynamicFormComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   formFields: FormField[] = [];
   @Input() file: ShaclFile = new ShaclFile();
@@ -56,6 +57,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   @ViewChildren('formOrArray') formOrArrayViewChildren: QueryList<DynamicFormOrArrayComponent>; 
   @ViewChildren('expandedFields') expandedFieldsViewChildren: QueryList<ExpandedFieldsComponent>; 
   @ViewChildren('selfLoops') selfLoopsViewChildren: QueryList<DynamicSelfLoopsComponent>; 
+  finishedLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   protected hiddenFormFields = [];
 
@@ -78,6 +80,13 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     this.hasStaticFiles = filesProvider.gethasStaticFiles();
     // iconSet singleton
     iconSetService.icons = { ...freeSet, ...flagSet, ...brandSet };
+  }
+  ngAfterViewChecked(): void {
+    if (this.groupsNumber) {
+      this.finishedLoading.next(true);
+    } else {
+      this.finishedLoading.next(false);
+    }
   }
 
   ngOnChanges() {

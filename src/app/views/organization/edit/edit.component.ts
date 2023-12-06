@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { IOrganizationData } from "../organization-data";
 import { AuthService } from 'src/app/services/auth.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
@@ -6,19 +6,21 @@ import { ShaclFile } from '@models/shacl-file';
 import { Shape } from '@models/shape';
 import { FormfieldControlService } from '@services/form-field.service';
 import { WizardExtensionService } from 'src/app/services/wizard-extension.service';
-
-import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { WizardExtensionComponent } from 'src/app/wizard-extension/wizard-extension.component';
 
 @Component({
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent implements OnInit {
+export class EditComponent implements OnInit, AfterViewInit {
 
   protected selectedOrganization: IOrganizationData = undefined;
 
-  @ViewChild("wizard") private wizard: DynamicFormComponent;
+  //@ViewChild("wizard") private wizard: DynamicFormComponent;
+  @ViewChild("wizardExtension") private wizardExtensionComponent: WizardExtensionComponent;
+  //private wizardExtension: WizardExtension;
 
   serviceFiles: string[];
   ecoSystem: string= "merlot";// pass this to getFiles Api
@@ -32,10 +34,11 @@ export class EditComponent implements OnInit {
     private wizardExtensionService: WizardExtensionService,
     private route: ActivatedRoute) {
   }
-
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    /*this.wizard.finishedLoadingEvent.subscribe(_ => {
+      console.log("Wizard initialized");
+    })*/
     let selectedOrgaId = this.route.snapshot.paramMap.get('orgaId');
-    console.log("selected orga: ", selectedOrgaId);
     if (selectedOrgaId) {
       this.selectOrganization(selectedOrgaId);
     } else {
@@ -43,6 +46,9 @@ export class EditComponent implements OnInit {
         this.selectOrganization(orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
       });
     }
+  }
+
+  ngOnInit(): void {
   }
 
   private selectOrganization(orgaId: string) {
@@ -61,61 +67,12 @@ export class EditComponent implements OnInit {
       console.log(result);
 
       this.selectedOrganization = result;
-      this.wizardExtensionService.prefillFields(this.wizard, result.selfDescription.verifiableCredential.credentialSubject);
-      console.log("start select shape");
-      this.selectShape();
+      this.wizardExtensionComponent.loadShape("Participant", 
+        this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject["@id"]);
+      this.wizardExtensionComponent.prefillFields(result.selfDescription.verifiableCredential.credentialSubject);
     });
   }
 
+  //value: this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject["@id"],
 
-  selectShape(): void {
-    this.organizationsApiService.getMerlotParticipantShape().then(
-      res => {
-        this.shaclFile = this.formFieldService.readShaclFile(res);
-        this.filteredShapes = this.formFieldService.updateFilteredShapes(this.shaclFile);
-        if (this.filteredShapes.length > 1) {
-          console.log("too many shapes selected");
-        }
-        else {
-          // add a field containing the id to avoid creating a new offering
-          this.filteredShapes[0].fields.push({
-            id: 'user_prefix',
-            value: this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject["@id"],
-            key: '',
-            name: '',
-            datatype: {
-              prefix: '',
-              value: ''
-            },
-            required: false,
-            minCount: 0,
-            maxCount: 0,
-            order: 0,
-            group: '',
-            controlTypes: [],
-            in: [],
-            or: [],
-            validations: [],
-            componentType: '',
-            childrenFields: [],
-            childrenSchema: '',
-            prefix: '',
-            values: [],
-            description: '',
-            selfLoop: false
-          });
-          console.log("this here"+this.shaclFile);
-          console.table(this.shaclFile);
-          this.updateSelectedShape();
-        }
-      }
-    );
-  }
-
-  updateSelectedShape(): void {
-    const shape = this.filteredShapes[0];
-    if (shape !== undefined) {
-      this.shaclFile.shapes.find(x => x.name === shape.name).selected = true;
-    }
-  }
 }

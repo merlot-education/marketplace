@@ -1,61 +1,108 @@
-import { Injectable } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { ShaclFile } from '@models/shacl-file';
+import { Shape } from '@models/shape';
+import { OrganizationsApiService } from '../services/organizations-api.service';
+import { FormfieldControlService } from '@services/form-field.service';
 import { DynamicFormComponent } from '../sdwizard/core/dynamic-form/dynamic-form.component';
-import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynamic-form-array.component';
-import { DynamicFormInputComponent } from '@components/dynamic-form-input/dynamic-form-input.component';
+import { ServiceofferingApiService } from '../services/serviceoffering-api.service';
 import { ExpandedFieldsComponent } from '@components/expanded-fields/expanded-fields.component';
-import { AuthService } from './auth.service';
-import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { DynamicFormInputComponent } from '@components/dynamic-form-input/dynamic-form-input.component';
+import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynamic-form-array.component';
+import { takeWhile } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
+@Component({
+  selector: 'app-wizard-extension',
+  templateUrl: './wizard-extension.component.html',
+  styleUrls: ['./wizard-extension.component.scss']
 })
-export class WizardExtensionService {
+export class WizardExtensionComponent {
+  @ViewChild("wizard") private wizard: DynamicFormComponent;
+  private ecoSystem: string= "merlot";// pass this to getFiles Api
+  protected shaclFile: ShaclFile;
+  private filteredShapes: Shape[];
 
-  private subscriptions = new Subscription();
+  constructor(private formFieldService: FormfieldControlService,
+    private organizationsApiService: OrganizationsApiService,
+    private serviceofferingApiService: ServiceofferingApiService) {}
+
+  private selectShape(shaclFile: ShaclFile, credentialSubjectId: string): void {
+    this.shaclFile = shaclFile;
+    this.filteredShapes = this.formFieldService.updateFilteredShapes(this.shaclFile);
+    if (this.filteredShapes.length > 1) {
+      console.log("too many shapes selected");
+    }
+    else {
+      // add a field containing the id to avoid creating a new offering
+      this.filteredShapes[0].fields.push({
+        id: 'user_prefix',
+        value: credentialSubjectId,
+        key: '',
+        name: '',
+        datatype: {
+          prefix: '',
+          value: ''
+        },
+        required: false,
+        minCount: 0,
+        maxCount: 0,
+        order: 0,
+        group: '',
+        controlTypes: [],
+        in: [],
+        or: [],
+        validations: [],
+        componentType: '',
+        childrenFields: [],
+        childrenSchema: '',
+        prefix: '',
+        values: [],
+        description: '',
+        selfLoop: false
+      });
+      console.log("this here"+this.shaclFile);
+      console.table(this.shaclFile);
+      this.updateSelectedShape();
+    }
+  }
+
+  private updateSelectedShape(): void {
+    const shape = this.filteredShapes[0];
+    if (shape !== undefined) {
+      this.shaclFile.shapes.find(x => x.name === shape.name).selected = true;
+    }
+  }
+
+  public loadShape(shapeName: string, id: string): void {
+    if (shapeName === "Participant") {
+      this.organizationsApiService.getMerlotParticipantShape().then(shape => {
+        this.selectShape(this.formFieldService.readShaclFile(shape), id);
+      })
+    }
+  }
 
   private createDateTimer: NodeJS.Timer = undefined;
 
-  constructor(private authService: AuthService) { }
 
-  public prefillFields(wizard: DynamicFormComponent, selfDescriptionFields: any, forceImmediateRefresh: boolean = false) {
-    console.log("start prefillFields")
-    this.subscriptions.unsubscribe();
-    if (this.createDateTimer !== undefined) {
-      clearInterval(this.createDateTimer);
-      this.createDateTimer = undefined;
-    }
-
-    if (forceImmediateRefresh) {
-      for (let expandedField of wizard.expandedFieldsViewChildren) {
-      this.processExpandedField(expandedField, selfDescriptionFields);
+  public prefillFields(selfDescriptionFields: any) {
+    this.wizard.finishedLoading
+      .pipe(takeWhile(finishedLoading => !finishedLoading, true)) // subscribe until finishedLoading is true for first time (inclusive), then unsubscribe
+      .subscribe(finishedLoading => {
+      if (!finishedLoading) {
+        console.log("Wizard not yet ready, waiting for init.");
+      } else {
+        console.log("Wizard initialized");
+        console.log("start prefillFields")
+        for (let expandedField of this.wizard.expandedFieldsViewChildren) {
+          this.processExpandedField(expandedField, selfDescriptionFields);
+          }
+        for (let formInput of this.wizard.formInputViewChildren) {
+          this.processFormInput(formInput, selfDescriptionFields);
+        }
+        for (let formArray of this.wizard.formArrayViewChildren) {
+          this.processFormArray(formArray, selfDescriptionFields);
+        }
       }
-      for (let formInput of wizard.formInputViewChildren) {
-        this.processFormInput(formInput, selfDescriptionFields);
-      }
-      for (let formArray of wizard.formArrayViewChildren) {
-        this.processFormArray(formArray, selfDescriptionFields);
-      }
-    }
-    let expandedFieldsSub = wizard.expandedFieldsViewChildren.changes.subscribe(_ => {
-      for (let expandedField of wizard.expandedFieldsViewChildren) {
-        this.processExpandedField(expandedField, selfDescriptionFields);
-      }
-      expandedFieldsSub.unsubscribe();
-    });
-
-    let formInputSub = wizard.formInputViewChildren.changes.subscribe(_ => {
-      for (let formInput of wizard.formInputViewChildren) {
-        this.processFormInput(formInput, selfDescriptionFields);
-      }
-      formInputSub.unsubscribe();
-    });
-
-    let formArraySub = wizard.formArrayViewChildren.changes.subscribe(_ => {
-      for (let formArray of wizard.formArrayViewChildren) {
-        this.processFormArray(formArray, selfDescriptionFields);
-      }
-      formArraySub.unsubscribe();
     });
   }
 
@@ -95,10 +142,10 @@ export class WizardExtensionService {
     let fullKey = formInput.input.prefix + ":" + formInput.input.key;
 
     if (["gax-core:offeredBy", "gax-trust-framework:providedBy"].includes(fullKey)) {
-      this.subscriptions.add(this.authService.activeOrganizationRole.subscribe(_ => {
+      /*this.subscriptions.add(this.authService.activeOrganizationRole.subscribe(_ => {
         formInput.form.controls[formInput.input.id].patchValue(this.authService.getActiveOrgaLegalName());
       }));
-      console.log(this.authService.activeOrganizationRole.observers);
+      console.log(this.authService.activeOrganizationRole.observers);*/
       formInput.form.controls[formInput.input.id].disable();
       return;
     } else if (fullKey === "merlot:creationDate") {
@@ -201,5 +248,4 @@ export class WizardExtensionService {
       return field["@id"]
     }
   }
-
 }

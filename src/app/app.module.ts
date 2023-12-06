@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { WizardAppModule } from './sdwizard/wizardapp.module';
+import { WizardExtensionModule } from './wizard-extension/wizard-extension.module';
 
 import {
   PERFECT_SCROLLBAR_CONFIG,
@@ -118,6 +119,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     FormsModule,
     WizardAppModule,
     LayoutModule,
+    WizardExtensionModule
   ],
   providers: [
     {
