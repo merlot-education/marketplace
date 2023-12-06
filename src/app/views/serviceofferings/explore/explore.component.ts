@@ -1,15 +1,10 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IBasicOffering, IOfferings, IPageBasicOfferings, ITermsAndConditions } from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
-import { WizardExtensionService } from '../../../services/wizard-extension.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { ShaclFile } from '@models/shacl-file';
-import { FormfieldControlService } from '@services/form-field.service';
-import { Shape } from '@models/shape';
 import { serviceFileNameDict } from '../serviceofferings-data';
-import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { IContract } from '../../contracts/contracts-data';
 import { ConnectorData } from '../../organization/organization-data';
@@ -107,8 +102,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
     protected serviceOfferingApiService : ServiceofferingApiService,
     protected organizationsApiService: OrganizationsApiService,
     private contractApiService: ContractApiService,
-    protected authService: AuthService,
-    private wizardExtensionService: WizardExtensionService) {
+    protected authService: AuthService) {
   }
 
   ngOnInit(): void {

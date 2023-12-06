@@ -1,13 +1,8 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService, OrganizationRole } from 'src/app/services/auth.service';
-import { ShaclFile } from '@models/shacl-file';
-import { Shape } from '@models/shape';
-import { FormfieldControlService } from '@services/form-field.service';
 import { ITermsAndConditions, serviceFileNameDict } from '../serviceofferings-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
-import { WizardExtensionService } from 'src/app/services/wizard-extension.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
-import { DynamicFormComponent } from 'src/app/sdwizard/core/dynamic-form/dynamic-form.component';
 import { WizardExtensionComponent } from 'src/app/wizard-extension/wizard-extension.component';
 
 @Component({
