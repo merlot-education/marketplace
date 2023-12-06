@@ -6,13 +6,14 @@ import { FormfieldControlService } from '@services/form-field.service';
 import { DynamicFormComponent } from '../sdwizard/core/dynamic-form/dynamic-form.component';
 import { ServiceofferingApiService } from '../services/serviceoffering-api.service';
 import { ExpandedFieldsComponent } from '@components/expanded-fields/expanded-fields.component';
-import { FormControl } from '@angular/forms';
+import { AbstractControl, FormControl } from '@angular/forms';
 import { DynamicFormInputComponent } from '@components/dynamic-form-input/dynamic-form-input.component';
 import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynamic-form-array.component';
 import { BehaviorSubject, takeWhile } from 'rxjs';
 import { ExportService } from '@services/export.service';
 import { StatusMessageComponent } from '../views/common-views/status-message/status-message.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-wizard-extension',
@@ -25,6 +26,7 @@ export class WizardExtensionComponent {
   protected shaclFile: ShaclFile;
   protected submitButtonsDisabled: boolean = false;
   protected filteredShapes: Shape[];
+  protected orgaIdFields: AbstractControl[] = [];
   submitCompleteEvent: EventEmitter<any> = new EventEmitter();
 
   private shapeInitialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -32,6 +34,7 @@ export class WizardExtensionComponent {
   constructor(private formFieldService: FormfieldControlService,
     private organizationsApiService: OrganizationsApiService,
     private serviceofferingApiService: ServiceofferingApiService,
+    private authService: AuthService,
     private exportService: ExportService) {}
 
   private selectShape(shaclFile: ShaclFile, credentialSubjectId: string): void {
@@ -82,6 +85,7 @@ export class WizardExtensionComponent {
   }
 
   public loadShape(shapeName: string, id: string): void {
+    this.orgaIdFields = [];
     this.shapeInitialized.next(false);
     console.log("Loading shape", shapeName);
     let shapeResult: Promise<any>;
@@ -166,13 +170,9 @@ export class WizardExtensionComponent {
     let fullKey = formInput.input.prefix + ":" + formInput.input.key;
 
     if (["gax-core:offeredBy", "gax-trust-framework:providedBy"].includes(fullKey)) {
-      /*this.subscriptions.add(this.authService.activeOrganizationRole.subscribe(_ => {
-        formInput.form.controls[formInput.input.id].patchValue(this.authService.getActiveOrgaLegalName());
-      }));
-      console.log(this.authService.activeOrganizationRole.observers);*/
-      formInput.form.controls[formInput.input.id].disable();
-      return;
-    } else if (fullKey === "merlot:creationDate") {
+      this.orgaIdFields.push(formInput.form.controls[formInput.input.id]); // save for later reference
+    } 
+    if (fullKey === "merlot:creationDate") {
       if (!Object.keys(prefillFields).includes(fullKey)) {
         this.updateDateField(formInput.form.controls[formInput.input.id] as FormControl); // initial update
         this.createDateTimer = setInterval(() => this.updateDateField(formInput.form.controls[formInput.input.id] as FormControl), 1000); // set timer to refresh date field
@@ -185,6 +185,7 @@ export class WizardExtensionComponent {
     }
 
     formInput.form.controls[formInput.input.id].patchValue(this.unpackValueFromField(prefillFields[fullKey]));
+    console.log(this.unpackValueFromField(prefillFields[fullKey]));
     if (prefillFields[fullKey] instanceof Object && Object.keys(prefillFields[fullKey]).includes("disabled") && prefillFields[fullKey]["disabled"]) {
       formInput.form.controls[formInput.input.id].disable();
     }
@@ -282,15 +283,25 @@ export class WizardExtensionComponent {
   }
 
   protected onSubmit(publishAfterSave: boolean): void {
+    console.log("onSubmit");
     this.submitButtonsDisabled = true;
     this.saveStatusMessage.hideAllMessages();
 
+    // for fields that contain the id of the creator organization, set them to the actual id
+    for (let control of this.orgaIdFields) {
+      control.patchValue(this.authService.getActiveOrgaId());
+    }
     this.wizard.shape.userPrefix = this.wizard.form.get('user_prefix').value;
     this.wizard.shape.downloadFormat = this.wizard.form.get('download_format').value;
     this.wizard.shape.fields = this.wizard.updateFormFieldsValues(this.wizard.formFields, this.wizard.form);
     this.wizard.shape.fields = this.wizard.emptyChildrenFields(this.wizard.shape.fields);
-    //this.patchFieldsForSubmit(this.wizard.groupedFormFields);
     let jsonSd = this.exportService.saveFile(this.wizard.file);
+
+    // revert the actual id to the orga for user readibility
+    for (let control of this.orgaIdFields) {
+      control.patchValue(this.authService.getActiveOrgaLegalName());
+    }
+
     this.saveSelfDescription(jsonSd).then(result => {
       console.log(result);
       let didField = this.wizard.form.get("user_prefix");
@@ -325,8 +336,5 @@ export class WizardExtensionComponent {
         this.submitButtonsDisabled = false;
       }
     });
-        /*if (this.shape?.name === "MerlotOrganization") {
-          this.authService.refreshActiveRoleOrgaData();
-        }*/
   }
 }

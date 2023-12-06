@@ -184,7 +184,9 @@ export class ExportService {
   }
 
   saveFile(file: ShaclFile): Promise<any> {
-    return this.convertTurtleToJsonLd(`${this.createRDFStream(file)}`);
+    let rdfStream = this.createRDFStream(file);
+    console.log(rdfStream);
+    return this.convertTurtleToJsonLd(`${rdfStream}`);
   }
 
   convertTurtleToJsonLd(ttl: string) {

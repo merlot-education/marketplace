@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService, OrganizationRole } from 'src/app/services/auth.service';
 import { ShaclFile } from '@models/shacl-file';
 import { Shape } from '@models/shape';
 import { FormfieldControlService } from '@services/form-field.service';
@@ -26,8 +26,6 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   constructor(private serviceofferingsApiService: ServiceofferingApiService, 
     protected authService : AuthService, 
-    private formFieldService: FormfieldControlService,
-    private wizardExtensionService: WizardExtensionService,
     private organizationsApiService: OrganizationsApiService) {
   }
   
@@ -76,6 +74,14 @@ export class EditComponent implements OnInit, AfterViewInit {
     let merlotTnC = this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
     let providerTnC: ITermsAndConditions = this.authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
     this.wizardExtension.prefillFields({
+      "gax-core:offeredBy": {
+        "@id": this.authService.getActiveOrgaLegalName(),
+        "disabled": true
+      },
+      "gax-trust-framework:providedBy": {
+        "@id": this.authService.getActiveOrgaLegalName(),
+        "disabled": true
+      },
       "gax-trust-framework:termsAndConditions": [
         {
           "@type": "gax-trust-framework:TermsAndConditions",
