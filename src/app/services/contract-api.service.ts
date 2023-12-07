@@ -1,6 +1,5 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
 import { ActiveOrganizationRoleService } from './active-organization-role.service';
 import { environment } from 'src/environments/environment';
 import { lastValueFrom } from 'rxjs';
@@ -20,11 +19,8 @@ export class ContractApiService {
     "ARCHIVED": "Archiviert"
   }
 
-  constructor(private http: HttpClient, private authService: AuthService, protected activeOrgRoleService: ActiveOrganizationRoleService) {}
+  constructor(private http: HttpClient, protected activeOrgRoleService: ActiveOrganizationRoleService) {}
 
-  private getActiveRoleHeaders() : HttpHeaders {
-    return new HttpHeaders({'Active-Role' : this.activeOrgRoleService.activeOrganizationRole.value.orgaRoleString });
-  }
 
   public getAvailableStatusNames() {
     return Object.keys(this.friendlyStatusNames);
@@ -34,23 +30,22 @@ export class ContractApiService {
     return await lastValueFrom(this.http.post(environment.contract_api_url, {
       offeringId: offeringId,
       consumerId: consumerId
-    }, {headers: this.getActiveRoleHeaders()})) as IContract;
+    })) as IContract;
   }
 
   public async regenerateContract(contractId: string): Promise<IContract> {
-    return await lastValueFrom(this.http.post(environment.contract_api_url + "contract/regenerate/" + contractId, null, {headers: this.getActiveRoleHeaders()})) as IContract;
+    return await lastValueFrom(this.http.post(environment.contract_api_url + "contract/regenerate/" + contractId, null)) as IContract;
   }
 
   public async updateContract(contract: IContract): Promise<IContract> {
-    return await lastValueFrom(this.http.put(environment.contract_api_url, contract, {headers: this.getActiveRoleHeaders()})) as IContract;
+    return await lastValueFrom(this.http.put(environment.contract_api_url, contract)) as IContract;
   }
 
   public async statusShiftContract(contractId: string, newStatus: string) {  
-    let headers = this.getActiveRoleHeaders();
 
     let fullUrl = environment.contract_api_url + 'contract/status/' + contractId + '/' + newStatus;
     
-    return await lastValueFrom(this.http.patch(fullUrl, null, {headers: headers})) as IContract;
+    return await lastValueFrom(this.http.patch(fullUrl, null)) as IContract;
   }
 
   public async getOrgaContracts(page: number, size: number, consumerId: string, statusFilter: string = undefined): Promise<IPageContracts> {
@@ -63,47 +58,47 @@ export class ContractApiService {
 
   public async getContractDetails(contractId: string): Promise<IContract> {
     return await lastValueFrom(this.http.get(
-      environment.contract_api_url + "contract/" + contractId, {headers: this.getActiveRoleHeaders()})) as IContract;
+      environment.contract_api_url + "contract/" + contractId)) as IContract;
   }
 
   public async initiateEdcNegotiation(contractId: string): Promise<IEdcIdResponse> {
     return await lastValueFrom(this.http.post(
-      environment.contract_api_url + "transfers/contract/" + contractId + "/negotiation/start", null, {headers: this.getActiveRoleHeaders()})) as IEdcIdResponse;
+      environment.contract_api_url + "transfers/contract/" + contractId + "/negotiation/start", null)) as IEdcIdResponse;
   }
 
   public async getEdcNegotiationStatus(contractId: string, negotiationId: string): Promise<IEdcNegotiationStatus> {
     return await lastValueFrom(this.http.get(
-      environment.contract_api_url + "transfers/contract/" + contractId + "/negotiation/" + negotiationId + "/status", {headers: this.getActiveRoleHeaders()})) as IEdcNegotiationStatus;
+      environment.contract_api_url + "transfers/contract/" + contractId + "/negotiation/" + negotiationId + "/status")) as IEdcNegotiationStatus;
   }
 
   public async initiateEdcTransfer(contractId: string, negotiationId: string): Promise<IEdcIdResponse> {
     return await lastValueFrom(this.http.post(
-      environment.contract_api_url + "transfers/contract/" + contractId + "/negotiation/" + negotiationId + "/transfer/start", null, {headers: this.getActiveRoleHeaders()})) as IEdcIdResponse;
+      environment.contract_api_url + "transfers/contract/" + contractId + "/negotiation/" + negotiationId + "/transfer/start", null)) as IEdcIdResponse;
   }
 
   public async getEdcTransferStatus(contractId: string, transferId: string): Promise<IEdcTransferStatus> {
     return await lastValueFrom(this.http.get(
-      environment.contract_api_url + "transfers/contract/" + contractId + "/transfer/" + transferId + "/status", {headers: this.getActiveRoleHeaders()})) as IEdcTransferStatus;
+      environment.contract_api_url + "transfers/contract/" + contractId + "/transfer/" + transferId + "/status")) as IEdcTransferStatus;
   }
 
   public async addAttachment(contractId: string, formData: FormData): Promise<IContract> {
     return await lastValueFrom(this.http.patch(
-      environment.contract_api_url + "contract/" + contractId + "/attachment", formData, {headers: this.getActiveRoleHeaders()})) as IContract;
+      environment.contract_api_url + "contract/" + contractId + "/attachment", formData)) as IContract;
   }
 
   public async deleteAttachment(contractId: string, attachmentName: string): Promise<IContract> {
     return await lastValueFrom(this.http.delete(
-      environment.contract_api_url + "contract/" + contractId + "/attachment/" + attachmentName, {headers: this.getActiveRoleHeaders()})) as IContract;
+      environment.contract_api_url + "contract/" + contractId + "/attachment/" + attachmentName)) as IContract;
   }
 
   public async downloadAttachment(contractId: string, attachmentName: string): Promise<any> {
     return await lastValueFrom(this.http.get(environment.contract_api_url + "contract/" + contractId + "/attachment/" + attachmentName, 
-    {headers: this.getActiveRoleHeaders(), responseType: 'blob'}));
+    {responseType: 'blob'}));
   }
 
   public async downloadContractPdf(contractId: string): Promise<any> {
     return await lastValueFrom(this.http.get(environment.contract_api_url + "contract/" + contractId + "/contractPdf", 
-    {headers: this.getActiveRoleHeaders(), responseType: 'blob'}));
+    {responseType: 'blob'}));
   }
 
   public resolveFriendlyStatusName(contractStatus: string) {

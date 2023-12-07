@@ -120,7 +120,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.activeOrgaSubscription.unsubscribe();
+    if (this.activeOrgaSubscription) {
+      this.activeOrgaSubscription.unsubscribe();
+    }
   }
 
   protected handleEventEditModal(modalVisible: boolean) {
