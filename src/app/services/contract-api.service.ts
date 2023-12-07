@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ActiveOrganizationRoleService } from './active-organization-role.service';
 import { environment } from 'src/environments/environment';
 import { lastValueFrom } from 'rxjs';
 import { IContract, IEdcIdResponse, IEdcNegotiationStatus, IEdcTransferStatus, IPageContracts } from '../views/contracts/contracts-data';
@@ -19,7 +18,7 @@ export class ContractApiService {
     "ARCHIVED": "Archiviert"
   }
 
-  constructor(private http: HttpClient, protected activeOrgRoleService: ActiveOrganizationRoleService) {}
+  constructor(private http: HttpClient) {}
 
 
   public getAvailableStatusNames() {

@@ -28,8 +28,7 @@ const routes: Routes = [
       {
         path: 'registration',
         loadChildren: () =>
-          import('./views/registration/registration.module').then((m) => m.RegistrationModule),
-          canActivate: [KeycloakGuard, fedAuthGuard]
+          import('./views/registration/registration.module').then((m) => m.RegistrationModule)
       },
       {
         path: 'organization',

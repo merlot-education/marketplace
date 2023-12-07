@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { KeycloakService } from 'keycloak-angular';
 import { AuthService, OrganizationRole } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 
@@ -30,19 +29,16 @@ export class DefaultLayoutComponent {
 
   constructor(
     protected authService: AuthService,
-    protected activeOrgRoleService: ActiveOrganizationRoleService,
-    protected keycloakService: KeycloakService
+    protected activeOrgRoleService: ActiveOrganizationRoleService
   ) {
     let globalNavItems = structuredClone(navItems);
     this.navItems = this.buildAllowedNavItems(globalNavItems, null);
   }
 
   public async ngOnInit() {
-    this.selectedRoleOption =
-      this.activeOrgRoleService.activeOrganizationRole.getValue().orgaRoleString;
-
     let tries = 0;
     while (this.activeOrgRoleService.isLoggedIn) {
+      this.selectedRoleOption = this.activeOrgRoleService.activeOrganizationRole.getValue().orgaRoleString;
       console.log('waiting for roles to load');
       await this.wait(100);
 
