@@ -102,40 +102,50 @@ export class WizardExtensionComponent {
 
   private createDateTimer: NodeJS.Timer = undefined;
 
+  private prefillWaitForWizard(selfDescriptionFields: any) {
+    this.wizard.finishedLoading
+      .pipe(takeWhile(finishedLoading => !finishedLoading, true)) // subscribe until finishedLoading is true for first time (inclusive), then unsubscribe
+      .subscribe(finishedLoading => {
+        if (!finishedLoading) {
+          console.log("Wizard not yet ready, waiting for init.");
+          return;
+        } 
 
-  public prefillFields(selfDescriptionFields: any) {
-    if (this.createDateTimer) {
-      clearInterval(this.createDateTimer);
-    }
+        console.log("Wizard initialized");
+        console.log("start prefilling fields");
+
+        for (let expandedField of this.wizard.expandedFieldsViewChildren) {
+          this.processExpandedField(expandedField, selfDescriptionFields);
+          }
+        for (let formInput of this.wizard.formInputViewChildren) {
+          this.processFormInput(formInput, selfDescriptionFields);
+        }
+        for (let formArray of this.wizard.formArrayViewChildren) {
+          this.processFormArray(formArray, selfDescriptionFields);
+        }
+      });
+  }
+
+  private prefillWaitForShape(selfDescriptionFields: any) {
     this.shapeInitialized
       .pipe(takeWhile(shapeInitialized => !shapeInitialized, true)) // subscribe until shapeInitialized is true for first time (inclusive), then unsubscribe
       .subscribe(shapeInitialized => {
         if (!shapeInitialized) {
           console.log("Shape not yet initialized, waiting for init.");
-        } else {
-          console.log("Shape initialized");
-          this.wizard.finishedLoading
-            .pipe(takeWhile(finishedLoading => !finishedLoading, true)) // subscribe until finishedLoading is true for first time (inclusive), then unsubscribe
-            .subscribe(finishedLoading => {
-            if (!finishedLoading) {
-              console.log("Wizard not yet ready, waiting for init.");
-            } else {
-              console.log("Wizard initialized");
-              console.log("start prefillFields");
-
-              for (let expandedField of this.wizard.expandedFieldsViewChildren) {
-                this.processExpandedField(expandedField, selfDescriptionFields);
-                }
-              for (let formInput of this.wizard.formInputViewChildren) {
-                this.processFormInput(formInput, selfDescriptionFields);
-              }
-              for (let formArray of this.wizard.formArrayViewChildren) {
-                this.processFormArray(formArray, selfDescriptionFields);
-              }
-            }
-          });
+          return;
         }
+
+        console.log("Shape initialized");
+        this.prefillWaitForWizard(selfDescriptionFields);
       });
+  }
+
+
+  public prefillFields(selfDescriptionFields: any) {
+    if (this.createDateTimer) {
+      clearInterval(this.createDateTimer);
+    }
+    this.prefillWaitForShape(selfDescriptionFields);
   }
 
   private processFormArray(formArray: DynamicFormArrayComponent, prefillFields: any) {

@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, OnDestroy, ViewChildren, QueryList, AfterViewChecked, AfterViewInit, AfterContentChecked} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, ViewChildren, QueryList, AfterViewChecked } from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FormField} from '@models/form-field.model';
 import {FormfieldControlService} from '@services/form-field.service';
@@ -15,7 +15,6 @@ import { IconSetService } from '@coreui/icons-angular';
 import { brandSet, flagSet, freeSet } from '@coreui/icons';
 import { AuthService } from 'src/app/services/auth.service';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { DynamicFormInputComponent } from '@components/dynamic-form-input/dynamic-form-input.component';
 import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynamic-form-array.component';
 import { DynamicFormOrComponent } from '@components/dynamic-form-or/dynamic-form-or.component';

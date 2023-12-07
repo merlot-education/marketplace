@@ -16,7 +16,7 @@ export class AddActiveRoleHeaderInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let activeRole = this.activeOrgaRoleService.activeOrganizationRole.value;
-    if (activeRole && activeRole.orgaRoleString) {
+    if (activeRole?.orgaRoleString) {
       const clonedRequest = req.clone(
         { 
           headers: req.headers.append('Active-Role', activeRole.orgaRoleString)

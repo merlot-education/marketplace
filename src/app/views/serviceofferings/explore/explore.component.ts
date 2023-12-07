@@ -275,7 +275,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
       name = (input as HTMLSelectElement).value;
     }
     this.wizardExtension.loadShape(name, this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id']);
-    // todo adjust tnc field to include at least 2 values
   }
 
   bookServiceOffering(offeringId: string): void {
