@@ -4,11 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { DefaultLayoutComponent } from './containers';
 import { Page404Component } from './views/pages/page404/page404.component';
 import { Page500Component } from './views/pages/page500/page500.component';
-import { LoginComponent } from './views/pages/login/login.component';
-import { RegisterComponent } from './views/pages/register/register.component';
 import { KeycloakGuard } from './keycloak.guard'
-import { KeycloakAuthGuard } from 'keycloak-angular';
-import { repAuthGuard } from './auth.guard';
+import { fedAuthGuard, repAuthGuard } from './auth.guard';
 
 const routes: Routes = [
   {
@@ -31,7 +28,8 @@ const routes: Routes = [
       {
         path: 'registration',
         loadChildren: () =>
-          import('./views/registration/registration.module').then((m) => m.RegistrationModule)
+          import('./views/registration/registration.module').then((m) => m.RegistrationModule),
+          canActivate: [KeycloakGuard, fedAuthGuard]
       },
       {
         path: 'organization',
@@ -79,20 +77,6 @@ const routes: Routes = [
     component: Page500Component,
     data: {
       title: 'Page 500'
-    }
-  },
-  {
-    path: 'login',
-    component: LoginComponent,
-    data: {
-      title: 'Login Page'
-    }
-  },
-  {
-    path: 'register',
-    component: RegisterComponent,
-    data: {
-      title: 'Register Page'
     }
   },
   {path: '**', redirectTo: 'start'}
