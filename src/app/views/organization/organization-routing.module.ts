@@ -4,7 +4,7 @@ import { EditComponent } from './edit/edit.component';
 import { ExploreComponent } from './explore/explore.component';
 import { ImportComponent } from './import/import.component';
 import { KeycloakGuard } from 'src/app/keycloak.guard';
-import { fedAuthGuard } from 'src/app/auth.guard';
+import { fedAuthGuard, repAuthGuard } from 'src/app/auth.guard';
 
 
 const routes: Routes = [
@@ -32,7 +32,7 @@ const routes: Routes = [
         data: {
           title: 'Organisation bearbeiten',
         },
-        canActivate: [KeycloakGuard]
+        canActivate: [KeycloakGuard, repAuthGuard]
       },
       {
         path: 'edit/:orgaId',
