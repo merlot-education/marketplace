@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { AuthService, OrganizationRole } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { ITermsAndConditions, serviceFileNameDict } from '../serviceofferings-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
@@ -64,7 +64,6 @@ export class EditComponent implements OnInit, AfterViewInit {
     }
     this.wizardExtension.loadShape(name, "ServiceOffering:TBR");
     this.patchWizardTnC();
-    // todo adjust tnc field to include at least 2 values
   }
 
   patchWizardTnC() {

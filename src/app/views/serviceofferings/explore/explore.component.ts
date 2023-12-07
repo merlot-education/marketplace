@@ -50,7 +50,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
     totalPages: 0
   });
 
-  protected activeOrgaOfferingPage: BehaviorSubject<IPageBasicOfferings> = new BehaviorSubject({
+  private emptyPage: IPageBasicOfferings = {
     content: [],
     empty: false,
     first: false,
@@ -72,7 +72,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
     size: 0,
     totalElements: 0,
     totalPages: 0
-  });
+  };
+
+  protected activeOrgaOfferingPage: BehaviorSubject<IPageBasicOfferings> = new BehaviorSubject(this.emptyPage);
 
 
   protected friendlyStatusNames = {
@@ -156,7 +158,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   protected refreshOrgaOfferings(page: number, size: number, statusFilter: string = undefined) {
-    if (this.activeOrgRoleService.isLoggedIn) {
+    this.activeOrgaOfferingPage.next(this.emptyPage);
+    if (this.activeOrgRoleService.isLoggedIn && this.activeOrgRoleService.isActiveAsRepresentative()) {
       this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, statusFilter).then(result => {
       this.activeOrgaOfferingPage.next(result);
       this.initialLoading = false;
@@ -270,7 +273,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
       name = (input as HTMLSelectElement).value;
     }
     this.wizardExtension.loadShape(name, this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id']);
-    // todo adjust tnc field to include at least 2 values
   }
 
   bookServiceOffering(offeringId: string): void {
