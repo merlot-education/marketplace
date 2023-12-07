@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { IOrganizationData } from "../organization-data";
+import { IOrganizationData, IRegistrationNumber } from "../organization-data";
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
@@ -42,22 +42,28 @@ export class EditComponent implements OnInit, AfterViewInit {
     this.selectedOrganization = undefined;
     console.log("get orga by id", orgaId);
     this.organizationsApiService.getOrgaById(orgaId).then(result => {
-
-      result.selfDescription.verifiableCredential.credentialSubject['merlot:merlotId']['disabled'] = true;
-      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['disabled'] = true;
-      result.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['disabled'] = true;
-      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']['disabled'] = true;
-      // TODO allow other types of registration number
-      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EUID'] = {'@value': "", '@type': "", 'disabled': true};
-      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EORI'] = {'@value': "", '@type': "", 'disabled': true};
-      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:vatID'] = {'@value': "", '@type': "", 'disabled': true};
-      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:leiCode'] = {'@value': "", '@type': "", 'disabled': true};
       console.log(result);
+      result.selfDescription.verifiableCredential.credentialSubject['merlot:merlotId']['disabled'] = true;
+      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['disabled'] = !this.authService.isActiveAsFederatorAdmin;
+      result.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['disabled'] = !this.authService.isActiveAsFederatorAdmin;
+      let registrationNumberFields = result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber'];
+      this.patchRegistrationNumberField('gax-trust-framework:local', registrationNumberFields);
+      this.patchRegistrationNumberField('gax-trust-framework:EUID', registrationNumberFields);
+      this.patchRegistrationNumberField('gax-trust-framework:EORI', registrationNumberFields);
+      this.patchRegistrationNumberField('gax-trust-framework:vatID', registrationNumberFields);
+      this.patchRegistrationNumberField('gax-trust-framework:leiCode', registrationNumberFields);
 
       this.selectedOrganization = result;
       this.wizardExtensionComponent.loadShape("MerlotOrganization", 
         this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject["@id"]);
       this.wizardExtensionComponent.prefillFields(result.selfDescription.verifiableCredential.credentialSubject);
     });
+  }
+
+  private patchRegistrationNumberField(registrationNumberType: string, registrationNumberField: IRegistrationNumber) {
+    if (!registrationNumberField[registrationNumberType]) { // if it does not exist, add dummy values
+      registrationNumberField[registrationNumberType] = {'@value': "", '@type': "" }
+    } 
+    registrationNumberField[registrationNumberType]['disabled'] = !this.authService.isActiveAsFederatorAdmin;
   }
 }

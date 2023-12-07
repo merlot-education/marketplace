@@ -29,8 +29,12 @@ interface IStringTypeValue {
   '@value': string;
 }
 
-interface IRegistrationNumber {
+export interface IRegistrationNumber {
   'gax-trust-framework:local': IStringTypeValue;
+  'gax-trust-framework:EUID': IStringTypeValue;
+  'gax-trust-framework:EORI': IStringTypeValue;
+  'gax-trust-framework:vatID': IStringTypeValue;
+  'gax-trust-framework:leiCode': IStringTypeValue;
 }
 
 interface IVCardAddress {

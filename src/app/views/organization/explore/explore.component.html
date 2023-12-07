@@ -1,4 +1,4 @@
-<c-row *ngIf="(authService.isActiveAsFederatorAdmin === true)">
+<c-row *ngIf="authService.isActiveAsFederatorAdmin">
   <c-col>
     <button
     id="import-button"
@@ -37,9 +37,21 @@
         </li>
         <li class="list-group-item" style="border: none">
           <strong>Registrierungsnummer:</strong><br />
-          {{
-          organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']['@value']
-          }}
+          <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']">
+            Lokal: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']['@value'] }}
+          </div>
+          <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EUID']">
+            EUID: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EUID']['@value'] }}
+          </div>
+          <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EORI']">
+            EORI: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EORI']['@value'] }}
+          </div>
+          <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:vatID']">
+            vatID: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:vatID']['@value'] }}
+          </div>
+          <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:leiCode']">
+            leiCode: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:leiCode']['@value'] }}
+          </div>
         </li>
         <li class="list-group-item" style="border: none">
           <strong>Name der Organisation:</strong><br />
@@ -76,11 +88,16 @@
           </tr>
         </tbody>
       </table>
-      <button type="button" class="btn btn-primary flex-item-grow" 
-      (click)="editOrganization(organization)"
-      >
-        Bearbeiten 
-      </button>
+      <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
+        <div class="p-2 docs-highlight">
+          <button type="button" class="btn btn-primary flex-item-grow" 
+          *ngIf="authService.isActiveAsFederatorAdmin"
+          (click)="editOrganization(organization)"
+          >
+            Bearbeiten 
+          </button>
+        </div>
+      </div>
     </div>
 
     <div card-footer *ngIf="
