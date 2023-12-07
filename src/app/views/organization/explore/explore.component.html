@@ -47,10 +47,10 @@
             EORI: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EORI']['@value'] }}
           </div>
           <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:vatID']">
-            vatID: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:vatID']['@value'] }}
+            VAT ID: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:vatID']['@value'] }}
           </div>
           <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:leiCode']">
-            leiCode: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:leiCode']['@value'] }}
+            LEI Code: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:leiCode']['@value'] }}
           </div>
         </li>
         <li class="list-group-item" style="border: none">
