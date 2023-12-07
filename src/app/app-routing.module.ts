@@ -8,6 +8,7 @@ import { LoginComponent } from './views/pages/login/login.component';
 import { RegisterComponent } from './views/pages/register/register.component';
 import { KeycloakGuard } from './keycloak.guard'
 import { KeycloakAuthGuard } from 'keycloak-angular';
+import { repAuthGuard } from './auth.guard';
 
 const routes: Routes = [
   {
@@ -46,7 +47,7 @@ const routes: Routes = [
         path: 'users',
         loadChildren: () =>
           import('./views/users/users.module').then((m) => m.UsersModule),
-          canActivate: [KeycloakGuard]
+          canActivate: [KeycloakGuard, repAuthGuard]
       },
       {
         path: 'service-offerings',
@@ -57,7 +58,7 @@ const routes: Routes = [
         path: 'contracts',
         loadChildren: () =>
           import('./views/contracts/contracts.module').then((m) => m.ContractsModule),
-          canActivate: [KeycloakGuard]
+          canActivate: [KeycloakGuard, repAuthGuard]
       },
       {
         path: 'pages',

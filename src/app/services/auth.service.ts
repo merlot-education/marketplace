@@ -21,6 +21,7 @@ export class AuthService {
 
   public isLoggedIn: boolean = false;
   public isActiveAsFederatorAdmin = false;
+  public isActiveAsRepresentative = false;
   public userProfile: KeycloakProfile = {};
   public organizationRoles: {
     [orgaRoleKey: string]: OrganizationRole;
@@ -98,6 +99,10 @@ private getActiveOrganizationRole(): BehaviorSubject<OrganizationRole>{
     return roleName === "FedAdmin";
   }
 
+  private isRepresentative(roleName: string): boolean{
+    return roleName === "OrgLegRep";
+  }
+
   public getActiveOrgaId(): string {
     return this.getActiveOrganizationRole().value.orgaData?.selfDescription
       .verifiableCredential.credentialSubject['@id'];
@@ -118,6 +123,7 @@ private getActiveOrganizationRole(): BehaviorSubject<OrganizationRole>{
   public changeActiveOrgaRole(orgaRoleString: string) {
     this.getActiveOrganizationRole().next(this.organizationRoles[orgaRoleString]);
     this.isActiveAsFederatorAdmin = this.isFederatorAdmin(this.getActiveOrganizationRole().value.roleName);
+    this.isActiveAsRepresentative = this.isRepresentative(this.getActiveOrganizationRole().value.roleName);
   }
 
   private buildOrganizationRoles(userRoles: string[]) {
@@ -128,6 +134,7 @@ private getActiveOrganizationRole(): BehaviorSubject<OrganizationRole>{
         if (this.getActiveOrganizationRole().getValue().orgaRoleString === '') {
           this.getActiveOrganizationRole().next(this.organizationRoles[r]);
           this.isActiveAsFederatorAdmin = this.isFederatorAdmin(this.getActiveOrganizationRole().value.roleName);
+          this.isActiveAsRepresentative = this.isRepresentative(this.getActiveOrganizationRole().value.roleName);
         }
       }
     }
