@@ -1,34 +1,28 @@
-import {Component, OnInit, Input, OnDestroy, ViewChildren, QueryList} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, ViewChildren, QueryList, AfterViewChecked } from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FormField} from '@models/form-field.model';
 import {FormfieldControlService} from '@services/form-field.service';
 import {Router} from '@angular/router';
 import {Shape} from '@models/shape';
 import {Utils} from '@shared/utils';
-import {ExportService} from '@services/export.service';
 import {ShaclFile} from '@models/shacl-file';
 import {DateHelper} from '@shared/date-helper';
 import {FilesProvider} from '@shared/files-provider';
 import {DownloadFormat} from '@shared/download-format.enum';
-
-import { IconSetService } from '@coreui/icons-angular';
-import { brandSet, flagSet, freeSet } from '@coreui/icons';
-import { AuthService } from 'src/app/services/auth.service';
-import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { DynamicFormInputComponent } from '@components/dynamic-form-input/dynamic-form-input.component';
 import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynamic-form-array.component';
 import { DynamicFormOrComponent } from '@components/dynamic-form-or/dynamic-form-or.component';
 import { DynamicFormOrArrayComponent } from '@components/dynamic-form-or-array/dynamic-form-or-array.component';
 import { ExpandedFieldsComponent } from '@components/expanded-fields/expanded-fields.component';
 import { DynamicSelfLoopsComponent } from '@components/dynamic-self-loops/dynamic-self-loops.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['./dynamic-form.component.scss']
 })
-export class DynamicFormComponent implements OnInit, OnDestroy {
+export class DynamicFormComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   formFields: FormField[] = [];
   @Input() file: ShaclFile = new ShaclFile();
@@ -56,6 +50,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   @ViewChildren('formOrArray') formOrArrayViewChildren: QueryList<DynamicFormOrArrayComponent>; 
   @ViewChildren('expandedFields') expandedFieldsViewChildren: QueryList<ExpandedFieldsComponent>; 
   @ViewChildren('selfLoops') selfLoopsViewChildren: QueryList<DynamicSelfLoopsComponent>; 
+  finishedLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   protected hiddenFormFields = [];
 
@@ -65,19 +60,21 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   constructor(
     private formfieldService: FormfieldControlService,
     private router: Router,
-    private exportService: ExportService,
     private filesProvider: FilesProvider, 
-    private iconSetService: IconSetService,
-    private authService: AuthService,
-    private serviceofferingApiService: ServiceofferingApiService
   ) {
     this.readObjectDataFromRoute();
     if (this.requestSuccess) {
       this.getFormFields();
     }
     this.hasStaticFiles = filesProvider.gethasStaticFiles();
-    // iconSet singleton
-    iconSetService.icons = { ...freeSet, ...flagSet, ...brandSet };
+  }
+  ngAfterViewChecked(): void {
+    if (this.groupsNumber) {
+      this.finishedLoading.next(true);
+      this.finishedLoading.next(false); // immediately reset
+    } else {
+      this.finishedLoading.next(false);
+    }
   }
 
   ngOnChanges() {
@@ -107,52 +104,13 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   groupFormFields(): void {
     this.groupedFormFields = Utils.groupBy(this.formFields, (formField) => formField.group);
-    this.patchRequiredFieldsOffering(this.groupedFormFields);
     this.groupsNumber = this.groupedFormFields.length;
   }
 
-  private patchRequiredFieldsOffering(groupedFormFields: FormField[][]) {
-    for (let group of groupedFormFields) {
-      for (let field of group) {
-        if (field.key === "offeredBy" || field.key === "providedBy" ) {
-          let formField = this.form.get(field.id);
-          formField.patchValue(this.authService.getActiveOrgaLegalName());
-        }
-      }
-    }
-    
-    // set did to a dummy value that gets replaced by the orchestrator
-    let didField = this.form.get("user_prefix");
-
-    if (didField.value === undefined || didField.value === null) {
-      didField.patchValue("ServiceOffering:TBR");
-    }
-    
-    didField.disable();
-  }
-
-  private patchFieldsForSubmit(groupedFormFields: FormField[][]) {
-    // replace the fields containing the Organization name with their id
-    for (let group of groupedFormFields) {
-      for (let field of group) {
-        if (field.key === "offeredBy" || field.key === "providedBy" ) {
-          let formField = this.form.get(field.id);
-          formField.patchValue(this.authService.getActiveOrgaId());
-        }
-      }
-    }
-  }
-
   readObjectDataFromRoute(): void {
-    if (this.router.getCurrentNavigation().extras.state) {
-      this.routeState = this.router.getCurrentNavigation().extras.state;
-      if (this.routeState) {
-        this.requestSuccess = true;
-        this.file = this.routeState.file;
-      }
-    } else {
-      this.file = undefined;
-    }
+    this.routeState = this.router.getCurrentNavigation().extras.state;
+    this.requestSuccess = true;
+    this.file = undefined;
     this.multipleShapes = this.formfieldService.updateFilteredShapes(this.file)?.length > 1;
   }
 
@@ -172,65 +130,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       charactersLength));
    }
    return result;
-  }
-
-  onSubmit(publishAfterSave: boolean): void {
-    this.submitButtonsDisabled = true;
-    this.showSuccessMessage = false;
-    this.showErrorMessage = false;
-    this.createdServiceOfferingId = "";
-    this.errorDetails = "";
-
-    this.shape.userPrefix = this.form.get('user_prefix').value;
-
-    this.patchFieldsForSubmit(this.groupedFormFields);
-
-    this.shape.downloadFormat = this.form.get('download_format').value;
-    console.log("shape fields pre update/empty", this.shape.fields);  
-    this.shape.fields = this.updateFormFieldsValues(this.formFields, this.form);
-    this.shape.fields = this.emptyChildrenFields(this.shape.fields);
-    console.log("shape fields pre save", this.shape.fields);
-    this.exportService.saveFile(this.file)
-      .then(result => {
-        console.log(result);
-        this.showSuccessMessage = true;
-        this.createdServiceOfferingId = result["id"];
-        let didField = this.form.get("user_prefix");
-        didField.patchValue(result["id"]);
-
-        if (this.shape?.name === "MerlotOrganization") {
-          this.authService.refreshActiveRoleOrgaData();
-        }
-
-        if (publishAfterSave) {
-          this.serviceofferingApiService.releaseServiceOffering(result["id"])
-          .catch((e: HttpErrorResponse) => {
-            this.showErrorMessage = true;
-            this.errorDetails = e.error.message;
-            this.submitButtonsDisabled = false;
-          })
-          .catch(e => {
-            this.showErrorMessage = true;
-            this.errorDetails = "Unbekannter Fehler.";
-            this.submitButtonsDisabled = false;
-          });
-        }
-      })
-      .catch((e: HttpErrorResponse) => {
-        this.showErrorMessage = true;
-        this.errorDetails = e.error.message;
-        this.submitButtonsDisabled = false;
-      })
-      .catch(e => {
-        this.showErrorMessage = true;
-        this.errorDetails = "Unbekannter Fehler.";
-        this.submitButtonsDisabled = false;
-      }).finally(() => {
-        if (!publishAfterSave) {
-          this.submitButtonsDisabled = false;
-        }
-      });
-    this.patchRequiredFieldsOffering(this.groupedFormFields); // re-patch the fields so the user sees the resolved names instead of ids
   }
 
   ngOnDestroy() {

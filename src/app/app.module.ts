@@ -8,10 +8,12 @@ import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { WizardAppModule } from './sdwizard/wizardapp.module';
+import { WizardExtensionModule } from './wizard-extension/wizard-extension.module';
+import { AddActiveRoleHeaderInterceptor } from './services/add-active-role-header.interceptor';
 
 import {
   PERFECT_SCROLLBAR_CONFIG,
@@ -118,6 +120,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     FormsModule,
     WizardAppModule,
     LayoutModule,
+    WizardExtensionModule
   ],
   providers: [
     {
@@ -133,6 +136,11 @@ function initializeKeycloak(keycloak: KeycloakService) {
       useFactory: initializeKeycloak,
       multi: true,
       deps: [KeycloakService],
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AddActiveRoleHeaderInterceptor,
+      multi: true,
     },
     IconSetService,
     Title,

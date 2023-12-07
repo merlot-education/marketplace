@@ -28,7 +28,7 @@
             </li>
             <li class="list-group-item" style="border: none">
               <strong>Erstelldatum:</strong><br />
-              {{ offering.creationDate }}
+              {{ offering.creationDate | date:"medium" }}
             </li>
             <li class="list-group-item" style="border: none">
               <strong>Anbieter:</strong><br />
@@ -75,7 +75,7 @@
             </li>
             <li class="list-group-item" style="border: none">
               <strong>Erstelldatum:</strong><br />
-              {{ offering.creationDate }}
+              {{ offering.creationDate | date:"medium" }}
             </li>
             <li class="list-group-item" style="border: none">
               <strong>Anbieter:</strong><br />
@@ -83,7 +83,7 @@
             </li>
           </ul>
           <div style="padding: 10px">
-            <button type="button" class="btn btn-primary flex-item-grow" *ngIf="authService.isLoggedIn"
+            <button type="button" class="btn btn-primary flex-item-grow" *ngIf="activeOrgRoleService.isLoggedIn && activeOrgRoleService.isActiveAsRepresentative()"
               [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = true; requestDetails(offering.id)">
               Details
             </button>
@@ -172,7 +172,7 @@
       }}" bearbeiten</h5>
   </c-modal-header>
   <c-modal-body>
-    <app-dynamic-form [file]="shaclFile" #wizard></app-dynamic-form>
+    <app-wizard-extension #wizardExtension></app-wizard-extension>
   </c-modal-body>
   <c-modal-footer>
     <button cButton color="secondary" [cModalToggle]="modalEditServiceOffering.id">Schließen</button>

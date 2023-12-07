@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IContract, IContractBasic, IPageContracts } from '../contracts-data';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { BehaviorSubject } from 'rxjs';
 import { ConnectorData } from '../../organization/organization-data';
@@ -55,13 +56,14 @@ export class ExploreComponent implements OnInit {
     private organizationsApiService: OrganizationsApiService,
     private serviceOfferingApiService: ServiceofferingApiService,
     protected authService: AuthService,
+    protected activeOrgRoleService: ActiveOrganizationRoleService,
     protected contractApiService: ContractApiService
     ) {
       this.selectedStatusFilter = this.contractApiService.getAvailableStatusNames()[0];
   }
 
   ngOnInit(): void {
-    this.authService.activeOrganizationRole.subscribe(value => {
+    this.activeOrgRoleService.activeOrganizationRole.subscribe(value => {
       this.organizationsApiService.getConnectorsOfOrganization(value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']).then(result => {
         this.orgaConnectors = result;
       });
@@ -91,7 +93,7 @@ export class ExploreComponent implements OnInit {
 
   protected refreshContracts(page: number, size: number) {
     this.contractApiService.getOrgaContracts(page, size, 
-      this.authService.getActiveOrgaId(), 
+      this.activeOrgRoleService.getActiveOrgaId(), 
       this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
         this.activePage.next(result);
         this.initialLoading = false;
@@ -104,11 +106,11 @@ export class ExploreComponent implements OnInit {
   }
 
   protected isActiveProvider(contract: IContractBasic): boolean {
-    return contract.providerId === this.authService.getActiveOrgaId();
+    return contract.providerId === this.activeOrgRoleService.getActiveOrgaId();
   }
 
   protected isActiveConsumer(contract: IContractBasic): boolean {
-    return contract.consumerId === this.authService.getActiveOrgaId();
+    return contract.consumerId === this.activeOrgRoleService.getActiveOrgaId();
   }
 
   protected getContractTypeName(contract: IContractBasic): string {

@@ -24,7 +24,7 @@ export interface IOfferings {
         '@id': string;
         '@type': string;
         'gax-core:offeredBy': INodeKindIRITypeId;
-        'gax-core:providedBy': INodeKindIRITypeId;
+        'gax-trust-framework:providedBy': INodeKindIRITypeId;
         'gax-trust-framework:name': IStringTypeValue;
         'gax-trust-framework:termsAndConditions': ITermsAndConditions[];
         'dct:description'?: IStringTypeValue;

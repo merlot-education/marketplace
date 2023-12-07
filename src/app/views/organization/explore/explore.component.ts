@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ConnectorData, IOrganizationData, IPageOrganizations } from "../organization-data";
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -41,14 +43,16 @@ export class ExploreComponent implements OnInit {
 
   constructor(
     private organizationsApiService: OrganizationsApiService,
-    protected authService: AuthService
+    protected authService: AuthService,
+    protected activeOrgRoleService: ActiveOrganizationRoleService,
+    private router: Router
   ) {}
 
   private updateOrgaRepresentation() {
-    if (this.authService.isLoggedIn) {
-      let representedOrgaIds = Object.values(this.authService.organizationRoles).map(orga => orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+    if (this.activeOrgRoleService.isLoggedIn) {
+      let representedOrgaIds = Object.values(this.activeOrgRoleService.organizationRoles).map(orga => orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
       for(let orga of this.activeOrganizationsPage.value.content) {
-        if (orga.selfDescription.verifiableCredential.credentialSubject['@id'] === this.authService.getActiveOrgaId()) {
+        if (orga.selfDescription.verifiableCredential.credentialSubject['@id'] === this.activeOrgRoleService.getActiveOrgaId()) {
           orga.activeRepresentant = true;
           orga.passiveRepresentant = true;
         } else if (representedOrgaIds.includes(orga.selfDescription.verifiableCredential.credentialSubject['@id'])) {
@@ -68,7 +72,7 @@ export class ExploreComponent implements OnInit {
 
   ngOnInit(): void {
     this.refreshOrganizations(0, this.ITEMS_PER_PAGE);
-    this.authService.activeOrganizationRole.subscribe(_ => this.updateOrgaRepresentation());
+    this.activeOrgRoleService.activeOrganizationRole.subscribe(_ => this.updateOrgaRepresentation());
   }
 
   checkRepresentant(organization: IOrganizationData): string {
@@ -86,5 +90,9 @@ export class ExploreComponent implements OnInit {
       this.activeOrganizationsPage.next(result);
       this.updateOrgaRepresentation();
     });
+  }
+
+  protected editOrganization(orga: IOrganizationData) {
+    this.router.navigate(["organization/edit/", orga.selfDescription.verifiableCredential.credentialSubject['@id']]);
   }
 }

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ExploreComponent } from './explore/explore.component';
 import { EditComponent } from './edit/edit.component';
+import { WizardExtensionModule } from 'src/app/wizard-extension/wizard-extension.module';
 
 // CoreUI Modules
 import {
@@ -102,6 +103,7 @@ import {
     PaginatorComponent,
     CardComponent,
     GridComponent,
+    WizardExtensionModule
   ],
 })
 export class ServiceofferingsModule {}

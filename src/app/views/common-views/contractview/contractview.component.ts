@@ -3,7 +3,7 @@ import { IContract, IDataDeliveryContract, IEdcIdResponse, IEdcNegotiationStatus
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
-import { AuthService } from 'src/app/services/auth.service';
+import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
 import { IRuntime } from '../../serviceofferings/serviceofferings-data';
@@ -36,7 +36,7 @@ export class ContractviewComponent {
 
   constructor(
     protected contractApiService: ContractApiService,
-    private authService: AuthService,
+    private activeOrgRoleService: ActiveOrganizationRoleService,
     protected serviceOfferingApiService: ServiceofferingApiService,
     protected organizationsApiService: OrganizationsApiService) {
   }
@@ -184,11 +184,11 @@ export class ContractviewComponent {
   }
 
   protected userIsActiveProvider(): boolean {
-    return this.authService.getActiveOrgaId() == this.contractDetails.details.providerId;
+    return this.activeOrgRoleService.getActiveOrgaId() == this.contractDetails.details.providerId;
   }
 
   protected userIsActiveConsumer(): boolean {
-    return this.authService.getActiveOrgaId() == this.contractDetails.details.consumerId;
+    return this.activeOrgRoleService.getActiveOrgaId() == this.contractDetails.details.consumerId;
   }
 
 

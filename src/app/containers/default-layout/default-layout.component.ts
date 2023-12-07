@@ -1,16 +1,12 @@
 import { Component } from '@angular/core';
-import { INavData } from '@coreui/angular';
-import { KeycloakService } from 'keycloak-angular';
-import { KeycloakProfile } from 'keycloak-js';
-import { AuthService } from 'src/app/services/auth.service';
-import { AaamApiService } from 'src/app/services/aaam-api.service';
+import { AuthService, OrganizationRole } from 'src/app/services/auth.service';
+import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 
 import {
   IRoleNavData,
   OrganizationRoleLayoutData,
 } from '@merlot-education/m-dashboard-ui';
 import { navItems } from './_nav';
-import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,28 +29,24 @@ export class DefaultLayoutComponent {
 
   constructor(
     protected authService: AuthService,
-    protected keycloakService: KeycloakService,
-    private aaamApiService: AaamApiService,
-    private organizationsApiService: OrganizationsApiService
+    protected activeOrgRoleService: ActiveOrganizationRoleService
   ) {
     let globalNavItems = structuredClone(navItems);
-    this.navItems = this.buildAllowedNavItems(globalNavItems);
+    this.navItems = this.buildAllowedNavItems(globalNavItems, null);
   }
 
   public async ngOnInit() {
-    //this.authService.user.subscribe(x => {
-    let globalNavItems = structuredClone(navItems);
-    this.navItems = this.buildAllowedNavItems(globalNavItems);
-    //});
-    this.selectedRoleOption =
-      this.authService.activeOrganizationRole.getValue().orgaRoleString;
-
     let tries = 0;
-    while (this.authService.isLoggedIn) {
+    while (this.activeOrgRoleService.isLoggedIn) {
+      this.selectedRoleOption = this.activeOrgRoleService.activeOrganizationRole.getValue().orgaRoleString;
       console.log('waiting for roles to load');
       await this.wait(100);
 
       if (this.authService.finishedLoadingRoles) {
+        this.activeOrgRoleService.activeOrganizationRole.subscribe(role => {
+          let globalNavItems = structuredClone(navItems);
+          this.navItems = this.buildAllowedNavItems(globalNavItems, role);
+        });
         this.loadRolesForMenu();
         break;
       }
@@ -70,14 +62,14 @@ export class DefaultLayoutComponent {
   }
 
   private loadRolesForMenu() {
-    for (let role in this.authService.organizationRoles) {
+    for (let role in this.activeOrgRoleService.organizationRoles) {
       this.organizationRolesForLayout.push({
-        orgaRoleString: this.authService.organizationRoles[role].orgaRoleString,
-        roleName: this.authService.organizationRoles[role].roleName,
+        orgaRoleString: this.activeOrgRoleService.organizationRoles[role].orgaRoleString,
+        roleName: this.activeOrgRoleService.organizationRoles[role].roleName,
         roleFriendlyName:
-          this.authService.organizationRoles[role].roleFriendlyName,
+          this.activeOrgRoleService.organizationRoles[role].roleFriendlyName,
         orgaName:
-          this.authService.organizationRoles[role].orgaData?.selfDescription
+          this.activeOrgRoleService.organizationRoles[role].orgaData?.selfDescription
             .verifiableCredential.credentialSubject['merlot:orgaName'][
             '@value'
           ],
@@ -85,19 +77,19 @@ export class DefaultLayoutComponent {
     }
   }
 
-  private buildAllowedNavItems(navItems: IRoleNavData[]) {
+  private buildAllowedNavItems(navItems: IRoleNavData[], activeRole: OrganizationRole) {
     let outNavItems: IRoleNavData[] = [];
     // iterate over navItems, check if they are allowed for this role
     for (let navItem of navItems) {
       // check if entry itself is allowed
-      if (!this.checkNavItemRoleAllowed(navItem)) {
+      if (!this.checkNavItemRoleAllowed(navItem, activeRole)) {
         // if not allowed, don't waste time with checking children
         continue;
       }
 
       // checking for children and their roles
       if (navItem.children !== undefined) {
-        navItem.children = this.buildAllowedNavItems(navItem.children);
+        navItem.children = this.buildAllowedNavItems(navItem.children, activeRole);
       }
 
       // at this point we have an allowed item with allowed children, push it back to the list
@@ -106,15 +98,20 @@ export class DefaultLayoutComponent {
     return outNavItems;
   }
 
-  private checkNavItemRoleAllowed(navItem: IRoleNavData) {
-    return true;
-    // TODO readd this once roles are properly implemented
-    // if no roles are defined, allow for everyone
-    /*if (navItem.allowedRoles === undefined) {
-      return true
+  private checkNavItemRoleAllowed(navItem: IRoleNavData, activeRole: OrganizationRole) {
+    if (navItem.allowedRoles.includes("Visitor")) { // if visitor is included, everyone can see it
+      return true;
     }
-    // otherwise ask the auth service if the current user has any of the allowed roles
-    return navItem.allowedRoles.some(r => this.authService.user.value.roles.includes(r));*/
+    if (!activeRole) { // make sure we have a proper role from this point onwards
+      return false;
+    }
+    if (activeRole.roleName === "OrgLegRep") {
+      return navItem.allowedRoles.includes("Rep");
+    }
+    if (activeRole.roleName === "FedAdmin") {
+      return navItem.allowedRoles.includes("FedAdmin");
+    }
+    return false; // if nothing matches, deny
   }
 
   selectedRoleChanged(event: any) {
