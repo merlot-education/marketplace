@@ -4,6 +4,7 @@ import { EditComponent } from './edit/edit.component';
 import { ExploreComponent } from './explore/explore.component';
 import { ImportComponent } from './import/import.component';
 import { KeycloakGuard } from 'src/app/keycloak.guard';
+import { authGuard } from 'src/app/auth.guard';
 
 
 const routes: Routes = [
@@ -47,7 +48,7 @@ const routes: Routes = [
         data: {
           title: 'Organisation hinzufügen',
         },
-        canActivate: [KeycloakGuard]
+        canActivate: [KeycloakGuard, authGuard]
       },
     ],
   },
