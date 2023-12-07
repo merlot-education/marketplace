@@ -18,24 +18,6 @@
           fxFlex.sm="100%"
           fxFlex.xs="100%"
         >
-          <h2>
-            {{ "form.complete" | translate }} <b>{{ shape.name }} </b>
-            {{ "form.form" | translate }}
-          </h2>
-          <!--
-    <div class="field">
-      <div class="textField">
-        -->
-          <!--
-    </div>
-
-      <div class="iconField tooltip">
-        <img src="../../../assets/images/information.svg">
-        <span  class="tooltiptext">Tooltip text</span>
-      </div>
-  </div>
--->
-
           <div class="mb-3" [hidden]="true">
             <label class="form-label">Angebots-ID*</label>
             <input
@@ -44,17 +26,14 @@
               formControlName="user_prefix"
               placeholder="did:example:123456789abcdefghi"
             />
-          </div> <!-- TODO Auto generated in orchestrator -->
+          </div>
 
           <div
             *ngFor="let formField of group; let j = index"
             class="form-group"
           >
             <span *ngIf="j == 0">{{ formField.group }}</span>
-            <!--
-        <div class="field">
-          <div class="textField">
-          -->
+
             <app-dynamic-form-input
               *ngIf="formField.componentType == 'dynamicFormInput'"
               [form]="form"
@@ -63,14 +42,6 @@
               [hidden]="hiddenFormFields.includes(formField.key)"
               #formInput
             ></app-dynamic-form-input>
-            <!--
-          </div>
-                <div class="iconField tooltip">
-                  <img src="../../../assets/images/information.svg">
-                  <span  class="tooltiptext">Tooltip text</span>
-                </div>
-        </div>
-        -->
             <app-dynamic-form-array
               *ngIf="formField.componentType == 'dynamicFormArray'"
               [form]="form"
@@ -113,13 +84,6 @@
               #selfLoops
             ></app-dynamic-self-loops>
           </div>
-          <!--div class="all-errors"> 
-      <div *ngFor="let formField of group" class="alert alert-danger ">
-        <app-show-errors [displayAll]="true" [formField]="formField" [form]="form" [label]="formField.name">
-        </app-show-errors>
-      </div>
-    </div-->
-          <!-- TODO re-add error messages -->
         </div>
       </div>
     </form>

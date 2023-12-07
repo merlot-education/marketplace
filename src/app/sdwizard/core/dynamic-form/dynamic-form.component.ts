@@ -5,16 +5,10 @@ import {FormfieldControlService} from '@services/form-field.service';
 import {Router} from '@angular/router';
 import {Shape} from '@models/shape';
 import {Utils} from '@shared/utils';
-import {ExportService} from '@services/export.service';
 import {ShaclFile} from '@models/shacl-file';
 import {DateHelper} from '@shared/date-helper';
 import {FilesProvider} from '@shared/files-provider';
 import {DownloadFormat} from '@shared/download-format.enum';
-
-import { IconSetService } from '@coreui/icons-angular';
-import { brandSet, flagSet, freeSet } from '@coreui/icons';
-import { AuthService } from 'src/app/services/auth.service';
-import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { DynamicFormInputComponent } from '@components/dynamic-form-input/dynamic-form-input.component';
 import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynamic-form-array.component';
 import { DynamicFormOrComponent } from '@components/dynamic-form-or/dynamic-form-or.component';
@@ -66,19 +60,13 @@ export class DynamicFormComponent implements OnInit, OnDestroy, AfterViewChecked
   constructor(
     private formfieldService: FormfieldControlService,
     private router: Router,
-    private exportService: ExportService,
     private filesProvider: FilesProvider, 
-    private iconSetService: IconSetService,
-    private authService: AuthService,
-    private serviceofferingApiService: ServiceofferingApiService
   ) {
     this.readObjectDataFromRoute();
     if (this.requestSuccess) {
       this.getFormFields();
     }
     this.hasStaticFiles = filesProvider.gethasStaticFiles();
-    // iconSet singleton
-    iconSetService.icons = { ...freeSet, ...flagSet, ...brandSet };
   }
   ngAfterViewChecked(): void {
     if (this.groupsNumber) {
@@ -117,18 +105,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy, AfterViewChecked
   groupFormFields(): void {
     this.groupedFormFields = Utils.groupBy(this.formFields, (formField) => formField.group);
     this.groupsNumber = this.groupedFormFields.length;
-  }
-
-  private patchFieldsForSubmit(groupedFormFields: FormField[][]) {
-    // replace the fields containing the Organization name with their id
-    for (let group of groupedFormFields) {
-      for (let field of group) {
-        if (field.key === "offeredBy" || field.key === "providedBy" ) {
-          let formField = this.form.get(field.id);
-          formField.patchValue(this.authService.getActiveOrgaId());
-        }
-      }
-    }
   }
 
   readObjectDataFromRoute(): void {
