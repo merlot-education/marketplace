@@ -13,7 +13,7 @@ export class ActiveOrganizationRoleService {
     roleFriendlyName: '',
   });
 
-  public nextMethod(next: OrganizationRole){
+  public nextMethod(next: OrganizationRole) {
     this.activeOrganizationRole.next(next)
   }
 }

@@ -1,17 +1,13 @@
 import { Component } from '@angular/core';
-import { INavData } from '@coreui/angular';
 import { KeycloakService } from 'keycloak-angular';
-import { KeycloakProfile } from 'keycloak-js';
 import { AuthService, OrganizationRole } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
-import { AaamApiService } from 'src/app/services/aaam-api.service';
 
 import {
   IRoleNavData,
   OrganizationRoleLayoutData,
 } from '@merlot-education/m-dashboard-ui';
 import { navItems } from './_nav';
-import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 
 @Component({
   selector: 'app-dashboard',
