@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
+import { ActiveOrganizationRoleService } from './active-organization-role.service';
 import { lastValueFrom } from 'rxjs';
 import { IUserData } from '../views/users/user-data';
 import { environment } from 'src/environments/environment';
@@ -12,13 +12,13 @@ export class AaamApiService {
 
   constructor(    
     private http: HttpClient,
-    protected authService: AuthService,
+    protected activeOrgRoleService: ActiveOrganizationRoleService,
     ) { 
   }
 
   public async getUsersFromOrganization(organizationId: String) {
     organizationId = organizationId.replace("Participant:", "");
-    if (this.authService.isLoggedIn) {
+    if (this.activeOrgRoleService.isLoggedIn) {
       return await lastValueFrom(this.http.get(environment.aaam_api_url + "fromOrganization/" + organizationId)) as IUserData[];
     } else {
       console.log("Error: Not logged in.");

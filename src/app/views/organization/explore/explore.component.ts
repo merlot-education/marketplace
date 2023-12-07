@@ -49,10 +49,10 @@ export class ExploreComponent implements OnInit {
   ) {}
 
   private updateOrgaRepresentation() {
-    if (this.authService.isLoggedIn) {
-      let representedOrgaIds = Object.values(this.authService.organizationRoles).map(orga => orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+    if (this.activeOrgRoleService.isLoggedIn) {
+      let representedOrgaIds = Object.values(this.activeOrgRoleService.organizationRoles).map(orga => orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
       for(let orga of this.activeOrganizationsPage.value.content) {
-        if (orga.selfDescription.verifiableCredential.credentialSubject['@id'] === this.authService.getActiveOrgaId()) {
+        if (orga.selfDescription.verifiableCredential.credentialSubject['@id'] === this.activeOrgRoleService.getActiveOrgaId()) {
           orga.activeRepresentant = true;
           orga.passiveRepresentant = true;
         } else if (representedOrgaIds.includes(orga.selfDescription.verifiableCredential.credentialSubject['@id'])) {

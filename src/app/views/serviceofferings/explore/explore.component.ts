@@ -3,7 +3,6 @@ import { IBasicOffering, IOfferings, IPageBasicOfferings, ITermsAndConditions } 
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
-import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { serviceFileNameDict } from '../serviceofferings-data';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -103,12 +102,11 @@ export class ExploreComponent implements OnInit, OnDestroy {
     protected serviceOfferingApiService : ServiceofferingApiService,
     protected organizationsApiService: OrganizationsApiService,
     private contractApiService: ContractApiService,
-    protected authService: AuthService,
     protected activeOrgRoleService: ActiveOrganizationRoleService) {
   }
 
   ngOnInit(): void {
-    if (this.authService.isLoggedIn) {
+    if (this.activeOrgRoleService.isLoggedIn) {
       this.activeOrgaSubscription = this.activeOrgRoleService.activeOrganizationRole.subscribe(value => {
         this.organizationsApiService.getConnectorsOfOrganization(value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']).then(result => {
         this.orgaConnectors = result;
@@ -158,7 +156,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   protected refreshOrgaOfferings(page: number, size: number, statusFilter: string = undefined) {
-    if (this.authService.isLoggedIn) {
+    if (this.activeOrgRoleService.isLoggedIn) {
       this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, statusFilter).then(result => {
       this.activeOrgaOfferingPage.next(result);
       this.initialLoading = false;
@@ -254,9 +252,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
           tnc['gax-trust-framework:hash']['disabled'] = true;
         }
       }
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] = this.authService.getActiveOrgaLegalName();
+      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] = this.activeOrgRoleService.getActiveOrgaLegalName();
       this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['disabled'] = true;
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:providedBy']['@id'] = this.authService.getActiveOrgaLegalName();
+      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:providedBy']['@id'] = this.activeOrgRoleService.getActiveOrgaLegalName();
       this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:providedBy']['disabled'] = true;
       
       this.select(this.findFilenameByShapeType(offering.type));
@@ -278,7 +276,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   bookServiceOffering(offeringId: string): void {
     this.contractApiService.createNewContract(
       offeringId, 
-      this.authService.getActiveOrgaId())
+      this.activeOrgRoleService.getActiveOrgaId())
       .then(result => {
         console.log(result)
         this.contractTemplate = result;
@@ -312,6 +310,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   protected shouldShowBookButton(offering: IOfferings): boolean {
-    return this.authService.isLoggedIn && (offering.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] !== this.authService.getActiveOrgaId())
+    return this.activeOrgRoleService.isLoggedIn && (offering.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] !== this.activeOrgRoleService.getActiveOrgaId())
   }
 }

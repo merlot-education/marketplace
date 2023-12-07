@@ -44,8 +44,8 @@ export class EditComponent implements OnInit, AfterViewInit {
     this.organizationsApiService.getOrgaById(orgaId).then(result => {
       console.log(result);
       result.selfDescription.verifiableCredential.credentialSubject['merlot:merlotId']['disabled'] = true;
-      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['disabled'] = !this.authService.isActiveAsFederatorAdmin;
-      result.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['disabled'] = !this.authService.isActiveAsFederatorAdmin;
+      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
+      result.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
       let registrationNumberFields = result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber'];
       this.patchRegistrationNumberField('gax-trust-framework:local', registrationNumberFields);
       this.patchRegistrationNumberField('gax-trust-framework:EUID', registrationNumberFields);
@@ -64,6 +64,6 @@ export class EditComponent implements OnInit, AfterViewInit {
     if (!registrationNumberField[registrationNumberType]) { // if it does not exist, add dummy values
       registrationNumberField[registrationNumberType] = {'@value': "", '@type': "" }
     } 
-    registrationNumberField[registrationNumberType]['disabled'] = !this.authService.isActiveAsFederatorAdmin;
+    registrationNumberField[registrationNumberType]['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
   }
 }

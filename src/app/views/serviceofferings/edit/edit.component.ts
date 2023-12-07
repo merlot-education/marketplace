@@ -72,11 +72,11 @@ export class EditComponent implements OnInit, AfterViewInit {
     let providerTnC: ITermsAndConditions = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
     this.wizardExtension.prefillFields({
       "gax-core:offeredBy": {
-        "@id": this.authService.getActiveOrgaLegalName(),
+        "@id": this.activeOrgRoleService.getActiveOrgaLegalName(),
         "disabled": true
       },
       "gax-trust-framework:providedBy": {
-        "@id": this.authService.getActiveOrgaLegalName(),
+        "@id": this.activeOrgRoleService.getActiveOrgaLegalName(),
         "disabled": true
       },
       "gax-trust-framework:termsAndConditions": [

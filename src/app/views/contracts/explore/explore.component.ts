@@ -93,7 +93,7 @@ export class ExploreComponent implements OnInit {
 
   protected refreshContracts(page: number, size: number) {
     this.contractApiService.getOrgaContracts(page, size, 
-      this.authService.getActiveOrgaId(), 
+      this.activeOrgRoleService.getActiveOrgaId(), 
       this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
         this.activePage.next(result);
         this.initialLoading = false;
@@ -106,11 +106,11 @@ export class ExploreComponent implements OnInit {
   }
 
   protected isActiveProvider(contract: IContractBasic): boolean {
-    return contract.providerId === this.authService.getActiveOrgaId();
+    return contract.providerId === this.activeOrgRoleService.getActiveOrgaId();
   }
 
   protected isActiveConsumer(contract: IContractBasic): boolean {
-    return contract.consumerId === this.authService.getActiveOrgaId();
+    return contract.consumerId === this.activeOrgRoleService.getActiveOrgaId();
   }
 
   protected getContractTypeName(contract: IContractBasic): string {

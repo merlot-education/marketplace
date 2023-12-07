@@ -42,7 +42,7 @@ export class DefaultLayoutComponent {
       this.activeOrgRoleService.activeOrganizationRole.getValue().orgaRoleString;
 
     let tries = 0;
-    while (this.authService.isLoggedIn) {
+    while (this.activeOrgRoleService.isLoggedIn) {
       console.log('waiting for roles to load');
       await this.wait(100);
 
@@ -66,14 +66,14 @@ export class DefaultLayoutComponent {
   }
 
   private loadRolesForMenu() {
-    for (let role in this.authService.organizationRoles) {
+    for (let role in this.activeOrgRoleService.organizationRoles) {
       this.organizationRolesForLayout.push({
-        orgaRoleString: this.authService.organizationRoles[role].orgaRoleString,
-        roleName: this.authService.organizationRoles[role].roleName,
+        orgaRoleString: this.activeOrgRoleService.organizationRoles[role].orgaRoleString,
+        roleName: this.activeOrgRoleService.organizationRoles[role].roleName,
         roleFriendlyName:
-          this.authService.organizationRoles[role].roleFriendlyName,
+          this.activeOrgRoleService.organizationRoles[role].roleFriendlyName,
         orgaName:
-          this.authService.organizationRoles[role].orgaData?.selfDescription
+          this.activeOrgRoleService.organizationRoles[role].orgaData?.selfDescription
             .verifiableCredential.credentialSubject['merlot:orgaName'][
             '@value'
           ],

@@ -13,7 +13,7 @@ import {DownloadFormat} from '@shared/download-format.enum';
 
 import { IconSetService } from '@coreui/icons-angular';
 import { brandSet, flagSet, freeSet } from '@coreui/icons';
-import { AuthService } from 'src/app/services/auth.service';
+import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DynamicFormInputComponent } from '@components/dynamic-form-input/dynamic-form-input.component';
@@ -70,7 +70,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy, AfterViewChecked
     private exportService: ExportService,
     private filesProvider: FilesProvider, 
     private iconSetService: IconSetService,
-    private authService: AuthService,
+    private activeOrgRoleService: ActiveOrganizationRoleService,
     private serviceofferingApiService: ServiceofferingApiService
   ) {
     this.readObjectDataFromRoute();
@@ -126,7 +126,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy, AfterViewChecked
       for (let field of group) {
         if (field.key === "offeredBy" || field.key === "providedBy" ) {
           let formField = this.form.get(field.id);
-          formField.patchValue(this.authService.getActiveOrgaId());
+          formField.patchValue(this.activeOrgRoleService.getActiveOrgaId());
         }
       }
     }

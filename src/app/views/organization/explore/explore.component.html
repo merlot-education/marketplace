@@ -1,4 +1,4 @@
-<c-row *ngIf="authService.isActiveAsFederatorAdmin">
+<c-row *ngIf="activeOrgRoleService.isActiveAsFedAdmin()">
   <c-col>
     <button
     id="import-button"
@@ -91,7 +91,7 @@
       <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
         <div class="p-2 docs-highlight">
           <button type="button" class="btn btn-primary flex-item-grow" 
-          *ngIf="authService.isActiveAsFederatorAdmin"
+          *ngIf="activeOrgRoleService.isActiveAsFedAdmin()"
           (click)="editOrganization(organization)"
           >
             Bearbeiten 

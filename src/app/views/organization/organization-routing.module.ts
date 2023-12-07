@@ -40,7 +40,7 @@ const routes: Routes = [
         data: {
           title: 'Organisation bearbeiten',
         },
-        canActivate: [KeycloakGuard]
+        canActivate: [KeycloakGuard, fedAuthGuard]
       },
       {
         path: 'import', 

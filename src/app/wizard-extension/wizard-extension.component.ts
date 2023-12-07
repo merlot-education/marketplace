@@ -14,6 +14,7 @@ import { ExportService } from '@services/export.service';
 import { StatusMessageComponent } from '../views/common-views/status-message/status-message.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 
 @Component({
   selector: 'app-wizard-extension',
@@ -35,6 +36,7 @@ export class WizardExtensionComponent {
     private organizationsApiService: OrganizationsApiService,
     private serviceofferingApiService: ServiceofferingApiService,
     private authService: AuthService,
+    private activeOrgRoleService: ActiveOrganizationRoleService,
     private exportService: ExportService) {}
 
   private selectShape(shaclFile: ShaclFile, credentialSubjectId: string): void {
@@ -293,7 +295,7 @@ export class WizardExtensionComponent {
 
     // for fields that contain the id of the creator organization, set them to the actual id
     for (let control of this.orgaIdFields) {
-      control.patchValue(this.authService.getActiveOrgaId());
+      control.patchValue(this.activeOrgRoleService.getActiveOrgaId());
     }
     this.wizard.shape.userPrefix = this.wizard.form.get('user_prefix').value;
     this.wizard.shape.downloadFormat = this.wizard.form.get('download_format').value;
@@ -303,7 +305,7 @@ export class WizardExtensionComponent {
 
     // revert the actual id to the orga for user readibility
     for (let control of this.orgaIdFields) {
-      control.patchValue(this.authService.getActiveOrgaLegalName());
+      control.patchValue(this.activeOrgRoleService.getActiveOrgaLegalName());
     }
 
     this.saveSelfDescription(jsonSd).then(result => {

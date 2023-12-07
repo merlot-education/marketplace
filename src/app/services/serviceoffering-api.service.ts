@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { lastValueFrom } from 'rxjs';
 import { IOfferings, IPageBasicOfferings } from '../views/serviceofferings/serviceofferings-data';
-import { AuthService } from './auth.service';
+import { ActiveOrganizationRoleService } from './active-organization-role.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,7 @@ export class ServiceofferingApiService {
     "merlot:MerlotServiceOfferingCooperation": "Kooperationsvertrag"
   }
 
-  constructor(private http: HttpClient, private authService: AuthService) { 
+  constructor(private http: HttpClient, private activeOrgRoleService: ActiveOrganizationRoleService) { 
 
   }
 
@@ -39,8 +39,8 @@ export class ServiceofferingApiService {
 
   // get all service offerings for the active organization
   public async fetchOrganizationServiceOfferings(page: number, size: number, state?: string): Promise<IPageBasicOfferings> {
-    if (this.authService.isLoggedIn) {
-      let activeOrgaId = this.authService.getActiveOrgaId().replace("Participant:", "");
+    if (this.activeOrgRoleService.isLoggedIn) {
+      let activeOrgaId = this.activeOrgRoleService.getActiveOrgaId().replace("Participant:", "");
       let target_url = environment.serviceoffering_api_url + "organization/" + activeOrgaId + "?page=" + page + "&size=" + size;
       if (state !== undefined) {
         target_url += "&state=" + state
@@ -53,7 +53,7 @@ export class ServiceofferingApiService {
 
   // get details to a specific service offering (authenticated)
   public async fetchServiceOfferingDetails(id: string): Promise<IOfferings> {
-    if (this.authService.isLoggedIn) {
+    if (this.activeOrgRoleService.isLoggedIn) {
       return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "serviceoffering/" + id)) as IOfferings;
     }
       
