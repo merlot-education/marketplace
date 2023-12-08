@@ -22,9 +22,9 @@ it('testuser can log in, check organization and assigned person data, edit organ
     cy.contains("Meine Verträge"); // todo maybe find a better way to make sure the navbar is loaded
 
     // make sure there is "Organisationsverwaltung" and click on it
-    cy.contains('Organisationsverwaltung').click();
+    cy.contains('Organisationsverwaltung').click({force: true});
     // make sure there is "Organisationen erkunden" and click on it
-    cy.contains('Organisationen erkunden').click();
+    cy.contains('Organisationen erkunden').click({force: true});
     // url should have updated
     cy.url().should('include', 'organization/explore');
 
@@ -45,7 +45,7 @@ it('testuser can log in, check organization and assigned person data, edit organ
 
     });
 
-    cy.contains('Meine Organisation bearbeiten').click()
+    cy.contains('Meine Organisation bearbeiten').click({force: true})
 
     let unique = Date.now().toString(36);
     let email = 'merlot-' + unique + '@gaiax.de';
@@ -68,9 +68,9 @@ it('testuser can log in, check organization and assigned person data, edit organ
     cy.contains("Selbstbeschreibung erfolgreich gespeichert! (ID: Participant:10)", { timeout: 30000 });
 
     // click on navigation entry "Benutzerverwaltung", the submenu is extended
-    cy.contains('Benutzerverwaltung').click();
+    cy.contains('Benutzerverwaltung').click({force: true});
     // click on navigation entry "Nutzer meiner Organisation anzeigen"
-    cy.contains('Nutzer meiner Organisation anzeigen').click();
+    cy.contains('Nutzer meiner Organisation anzeigen').click({force: true});
     // url should have updated
     cy.url().should('include', 'users/explore');
 

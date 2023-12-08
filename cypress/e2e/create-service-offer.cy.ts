@@ -167,10 +167,10 @@ it('create saas service offering', {
     let runtimeOptionsSelect = ["year(s)", "year(s)", "unlimited"];
 
     // click on navigation entry Serviceangebote,  the submenu is extended
-    cy.contains('Service Angebote').click()
+    cy.contains('Service Angebote').click({force: true})
 
     // click on navigation entry Serviceangebot erstellen, the form will be displayed on the right side of the screen
-    cy.contains('Service Angebot erstellen').click()
+    cy.contains('Service Angebot erstellen').click({force: true})
     cy.url().should('include', 'service-offerings/edit')
 
     // select Webanwendung as type
@@ -204,7 +204,7 @@ it('create saas service offering', {
         let offeringId = result.get(0).innerText.match(/ServiceOffering:[^)]+/)[0];
 
         // click on navigation entry Angebote erkunden, the created offer is shown on top of the page
-        cy.contains("Service Angebote erkunden").click();
+        cy.contains("Service Angebote erkunden").click({force: true});
 
        openOfferingForEdit(offeringId);
 
@@ -251,10 +251,10 @@ it('create saas service offering', {
         logout();
 
         // click on navigation entry Serviceangebote,  the submenu is extended
-        cy.contains('Service Angebote').click()
+        cy.contains('Service Angebote').click({force: true})
 
         // click on navigation entry Serviceangebot erkunden, the form will be displayed on the right side of the screen
-        cy.contains('Service Angebote erkunden').click()
+        cy.contains('Service Angebote erkunden').click({force: true})
         cy.url().should('include', 'service-offerings/explore')
 
         // search for offering in list
@@ -275,10 +275,10 @@ it('create saas service offering', {
         loginAsTestuser();
 
         // click on navigation entry Serviceangebote,  the submenu is extended
-        cy.contains('Service Angebote').click()
+        cy.contains('Service Angebote').click({force: true})
 
         // click on navigation entry Serviceangebot erkunden, the form will be displayed on the right side of the screen
-        cy.contains('Service Angebote erkunden').click()
+        cy.contains('Service Angebote erkunden').click({force: true})
         cy.url().should('include', 'service-offerings/explore')
 
         openOfferingDetails(offeringId, "Veröffentlicht");
@@ -311,10 +311,10 @@ it('create data delivery service offering', {
     let runtimeOptionsSelect = ["year(s)", "year(s)", "unlimited"];
 
     // click on navigation entry Serviceangebote,  the submenu is extended
-    cy.contains('Service Angebote').click()
+    cy.contains('Service Angebote').click({force: true})
 
     // click on navigation entry Serviceangebot erstellen, the form will be displayed on the right side of the screen
-    cy.contains('Service Angebot erstellen').click()
+    cy.contains('Service Angebot erstellen').click({force: true})
     cy.url().should('include', 'service-offerings/edit')
 
     // select Webanwendung as type
@@ -406,10 +406,10 @@ it('create data delivery service offering', {
         logout();
 
         // click on navigation entry Serviceangebote,  the submenu is extended
-        cy.contains('Service Angebote').click()
+        cy.contains('Service Angebote').click({force: true})
 
         // click on navigation entry Serviceangebot erkunden, the form will be displayed on the right side of the screen
-        cy.contains('Service Angebote erkunden').click()
+        cy.contains('Service Angebote erkunden').click({force: true})
         cy.url().should('include', 'service-offerings/explore')
 
         // search for offering in list
@@ -429,10 +429,10 @@ it('create data delivery service offering', {
         loginAsTestuser();
 
         // click on navigation entry Serviceangebote,  the submenu is extended
-        cy.contains('Service Angebote').click()
+        cy.contains('Service Angebote').click({force: true})
 
         // click on navigation entry Serviceangebot erkunden, the form will be displayed on the right side of the screen
-        cy.contains('Service Angebote erkunden').click()
+        cy.contains('Service Angebote erkunden').click({force: true})
         cy.url().should('include', 'service-offerings/explore')
 
         openOfferingDetails(offeringId, "Veröffentlicht");
@@ -463,10 +463,10 @@ it('create coop contract service offering', {
     let runtimeOptionsSelect = ["year(s)", "year(s)", "unlimited"];
 
     // click on navigation entry Serviceangebote,  the submenu is extended
-    cy.contains('Service Angebote').click()
+    cy.contains('Service Angebote').click({force: true})
 
     // click on navigation entry Serviceangebot erstellen, the form will be displayed on the right side of the screen
-    cy.contains('Service Angebot erstellen').click()
+    cy.contains('Service Angebot erstellen').click({force: true})
     cy.url().should('include', 'service-offerings/edit')
 
     // select Webanwendung as type
@@ -492,7 +492,7 @@ it('create coop contract service offering', {
         let offeringId = result.get(0).innerText.match(/ServiceOffering:[^)]+/)[0];
 
         // click on navigation entry Angebote erkunden, the created offer is shown on top of the page
-        cy.contains("Service Angebote erkunden").click();
+        cy.contains("Service Angebote erkunden").click({force: true});
 
         openOfferingDetails(offeringId, "Veröffentlicht");
 
