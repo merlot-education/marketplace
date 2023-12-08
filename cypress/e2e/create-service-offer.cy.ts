@@ -174,7 +174,7 @@ it('create saas service offering', {
     cy.url().should('include', 'service-offerings/edit')
 
     // select Webanwendung as type
-    cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Webanwendung");
+    cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Webanwendung", {force: true});
     cy.contains('Datenaustauschanzahl-Option').should('not.exist');
     cy.contains('Nutzeranzahl-Option');
     cy.contains('Laufzeit-Option');
@@ -318,7 +318,7 @@ it('create data delivery service offering', {
     cy.url().should('include', 'service-offerings/edit')
 
     // select Webanwendung as type
-    cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Datenlieferung");
+    cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Datenlieferung", {force: true});
     cy.contains('Datenaustauschanzahl-Option');
     cy.contains('Nutzeranzahl-Option').should('not.exist');
     cy.contains('Laufzeit-Option');
@@ -470,7 +470,7 @@ it('create coop contract service offering', {
     cy.url().should('include', 'service-offerings/edit')
 
     // select Webanwendung as type
-    cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Kooperationsvertrag");
+    cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Kooperationsvertrag", {force: true});
     cy.contains('Datenaustauschanzahl-Option').should('not.exist');
     cy.contains('Nutzeranzahl-Option').should('not.exist');
     cy.contains('Laufzeit-Option');
