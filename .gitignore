@@ -50,5 +50,6 @@ Thumbs.db
 *.css.map
 
 cypress/videos
+cypress/screenshots
 
 .nyc_output
