@@ -5,6 +5,7 @@ import { ITermsAndConditions, serviceFileNameDict } from '../serviceofferings-da
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { WizardExtensionComponent } from 'src/app/wizard-extension/wizard-extension.component';
+import { skip } from 'rxjs';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -28,7 +29,7 @@ export class EditComponent implements OnInit, AfterViewInit {
   
   ngAfterViewInit(): void {
     this.requestShapes();
-    this.activeOrgRoleService.activeOrganizationRole.subscribe(role => {
+    this.activeOrgRoleService.activeOrganizationRole.pipe(skip(1)).subscribe(_ => {
       this.patchWizardTnC();
     });
   }

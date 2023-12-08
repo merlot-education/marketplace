@@ -16,6 +16,8 @@ import { DynamicFormOrArrayComponent } from '@components/dynamic-form-or-array/d
 import { ExpandedFieldsComponent } from '@components/expanded-fields/expanded-fields.component';
 import { DynamicSelfLoopsComponent } from '@components/dynamic-self-loops/dynamic-self-loops.component';
 import { BehaviorSubject } from 'rxjs';
+import { IconSetService } from '@coreui/icons-angular';
+import { brandSet, flagSet, freeSet } from '@coreui/icons';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -61,12 +63,14 @@ export class DynamicFormComponent implements OnInit, OnDestroy, AfterViewChecked
     private formfieldService: FormfieldControlService,
     private router: Router,
     private filesProvider: FilesProvider, 
+    private iconSetService: IconSetService
   ) {
     this.readObjectDataFromRoute();
     if (this.requestSuccess) {
       this.getFormFields();
     }
     this.hasStaticFiles = filesProvider.gethasStaticFiles();
+    iconSetService.icons = { ...freeSet, ...flagSet, ...brandSet };
   }
   ngAfterViewChecked(): void {
     if (this.groupsNumber) {
