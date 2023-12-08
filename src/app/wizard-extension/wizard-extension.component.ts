@@ -87,6 +87,7 @@ export class WizardExtensionComponent {
 
   public loadShape(shapeName: string, id: string): void {
     this.orgaIdFields = [];
+    this.shaclFile = undefined;
     this.shapeInitialized.next(false);
     console.log("Loading shape", shapeName);
     let shapeResult: Promise<any>;
