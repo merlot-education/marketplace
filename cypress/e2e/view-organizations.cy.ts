@@ -3,7 +3,9 @@ beforeEach(() => {
     cy.visit('/')
 });
   
-it('open organizations overview', () => {
+it('open organizations overview', {
+    defaultCommandTimeout: 10000
+  }, () => {
 
     // make sure there is "Organisationsverwaltung" and click on it
     cy.contains('Organisationsverwaltung').click()

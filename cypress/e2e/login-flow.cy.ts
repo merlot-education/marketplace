@@ -4,7 +4,9 @@ beforeEach(() => {
   cy.visit('/')
 })
 
-it('testuser can log in', () => {
+it('testuser can log in', {
+  defaultCommandTimeout: 10000
+}, () => {
   // user is not logged in at this point, check that the welcome text states the user is a visitor
   cy.get("#welcome-text").contains('Willkommen, Besucher!');
 

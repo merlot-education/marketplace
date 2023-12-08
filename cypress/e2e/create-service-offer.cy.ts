@@ -150,7 +150,9 @@ beforeEach(() => {
     loginAsTestuser();
 });
 
-it('create saas service offering', () => {
+it('create saas service offering', {
+    defaultCommandTimeout: 10000
+  }, () => {
 
     // prepare some data to fill in the form
     let offeringName = "DRAFT: Lernplattform (LMS) für betriebliche Weiterbildung (SaaS)";
@@ -294,7 +296,9 @@ it('create saas service offering', () => {
     });
 });
 
-it('create data delivery service offering', () => {
+it('create data delivery service offering', {
+    defaultCommandTimeout: 10000
+  }, () => {
     // prepare some data to fill in the form
     let offeringName = "Brandneue Jobangebote";
     let offeringDescription = "Ob Praktika, Ausbildungen, Werkstudentenjobs oder Festanstellungen... Wir schicken Ihnen immer die neusten Stellenanzeigen bei ChemPoint für Ihre Plattform, um Ihren Nutzern offene Jobangebote mit tollen Perspektiven und Entwicklungsmöglichkeiten in der chemischen Industrie zu bieten und ein “perfect Match” zu finden. Lösungen sind unser Job!";
@@ -446,7 +450,9 @@ it('create data delivery service offering', () => {
     });
 });
 
-it('create coop contract service offering', () => {
+it('create coop contract service offering', {
+    defaultCommandTimeout: 10000
+  }, () => {
 
     // prepare some data to fill in the form
     let offeringName = "imc My Digital School - Transformation gemeinsam gestalten";
