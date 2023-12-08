@@ -16,6 +16,7 @@ it('testuser can log in, check organization and assigned person data, edit organ
     // at this point we should be redirected again to the MPO and the welcome text should have changed and roles should be visible
     cy.get("#welcome-text").contains('Willkommen, Test User!');
     cy.get("#role-select").should("be.visible");
+    cy.get("#role-select").should("contain.text", "Gaia-X");
 
     // make sure there is "Organisationsverwaltung" and click on it
     cy.contains('Organisationsverwaltung').click();
@@ -61,7 +62,7 @@ it('testuser can log in, check organization and assigned person data, edit organ
 
     // click on Änderungen speichern, the page shows the following response "Selbstbeschreibung erfolgreich gespeichert! ID: Participant:40"
     cy.contains('Änderungen speichern').should("not.be.disabled").click();
-    cy.contains("Selbstbeschreibung erfolgreich gespeichert! ID: Participant:10", { timeout: 30000 });
+    cy.contains("Selbstbeschreibung erfolgreich gespeichert! (ID: Participant:10)", { timeout: 30000 });
 
     // click on navigation entry "Benutzerverwaltung", the submenu is extended
     cy.contains('Benutzerverwaltung').click();

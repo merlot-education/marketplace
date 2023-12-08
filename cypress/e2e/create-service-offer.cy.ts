@@ -1,4 +1,9 @@
 function loginAsTestuser() {
+    cy.visit('/')
+
+    //open merlot marketplace landing page, user is not logged in, use the welcome text to check that user is a visitor
+    cy.get("#welcome-text").contains('Willkommen, Besucher!');
+
     // click login will redirect to keycloak, use testuser to login
     cy.get("#login-button").click();
 
@@ -8,6 +13,7 @@ function loginAsTestuser() {
 
     // make sure welcome text changed
     cy.get("#welcome-text").contains('Willkommen, Test User!');
+    cy.get("#role-select").should("contain.text", "Gaia-X");
 }
 
 function logout() {
@@ -141,20 +147,7 @@ function openOfferingDetails(offeringId: string, expectedStatus: string) {
 
 
 beforeEach(() => {
-    cy.visit('/')
-
-    //open merlot marketplace landing page, user is not logged in, use the welcome text to check that user is a visitor
-    cy.get("#welcome-text").contains('Willkommen, Besucher!');
-
-    // click login will redirect to keycloak, use testuser to login
-    cy.get("#login-button").click();
-
-    cy.get("#username").type("testuser");
-    cy.get("#password").type("testuser");
-    cy.get("#kc-login").click();
-
-    // make sure welcome text changed
-    cy.get("#welcome-text").contains('Willkommen, Test User!');
+    loginAsTestuser();
 });
 
 it('create saas service offering', () => {
@@ -179,7 +172,9 @@ it('create saas service offering', () => {
 
     // select Webanwendung as type
     cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Webanwendung");
-    cy.contains("Füllen Sie das MerlotServiceOfferingSaaS Formular aus");
+    cy.contains('Datenaustauschanzahl-Option').should('not.exist');
+    cy.contains('Nutzeranzahl-Option');
+    cy.contains('Laufzeit-Option');
 
     // make sure we cannot submit the form yet
     cy.contains("Änderungen speichern").should("be.disabled");
@@ -203,7 +198,7 @@ it('create saas service offering', () => {
     cy.contains("Selbstbeschreibung erfolgreich gespeichert!", {timeout: 30000}).should("include.text", "ServiceOffering:").then((result) => {
 
         // store id of created offering
-        let offeringId = result.get(0).innerText.match(/ServiceOffering:\S+/)[0];
+        let offeringId = result.get(0).innerText.match(/ServiceOffering:[^)]+/)[0];
 
         // click on navigation entry Angebote erkunden, the created offer is shown on top of the page
         cy.contains("Service Angebote erkunden").click();
@@ -319,7 +314,9 @@ it('create data delivery service offering', () => {
 
     // select Webanwendung as type
     cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Datenlieferung");
-    cy.contains("Füllen Sie das MerlotServiceOfferingDataDelivery Formular aus");
+    cy.contains('Datenaustauschanzahl-Option');
+    cy.contains('Nutzeranzahl-Option').should('not.exist');
+    cy.contains('Laufzeit-Option');
 
     // make sure we cannot submit the form yet
     cy.contains("Änderungen speichern").should("be.disabled");
@@ -345,7 +342,7 @@ it('create data delivery service offering', () => {
     cy.contains("Selbstbeschreibung erfolgreich gespeichert!", {timeout: 30000}).should("include.text", "ServiceOffering:").then((result) => {
 
         // store id of created offering
-        let offeringId = result.get(0).innerText.match(/ServiceOffering:\S+/)[0];
+        let offeringId = result.get(0).innerText.match(/ServiceOffering:[^)]+/)[0];
 
         // click on navigation entry Angebote erkunden, the created offer is shown on top of the page
         cy.contains("Service Angebote erkunden").click();
@@ -467,7 +464,9 @@ it('create coop contract service offering', () => {
 
     // select Webanwendung as type
     cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Kooperationsvertrag");
-    cy.contains("Füllen Sie das MerlotServiceOfferingCooperation Formular aus");
+    cy.contains('Datenaustauschanzahl-Option').should('not.exist');
+    cy.contains('Nutzeranzahl-Option').should('not.exist');
+    cy.contains('Laufzeit-Option');
 
     // make sure we cannot submit the form yet
     cy.contains("Änderungen speichern").should("be.disabled");
@@ -483,7 +482,7 @@ it('create coop contract service offering', () => {
     cy.contains("Selbstbeschreibung erfolgreich gespeichert!", {timeout: 30000}).should("include.text", "ServiceOffering:").then((result) => {
 
         // store id of created offering
-        let offeringId = result.get(0).innerText.match(/ServiceOffering:\S+/)[0];
+        let offeringId = result.get(0).innerText.match(/ServiceOffering:[^)]+/)[0];
 
         // click on navigation entry Angebote erkunden, the created offer is shown on top of the page
         cy.contains("Service Angebote erkunden").click();
