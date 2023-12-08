@@ -14,6 +14,7 @@ function loginAsTestuser() {
     // make sure welcome text changed
     cy.get("#welcome-text").contains('Willkommen, Test User!');
     cy.get("#role-select").should("contain.text", "Gaia-X");
+    cy.contains("Meine Verträge"); // todo maybe find a better way to make sure the navbar is loaded
 }
 
 function logout() {

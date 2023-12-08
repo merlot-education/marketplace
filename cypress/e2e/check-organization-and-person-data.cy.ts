@@ -19,6 +19,7 @@ it('testuser can log in, check organization and assigned person data, edit organ
     cy.get("#welcome-text").contains('Willkommen, Test User!');
     cy.get("#role-select").should("be.visible");
     cy.get("#role-select").should("contain.text", "Gaia-X");
+    cy.contains("Meine Verträge"); // todo maybe find a better way to make sure the navbar is loaded
 
     // make sure there is "Organisationsverwaltung" and click on it
     cy.contains('Organisationsverwaltung').click();
