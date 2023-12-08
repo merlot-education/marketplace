@@ -73,7 +73,6 @@ export class WizardExtensionComponent {
         description: '',
         selfLoop: false
       });
-      console.log("this here"+this.shaclFile);
       console.table(this.shaclFile);
       this.updateSelectedShape();
     }
@@ -201,7 +200,6 @@ export class WizardExtensionComponent {
     }
 
     formInput.form.controls[formInput.input.id].patchValue(this.unpackValueFromField(prefillFields[fullKey]));
-    console.log(this.unpackValueFromField(prefillFields[fullKey]));
     if (prefillFields[fullKey] instanceof Object && Object.keys(prefillFields[fullKey]).includes("disabled") && prefillFields[fullKey]["disabled"]) {
       formInput.form.controls[formInput.input.id].disable();
     }
@@ -256,7 +254,6 @@ export class WizardExtensionComponent {
 
     let i = 0;
     for (let input of expandedField.inputs) {
-      console.log(expandedField);
       if (prefillFields[parentKey][i] instanceof Object && Object.keys(prefillFields[parentKey][i]).includes("overrideName")) {
         input.name = prefillFields[parentKey][i]["overrideName"];
       }
