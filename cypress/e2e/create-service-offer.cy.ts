@@ -178,6 +178,7 @@ it('create saas service offering', {
     cy.contains('Datenaustauschanzahl-Option').should('not.exist');
     cy.contains('Nutzeranzahl-Option');
     cy.contains('Laufzeit-Option');
+    cy.wait(1000);
 
     // make sure we cannot submit the form yet
     cy.contains("Änderungen speichern").should("be.disabled");
@@ -322,6 +323,7 @@ it('create data delivery service offering', {
     cy.contains('Datenaustauschanzahl-Option');
     cy.contains('Nutzeranzahl-Option').should('not.exist');
     cy.contains('Laufzeit-Option');
+    cy.wait(1000);
 
     // make sure we cannot submit the form yet
     cy.contains("Änderungen speichern").should("be.disabled");
@@ -474,6 +476,7 @@ it('create coop contract service offering', {
     cy.contains('Datenaustauschanzahl-Option').should('not.exist');
     cy.contains('Nutzeranzahl-Option').should('not.exist');
     cy.contains('Laufzeit-Option');
+    cy.wait(1000);
 
     // make sure we cannot submit the form yet
     cy.contains("Änderungen speichern").should("be.disabled");
