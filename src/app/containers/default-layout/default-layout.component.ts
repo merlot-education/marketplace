@@ -30,17 +30,18 @@ export class DefaultLayoutComponent {
   constructor(
     protected authService: AuthService,
     protected activeOrgRoleService: ActiveOrganizationRoleService
-  ) {
-    let globalNavItems = structuredClone(navItems);
-    this.navItems = this.buildAllowedNavItems(globalNavItems, null);
-  }
+  ) {}
 
   public async ngOnInit() {
+    let globalNavItems = structuredClone(navItems);
+    if (!this.activeOrgRoleService.isLoggedIn) {
+      this.navItems = this.buildAllowedNavItems(globalNavItems, null);
+    }
     let tries = 0;
     while (this.activeOrgRoleService.isLoggedIn) {
       this.selectedRoleOption = this.activeOrgRoleService.activeOrganizationRole.getValue().orgaRoleString;
       console.log('waiting for roles to load');
-      await this.wait(100);
+      await this.wait(200);
 
       if (this.authService.finishedLoadingRoles) {
         this.activeOrgRoleService.activeOrganizationRole.subscribe(role => {
