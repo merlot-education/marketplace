@@ -27,8 +27,10 @@ it('create saas service offering', {
     cy.contains('Service Angebot erstellen').click({force: true})
     cy.url().should('include', 'service-offerings/edit')
 
+    // wait for wizard to have loaded the form
+    cy.contains("Servicename");
+    
     // select Webanwendung as type
-    cy.wait(1000);
     cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Webanwendung", {force: true});
     cy.contains('Datenaustauschanzahl-Option').should('not.exist');
     cy.contains('Nutzeranzahl-Option');

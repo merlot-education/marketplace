@@ -24,7 +24,10 @@ it('create data delivery service offering', {
     cy.contains('Service Angebot erstellen').click({force: true})
     cy.url().should('include', 'service-offerings/edit')
 
-    // select Webanwendung as type
+    // wait for wizard to have loaded the form
+    cy.contains("Servicename");
+
+    // select Datenlieferung as type
     cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Datenlieferung", {force: true});
     cy.contains('Datenaustauschanzahl-Option');
     cy.contains('Nutzeranzahl-Option').should('not.exist');
