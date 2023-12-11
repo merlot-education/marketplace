@@ -28,11 +28,11 @@ it('create saas service offering', {
     cy.url().should('include', 'service-offerings/edit')
 
     // select Webanwendung as type
+    cy.wait(1000);
     cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Webanwendung", {force: true});
     cy.contains('Datenaustauschanzahl-Option').should('not.exist');
     cy.contains('Nutzeranzahl-Option');
     cy.contains('Laufzeit-Option');
-    cy.wait(1000);
 
     // make sure we cannot submit the form yet
     cy.contains("Änderungen speichern").should("be.disabled");
