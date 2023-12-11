@@ -86,11 +86,11 @@ export class WizardExtensionComponent {
   }
 
   private reinitWizard(): void{
+    this.wizardVisible = false;
+    this.changeDetectorRef.detectChanges();
     this.orgaIdFields = [];
     this.shaclFile = undefined;
     this.shapeInitialized.next(false);
-    this.wizardVisible = false;
-    this.changeDetectorRef.detectChanges();
     this.wizardVisible = true;
     this.changeDetectorRef.detectChanges();
 }
