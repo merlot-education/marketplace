@@ -14,7 +14,6 @@ import { ExportService } from '@services/export.service';
 import { StatusMessageComponent } from '../views/common-views/status-message/status-message.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
-import { Mutex } from 'async-mutex';
 
 @Component({
   selector: 'app-wizard-extension',
@@ -30,9 +29,6 @@ export class WizardExtensionComponent {
   protected orgaIdFields: AbstractControl[] = [];
   protected wizardVisible: boolean = false;
   submitCompleteEvent: EventEmitter<any> = new EventEmitter();
-
-  private shapeSelectMutex = new Mutex();
-  private prefillMutex = new Mutex();
 
   private shapeInitialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -100,20 +96,18 @@ export class WizardExtensionComponent {
 }
 
   public loadShape(shapeName: string, id: string): void {
-      this.reinitWizard();
-      console.log("Loading shape", shapeName);
-      let shapeResult: Promise<any>;
-      if (shapeName === "MerlotOrganization") {
-        shapeResult = this.organizationsApiService.getMerlotParticipantShape();
-      } else {
-        shapeResult = this.serviceofferingApiService.fetchShape(shapeName);
-      }
-      shapeResult.then(shape => {
-        this.shapeSelectMutex.runExclusive(() => {
-          this.selectShape(this.formFieldService.readShaclFile(shape), id);
-          this.shapeInitialized.next(true);
-        });
-      });
+    this.reinitWizard();
+    console.log("Loading shape", shapeName);
+    let shapeResult: Promise<any>;
+    if (shapeName === "MerlotOrganization") {
+      shapeResult = this.organizationsApiService.getMerlotParticipantShape();
+    } else {
+      shapeResult = this.serviceofferingApiService.fetchShape(shapeName);
+    }
+    shapeResult.then(shape => {
+      this.selectShape(this.formFieldService.readShaclFile(shape), id);
+      this.shapeInitialized.next(true);
+    });
   }
 
   private createDateTimer: NodeJS.Timer = undefined;
@@ -129,17 +123,16 @@ export class WizardExtensionComponent {
 
         console.log("Wizard initialized");
         console.log("start prefilling fields");
-        this.prefillMutex.runExclusive(() => {
-          for (let expandedField of this.wizard.expandedFieldsViewChildren) {
-            this.processExpandedField(expandedField, selfDescriptionFields);
-            }
-          for (let formInput of this.wizard.formInputViewChildren) {
-            this.processFormInput(formInput, selfDescriptionFields);
+
+        for (let expandedField of this.wizard.expandedFieldsViewChildren) {
+          this.processExpandedField(expandedField, selfDescriptionFields);
           }
-          for (let formArray of this.wizard.formArrayViewChildren) {
-            this.processFormArray(formArray, selfDescriptionFields);
-          }
-        });
+        for (let formInput of this.wizard.formInputViewChildren) {
+          this.processFormInput(formInput, selfDescriptionFields);
+        }
+        for (let formArray of this.wizard.formArrayViewChildren) {
+          this.processFormArray(formArray, selfDescriptionFields);
+        }
       });
   }
 
