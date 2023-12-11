@@ -29,8 +29,8 @@ function fillGeneralOfferingFields(offeringName: string, offeringDescription: st
     runtimeOptionsSelect: string[]) {
     cy.contains("Servicename").next().type(offeringName, {force: true});
     cy.wait(1000);
-    cy.contains("Service Bereitsteller").next().parent().within(() => {
-        cy.get("input").should('not.have.value', undefined).should('not.have.value', "");
+    cy.contains("Service Bereitsteller").parent().within(() => {
+        cy.get("input").should('have.value', 'Gaia-X European Association for Data and Cloud AISBL');
     });
     cy.contains("Service Anbieter").next().invoke('val').should("not.be.empty");
     cy.contains("Service Bereitsteller").next().should('be.disabled');
