@@ -30,7 +30,7 @@ function fillGeneralOfferingFields(offeringName: string, offeringDescription: st
     cy.contains("Servicename").next().type(offeringName, {force: true});
     cy.wait(1000);
     cy.contains("Service Bereitsteller").next().parent().within(() => {
-        cy.get("input").should("not.be.empty");
+        cy.get("input").should('not.have.value', undefined).should('not.have.value', "");
     });
     cy.contains("Service Anbieter").next().invoke('val').should("not.be.empty");
     cy.contains("Service Bereitsteller").next().should('be.disabled');
