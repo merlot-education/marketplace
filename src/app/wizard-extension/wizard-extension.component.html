@@ -1,8 +1,8 @@
-<app-dynamic-form [file]="shaclFile" #wizard></app-dynamic-form>
+<app-dynamic-form [file]="shaclFile" #wizard *ngIf="wizardVisible"></app-dynamic-form>
 <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
     <div class="p-2 docs-highlight">
         <button
-        [disabled]="wizard.form.invalid || submitButtonsDisabled"
+        [disabled]="wizard?.form.invalid || submitButtonsDisabled"
         cButton 
         color="primary"
         (click)="onSubmit(false)"
@@ -13,7 +13,7 @@
     <div class="p-2 docs-highlight">
         <button
         *ngIf="filteredShapes && filteredShapes[0].name !== 'MerlotOrganization'"
-        [disabled]="wizard.form.invalid || submitButtonsDisabled"
+        [disabled]="wizard?.form.invalid || submitButtonsDisabled"
         cButton 
         color="primary"
         (click)="onSubmit(true)"

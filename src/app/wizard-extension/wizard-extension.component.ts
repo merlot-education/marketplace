@@ -1,4 +1,4 @@
-import { Component, EventEmitter, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, ViewChild } from '@angular/core';
 import { ShaclFile } from '@models/shacl-file';
 import { Shape } from '@models/shape';
 import { OrganizationsApiService } from '../services/organizations-api.service';
@@ -13,7 +13,6 @@ import { BehaviorSubject, takeWhile } from 'rxjs';
 import { ExportService } from '@services/export.service';
 import { StatusMessageComponent } from '../views/common-views/status-message/status-message.component';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AuthService } from '../services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 
 @Component({
@@ -28,6 +27,7 @@ export class WizardExtensionComponent {
   protected submitButtonsDisabled: boolean = false;
   protected filteredShapes: Shape[];
   protected orgaIdFields: AbstractControl[] = [];
+  protected wizardVisible: boolean = false;
   submitCompleteEvent: EventEmitter<any> = new EventEmitter();
 
   private shapeInitialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -35,9 +35,9 @@ export class WizardExtensionComponent {
   constructor(private formFieldService: FormfieldControlService,
     private organizationsApiService: OrganizationsApiService,
     private serviceofferingApiService: ServiceofferingApiService,
-    private authService: AuthService,
     private activeOrgRoleService: ActiveOrganizationRoleService,
-    private exportService: ExportService) {}
+    private exportService: ExportService,
+    private changeDetectorRef: ChangeDetectorRef) {}
 
   private selectShape(shaclFile: ShaclFile, credentialSubjectId: string): void {
     this.shaclFile = shaclFile;
@@ -85,10 +85,18 @@ export class WizardExtensionComponent {
     }
   }
 
-  public loadShape(shapeName: string, id: string): void {
+  private reinitWizard(): void{
     this.orgaIdFields = [];
     this.shaclFile = undefined;
     this.shapeInitialized.next(false);
+    this.wizardVisible = false;
+    this.changeDetectorRef.detectChanges();
+    this.wizardVisible = true;
+    this.changeDetectorRef.detectChanges();
+}
+
+  public loadShape(shapeName: string, id: string): void {
+    this.reinitWizard();
     console.log("Loading shape", shapeName);
     let shapeResult: Promise<any>;
     if (shapeName === "MerlotOrganization") {
