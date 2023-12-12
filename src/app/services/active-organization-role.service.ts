@@ -54,7 +54,7 @@ export class ActiveOrganizationRoleService {
 
   private roleFriendlyNameMapper: { [key: string]: string } = {
     OrgLegRep: 'Prokurist',
-    FedAdmin: 'Föderator',
+    FedAdmin: 'Föderationsadmin',
   };
 
   private getOrganizationRole(orgaRoleString: string): OrganizationRole {

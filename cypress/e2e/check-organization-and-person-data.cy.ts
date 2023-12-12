@@ -30,8 +30,8 @@ it('testuser can log in, check organization and assigned person data, edit organ
 
     // the organization of testuser, "Gaia-X AISBL", should be visible on page 1
     cy.get('c-card-header').filter(':contains("Gaia-X AISBL")').parent().within(() => {
-        // this organization should be marked with "Aktive Rolle"        
-        cy.get('c-card-footer').should('have.text', "Aktive Rolle");
+        // this organization should be marked with "Aktiver Repräsentant"        
+        cy.get('c-card-footer').should('have.text', "Aktiver Repräsentant");
 
         // the pool edcs ("edc1", "edc2") are connected and the corresponding S3 buckets belong to the organization ("merlot-edc-gaiax")
         cy.get('c-card-body').scrollIntoView().within(() => {

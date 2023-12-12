@@ -103,10 +103,10 @@
     <div card-footer *ngIf="
           organization.activeRepresentant || organization.passiveRepresentant
         ">
-      <small *ngIf="organization.activeRepresentant; else passive_repr_footer" class="text-medium-emphasis">Aktive
-        Rolle</small>
+      <small *ngIf="organization.activeRepresentant; else passive_repr_footer" class="text-medium-emphasis">Aktiver
+        Repräsentant</small>
       <ng-template #passive_repr_footer>
-        <small class="text-medium-emphasis">Inaktive Rolle</small>
+        <small class="text-medium-emphasis">Inaktiver Repräsentant</small>
       </ng-template>
     </div>
   </m-card>
