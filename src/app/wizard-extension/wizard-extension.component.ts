@@ -14,6 +14,8 @@ import { ExportService } from '@services/export.service';
 import { StatusMessageComponent } from '../views/common-views/status-message/status-message.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
+import { Mutex } from 'async-mutex';
+
 
 @Component({
   selector: 'app-wizard-extension',
@@ -31,6 +33,8 @@ export class WizardExtensionComponent {
   submitCompleteEvent: EventEmitter<any> = new EventEmitter();
 
   private shapeInitialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  private wizardMutex: Mutex = new Mutex();
 
   constructor(private formFieldService: FormfieldControlService,
     private organizationsApiService: OrganizationsApiService,
@@ -105,9 +109,15 @@ export class WizardExtensionComponent {
       shapeResult = this.serviceofferingApiService.fetchShape(shapeName);
     }
     shapeResult.then(shape => {
-      this.selectShape(this.formFieldService.readShaclFile(shape), id);
-      this.shapeInitialized.next(true);
+      this.wizardMutex.runExclusive(() => {
+        this.selectShape(this.formFieldService.readShaclFile(shape), id);
+        this.shapeInitialized.next(true);
+      });
     });
+  }
+
+  public isShapeLoaded(): boolean {
+    return this.shapeInitialized.value;
   }
 
   private createDateTimer: NodeJS.Timer = undefined;
@@ -123,16 +133,18 @@ export class WizardExtensionComponent {
 
         console.log("Wizard initialized");
         console.log("start prefilling fields");
-
-        for (let expandedField of this.wizard.expandedFieldsViewChildren) {
-          this.processExpandedField(expandedField, selfDescriptionFields);
+        
+        this.wizardMutex.runExclusive(() => {
+          for (let expandedField of this.wizard.expandedFieldsViewChildren) {
+            this.processExpandedField(expandedField, selfDescriptionFields);
+            }
+          for (let formInput of this.wizard.formInputViewChildren) {
+            this.processFormInput(formInput, selfDescriptionFields);
           }
-        for (let formInput of this.wizard.formInputViewChildren) {
-          this.processFormInput(formInput, selfDescriptionFields);
-        }
-        for (let formArray of this.wizard.formArrayViewChildren) {
-          this.processFormArray(formArray, selfDescriptionFields);
-        }
+          for (let formArray of this.wizard.formArrayViewChildren) {
+            this.processFormArray(formArray, selfDescriptionFields);
+          }
+        });
       });
   }
 
