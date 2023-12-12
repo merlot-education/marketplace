@@ -100,6 +100,7 @@ export class WizardExtensionComponent {
 }
 
   public loadShape(shapeName: string, id: string): void {
+    this.reinitWizard();
     console.log("Loading shape", shapeName);
     let shapeResult: Promise<any>;
     if (shapeName === "MerlotOrganization") {
@@ -109,7 +110,6 @@ export class WizardExtensionComponent {
     }
     shapeResult.then(shape => {
       this.wizardMutex.runExclusive(() => {
-        this.reinitWizard();
         this.selectShape(this.formFieldService.readShaclFile(shape), id);
         this.shapeInitialized.next(true);
       });
