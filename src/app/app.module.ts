@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { WizardAppModule } from './sdwizard/wizardapp.module';
 import { WizardExtensionModule } from './wizard-extension/wizard-extension.module';
 import { AddActiveRoleHeaderInterceptor } from './services/add-active-role-header.interceptor';
+import { AuthorizationInterceptor} from './services/authorization.interceptor'
 
 import {
   PERFECT_SCROLLBAR_CONFIG,
@@ -140,6 +141,11 @@ function initializeKeycloak(keycloak: KeycloakService) {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AddActiveRoleHeaderInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthorizationInterceptor,
       multi: true,
     },
     IconSetService,
