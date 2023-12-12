@@ -16,6 +16,7 @@ export class EditComponent implements OnInit, AfterViewInit {
   serviceFileNameDict = serviceFileNameDict;
 
   serviceFiles: string[];
+  private selectedServiceFile: string = "";
 
   @ViewChild("wizardExtension") private wizardExtension: WizardExtensionComponent;
 
@@ -30,7 +31,7 @@ export class EditComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.requestShapes();
     this.activeOrgRoleService.activeOrganizationRole.pipe(skip(1)).subscribe(_ => {
-      this.patchWizardTnC();
+      this.prefillWizard(false);
     });
   }
 
@@ -57,20 +58,21 @@ export class EditComponent implements OnInit, AfterViewInit {
 
 
   select(input: string | EventTarget): void {
-    let name = "";
+    this.selectedServiceFile = "";
     if (typeof input === "string") {
-      name = input;
+      this.selectedServiceFile = input;
     } else if (input instanceof EventTarget) {
-      name = (input as HTMLSelectElement).value;
+      this.selectedServiceFile = (input as HTMLSelectElement).value;
     }
-    this.wizardExtension.loadShape(name, "ServiceOffering:TBR");
-    this.patchWizardTnC();
+    
+    this.prefillWizard(true);
   }
 
-  patchWizardTnC() {
+  prefillWizard(changeShape: boolean) {
     let merlotTnC = this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
     let providerTnC: ITermsAndConditions = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-    this.wizardExtension.prefillFields({
+    
+    let prefillSd = {
       "gax-core:offeredBy": {
         "@id": this.activeOrgRoleService.getActiveOrgaLegalName(),
         "disabled": true
@@ -127,6 +129,15 @@ export class EditComponent implements OnInit, AfterViewInit {
           "@type": "xsd:string",
         }
       }
-    });
+    };
+  
+    if (changeShape) {
+      this.wizardExtension.loadShape(this.selectedServiceFile, "ServiceOffering:TBR").then(_ => {
+        this.wizardExtension.prefillFields(prefillSd);
+      });
+    } else {
+      this.wizardExtension.prefillFields(prefillSd);
+    }
+    
   }
 }

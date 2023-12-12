@@ -56,9 +56,12 @@ export class EditComponent implements OnInit, AfterViewInit {
       this.selectedOrganization = result;
       if (!this.wizardExtensionComponent.isShapeLoaded()) {
         this.wizardExtensionComponent.loadShape("MerlotOrganization", 
-        this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject["@id"]);
-      } 
-      this.wizardExtensionComponent.prefillFields(result.selfDescription.verifiableCredential.credentialSubject);
+        this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject["@id"]).then(_ => {
+          this.wizardExtensionComponent.prefillFields(result.selfDescription.verifiableCredential.credentialSubject);
+        });
+      } else {
+        this.wizardExtensionComponent.prefillFields(result.selfDescription.verifiableCredential.credentialSubject);
+      }
     });
   }
 

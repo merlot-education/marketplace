@@ -99,20 +99,19 @@ export class WizardExtensionComponent {
     this.changeDetectorRef.detectChanges();
 }
 
-  public loadShape(shapeName: string, id: string): void {
-    this.reinitWizard();
-    console.log("Loading shape", shapeName);
-    let shapeResult: Promise<any>;
-    if (shapeName === "MerlotOrganization") {
-      shapeResult = this.organizationsApiService.getMerlotParticipantShape();
-    } else {
-      shapeResult = this.serviceofferingApiService.fetchShape(shapeName);
-    }
-    shapeResult.then(shape => {
-      this.wizardMutex.runExclusive(() => {
-        this.selectShape(this.formFieldService.readShaclFile(shape), id);
-        this.shapeInitialized.next(true);
-      });
+  public async loadShape(shapeName: string, id: string): Promise<void> {
+    await this.wizardMutex.runExclusive(async () => {
+      this.reinitWizard();
+      console.log("Loading shape", shapeName);
+      let shapeResult: Promise<any>;
+      if (shapeName === "MerlotOrganization") {
+        shapeResult = this.organizationsApiService.getMerlotParticipantShape();
+      } else {
+        shapeResult = this.serviceofferingApiService.fetchShape(shapeName);
+      }
+      let shape = await shapeResult;
+      this.selectShape(this.formFieldService.readShaclFile(shape), id);
+      this.shapeInitialized.next(true);
     });
   }
 
@@ -373,7 +372,9 @@ export class WizardExtensionComponent {
   }
 
   public ngOnDestroy() {
-    this.wizard.ngOnDestroy();
+    if (this.wizard) {
+      this.wizard.ngOnDestroy();
+    }
     this.saveStatusMessage.hideAllMessages();
     this.submitButtonsDisabled = false;
   }

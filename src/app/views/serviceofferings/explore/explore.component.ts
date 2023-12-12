@@ -260,19 +260,11 @@ export class ExploreComponent implements OnInit, OnDestroy {
       this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:providedBy']['@id'] = this.activeOrgRoleService.getActiveOrgaLegalName();
       this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:providedBy']['disabled'] = true;
       
-      this.select(this.findFilenameByShapeType(offering.type));
-      this.wizardExtension.prefillFields(this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject);
+      this.wizardExtension.loadShape(this.findFilenameByShapeType(offering.type), 
+      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id']).then(_ => {
+        this.wizardExtension.prefillFields(this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject);
+      });
     });
-  }
-
-  select(input: string | EventTarget): void {
-    let name = "";
-    if (typeof input === "string") {
-      name = input;
-    } else if (input instanceof EventTarget) {
-      name = (input as HTMLSelectElement).value;
-    }
-    this.wizardExtension.loadShape(name, this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id']);
   }
 
   bookServiceOffering(offeringId: string): void {
