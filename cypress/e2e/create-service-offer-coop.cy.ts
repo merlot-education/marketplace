@@ -23,15 +23,11 @@ it('create coop contract service offering', {
     cy.contains('Service Angebot erstellen').click({force: true})
     cy.url().should('include', 'service-offerings/edit')
 
-    // wait for wizard to have loaded the form
-    cy.contains("Servicename");
-
     // select Kooperationsvertrag as type
     cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Kooperationsvertrag", {force: true});
     cy.contains('Datenaustauschanzahl-Option').should('not.exist');
     cy.contains('Nutzeranzahl-Option').should('not.exist');
     cy.contains('Laufzeit-Option');
-    cy.wait(1000);
 
     // make sure we cannot submit the form yet
     cy.contains("Änderungen speichern").should("be.disabled");

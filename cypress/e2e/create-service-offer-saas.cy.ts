@@ -26,9 +26,6 @@ it('create saas service offering', {
     // click on navigation entry Serviceangebot erstellen, the form will be displayed on the right side of the screen
     cy.contains('Service Angebot erstellen').click({force: true})
     cy.url().should('include', 'service-offerings/edit')
-
-    // wait for wizard to have loaded the form
-    cy.contains("Servicename");
     
     // select Webanwendung as type
     cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Webanwendung", {force: true});
