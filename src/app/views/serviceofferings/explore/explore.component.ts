@@ -167,13 +167,13 @@ export class ExploreComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected filterByStatus(eventTarget: EventTarget, applyFilter: boolean, status: string) {
+  protected filterByStatus(eventTarget: EventTarget, applyFilter: boolean) {
     if (eventTarget !== undefined) {
       this.selectedStatusFilter = (eventTarget as HTMLSelectElement).value;
     }
     // either we should apply the filter and need to refresh, or we switched the filter off and should refresh just once
     if (applyFilter) {
-      this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE, status);
+      this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE, this.selectedStatusFilter);
       this.isCurrentlyFiltered = true;
     } else if (this.isCurrentlyFiltered) {
       this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
