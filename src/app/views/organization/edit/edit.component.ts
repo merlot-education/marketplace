@@ -27,7 +27,10 @@ export class EditComponent implements OnInit, AfterViewInit {
       this.selectOrganization(selectedOrgaId);
     } else {
       this.activeOrgRoleService.activeOrganizationRole.subscribe(orga => {
-        this.selectOrganization(orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+        if (orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'] 
+          != this.selectedOrganization?.selfDescription.verifiableCredential.credentialSubject['@id']) {
+            this.selectOrganization(orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+        }
       });
       this.wizardExtensionComponent.submitCompleteEvent.subscribe(_ => {
         this.authService.refreshActiveRoleOrgaData();

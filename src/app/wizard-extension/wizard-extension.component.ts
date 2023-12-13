@@ -95,6 +95,7 @@ export class WizardExtensionComponent {
     this.orgaIdFields = [];
     this.shaclFile = undefined;
     this.shapeInitialized.next(false);
+    this.saveStatusMessage.hideAllMessages();
     this.wizardVisible = true;
     this.changeDetectorRef.detectChanges();
 }
