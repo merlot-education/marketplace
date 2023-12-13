@@ -14,7 +14,7 @@
 
 <m-grid>
   <m-card *ngFor="let organization of activeOrganizationsPage.value.content"
-    [markAs]="organization.activeRepresentant ? 'primary' : (organization.passiveRepresentant ? 'secondary' : '')"
+    [markAs]="organization.activeRepresentant || organization.activeFedAdmin ? 'primary' : (organization.passiveRepresentant || organization.passiveFedAdmin ? 'secondary' : '')"
     [title]="organization.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value']"
     class="mb-4">
     <!--div class="center" style="display: flex;
@@ -107,6 +107,16 @@
         Repräsentant</small>
       <ng-template #passive_repr_footer>
         <small class="text-medium-emphasis">Inaktiver Repräsentant</small>
+      </ng-template>
+    </div>
+
+    <div card-footer *ngIf="
+          organization.activeFedAdmin || organization.passiveFedAdmin
+        ">
+      <small *ngIf="organization.activeFedAdmin; else passive_fedAdmin_footer" class="text-medium-emphasis">Aktiver
+        Föderationsadmin</small>
+      <ng-template #passive_fedAdmin_footer>
+        <small class="text-medium-emphasis">Inaktiver Föderationsadmin</small>
       </ng-template>
     </div>
   </m-card>

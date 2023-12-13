@@ -51,8 +51,13 @@ export class ExploreComponent implements OnInit {
   private updateOrgaRepresentation() {
     if (this.activeOrgRoleService.isLoggedIn) {
       let representedOrgaIds = Object.values(this.activeOrgRoleService.organizationRoles).filter(orga => orga.roleName === "OrgLegRep").map(orga => orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+      let administratedOrgaIds = Object.values(this.activeOrgRoleService.organizationRoles).filter(orga => orga.roleName === "FedAdmin").map(orga => orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+      
       for (let orga of this.activeOrganizationsPage.value.content) {
         if (this.activeOrgRoleService.isActiveAsRepresentative()) {
+          orga.activeFedAdmin = false;
+          orga.passiveFedAdmin = false;
+
           if (orga.selfDescription.verifiableCredential.credentialSubject['@id'] === this.activeOrgRoleService.getActiveOrgaId()) {
             orga.activeRepresentant = true;
             orga.passiveRepresentant = true;
@@ -69,6 +74,14 @@ export class ExploreComponent implements OnInit {
         } else if (this.activeOrgRoleService.isActiveAsFedAdmin()) {
           orga.activeRepresentant = false;
           orga.passiveRepresentant = false;
+
+          if (orga.selfDescription.verifiableCredential.credentialSubject['@id'] === this.activeOrgRoleService.getActiveOrgaId()) {
+            orga.activeFedAdmin = true;
+            orga.passiveFedAdmin = true;
+          } else if (administratedOrgaIds.includes(orga.selfDescription.verifiableCredential.credentialSubject['@id'])) {
+            orga.activeFedAdmin = false;
+            orga.passiveFedAdmin = true;
+          }
         }
       }
     }

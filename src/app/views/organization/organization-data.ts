@@ -19,6 +19,8 @@ export interface IOrganizationData {
   };
   activeRepresentant: boolean;
   passiveRepresentant: boolean;
+  activeFedAdmin: boolean;
+  passiveFedAdmin: boolean;
 }
 
 export interface IPageOrganizations extends ISpringPage {
