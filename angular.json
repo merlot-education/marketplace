@@ -31,7 +31,9 @@
             "inlineStyleLanguage": "scss",
             "preserveSymlinks": true,
             "assets": ["src/favicon.ico", "src/assets", "src/.well-known/did.json",
-            { "glob": "did.json", "input": "src/.well-known/", "output": "/" }],
+            { "glob": "did.json", "input": "src/.well-known/", "output": "/" },
+            "src/.well-known/cert.ss.pem",
+            { "glob": "cert.ss.pem", "input": "src/.well-known/", "output": "/" }],
             "styles": ["src/scss/styles.scss"],
             "scripts": [],
             "allowedCommonJsDependencies": [
