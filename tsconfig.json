@@ -25,6 +25,7 @@
         "./src/app/sdwizard/shared/*"
       ]
     },
+    "types": ["node"],
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
