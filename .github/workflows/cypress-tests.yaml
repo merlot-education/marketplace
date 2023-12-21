@@ -35,7 +35,7 @@ jobs:
           config: baseUrl=https://marketplace.dev.merlot-education.eu
 
       - name: Upload screenshots
-        uses: actions/upload-artifact@latest
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
             name: cypress-screenshots
