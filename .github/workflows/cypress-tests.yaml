@@ -33,3 +33,10 @@ jobs:
           build: npm run build
           start: npm run qa
           config: baseUrl=https://marketplace.dev.merlot-education.eu
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@latest
+        if: failure()
+        with:
+            name: cypress-screenshots
+            path: cypress/screenshots
