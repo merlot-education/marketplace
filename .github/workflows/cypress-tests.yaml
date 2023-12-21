@@ -30,7 +30,6 @@ jobs:
       - name: Run full test suite
         uses: cypress-io/github-action@v5.5.1
         with:
-          start: npm run qa
           config: baseUrl=https://marketplace.dev.merlot-education.eu
 
       - name: Upload screenshots
