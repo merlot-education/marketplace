@@ -310,7 +310,20 @@ export class WizardExtensionComponent {
 
   private async saveSelfDescription(jsonSd: any) {
     if (this.filteredShapes[0].name === "MerlotOrganization") {
-      return await this.organizationsApiService.saveOrganization(JSON.stringify(jsonSd, null, 2), jsonSd["@id"]);
+      const editedOrganisationData = {
+        metadata: {
+          orgaId: jsonSd["@id"],
+          mailAddress: '', // TO DO 
+          membershipClass: '', // TO DO 
+        },
+        selfDescription: {
+          verifiableCredential: {
+            credentialSubject: jsonSd,
+          },
+        },
+      };
+
+      return await this.organizationsApiService.saveOrganization(JSON.stringify(editedOrganisationData, null, 2), jsonSd["@id"]);
     } else {
       return await this.serviceofferingApiService.createServiceOffering(JSON.stringify(jsonSd, null, 2), jsonSd["@type"]);
     }
