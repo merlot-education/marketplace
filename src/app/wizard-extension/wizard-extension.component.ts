@@ -15,6 +15,7 @@ import { StatusMessageComponent } from '../views/common-views/status-message/sta
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { Mutex } from 'async-mutex';
+import { IOrganizationMetadata } from 'src/app/views/organization/organization-data';
 
 
 @Component({
@@ -36,10 +37,16 @@ export class WizardExtensionComponent {
 
   private wizardMutex: Mutex = new Mutex();
 
+  public selectedMembershipClass: string | null = null;
+  public federatorMembershipClassString = "FEDERATOR";
+  public participantMembershipClassString = "PARTICIPANT";
+
+  public mailAddress: string | null = null;
+
   constructor(private formFieldService: FormfieldControlService,
     private organizationsApiService: OrganizationsApiService,
     private serviceofferingApiService: ServiceofferingApiService,
-    private activeOrgRoleService: ActiveOrganizationRoleService,
+    protected activeOrgRoleService: ActiveOrganizationRoleService,
     private exportService: ExportService,
     private changeDetectorRef: ChangeDetectorRef) {}
 
@@ -163,7 +170,12 @@ export class WizardExtensionComponent {
   }
 
 
-  public prefillFields(selfDescriptionFields: any) {
+  public prefillFields(selfDescriptionFields: any, metadata?: IOrganizationMetadata) {
+    if (metadata !== undefined && this.isOrganizationShape()) {
+      this.selectedMembershipClass = this.getGermanMembershipClassString(metadata.membershipClass);
+      this.mailAddress = this.getGermanMembershipClassString(metadata.mailAddress);
+    }
+
     if (this.createDateTimer) {
       clearInterval(this.createDateTimer);
     }
@@ -309,12 +321,13 @@ export class WizardExtensionComponent {
   }
 
   private async saveSelfDescription(jsonSd: any) {
-    if (this.filteredShapes[0].name === "MerlotOrganization") {
+    if (this.isOrganizationShape()) {
       const editedOrganisationData = {
+        id: jsonSd["@id"],
         metadata: {
           orgaId: jsonSd["@id"],
-          mailAddress: '', // TO DO 
-          membershipClass: '', // TO DO 
+          mailAddress: this.mailAddress,
+          membershipClass: this.getEnglishMembershipClassString(this.selectedMembershipClass),
         },
         selfDescription: {
           verifiableCredential: {
@@ -391,5 +404,40 @@ export class WizardExtensionComponent {
     }
     this.saveStatusMessage.hideAllMessages();
     this.submitButtonsDisabled = false;
+  }
+
+  public isOrganizationShape(): boolean {
+    return this.filteredShapes[0].name === "MerlotOrganization";
+  }
+
+  public isOrganizationMetadataFilled(): boolean {
+    let membershipClassOk = this.selectedMembershipClass !== null && this.selectedMembershipClass.trim().length !== 0;
+    let mailAddressOk = this.mailAddress !== null && this.mailAddress.trim().length !== 0;
+
+    return membershipClassOk && mailAddressOk;
+  }
+
+  private getEnglishMembershipClassString(stringGerman: string): string {
+    let stringEnglish = null;
+
+    if (stringGerman.trim().toUpperCase() === this.federatorMembershipClassString.trim().toUpperCase()) {
+      stringEnglish = "FEDERATOR";
+    } else if (stringGerman.trim().toUpperCase() === this.participantMembershipClassString.trim().toUpperCase()) {
+      stringEnglish = "PARTICIPANT"; 
+    }
+
+    return stringEnglish;
+  }
+
+  private getGermanMembershipClassString(stringEnglish: string): string {
+    let stringGerman = null;
+
+    if (stringEnglish.trim().toUpperCase() === "FEDERATOR") {
+      stringGerman = this.federatorMembershipClassString;
+    } else if (stringEnglish.trim().toUpperCase() === "PARTICIPANT") {
+      stringGerman = this.participantMembershipClassString; 
+    }
+
+    return stringGerman;
   }
 }

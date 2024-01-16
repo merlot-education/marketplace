@@ -1,8 +1,26 @@
 <app-dynamic-form [file]="shaclFile" #wizard *ngIf="wizardVisible"></app-dynamic-form>
+<c-container fluid class="justify-content-center w-75" *ngIf="filteredShapes && isOrganizationShape()">
+    <li class="list-group-item" style="border: none">
+        <div class="mb-3">
+            <label class="form-label">Mail-Adresse*</label>
+            <input class="form-control" [(ngModel)]="mailAddress">
+        </div>
+    </li>
+
+    <br>
+    <li class="list-group-item" style="border: none">
+        Mitgliedschaftsklasse*:<br />
+        <select class="form-select" [(ngModel)]="selectedMembershipClass"
+            [disabled]="!activeOrgRoleService.isActiveAsFedAdmin()">
+            <option [value]="federatorMembershipClassString">{{ federatorMembershipClassString }}</option>
+            <option [value]="participantMembershipClassString">{{ participantMembershipClassString }}</option>
+        </select>
+    </li>
+</c-container>
 <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
     <div class="p-2 docs-highlight">
         <button
-        [disabled]="wizard?.form.invalid || submitButtonsDisabled"
+        [disabled]="isOrganizationShape() ? wizard?.form.invalid || submitButtonsDisabled || !isOrganizationMetadataFilled() : wizard?.form.invalid || submitButtonsDisabled"
         cButton 
         color="primary"
         (click)="onSubmit(false)"
