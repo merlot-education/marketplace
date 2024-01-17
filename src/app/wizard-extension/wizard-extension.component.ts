@@ -38,8 +38,8 @@ export class WizardExtensionComponent {
   private wizardMutex: Mutex = new Mutex();
 
   public selectedMembershipClass: string | null = null;
-  public federatorMembershipClassString = "FEDERATOR";
-  public participantMembershipClassString = "PARTICIPANT";
+  public federatorMembershipClassString = "Föderator";
+  public participantMembershipClassString = "Mitglied";
 
   public mailAddress: string | null = null;
 
@@ -171,9 +171,9 @@ export class WizardExtensionComponent {
 
 
   public prefillFields(selfDescriptionFields: any, metadata?: IOrganizationMetadata) {
-    if (metadata !== undefined && this.isOrganizationShape()) {
+    if (metadata !== undefined && this.isShapeOrganizationShape()) {
       this.selectedMembershipClass = this.getGermanMembershipClassString(metadata.membershipClass);
-      this.mailAddress = this.getGermanMembershipClassString(metadata.mailAddress);
+      this.mailAddress = metadata.mailAddress;
     }
 
     if (this.createDateTimer) {
@@ -321,7 +321,7 @@ export class WizardExtensionComponent {
   }
 
   private async saveSelfDescription(jsonSd: any) {
-    if (this.isOrganizationShape()) {
+    if (this.isShapeOrganizationShape()) {
       const editedOrganisationData = {
         id: jsonSd["@id"],
         metadata: {
@@ -406,15 +406,23 @@ export class WizardExtensionComponent {
     this.submitButtonsDisabled = false;
   }
 
-  public isOrganizationShape(): boolean {
+  public isShapeOrganizationShape(): boolean {
     return this.filteredShapes[0].name === "MerlotOrganization";
   }
 
   public isOrganizationMetadataFilled(): boolean {
-    let membershipClassOk = this.selectedMembershipClass !== null && this.selectedMembershipClass.trim().length !== 0;
-    let mailAddressOk = this.mailAddress !== null && this.mailAddress.trim().length !== 0;
+    let membershipClassOk = this.isMembershipClassFilled();
+    let mailAddressOk = this.isMailAddressFilled();
 
     return membershipClassOk && mailAddressOk;
+  }
+
+  public isMailAddressFilled(): boolean {
+    return this.mailAddress !== null && this.mailAddress.trim().length !== 0;
+  }
+
+  public isMembershipClassFilled(): boolean {
+    return this.selectedMembershipClass !== null && this.selectedMembershipClass.trim().length !== 0;
   }
 
   private getEnglishMembershipClassString(stringGerman: string): string {

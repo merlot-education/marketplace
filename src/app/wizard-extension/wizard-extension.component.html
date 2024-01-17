@@ -1,34 +1,48 @@
 <app-dynamic-form [file]="shaclFile" #wizard *ngIf="wizardVisible"></app-dynamic-form>
-<c-container fluid class="justify-content-center w-75" *ngIf="filteredShapes && isOrganizationShape()">
+<c-container fluid class="justify-content-center" style="width: 85%;"
+    *ngIf="isShapeLoaded() && isShapeOrganizationShape()">
     <ul>
         <li class="list-group-item" style="border: none">
             <div class="mb-3">
                 <label class="form-label">Mail-Adresse*</label>
                 <input class="form-control" [(ngModel)]="mailAddress">
+                <div cFormText style="color: #7f7f7f;">
+                    <small>Mail-Adresse der Organisation</small>
+                </div>
+            </div>
+            <div *ngIf="!isMailAddressFilled()" style="color: red">
+                <small>
+                    Mail-Adresse ist erforderlich.
+                </small>
             </div>
         </li>
     </ul>
     <br>
     <ul>
         <li class="list-group-item" style="border: none">
-            Mitgliedschaftsklasse*:<br />
+            <label class="form-label"> Mitgliedschaftsklasse*</label>
             <select class="form-select" [(ngModel)]="selectedMembershipClass"
                 [disabled]="!activeOrgRoleService.isActiveAsFedAdmin()">
                 <option [value]="federatorMembershipClassString">{{ federatorMembershipClassString }}</option>
                 <option [value]="participantMembershipClassString">{{ participantMembershipClassString }}</option>
             </select>
+            <div cFormText style="color: #7f7f7f;">
+                <small>Mitgliedschaftsklasse der Organisation</small>
+            </div>
+            <div *ngIf="!isMembershipClassFilled()" style="color: red">
+                <small>
+                    Mitgliedschaftsklasse ist erforderlich.
+                </small>
+            </div>
         </li>
     </ul>
 </c-container>
 <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
     <div class="p-2 docs-highlight">
         <button
-        [disabled]="isOrganizationShape() ? wizard?.form.invalid || submitButtonsDisabled || !isOrganizationMetadataFilled() : wizard?.form.invalid || submitButtonsDisabled"
-        cButton 
-        color="primary"
-        (click)="onSubmit(false)"
-        >
-        {{ 'Änderungen speichern' }}
+            [disabled]="wizard?.form.invalid || submitButtonsDisabled || isShapeLoaded() && isShapeOrganizationShape() && !isOrganizationMetadataFilled()"
+            cButton color="primary" (click)="onSubmit(false)">
+            {{ 'Änderungen speichern' }}
         </button>
     </div>
     <div class="p-2 docs-highlight">
