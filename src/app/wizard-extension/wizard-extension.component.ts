@@ -120,7 +120,7 @@ export class WizardExtensionComponent {
     return this.shapeInitialized.value;
   }
 
-  private createDateTimer: NodeJS.Timer = undefined;
+  private createDateTimer: NodeJS.Timeout = undefined;
 
   private prefillWaitForWizard(selfDescriptionFields: any) {
     this.wizard.finishedLoading
