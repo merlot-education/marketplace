@@ -7,15 +7,18 @@ import {
   OrganizationRoleLayoutData,
 } from '@merlot-education/m-dashboard-ui';
 import { navItems } from './_nav';
+import packageJson from '../../../../package.json';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './default-layout.component.html',
+  styleUrls: ['./default-layout.component.scss']
 })
 export class DefaultLayoutComponent {
   public navItems: IRoleNavData[];
 
   public selectedRoleOption: string = '';
+  protected version: string = packageJson.version;
 
   wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
