@@ -2,6 +2,7 @@ import { ISpringPage } from '@merlot-education/m-basic-ui';
 import { ITermsAndConditions } from '../serviceofferings/serviceofferings-data';
 
 export interface IOrganizationData {
+  id: string;
   metadata: IOrganizationMetadata;
   selfDescription: {
     verifiableCredential: {

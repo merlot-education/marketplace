@@ -24,8 +24,8 @@
             <label class="form-label"> Mitgliedschaftsklasse*</label>
             <select class="form-select" [(ngModel)]="selectedMembershipClass"
                 [disabled]="!activeOrgRoleService.isActiveAsFedAdmin()">
-                <option [value]="federatorMembershipClassString">{{ federatorMembershipClassString }}</option>
-                <option [value]="participantMembershipClassString">{{ participantMembershipClassString }}</option>
+                <option value="FEDERATOR">Föderator</option>
+                <option value="PARTICIPANT">Mitglied</option>
             </select>
         </div>
         <div cFormText style="color: #7f7f7f;">

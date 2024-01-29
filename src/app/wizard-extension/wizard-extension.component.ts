@@ -15,7 +15,7 @@ import { StatusMessageComponent } from '../views/common-views/status-message/sta
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { Mutex } from 'async-mutex';
-import { IOrganizationMetadata } from 'src/app/views/organization/organization-data';
+import { IOrganizationData, IOrganizationMetadata } from 'src/app/views/organization/organization-data';
 
 
 @Component({
@@ -38,8 +38,6 @@ export class WizardExtensionComponent {
   private wizardMutex: Mutex = new Mutex();
 
   public selectedMembershipClass: string | null = null;
-  public federatorMembershipClassString = "Föderator";
-  public participantMembershipClassString = "Mitglied";
 
   public mailAddress: string | null = null;
 
@@ -172,7 +170,7 @@ export class WizardExtensionComponent {
 
   public prefillFields(selfDescriptionFields: any, metadata?: IOrganizationMetadata) {
     if (metadata !== undefined && this.isShapeOrganizationShape()) {
-      this.selectedMembershipClass = this.getGermanMembershipClassString(metadata.membershipClass);
+      this.selectedMembershipClass = metadata.membershipClass;
       this.mailAddress = metadata.mailAddress;
     }
 
@@ -322,18 +320,22 @@ export class WizardExtensionComponent {
 
   private async saveSelfDescription(jsonSd: any) {
     if (this.isShapeOrganizationShape()) {
-      const editedOrganisationData = {
+      const editedOrganisationData : IOrganizationData = {
         id: jsonSd["@id"],
         metadata: {
           orgaId: jsonSd["@id"],
           mailAddress: this.mailAddress,
-          membershipClass: this.getEnglishMembershipClassString(this.selectedMembershipClass),
+          membershipClass: this.selectedMembershipClass,
         },
         selfDescription: {
           verifiableCredential: {
             credentialSubject: jsonSd,
           },
         },
+        activeRepresentant: false,
+        passiveRepresentant: false,
+        activeFedAdmin: false,
+        passiveFedAdmin: false
       };
 
       return await this.organizationsApiService.saveOrganization(JSON.stringify(editedOrganisationData, null, 2), jsonSd["@id"]);
@@ -423,29 +425,5 @@ export class WizardExtensionComponent {
 
   public isMembershipClassFilled(): boolean {
     return this.selectedMembershipClass !== null && this.selectedMembershipClass.trim().length !== 0;
-  }
-
-  private getEnglishMembershipClassString(stringGerman: string): string {
-    let stringEnglish = null;
-
-    if (stringGerman.trim().toUpperCase() === this.federatorMembershipClassString.trim().toUpperCase()) {
-      stringEnglish = "FEDERATOR";
-    } else if (stringGerman.trim().toUpperCase() === this.participantMembershipClassString.trim().toUpperCase()) {
-      stringEnglish = "PARTICIPANT"; 
-    }
-
-    return stringEnglish;
-  }
-
-  private getGermanMembershipClassString(stringEnglish: string): string {
-    let stringGerman = null;
-
-    if (stringEnglish.trim().toUpperCase() === "FEDERATOR") {
-      stringGerman = this.federatorMembershipClassString;
-    } else if (stringEnglish.trim().toUpperCase() === "PARTICIPANT") {
-      stringGerman = this.participantMembershipClassString; 
-    }
-
-    return stringGerman;
   }
 }
