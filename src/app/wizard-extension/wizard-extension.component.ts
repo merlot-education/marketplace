@@ -339,7 +339,7 @@ export class WizardExtensionComponent {
         passiveFedAdmin: false
       };
 
-      return await this.organizationsApiService.saveOrganization(JSON.stringify(editedOrganisationData, null, 2), jsonSd["@id"]);
+      return await this.organizationsApiService.saveOrganization(editedOrganisationData, jsonSd["@id"]);
     } else {
       return await this.serviceofferingApiService.createServiceOffering(JSON.stringify(jsonSd, null, 2), jsonSd["@type"]);
     }
