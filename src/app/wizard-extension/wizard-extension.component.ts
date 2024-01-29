@@ -167,16 +167,17 @@ export class WizardExtensionComponent {
       });
   }
 
+  public prefillOrganisation(orga: IOrganizationData) {
+    this.selectedMembershipClass = orga.metadata.membershipClass;
+    this.mailAddress = orga.metadata.mailAddress;
+    this.prefillFields(orga.selfDescription.verifiableCredential.credentialSubject);
+  }
 
-  public prefillFields(selfDescriptionFields: any, metadata?: IOrganizationMetadata) {
-    if (metadata !== undefined && this.isShapeOrganizationShape()) {
-      this.selectedMembershipClass = metadata.membershipClass;
-      this.mailAddress = metadata.mailAddress;
-    }
-
+  public prefillFields(selfDescriptionFields: any) {
     if (this.createDateTimer) {
       clearInterval(this.createDateTimer);
     }
+    // prefill self-description
     this.prefillWaitForShape(selfDescriptionFields);
   }
 

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { IOrganizationData } from '../organization/organization-data';
 
@@ -9,13 +8,11 @@ import { IOrganizationData } from '../organization/organization-data';
   styleUrls: ['./registration.component.scss']
 })
 export class RegistrationComponent {
-  public activeFederators: BehaviorSubject<IOrganizationData[]> = new BehaviorSubject([]);
-
   public sortedFederatorsList: string[] = [];
 
-  private federatorMap: Map<string, IOrganizationData> = new Map<string, IOrganizationData>();
+  private federatorMailMap: Map<string, string> = new Map<string, string>();
 
-  public selectedFederator: string | null = null;
+  public selectedFederator: string = null;
 
   constructor(
     private organizationsApiService: OrganizationsApiService
@@ -27,9 +24,8 @@ export class RegistrationComponent {
 
   protected refreshFederators() {
     this.organizationsApiService.fetchFederators().then(result => {
-      this.activeFederators.next(result);
-      this.federatorMap = this.getFederatorMap(this.activeFederators.value);
-      this.sortedFederatorsList = this.getListOfFederatorNames(this.federatorMap).sort(this.sortAlphabetically);
+      this.federatorMailMap = this.getFederatorMap(result);
+      this.sortedFederatorsList = this.getListOfFederatorNames(this.federatorMailMap).sort(this.sortAlphabetically);
     });
   }
 
@@ -42,10 +38,11 @@ export class RegistrationComponent {
   }
 
   private getFederatorMap(federators: IOrganizationData[]) {
-    let federatorMap: Map<string, IOrganizationData> = new Map<string, IOrganizationData>();
+    let federatorMap: Map<string, string> = new Map<string, string>();
     for (let federator of federators) {
       let federatorName: string = federator.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'];
-      federatorMap.set(federatorName, federator);
+      let federatorMail: string = federator.metadata.mailAddress;
+      federatorMap.set(federatorName, federatorMail);
     }
     return federatorMap;
   }
@@ -69,8 +66,8 @@ export class RegistrationComponent {
   }
 
   private getCCForRegistrationMail() {
-    if (this.getListOfFederatorNames(this.federatorMap).includes(this.selectedFederator)) {
-      return this.federatorMap.get(this.selectedFederator).metadata.mailAddress;
+    if (this.sortedFederatorsList.includes(this.selectedFederator)) {
+      return this.federatorMailMap.get(this.selectedFederator);
     } else {
       return '';
     }
