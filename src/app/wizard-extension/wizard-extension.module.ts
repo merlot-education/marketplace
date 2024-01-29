@@ -5,6 +5,7 @@ import { WizardAppModule } from '../sdwizard/wizardapp.module';
 import { CommonViewsModule } from "../views/common-views/common-views.module";
 import { ButtonGroupModule, ButtonModule, GridModule } from '@coreui/angular';
 import { FormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
     declarations: [WizardExtensionComponent],
@@ -15,6 +16,7 @@ import { FormsModule } from '@angular/forms';
         CommonModule,
         WizardAppModule,
         CommonViewsModule,
+        FlexLayoutModule,
         ButtonModule,
         ButtonGroupModule,
         FormsModule,
