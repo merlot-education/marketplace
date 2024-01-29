@@ -1,13 +1,49 @@
 <app-dynamic-form [file]="shaclFile" #wizard *ngIf="wizardVisible"></app-dynamic-form>
+<c-container fluid class="justify-content-center">
+    <div
+        [ngClass]="{ 'position-center': true }"
+        fxFlex="70%"
+        fxFlex.sm="100%"
+        fxFlex.xs="100%"
+        *ngIf="isShapeLoaded() && isShapeOrganizationShape()">
+
+        <div class="mb-3">
+            <label class="form-label">Mail-Adresse*</label>
+            <input class="form-control" [(ngModel)]="mailAddress">
+            <div cFormText style="color: #7f7f7f;">
+                <small>Mail-Adresse der Organisation</small>
+            </div>
+        </div>
+        <div *ngIf="!isMailAddressFilled()" style="color: red">
+            <small>
+                Mail-Adresse ist erforderlich.
+            </small>
+        </div>
+        <br>
+        <div class="mb-3">
+            <label class="form-label"> Mitgliedschaftsklasse*</label>
+            <select class="form-select" [(ngModel)]="selectedMembershipClass"
+                [disabled]="!activeOrgRoleService.isActiveAsFedAdmin()">
+                <option value="FEDERATOR">Föderator</option>
+                <option value="PARTICIPANT">Mitglied</option>
+            </select>
+        </div>
+        <div cFormText style="color: #7f7f7f;">
+            <small>Mitgliedschaftsklasse der Organisation</small>
+        </div>
+        <div *ngIf="!isMembershipClassFilled()" style="color: red">
+            <small>
+                Mitgliedschaftsklasse ist erforderlich.
+            </small>
+        </div>
+    </div>
+</c-container>
 <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
     <div class="p-2 docs-highlight">
         <button
-        [disabled]="wizard?.form.invalid || submitButtonsDisabled"
-        cButton 
-        color="primary"
-        (click)="onSubmit(false)"
-        >
-        {{ 'Änderungen speichern' }}
+            [disabled]="wizard?.form.invalid || submitButtonsDisabled || isShapeLoaded() && isShapeOrganizationShape() && !isOrganizationMetadataFilled()"
+            cButton color="primary" (click)="onSubmit(false)">
+            {{ 'Änderungen speichern' }}
         </button>
     </div>
     <div class="p-2 docs-highlight">

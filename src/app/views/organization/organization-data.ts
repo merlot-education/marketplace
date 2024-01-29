@@ -2,7 +2,8 @@ import { ISpringPage } from '@merlot-education/m-basic-ui';
 import { ITermsAndConditions } from '../serviceofferings/serviceofferings-data';
 
 export interface IOrganizationData {
-  metadata?: any;
+  id: string;
+  metadata: IOrganizationMetadata;
   selfDescription: {
     verifiableCredential: {
       credentialSubject: {
@@ -53,4 +54,10 @@ export interface ConnectorData {
   connectorEndpoint: string;
   connectorAccessToken: string;
   bucketNames: string[];
+}
+
+export interface IOrganizationMetadata {
+  orgaId: string;
+  mailAddress: string;
+  membershipClass: string;
 }

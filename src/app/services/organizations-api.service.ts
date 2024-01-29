@@ -47,19 +47,19 @@ export class OrganizationsApiService {
     return await lastValueFrom(this.http.get(environment.organizations_api_url + "shapes/merlotParticipant"));
   }
 
-  public async saveOrganization(sdJson: string, orgaId: string) {
+  public async saveOrganization(sdJson: IOrganizationData, orgaId: string) {
     console.log(sdJson);
     const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
     return await lastValueFrom(this.http.put(environment.organizations_api_url + "organization/" + orgaId, sdJson, {headers: headers}));
   }
 
-  public async fetchFederators(page: number, size: number): Promise<IPageOrganizations> {
+  public async fetchFederators(): Promise<IOrganizationData[]> {
     console.log("fetching federators");
 
-    let orgaData = (await lastValueFrom(
+    let federatorList = (await lastValueFrom(
       this.http.get(environment.organizations_api_url + "federators")
-    )) as IPageOrganizations;
-    return orgaData;
+    )) as IOrganizationData[];
+    return federatorList;
   }
 
   public async addOrganization(formData: FormData) {

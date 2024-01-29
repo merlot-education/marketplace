@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { WizardExtensionComponent } from './wizard-extension.component';
 import { WizardAppModule } from '../sdwizard/wizardapp.module';
 import { CommonViewsModule } from "../views/common-views/common-views.module";
-import { ButtonGroupModule, ButtonModule } from '@coreui/angular';
+import { ButtonGroupModule, ButtonModule, GridModule } from '@coreui/angular';
+import { FormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
     declarations: [WizardExtensionComponent],
@@ -14,8 +16,11 @@ import { ButtonGroupModule, ButtonModule } from '@coreui/angular';
         CommonModule,
         WizardAppModule,
         CommonViewsModule,
+        FlexLayoutModule,
         ButtonModule,
         ButtonGroupModule,
+        FormsModule,
+        GridModule,
     ]
 })
 export class WizardExtensionModule { }
