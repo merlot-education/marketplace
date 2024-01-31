@@ -16,9 +16,13 @@ export class AaamApiService {
     ) { 
   }
 
-  public async getUsersFromOrganization(organizationId: String) {
+  private patchOrgaId(id: string) : string {
+    return id.replace("#", "%23");  // encode hashtag
+  }
+
+  public async getUsersFromOrganization(organizationId: string) {
     if (this.activeOrgRoleService.isLoggedIn) {
-      return await lastValueFrom(this.http.get(environment.aaam_api_url + "fromOrganization/" + organizationId)) as IUserData[];
+      return await lastValueFrom(this.http.get(environment.aaam_api_url + "fromOrganization/" + this.patchOrgaId(organizationId))) as IUserData[];
     } else {
       console.log("Error: Not logged in.");
       return []
