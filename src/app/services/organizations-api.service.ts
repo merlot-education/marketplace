@@ -12,7 +12,7 @@ export class OrganizationsApiService {
   private merlotFederationOrga: IOrganizationData = undefined;
 
   constructor(private http: HttpClient) {
-    this.getOrgaById("did:web:marketplace.dev.merlot-education.eu#df15587a-0760-32b5-9c42-bb7be66e8076").then(result => { // TODO replace url part
+    this.getOrgaById("did:web:" + environment.marketplace_url + "#df15587a-0760-32b5-9c42-bb7be66e8076").then(result => {
       this.merlotFederationOrga = result;
     });
   }
