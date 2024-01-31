@@ -20,6 +20,9 @@ export class ContractApiService {
 
   constructor(private http: HttpClient) {}
 
+  private patchOrgaId(id: string) : string {
+    return id.replace("#", "%23");  // encode hashtag
+  }
 
   public getAvailableStatusNames() {
     return Object.keys(this.friendlyStatusNames);
@@ -48,7 +51,7 @@ export class ContractApiService {
   }
 
   public async getOrgaContracts(page: number, size: number, consumerId: string, statusFilter: string = undefined): Promise<IPageContracts> {
-    let url = environment.contract_api_url + "organization/" + consumerId + "?page=" + page + "&size=" + size;
+    let url = environment.contract_api_url + "organization/" + this.patchOrgaId(consumerId) + "?page=" + page + "&size=" + size;
     if (statusFilter !== undefined) {
       url += "&status=" + statusFilter;
     }

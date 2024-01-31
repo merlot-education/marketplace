@@ -46,7 +46,6 @@ export class EditComponent implements OnInit, AfterViewInit {
     console.log("get orga by id", orgaId);
     this.organizationsApiService.getOrgaById(orgaId).then(result => {
       console.log(result);
-      result.selfDescription.verifiableCredential.credentialSubject['merlot:merlotId']['disabled'] = true;
       result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
       result.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
       let registrationNumberFields = result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber'];

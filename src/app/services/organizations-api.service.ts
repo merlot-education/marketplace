@@ -12,13 +12,17 @@ export class OrganizationsApiService {
   private merlotFederationOrga: IOrganizationData = undefined;
 
   constructor(private http: HttpClient) {
-    this.getOrgaById("Participant:99").then(result => {
+    this.getOrgaById("did:web:marketplace.dev.merlot-education.eu#merlot-federation").then(result => { // TODO replace url part
       this.merlotFederationOrga = result;
     });
   }
 
   public getMerlotFederationOrga() {
     return this.merlotFederationOrga;
+  }
+
+  private patchOrgaId(id: string) : string {
+    return id.replace("#", "%23");  // encode hashtag
   }
 
   public async fetchOrganizations(page: number, size: number): Promise<IPageOrganizations> {
@@ -31,15 +35,14 @@ export class OrganizationsApiService {
   }
 
   public async getConnectorsOfOrganization(orgaId: string) {
-    orgaId = orgaId.replace("Participant:", "");
     return await lastValueFrom(
-      this.http.get(environment.organizations_api_url + "organization/" + orgaId + "/connectors/")
+      this.http.get(environment.organizations_api_url + "organization/" + this.patchOrgaId(orgaId) + "/connectors/")
     ) as ConnectorData[];
   }
 
   public async getOrgaById(id: string): Promise<IOrganizationData> {
     return await (await lastValueFrom(
-      this.http.get(environment.organizations_api_url + "organization/" + id)
+      this.http.get(environment.organizations_api_url + "organization/" + this.patchOrgaId(id))
     )) as IOrganizationData;
   }
 
@@ -47,10 +50,10 @@ export class OrganizationsApiService {
     return await lastValueFrom(this.http.get(environment.organizations_api_url + "shapes/merlotParticipant"));
   }
 
-  public async saveOrganization(sdJson: IOrganizationData, orgaId: string) {
+  public async saveOrganization(sdJson: IOrganizationData) {
     console.log(sdJson);
     const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
-    return await lastValueFrom(this.http.put(environment.organizations_api_url + "organization/" + orgaId, sdJson, {headers: headers}));
+    return await lastValueFrom(this.http.put(environment.organizations_api_url + "organization", sdJson, {headers: headers}));
   }
 
   public async fetchFederators(): Promise<IOrganizationData[]> {
