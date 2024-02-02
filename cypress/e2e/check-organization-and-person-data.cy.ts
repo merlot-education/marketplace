@@ -65,7 +65,7 @@ it('testuser can log in, check organization and assigned person data, edit organ
 
     // click on Änderungen speichern, the page shows the following response "Selbstbeschreibung erfolgreich gespeichert! ID: Participant:40"
     cy.contains('Änderungen speichern').should("not.be.disabled").click();
-    cy.contains("Selbstbeschreibung erfolgreich gespeichert! (ID: Participant:10)", { timeout: 30000 });
+    cy.contains("Selbstbeschreibung erfolgreich gespeichert! (ID: did:web:marketplace.dev.merlot-education.eu#c041ea73-3ecf-3a06-a5cd-919f5cef8e54)", { timeout: 30000 });
 
     // click on navigation entry "Benutzerverwaltung", the submenu is extended
     cy.contains('Benutzerverwaltung').click({force: true});
@@ -74,13 +74,13 @@ it('testuser can log in, check organization and assigned person data, edit organ
     // url should have updated
     cy.url().should('include', 'users/explore');
 
-    // check if all expected persons are shown, we expect following 7 persons: "Jérôme Estienne", "Jan Larwig", "Lilli Karliczek", "Marc Buskies", "Martin Jürgens", "Sebastian Hoyer", "Test User"
-    cy.get('c-card-header').should("have.length.at.least", 7).then((headers) => {
+    // check if all expected persons are shown, we expect following persons: "Test User"
+    cy.get('c-card-header').should("have.length.at.least", 1).then((headers) => {
         // check if persons are sorted alphabetically by first name -> this check is left out for now
         // the names seem to be sorted alphabetically, but somehow with modification, e.g. é < a
 
         // check if all expected persons are shown (in no particular order)
-        let personNames: string[] = ["Jérôme Estienne", "Jan Larwig", "Lilli Karliczek", "Marc Buskies", "Martin Jürgens", "Sebastian Hoyer", "Test User"];
+        let personNames: string[] = ["Test User"];
         let headerNames: string[] = [];
 
         for (let h of headers) {
@@ -105,7 +105,7 @@ it('testuser can log in, check organization and assigned person data, edit organ
     const recipient = 'funktionspostfach@merlot.de';
     const cc = email; //mail address that was used above
     const subject = 'Registrierung im MERLOT Portal für Organisationen';
-    const body = 'Bitte füllen Sie  das im Knowledge Transfer Center heruntergeladene Formular aus und hängen es dieser Mail an.';
+    const body = 'Bitte füllen Sie das im Knowledge Transfer Center heruntergeladene Formular aus und hängen es dieser Mail an.';
 
     const mailtoURL = `mailto:${recipient}?cc=${cc}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 

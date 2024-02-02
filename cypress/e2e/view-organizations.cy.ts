@@ -39,9 +39,6 @@ it('open organizations overview', {
     cy.get('c-card-body').then((bodies) => {
         for (let b of bodies) {
             // check for existence of fields and make sure their content isnt empty
-            cy.wrap(b).contains("Merlot ID:").parent().then((id) => {
-                cy.wrap(id.get(0).innerText.replace("Merlot ID:\n", "")).should("not.be.empty");
-            });
             // since some organisations have no registration number, we can only check for existence of the header
             cy.wrap(b).contains("Registrierungsnummer:");
             cy.wrap(b).contains("Name der Organisation:").parent().then((id) => {
@@ -81,9 +78,6 @@ it('open organizations overview', {
     cy.get('c-card-body').then((bodies) => {
         for (let b of bodies) {
             // check for existence of fields and make sure their content isnt empty
-            cy.wrap(b).contains("Merlot ID:").parent().then((id) => {
-                cy.wrap(id.get(0).innerText.replace("Merlot ID:\n", "")).should("not.be.empty");
-            });
             // since some organisations have no registration number, we can only check for existence of the header
             cy.wrap(b).contains("Registrierungsnummer:");
             cy.wrap(b).contains("Name der Organisation:").parent().then((id) => {

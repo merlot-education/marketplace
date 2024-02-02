@@ -21,10 +21,10 @@
 
       <br /><br />
 
-      <h5 cCardTitle>Federationsmitglied zur Bearbeitung der Bewerbung auswählen</h5>
-      Bitte wählen Sie einen Federator aus, mit dem Sie schon eine Geschäftsbeziehung oder einen persönlichen
-      Kontakt haben, der daher Ihre Bewerbung gut beurteilen kann. Wenn Sie noch mit keinem der Federator
-      persönlichen Kontakt hatten, wählen Sie die Option aus, dann wird sich einer der Federatoren um Ihre
+      <h5 cCardTitle>Föderationsmitglied zur Bearbeitung der Bewerbung auswählen</h5>
+      Bitte wählen Sie einen Föderator aus, mit dem Sie schon eine Geschäftsbeziehung oder einen persönlichen
+      Kontakt haben, der daher Ihre Bewerbung gut beurteilen kann. Wenn Sie noch mit keinem der Föderator
+      persönlichen Kontakt hatten, wählen Sie die Option aus, dann wird sich einer der Föderatoren um Ihre
       Bewerbung kümmern.
 
       <br />
@@ -33,8 +33,8 @@
         <c-form-check>
           <input cFormCheckInput type="radio" value="Any Federator" name="flexRadioDefault"
             [(ngModel)]="selectedFederator" />
-          <label cFormCheckLabel>Ich hatte noch keinen persönlichen Kontakt mit einem der Federator, daher
-            ist es mir egal, welcher Federator meinen Antrag bearbeitet.</label>
+          <label cFormCheckLabel>Ich hatte noch keinen persönlichen Kontakt mit einem der Föderator, daher
+            ist es mir egal, welcher Föderator meinen Antrag bearbeitet.</label>
         </c-form-check>
         <c-form-check *ngFor="let federator of sortedFederatorsList">
           <input cFormCheckInput type="radio" [value]="federator" name="flexRadioDefault"
@@ -43,7 +43,7 @@
         </c-form-check>
       </div>
       <button cButton color="primary" [disabled]="!selectedFederator" (click)="openMailApp()">
-        Federator bestätigen und Mailprogramm öffnen
+        Föderator bestätigen und Mailprogramm öffnen
       </button>
     </m-card>
   </c-col>
