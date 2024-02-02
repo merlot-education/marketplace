@@ -16,6 +16,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { Mutex } from 'async-mutex';
 import { IOrganizationData, IOrganizationMetadata } from 'src/app/views/organization/organization-data';
+import { throws } from 'assert';
+import { ModalComponent } from '@coreui/angular';
 
 
 @Component({
@@ -40,6 +42,12 @@ export class WizardExtensionComponent {
   public selectedMembershipClass: string | null = null;
 
   public mailAddress: string | null = null;
+
+  public orgaActive: string = "true";
+
+  public orgaActiveInitial: string = "true";
+
+  @ViewChild('modalConfirmation') modalConfirmation: ModalComponent;
 
   constructor(private formFieldService: FormfieldControlService,
     private organizationsApiService: OrganizationsApiService,
@@ -168,8 +176,11 @@ export class WizardExtensionComponent {
   }
 
   public prefillOrganisation(orga: IOrganizationData) {
+    orga.metadata.active = "true"; // todo remove once this is sent from backend
     this.selectedMembershipClass = orga.metadata.membershipClass;
     this.mailAddress = orga.metadata.mailAddress;
+    this.orgaActive = orga.metadata.active;
+    this.orgaActiveInitial = orga.metadata.active;
     this.prefillFields(orga.selfDescription.verifiableCredential.credentialSubject);
   }
 
@@ -327,6 +338,7 @@ export class WizardExtensionComponent {
           orgaId: jsonSd["@id"],
           mailAddress: this.mailAddress,
           membershipClass: this.selectedMembershipClass,
+          active: this.orgaActive
         },
         selfDescription: {
           verifiableCredential: {
@@ -338,10 +350,20 @@ export class WizardExtensionComponent {
         activeFedAdmin: false,
         passiveFedAdmin: false
       };
+      
+      this.orgaActiveInitial = this.orgaActive;
 
       return await this.organizationsApiService.saveOrganization(editedOrganisationData);
     } else {
       return await this.serviceofferingApiService.createServiceOffering(JSON.stringify(jsonSd, null, 2), jsonSd["@type"]);
+    }
+  }
+
+  protected checkConfirmationNeeded(publishAfterSave: boolean) {
+    if (this.orgaActiveInitial === "true" && this.orgaActive === "false") {
+      this.modalConfirmation.visible = true;
+    } else {
+      this.onSubmit(publishAfterSave);
     }
   }
 

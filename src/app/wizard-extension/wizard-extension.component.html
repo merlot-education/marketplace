@@ -36,13 +36,25 @@
                 Mitgliedschaftsklasse ist erforderlich.
             </small>
         </div>
+        <br>
+        <div class="mb-3">
+            <label class="form-label"> Mitgliedschaftsstatus*</label>
+            <select class="form-select" [(ngModel)]="orgaActive"
+                [disabled]="!activeOrgRoleService.isActiveAsFedAdmin()">
+                <option [value]=true>Aktiv</option>
+                <option [value]=false>Inaktiv</option>
+            </select>
+        </div>
+        <div cFormText style="color: #7f7f7f;">
+            <small>Mitgliedschaftsstatus der Organisation</small>
+        </div>
     </div>
 </c-container>
 <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
     <div class="p-2 docs-highlight">
         <button
             [disabled]="wizard?.form.invalid || submitButtonsDisabled || isShapeLoaded() && isShapeOrganizationShape() && !isOrganizationMetadataFilled()"
-            cButton color="primary" (click)="onSubmit(false)">
+            cButton color="primary" (click)="checkConfirmationNeeded(false)">
             {{ 'Änderungen speichern' }}
         </button>
     </div>
@@ -68,3 +80,25 @@
         </app-status-message>
     </div>
 </div>
+<c-modal #modalConfirmation id="modalConfirmation" size="xl" alignment="center">
+  <ng-container>
+    <c-modal-header>
+    </c-modal-header>
+    <c-modal-body>
+        Sind Sie sich sicher, dass Sie diese Organisation von Merlot ausschließen wollen? 
+        Die Organisation hat im deaktivierten Zustand keine Möglichkeit, ihre laufenden Verträge zu bearbeiten und kann diese ggf. nicht mehr erfüllen.
+    </c-modal-body>
+    <c-modal-footer>
+        <div class="p-2 docs-highlight">
+            <button
+                [disabled]="wizard?.form.invalid || submitButtonsDisabled || isShapeLoaded() && isShapeOrganizationShape() && !isOrganizationMetadataFilled()"
+                cButton color="primary" [cModalToggle]="modalConfirmation.id" (click)="onSubmit(false)">
+                {{ 'Fortfahren' }}
+            </button>
+        </div>
+        <div class="p-2 docs-highlight">
+            <button cButton color="secondary" [cModalToggle]="modalConfirmation.id">Abbrechen</button>
+        </div>
+    </c-modal-footer>
+  </ng-container>
+</c-modal>
