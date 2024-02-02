@@ -31,11 +31,6 @@
     <div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item" style="border: none">
-          <strong>Merlot ID:</strong><br />
-          {{ organization.selfDescription.verifiableCredential.credentialSubject['merlot:merlotId']['@value']
-          }}
-        </li>
-        <li class="list-group-item" style="border: none">
           <strong>Registrierungsnummer:</strong><br />
           <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']">
             Lokal: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']['@value'] }}

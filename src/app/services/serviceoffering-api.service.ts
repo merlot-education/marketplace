@@ -28,6 +28,10 @@ export class ServiceofferingApiService {
 
   }
 
+  private patchOrgaId(id: string) : string {
+    return id.replace("#", "%23");  // encode hashtag
+  }
+
   // get released service offering overview (unauthenticated)
   public async fetchPublicServiceOfferings(page: number, size: number, state?: string): Promise<IPageBasicOfferings> {
     let target_url = environment.serviceoffering_api_url + "?page=" + page + "&size=" + size
@@ -40,8 +44,8 @@ export class ServiceofferingApiService {
   // get all service offerings for the active organization
   public async fetchOrganizationServiceOfferings(page: number, size: number, state?: string): Promise<IPageBasicOfferings> {
     if (this.activeOrgRoleService.isLoggedIn) {
-      let activeOrgaId = this.activeOrgRoleService.getActiveOrgaId().replace("Participant:", "");
-      let target_url = environment.serviceoffering_api_url + "organization/" + activeOrgaId + "?page=" + page + "&size=" + size;
+      let activeOrgaId = this.activeOrgRoleService.getActiveOrgaId();
+      let target_url = environment.serviceoffering_api_url + "organization/" + this.patchOrgaId(activeOrgaId) + "?page=" + page + "&size=" + size;
       if (state !== undefined) {
         target_url += "&state=" + state
       }
