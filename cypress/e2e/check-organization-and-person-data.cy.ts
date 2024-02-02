@@ -117,9 +117,9 @@ it('testuser can log in, check organization and assigned person data, edit organ
         cy.stub(win, 'open').as('Open');
     });
 
-    //select "Gaia-X AISBL" as federator and click on button "Federator bestätigen und Mailprogramm öffnen"
+    //select "Gaia-X AISBL" as federator and click on button "Föderator bestätigen und Mailprogramm öffnen"
     cy.contains("Gaia-X AISBL").parent().within(() => { cy.get('input').click() });
-    cy.contains("Federator bestätigen und Mailprogramm öffnen").click();
+    cy.contains("Föderator bestätigen und Mailprogramm öffnen").click();
 
     cy.get('@Open').should('have.been.calledOnceWithExactly', mailtoURL, '_blank');
     cy.get("@Alert").should("have.been.calledOnceWithExactly", "Es konnte kein Mailprogramm geöffnet werden.");
