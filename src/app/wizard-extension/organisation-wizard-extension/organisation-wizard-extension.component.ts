@@ -1,10 +1,9 @@
 import { Component, EventEmitter, ViewChild } from '@angular/core';
 import { OrganizationsApiService } from '../../services/organizations-api.service';
-import { AbstractControl } from '@angular/forms';
 import { StatusMessageComponent } from '../../views/common-views/status-message/status-message.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
-import { IOrganizationData } from 'src/app/views/organization/organization-data';
+import { IOrganizationData, IOrganizationMetadata } from 'src/app/views/organization/organization-data';
 import { ModalComponent } from '@coreui/angular';
 import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wizard-extension.component';
 
@@ -15,22 +14,15 @@ import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wiza
   styleUrls: ['./organisation-wizard-extension.component.scss']
 })
 export class OrganisationWizardExtensionComponent {
-  @ViewChild("baseWizardExtension") protected baseWizardExtension: BaseWizardExtensionComponent;
-
+  @ViewChild("baseWizardExtension") private baseWizardExtension: BaseWizardExtensionComponent;
   @ViewChild("saveStatusMessage") private saveStatusMessage: StatusMessageComponent;
-  protected submitButtonsDisabled: boolean = false;
-  protected orgaIdFields: AbstractControl[] = [];
-  submitCompleteEvent: EventEmitter<any> = new EventEmitter();
-
-  public selectedMembershipClass: string | null = null;
-
-  public mailAddress: string | null = null;
-
-  public orgaActive: string = "true";
-
-  public orgaActiveInitial: string = "true";
-
   @ViewChild('modalConfirmation') private modalConfirmation: ModalComponent;
+
+  public submitCompleteEvent: EventEmitter<any> = new EventEmitter();
+
+  protected submitButtonsDisabled: boolean = false;  
+  protected orgaActiveSelection: string = "false";
+  protected orgaMetadata: IOrganizationMetadata = null;
 
   constructor(
       protected organizationsApiService: OrganizationsApiService,
@@ -46,28 +38,26 @@ export class OrganisationWizardExtensionComponent {
     return this.baseWizardExtension?.isShapeLoaded();
   }
 
-  public prefillOrganisation(orga: IOrganizationData) {
-    orga.metadata.active = "true"; // todo remove once this is sent from backend
-    this.selectedMembershipClass = orga.metadata.membershipClass;
-    this.mailAddress = orga.metadata.mailAddress;
-    this.orgaActive = orga.metadata.active;
-    this.orgaActiveInitial = orga.metadata.active;
-    this.prefillFields(orga.selfDescription.verifiableCredential.credentialSubject);
+  private activeStringToBoolean(active: string) { 
+    return active === "true";
   }
 
-  public prefillFields(selfDescriptionFields: any) {
-    this.baseWizardExtension.prefillFields(selfDescriptionFields);
+  private activeBooleanToString(active: boolean) { 
+    return active ? "true": "false";
+  }
+
+  public prefillOrganisation(orga: IOrganizationData) {
+    orga.metadata.active = true // todo remove once this is sent from backend
+    this.orgaMetadata = orga.metadata;
+    this.orgaActiveSelection = this.activeBooleanToString(orga.metadata.active);
+    this.baseWizardExtension.prefillFields(orga.selfDescription.verifiableCredential.credentialSubject);
   }
 
   private async saveSelfDescription(jsonSd: any) {
+    this.orgaMetadata.active = this.activeStringToBoolean(this.orgaActiveSelection);
     const editedOrganisationData : IOrganizationData = {
       id: jsonSd["@id"],
-      metadata: {
-        orgaId: jsonSd["@id"],
-        mailAddress: this.mailAddress,
-        membershipClass: this.selectedMembershipClass,
-        active: this.orgaActive
-      },
+      metadata: this.orgaMetadata,
       selfDescription: {
         verifiableCredential: {
           credentialSubject: jsonSd,
@@ -78,14 +68,12 @@ export class OrganisationWizardExtensionComponent {
       activeFedAdmin: false,
       passiveFedAdmin: false
     };
-    
-    this.orgaActiveInitial = this.orgaActive;
-
+    console.log(editedOrganisationData);
     return await this.organizationsApiService.saveOrganization(editedOrganisationData);
   }
 
   protected checkConfirmationNeeded() {
-    if (this.orgaActiveInitial === "true" && this.orgaActive === "false") {
+    if (this.orgaActiveSelection === "false" && this.orgaMetadata.active) {
       this.modalConfirmation.visible = true;
     } else {
       this.onSubmit();
@@ -128,11 +116,11 @@ export class OrganisationWizardExtensionComponent {
   }
 
   public isMailAddressFilled(): boolean {
-    return this.mailAddress !== null && this.mailAddress.trim().length !== 0;
+    return this.orgaMetadata.mailAddress !== null && this.orgaMetadata.mailAddress.trim().length !== 0;
   }
 
   public isMembershipClassFilled(): boolean {
-    return this.selectedMembershipClass !== null && this.selectedMembershipClass.trim().length !== 0;
+    return this.orgaMetadata.membershipClass !== null && this.orgaMetadata.membershipClass.trim().length !== 0;
   }
 
   protected isWizardFormInvalid(): boolean {

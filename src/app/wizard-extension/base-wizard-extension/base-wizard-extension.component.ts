@@ -18,16 +18,16 @@ import { Mutex } from 'async-mutex';
   styleUrls: ['./base-wizard-extension.component.scss']
 })
 export class BaseWizardExtensionComponent {
-  @ViewChild("wizard") protected wizard: DynamicFormComponent;
+  @ViewChild("wizard") private wizard: DynamicFormComponent;
+
+  public orgaIdFields: AbstractControl[] = [];
+
   protected shaclFile: ShaclFile;
   protected filteredShapes: Shape[];
   protected wizardVisible: boolean = false;
 
-  protected shapeInitialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
+  private shapeInitialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private wizardMutex: Mutex = new Mutex();
-
-  public orgaIdFields: AbstractControl[] = [];
 
   constructor(protected formFieldService: FormfieldControlService,
     protected exportService: ExportService,

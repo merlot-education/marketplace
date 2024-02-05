@@ -59,5 +59,5 @@ export interface IOrganizationMetadata {
   orgaId: string;
   mailAddress: string;
   membershipClass: string;
-  active: string;
+  active: boolean;
 }

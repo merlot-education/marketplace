@@ -9,7 +9,7 @@
 
         <div class="mb-3">
             <label class="form-label">Mail-Adresse*</label>
-            <input class="form-control" [(ngModel)]="mailAddress">
+            <input class="form-control" [(ngModel)]="orgaMetadata.mailAddress">
             <div cFormText style="color: #7f7f7f;">
                 <small>Mail-Adresse der Organisation</small>
             </div>
@@ -22,7 +22,7 @@
         <br>
         <div class="mb-3">
             <label class="form-label"> Mitgliedschaftsklasse*</label>
-            <select class="form-select" [(ngModel)]="selectedMembershipClass"
+            <select class="form-select" [(ngModel)]="orgaMetadata.membershipClass"
                 [disabled]="!activeOrgRoleService.isActiveAsFedAdmin()">
                 <option value="FEDERATOR">Föderator</option>
                 <option value="PARTICIPANT">Mitglied</option>
@@ -39,7 +39,7 @@
         <br>
         <div class="mb-3">
             <label class="form-label"> Mitgliedschaftsstatus*</label>
-            <select class="form-select" [(ngModel)]="orgaActive"
+            <select class="form-select" [(ngModel)]="orgaActiveSelection"
                 [disabled]="!activeOrgRoleService.isActiveAsFedAdmin()">
                 <option [value]=true>Aktiv</option>
                 <option [value]=false>Inaktiv</option>

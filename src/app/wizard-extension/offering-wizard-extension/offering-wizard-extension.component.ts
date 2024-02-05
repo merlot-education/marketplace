@@ -3,7 +3,6 @@ import { ServiceofferingApiService } from '../../services/serviceoffering-api.se
 import { StatusMessageComponent } from '../../views/common-views/status-message/status-message.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
-import { ModalComponent } from '@coreui/angular';
 import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wizard-extension.component';
 
 
@@ -13,12 +12,12 @@ import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wiza
   styleUrls: ['./offering-wizard-extension.component.scss']
 })
 export class OfferingWizardExtensionComponent {
-  @ViewChild("baseWizardExtension") protected baseWizardExtension: BaseWizardExtensionComponent;
+  @ViewChild("baseWizardExtension") private baseWizardExtension: BaseWizardExtensionComponent;
   @ViewChild("saveStatusMessage") private saveStatusMessage: StatusMessageComponent;
-  protected submitButtonsDisabled: boolean = false;
-  submitCompleteEvent: EventEmitter<any> = new EventEmitter();
 
-  @ViewChild('modalConfirmation') modalConfirmation: ModalComponent;
+  public submitCompleteEvent: EventEmitter<any> = new EventEmitter();
+
+  protected submitButtonsDisabled: boolean = false;
 
   constructor(
       private serviceofferingApiService: ServiceofferingApiService,
