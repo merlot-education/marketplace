@@ -79,11 +79,7 @@
     </c-modal-body>
     <c-modal-footer>
         <div class="p-2 docs-highlight">
-            <button
-                [disabled]="isWizardFormInvalid() || submitButtonsDisabled || isShapeLoaded() && !isOrganizationMetadataFilled()"
-                cButton color="primary" [cModalToggle]="modalConfirmation.id" (click)="onSubmit()">
-                {{ 'Fortfahren' }}
-            </button>
+            <button cButton color="primary" [cModalToggle]="modalConfirmation.id" (click)="onSubmit()">Fortfahren</button>
         </div>
         <div class="p-2 docs-highlight">
             <button cButton color="secondary" [cModalToggle]="modalConfirmation.id">Abbrechen</button>

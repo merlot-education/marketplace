@@ -7,8 +7,10 @@ export interface IContractBasic {
   offering: IOfferings;
   providerLegalName: string;
   providerId: string;
+  providerActive: boolean;
   consumerLegalName: string;
   consumerId: string;
+  consumerActive: boolean;
   state: string;
 }
 
@@ -35,8 +37,10 @@ export interface IContractDetails {
   providerId: string;
   termsAndConditions: IContractTnc[];
   providerLegalName: string;
+  providerActive: boolean;
   consumerId: string;
   consumerLegalName: string;
+  consumerActive: boolean;
   state: string;
   providerSignerUser: string;
   providerSignature: string;

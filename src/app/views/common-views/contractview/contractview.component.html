@@ -4,6 +4,14 @@
     </c-modal-header>
     <c-modal-body>
       <ng-container *ngIf="contractDetails">
+        <div *ngIf="!contractDetails.details.providerActive || !contractDetails.details.consumerActive" class="warning-box">
+          <svg class="warning-symbol" cIcon name='cil-warning' size='xl' width='24'></svg> 
+          <b>
+            Leider wurde die andere Vertragspartei von Merlot ausgeschlossen. 
+            Das bedeutet, dass diese keinen Zugriff mehr auf Merlot hat und Sie diese für Vertragsänderungen und -Erfüllungen außerhalb von Merlot direkt kontaktieren
+            müssen. Die Kontaktdaten der Organisation finden Sie in ihrem Vertrag.
+          </b>
+        </div>
         <h3>Angebots-Details</h3>
         <app-offeringdetailview [serviceOfferingData]="contractDetails.offering" [showVariableFields]="false"></app-offeringdetailview>
         <h3>Vertrags-Details</h3>
