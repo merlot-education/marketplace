@@ -47,7 +47,6 @@ export class OrganisationWizardExtensionComponent {
   }
 
   public prefillOrganisation(orga: IOrganizationData) {
-    orga.metadata.active = true // todo remove once this is sent from backend
     this.orgaMetadata = orga.metadata;
     this.orgaActiveSelection = this.activeBooleanToString(orga.metadata.active);
     this.baseWizardExtension.prefillFields(orga.selfDescription.verifiableCredential.credentialSubject);
