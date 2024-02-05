@@ -8,7 +8,7 @@ import { serviceFileNameDict } from '../serviceofferings-data';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { IContract } from '../../contracts/contracts-data';
 import { ConnectorData } from '../../organization/organization-data';
-import { WizardExtensionComponent } from 'src/app/wizard-extension/wizard-extension.component';
+import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
 
 
 @Component({
@@ -16,7 +16,7 @@ import { WizardExtensionComponent } from 'src/app/wizard-extension/wizard-extens
   styleUrls: ['./explore.component.scss']
 })
 export class ExploreComponent implements OnInit, OnDestroy {
-  @ViewChild("wizardExtension") private wizardExtension: WizardExtensionComponent;
+  @ViewChild("wizardExtension") private wizardExtension: OfferingWizardExtensionComponent;
 
   readonly ITEMS_PER_PAGE = 9;
 

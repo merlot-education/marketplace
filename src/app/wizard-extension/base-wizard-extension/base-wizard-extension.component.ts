@@ -1,60 +1,42 @@
-import { ChangeDetectorRef, Component, EventEmitter, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ShaclFile } from '@models/shacl-file';
 import { Shape } from '@models/shape';
-import { OrganizationsApiService } from '../services/organizations-api.service';
+import { OrganizationsApiService } from '../../services/organizations-api.service';
 import { FormfieldControlService } from '@services/form-field.service';
-import { DynamicFormComponent } from '../sdwizard/core/dynamic-form/dynamic-form.component';
-import { ServiceofferingApiService } from '../services/serviceoffering-api.service';
+import { DynamicFormComponent } from '../../sdwizard/core/dynamic-form/dynamic-form.component';
+import { ServiceofferingApiService } from '../../services/serviceoffering-api.service';
 import { ExpandedFieldsComponent } from '@components/expanded-fields/expanded-fields.component';
 import { AbstractControl, FormControl } from '@angular/forms';
 import { DynamicFormInputComponent } from '@components/dynamic-form-input/dynamic-form-input.component';
 import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynamic-form-array.component';
 import { BehaviorSubject, takeWhile } from 'rxjs';
 import { ExportService } from '@services/export.service';
-import { StatusMessageComponent } from '../views/common-views/status-message/status-message.component';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { Mutex } from 'async-mutex';
-import { IOrganizationData, IOrganizationMetadata } from 'src/app/views/organization/organization-data';
-import { throws } from 'assert';
-import { ModalComponent } from '@coreui/angular';
 
 
 @Component({
-  selector: 'app-wizard-extension',
-  templateUrl: './wizard-extension.component.html',
-  styleUrls: ['./wizard-extension.component.scss']
+  selector: 'app-base-wizard-extension',
+  templateUrl: './base-wizard-extension.component.html',
+  styleUrls: ['./base-wizard-extension.component.scss']
 })
-export class WizardExtensionComponent {
+export class BaseWizardExtensionComponent {
   @ViewChild("wizard") protected wizard: DynamicFormComponent;
-  @ViewChild("saveStatusMessage") private saveStatusMessage: StatusMessageComponent;
   protected shaclFile: ShaclFile;
-  protected submitButtonsDisabled: boolean = false;
   protected filteredShapes: Shape[];
-  protected orgaIdFields: AbstractControl[] = [];
   protected wizardVisible: boolean = false;
-  submitCompleteEvent: EventEmitter<any> = new EventEmitter();
 
-  private shapeInitialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  protected shapeInitialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   private wizardMutex: Mutex = new Mutex();
 
-  public selectedMembershipClass: string | null = null;
+  public orgaIdFields: AbstractControl[] = [];
 
-  public mailAddress: string | null = null;
-
-  public orgaActive: string = "true";
-
-  public orgaActiveInitial: string = "true";
-
-  @ViewChild('modalConfirmation') modalConfirmation: ModalComponent;
-
-  constructor(private formFieldService: FormfieldControlService,
-    private organizationsApiService: OrganizationsApiService,
-    private serviceofferingApiService: ServiceofferingApiService,
-    protected activeOrgRoleService: ActiveOrganizationRoleService,
-    private exportService: ExportService,
-    private changeDetectorRef: ChangeDetectorRef) {}
+  constructor(protected formFieldService: FormfieldControlService,
+    protected organizationsApiService: OrganizationsApiService,
+    protected serviceofferingApiService: ServiceofferingApiService,
+    protected exportService: ExportService,
+    protected changeDetectorRef: ChangeDetectorRef) {}
 
   private selectShape(shaclFile: ShaclFile, credentialSubjectId: string): void {
     this.shaclFile = shaclFile;
@@ -102,13 +84,11 @@ export class WizardExtensionComponent {
     }
   }
 
-  private reinitWizard(): void{
+  private reinitWizard(): void {
     this.wizardVisible = false;
     this.changeDetectorRef.detectChanges();
-    this.orgaIdFields = [];
     this.shaclFile = undefined;
     this.shapeInitialized.next(false);
-    this.saveStatusMessage.hideAllMessages();
     this.wizardVisible = true;
     this.changeDetectorRef.detectChanges();
 }
@@ -175,15 +155,6 @@ export class WizardExtensionComponent {
       });
   }
 
-  public prefillOrganisation(orga: IOrganizationData) {
-    orga.metadata.active = "true"; // todo remove once this is sent from backend
-    this.selectedMembershipClass = orga.metadata.membershipClass;
-    this.mailAddress = orga.metadata.mailAddress;
-    this.orgaActive = orga.metadata.active;
-    this.orgaActiveInitial = orga.metadata.active;
-    this.prefillFields(orga.selfDescription.verifiableCredential.credentialSubject);
-  }
-
   public prefillFields(selfDescriptionFields: any) {
     if (this.createDateTimer) {
       clearInterval(this.createDateTimer);
@@ -230,6 +201,7 @@ export class WizardExtensionComponent {
     if (["gax-core:offeredBy", "gax-trust-framework:providedBy"].includes(fullKey)) {
       this.orgaIdFields.push(formInput.form.controls[formInput.input.id]); // save for later reference
     } 
+
     if (fullKey === "merlot:creationDate") {
       if (!Object.keys(prefillFields).includes(fullKey)) {
         this.updateDateField(formInput.form.controls[formInput.input.id] as FormControl); // initial update
@@ -330,123 +302,29 @@ export class WizardExtensionComponent {
     }
   }
 
-  private async saveSelfDescription(jsonSd: any) {
-    if (this.isShapeOrganizationShape()) {
-      const editedOrganisationData : IOrganizationData = {
-        id: jsonSd["@id"],
-        metadata: {
-          orgaId: jsonSd["@id"],
-          mailAddress: this.mailAddress,
-          membershipClass: this.selectedMembershipClass,
-          active: this.orgaActive
-        },
-        selfDescription: {
-          verifiableCredential: {
-            credentialSubject: jsonSd,
-          },
-        },
-        activeRepresentant: false,
-        passiveRepresentant: false,
-        activeFedAdmin: false,
-        passiveFedAdmin: false
-      };
-      
-      this.orgaActiveInitial = this.orgaActive;
-
-      return await this.organizationsApiService.saveOrganization(editedOrganisationData);
-    } else {
-      return await this.serviceofferingApiService.createServiceOffering(JSON.stringify(jsonSd, null, 2), jsonSd["@type"]);
-    }
-  }
-
-  protected checkConfirmationNeeded(publishAfterSave: boolean) {
-    if (this.orgaActiveInitial === "true" && this.orgaActive === "false") {
-      this.modalConfirmation.visible = true;
-    } else {
-      this.onSubmit(publishAfterSave);
-    }
-  }
-
-  protected onSubmit(publishAfterSave: boolean): void {
-    console.log("onSubmit");
-    this.submitButtonsDisabled = true;
-    this.saveStatusMessage.hideAllMessages();
-
-    // for fields that contain the id of the creator organization, set them to the actual id
-    for (let control of this.orgaIdFields) {
-      control.patchValue(this.activeOrgRoleService.getActiveOrgaId());
-    }
+  public generateJsonSd(): any {
     this.wizard.shape.userPrefix = this.wizard.form.get('user_prefix').value;
     this.wizard.shape.downloadFormat = this.wizard.form.get('download_format').value;
     this.wizard.shape.fields = this.wizard.updateFormFieldsValues(this.wizard.formFields, this.wizard.form);
     this.wizard.shape.fields = this.wizard.emptyChildrenFields(this.wizard.shape.fields);
     let jsonSd = this.exportService.saveFile(this.wizard.file);
 
-    // revert the actual id to the orga for user readibility
-    for (let control of this.orgaIdFields) {
-      control.patchValue(this.activeOrgRoleService.getActiveOrgaLegalName());
-    }
-
-    this.saveSelfDescription(jsonSd).then(result => {
-      console.log(result);
-      let didField = this.wizard.form.get("user_prefix");
-      didField.patchValue(result["id"]);
-      this.saveStatusMessage.showSuccessMessage("ID: " + result["id"]);
-
-      if (publishAfterSave) {
-        this.serviceofferingApiService.releaseServiceOffering(result["id"])
-        .then(_ => {
-          this.submitCompleteEvent.emit(null);
-        })
-        .catch((e: HttpErrorResponse) => {
-          this.saveStatusMessage.showErrorMessage(e.error.message);
-          this.submitButtonsDisabled = false;
-        })
-        .catch(_ => {
-          this.saveStatusMessage.showErrorMessage("Unbekannter Fehler");
-          this.submitButtonsDisabled = false;
-        });
-      } else {
-        this.submitCompleteEvent.emit(null);
-      }
-    }).catch((e: HttpErrorResponse) => {
-      this.saveStatusMessage.showErrorMessage(e.error.message);
-      this.submitButtonsDisabled = false;
-    })
-    .catch(_ => {
-      this.saveStatusMessage.showErrorMessage("Unbekannter Fehler");
-      this.submitButtonsDisabled = false;
-    }).finally(() => {
-      if (!publishAfterSave) {
-        this.submitButtonsDisabled = false;
-      }
-    });
+    return jsonSd;
   }
 
   public ngOnDestroy() {
     if (this.wizard) {
       this.wizard.ngOnDestroy();
     }
-    this.saveStatusMessage.hideAllMessages();
-    this.submitButtonsDisabled = false;
   }
 
-  public isShapeOrganizationShape(): boolean {
-    return this.filteredShapes[0].name === "MerlotOrganization";
+  public isWizardFormInvalid() {
+    return this.wizard?.form.invalid;
   }
 
-  public isOrganizationMetadataFilled(): boolean {
-    let membershipClassOk = this.isMembershipClassFilled();
-    let mailAddressOk = this.isMailAddressFilled();
-
-    return membershipClassOk && mailAddressOk;
+  public setCredentialId(id: string) : void{
+    let didField = this.wizard.form.get("user_prefix");
+      didField.patchValue(id);
   }
 
-  public isMailAddressFilled(): boolean {
-    return this.mailAddress !== null && this.mailAddress.trim().length !== 0;
-  }
-
-  public isMembershipClassFilled(): boolean {
-    return this.selectedMembershipClass !== null && this.selectedMembershipClass.trim().length !== 0;
-  }
 }

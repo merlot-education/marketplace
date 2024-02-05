@@ -1,0 +1,30 @@
+<app-base-wizard-extension #baseWizardExtension></app-base-wizard-extension>
+<div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
+    <div class="p-2 docs-highlight">
+        <button
+            [disabled]="isWizardFormInvalid() || submitButtonsDisabled"
+            cButton color="primary" (click)="onSubmit(false)">
+            {{ 'Änderungen speichern' }}
+        </button>
+    </div>
+    <div class="p-2 docs-highlight">
+        <button
+        [disabled]="isWizardFormInvalid() || submitButtonsDisabled"
+        cButton 
+        color="primary"
+        (click)="onSubmit(true)"
+        >
+        Veröffentlichen
+        </button>
+    </div>
+</div>
+<div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
+    <div class="p-2 docs-highlight">
+        <app-status-message 
+              [successMessage]="'Selbstbeschreibung erfolgreich gespeichert!'"
+              [errorMessage]="'Fehler bei der Kommunikation mit dem GXFS-Katalog.'"
+              [infoMessage]="''"
+              #saveStatusMessage>
+        </app-status-message>
+    </div>
+</div>
