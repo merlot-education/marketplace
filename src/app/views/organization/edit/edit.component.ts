@@ -56,7 +56,7 @@ export class EditComponent implements OnInit, AfterViewInit {
       this.patchRegistrationNumberField('gax-trust-framework:leiCode', registrationNumberFields);
 
       this.selectedOrganization = result;
-      this.wizardExtensionComponent.loadShape("MerlotOrganization", 
+      this.wizardExtensionComponent.loadShape(
         this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject["@id"]).then(_ => {
           this.wizardExtensionComponent.prefillOrganisation(result);
         });

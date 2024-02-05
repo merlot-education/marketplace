@@ -1,9 +1,5 @@
-import { ChangeDetectorRef, Component, EventEmitter, ViewChild } from '@angular/core';
-import { OrganizationsApiService } from '../../services/organizations-api.service';
-import { FormfieldControlService } from '@services/form-field.service';
+import { Component, EventEmitter, ViewChild } from '@angular/core';
 import { ServiceofferingApiService } from '../../services/serviceoffering-api.service';
-import { AbstractControl } from '@angular/forms';
-import { ExportService } from '@services/export.service';
 import { StatusMessageComponent } from '../../views/common-views/status-message/status-message.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
@@ -31,7 +27,8 @@ export class OfferingWizardExtensionComponent {
 
 
   public async loadShape(shapeName: string, id: string): Promise<void> {
-    await this.baseWizardExtension.loadShape(shapeName, id);
+    console.log("Loading shape", shapeName);
+    await this.baseWizardExtension.loadShape(this.serviceofferingApiService.fetchShape(shapeName), id);
   }
 
   public isShapeLoaded(): boolean {

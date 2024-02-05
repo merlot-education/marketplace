@@ -37,8 +37,9 @@ export class OrganisationWizardExtensionComponent {
       protected activeOrgRoleService: ActiveOrganizationRoleService
     ) {}
 
-  public async loadShape(shapeName: string, id: string): Promise<void> {
-    await this.baseWizardExtension.loadShape(shapeName, id);
+  public async loadShape(id: string): Promise<void> {
+    console.log("Loading MERLOT Organisation shape");
+    await this.baseWizardExtension.loadShape(this.organizationsApiService.getMerlotParticipantShape(), id);
   }
 
   public isShapeLoaded(): boolean {

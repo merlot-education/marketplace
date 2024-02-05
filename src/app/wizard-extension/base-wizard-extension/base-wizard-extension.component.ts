@@ -1,17 +1,14 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ShaclFile } from '@models/shacl-file';
 import { Shape } from '@models/shape';
-import { OrganizationsApiService } from '../../services/organizations-api.service';
 import { FormfieldControlService } from '@services/form-field.service';
 import { DynamicFormComponent } from '../../sdwizard/core/dynamic-form/dynamic-form.component';
-import { ServiceofferingApiService } from '../../services/serviceoffering-api.service';
 import { ExpandedFieldsComponent } from '@components/expanded-fields/expanded-fields.component';
 import { AbstractControl, FormControl } from '@angular/forms';
 import { DynamicFormInputComponent } from '@components/dynamic-form-input/dynamic-form-input.component';
 import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynamic-form-array.component';
 import { BehaviorSubject, takeWhile } from 'rxjs';
 import { ExportService } from '@services/export.service';
-import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { Mutex } from 'async-mutex';
 
 
@@ -33,8 +30,6 @@ export class BaseWizardExtensionComponent {
   public orgaIdFields: AbstractControl[] = [];
 
   constructor(protected formFieldService: FormfieldControlService,
-    protected organizationsApiService: OrganizationsApiService,
-    protected serviceofferingApiService: ServiceofferingApiService,
     protected exportService: ExportService,
     protected changeDetectorRef: ChangeDetectorRef) {}
 
@@ -93,17 +88,10 @@ export class BaseWizardExtensionComponent {
     this.changeDetectorRef.detectChanges();
 }
 
-  public async loadShape(shapeName: string, id: string): Promise<void> {
+  public async loadShape(shapeSource: Promise<any>, id: string): Promise<void> {
     await this.wizardMutex.runExclusive(async () => {
       this.reinitWizard();
-      console.log("Loading shape", shapeName);
-      let shapeResult: Promise<any>;
-      if (shapeName === "MerlotOrganization") {
-        shapeResult = this.organizationsApiService.getMerlotParticipantShape();
-      } else {
-        shapeResult = this.serviceofferingApiService.fetchShape(shapeName);
-      }
-      let shape = await shapeResult;
+      let shape = await shapeSource;
       this.selectShape(this.formFieldService.readShaclFile(shape), id);
       this.shapeInitialized.next(true);
     });
