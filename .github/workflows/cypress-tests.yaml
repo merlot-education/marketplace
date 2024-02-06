@@ -1,0 +1,40 @@
+name: Cypress Smoke Tests
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types:
+      - postsync_hook
+
+jobs:
+  gateway:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@merlot-education'
+
+      - run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run full test suite
+        uses: cypress-io/github-action@v5.5.1
+        with:
+          config: baseUrl=https://marketplace.dev.merlot-education.eu
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+            name: cypress-screenshots
+            path: cypress/screenshots

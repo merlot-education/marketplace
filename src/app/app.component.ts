@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
   ) {
     titleService.setTitle(this.title);
     // iconSet singleton
-    iconSetService.icons = { ...freeSet, ...flagSet, ...brandSet };
+    iconSetService.icons = { ...iconSubset };
   }
 
   ngOnInit(): void {

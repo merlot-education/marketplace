@@ -8,7 +8,7 @@
 [![Reliability Rating](https://sonarqube.common.merlot-education.eu/api/project_badges/measure?project=merlot-education_marketplace_AYdG6VNrMxRMOCkiKtK_&metric=reliability_rating&token=sqb_629d7643396f780c99c0789cd0d30315336f4abc)](https://sonarqube.common.merlot-education.eu/dashboard?id=merlot-education_marketplace_AYdG6VNrMxRMOCkiKtK_)
 [![Security Hotspots](https://sonarqube.common.merlot-education.eu/api/project_badges/measure?project=merlot-education_marketplace_AYdG6VNrMxRMOCkiKtK_&metric=security_hotspots&token=sqb_629d7643396f780c99c0789cd0d30315336f4abc)](https://sonarqube.common.merlot-education.eu/dashboard?id=merlot-education_marketplace_AYdG6VNrMxRMOCkiKtK_)
 
-## First checkut
+## First checkout
 * `npm install`
 * `ng update`
 

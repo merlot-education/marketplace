@@ -7,7 +7,7 @@
             <label class="form-label" *ngIf="i == 0"
               >{{ input.name }}
               <span
-                *ngIf="hasRequiredValidator(control)"
+                *ngIf="hasRequiredValidator($any(control))"
                 aria-required="true"
                 class="required"
               >
@@ -18,7 +18,7 @@
             <div class="flex-container">
               <input
                 class="form-control"
-                [formControl]="inputs.controls[i]"
+                [formControl]="$any(inputs.controls[i])"
                 placeholder="{{ input.example }}"
               />
 
@@ -52,7 +52,7 @@
 
           <mat-error>
             <app-show-errors
-              [ctrl]="inputs.controls[i]"
+              [ctrl]="$any(inputs.controls[i])"
               [label]="input.name"
             ></app-show-errors>
           </mat-error>
@@ -63,7 +63,7 @@
           <label class="form-label" *ngIf="i == 0"
             >{{ input.name }}
             <span
-              *ngIf="hasRequiredValidator(control)"
+              *ngIf="hasRequiredValidator($any(control))"
               aria-required="true"
               class="required"
             >
@@ -74,7 +74,7 @@
           <div class="flex-container">
             <input
               class="form-control"
-              [formControl]="inputs.controls[i]"
+              [formControl]="$any(inputs.controls[i])"
               placeholder="{{ input.example }}"
               type="number"
             />
@@ -109,7 +109,7 @@
 
         <mat-error>
           <app-show-errors
-            [ctrl]="inputs.controls[i]"
+            [ctrl]="$any(inputs.controls[i])"
             [label]="input.name"
           ></app-show-errors>
         </mat-error>
@@ -120,7 +120,7 @@
           <label class="form-label" *ngIf="i == 0"
             >{{ input.name }}
             <span
-              *ngIf="hasRequiredValidator(control)"
+              *ngIf="hasRequiredValidator($any(control))"
               aria-required="true"
               class="required"
             >
@@ -131,7 +131,7 @@
           <div class="flex-container">
             <input
               class="form-control"
-              [formControl]="inputs.controls[i]"
+              [formControl]="$any(inputs.controls[i])"
               placeholder="{{ input.example }}"
             />
 
@@ -165,7 +165,7 @@
 
         <mat-error>
           <app-show-errors
-            [ctrl]="inputs.controls[i]"
+            [ctrl]="$any(inputs.controls[i])"
             [label]="input.name"
           ></app-show-errors>
         </mat-error>
@@ -176,7 +176,7 @@
           <label class="form-label" *ngIf="i == 0"
             >{{ input.name }}
             <span
-              *ngIf="hasRequiredValidator(control)"
+              *ngIf="hasRequiredValidator($any(control))"
               aria-required="true"
               class="required"
             >
@@ -187,7 +187,7 @@
           <div class="flex-container">
             <input
               class="form-control"
-              [formControl]="inputs.controls[i]"
+              [formControl]="$any(inputs.controls[i])"
               placeholder="{{ input.example }}"
             />
 
@@ -221,7 +221,7 @@
 
         <mat-error>
           <app-show-errors
-            [ctrl]="inputs.controls[i]"
+            [ctrl]="$any(inputs.controls[i])"
             [label]="input.name"
           ></app-show-errors>
         </mat-error>
@@ -236,12 +236,12 @@
         >
           <mat-label
             >{{ input.name }}
-            <span *ngIf="hasRequiredValidator(control)" aria-required="true">
+            <span *ngIf="hasRequiredValidator($any(control))" aria-required="true">
               *
             </span>
           </mat-label>
           <input
-            [formControl]="inputs.controls[i]"
+            [formControl]="$any(inputs.controls[i])"
             [matDatepicker]="picker"
             matInput
           />
@@ -271,7 +271,7 @@
         </button>
         <mat-error>
           <app-show-errors
-            [ctrl]="inputs.controls[i]"
+            [ctrl]="$any(inputs.controls[i])"
             [label]="input.name"
           ></app-show-errors>
         </mat-error>
@@ -287,7 +287,7 @@
           <mat-label
             >{{ input.name }}
             <span
-              *ngIf="hasRequiredValidator(control)"
+              *ngIf="hasRequiredValidator($any(control))"
               aria-required="true"
               class="required"
             >
@@ -295,12 +295,12 @@
             </span>
           </mat-label>
           <input
-            [formControl]="inputs.controls[i]"
+            [formControl]="$any(inputs.controls[i])"
             [ngxMatDatetimePicker]="picker"
             matInput
           />
           <mat-datepicker-toggle
-            [for]="picker"
+            [for]="$any(picker)"
             matSuffix
           ></mat-datepicker-toggle>
           <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
@@ -325,7 +325,7 @@
         </button>
         <mat-error>
           <app-show-errors
-            [ctrl]="inputs.controls[i]"
+            [ctrl]="$any(inputs.controls[i])"
             [label]="input.name"
           ></app-show-errors>
         </mat-error>
@@ -337,7 +337,7 @@
             <label class="form-label" *ngIf="i == 0"
               >{{ input.name }}
               <span
-                *ngIf="hasRequiredValidator(control)"
+                *ngIf="hasRequiredValidator($any(control))"
                 aria-required="true"
                 class="required"
               >
@@ -348,7 +348,7 @@
             <div class="flex-container">
               <select
                 class="form-select"
-                [formControl]="inputs.controls[i]"
+                [formControl]="$any(inputs.controls[i])"
                 [multiple]="false"
               >
                 <option *ngFor="let option of input.in" [value]="option.value">
@@ -387,7 +387,7 @@
 
         <mat-error>
           <app-show-errors
-            [ctrl]="inputs.controls[i]"
+            [ctrl]="$any(inputs.controls[i])"
             [label]="input.name"
           ></app-show-errors>
         </mat-error>

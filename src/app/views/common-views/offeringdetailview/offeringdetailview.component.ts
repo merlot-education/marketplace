@@ -15,5 +15,4 @@ export class OfferingdetailviewComponent {
   constructor(
     protected serviceOfferingApiService : ServiceofferingApiService) {
   }
-
 }

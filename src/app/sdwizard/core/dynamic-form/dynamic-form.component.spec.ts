@@ -4,7 +4,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Router} from '@angular/router';
 import {RouterTestingModule} from '@angular/router/testing';
 import {FilesProvider} from '@shared/files-provider';
-import {MaterialModule} from 'src/app/material.module';
+import {MaterialModule} from 'src/app/sdwizard/material.module';
 
 import {DynamicFormComponent} from './dynamic-form.component';
 

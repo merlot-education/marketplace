@@ -6,6 +6,8 @@
 /out-tsc
 /bazel-out
 
+.npmrc
+
 # Node
 /node_modules
 npm-debug.log
@@ -46,3 +48,8 @@ Thumbs.db
 
 *.css
 *.css.map
+
+cypress/videos
+cypress/screenshots
+
+.nyc_output

@@ -1,12 +1,7 @@
 <c-row>
   <c-col xs>
-    <c-card class="mb-4">
-      <c-card-header>Organisation bearbeiten</c-card-header>
-      <c-card-body>
-        <app-dynamic-form [file]="shaclFile"></app-dynamic-form>
-      </c-card-body>
-      <c-card-footer>
-      </c-card-footer>
-    </c-card>
+    <m-card title="Organisation bearbeiten">
+      <app-wizard-extension #wizardExtension></app-wizard-extension>
+    </m-card>
   </c-col>
 </c-row>

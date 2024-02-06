@@ -1,46 +1,86 @@
-import { ISpringPage } from "../common-views/paging-footer/page-data";
-import { IOfferings } from "../serviceofferings/serviceofferings-data";
+import { ISpringPage } from '@merlot-education/m-basic-ui';
+import { IOfferings } from '../serviceofferings/serviceofferings-data';
 
 export interface IContractBasic {
-  id: string,
-  creationDate: string,
-  offering: IOfferings,
-  providerLegalName: string,
-  consumerLegalName: string,
-  state: string
+  id: string;
+  creationDate: string;
+  offering: IOfferings;
+  providerLegalName: string;
+  providerId: string;
+  consumerLegalName: string;
+  consumerId: string;
+  state: string;
 }
 
 export interface IContract {
-  type: string,
-  details: IContractDetails,
-  negotiation: IContractNegotiation,
-  provisioning: IContractProvisioning,
-  offering: IOfferings
+  type: string;
+  details: IContractDetails;
+  negotiation: IContractNegotiation;
+  provisioning: IContractProvisioning;
+  offering: IOfferings;
+}
+
+export interface IDataDeliveryContract extends IContract {
+  negotiation: IDataDeliveryContractNegotiation;
+  provisioning: IDataDeliveryContractProvisioning;
+}
+
+export interface ISaasContract extends IContract {
+  negotiation: ISaasContractNegotiation;
 }
 
 export interface IContractDetails {
-  id: string,
-  creationDate: string,
-  providerId: string,
-  providerLegalName: string,
-  consumerId: string,
-  consumerLegalName: string,
-  state: string,
-  providerTncUrl: string
+  id: string;
+  creationDate: string;
+  providerId: string;
+  termsAndConditions: IContractTnc[];
+  providerLegalName: string;
+  consumerId: string;
+  consumerLegalName: string;
+  state: string;
+  providerSignerUser: string;
+  providerSignature: string;
+  providerSignatureDate: string;
+  consumerSignerUser: string;
+  consumerSignature: string;
+  consumerSignatureDate: string;
 }
 
 export interface IContractNegotiation {
-  runtimeSelection?: string,
-  additionalAgreements?: string,
-  attachments: string[],
-  consumerMerlotTncAccepted: boolean,
-  consumerOfferingTncAccepted: boolean,
-  consumerProviderTncAccepted: boolean,
-  providerMerlotTncAccepted: boolean
+  runtimeSelection?: string;
+  additionalAgreements?: string;
+  attachments: string[];
+  consumerTncAccepted: boolean;
+  consumerAttachmentsAccepted: boolean;
+  providerTncAccepted: boolean;
+}
+
+export interface IContractTnc {
+  content: string;
+  hash: string;
 }
 
 export interface IContractProvisioning {
-  validUntil: string
+  validUntil: string;
+}
+
+export interface IDataDeliveryContractProvisioning
+  extends IContractProvisioning {
+  dataAddressType: string;
+  dataAddressSourceBucketName: string;
+  dataAddressSourceFileName: string;
+  selectedProviderConnectorId: string;
+  dataAddressTargetBucketName: string;
+  dataAddressTargetFileName: string;
+  selectedConsumerConnectorId: string;
+}
+
+export interface IDataDeliveryContractNegotiation extends IContractNegotiation {
+  exchangeCountSelection: string;
+}
+
+export interface ISaasContractNegotiation extends IContractNegotiation {
+  userCountSelection: string;
 }
 
 export class IEdcIdResponse {
@@ -59,5 +99,5 @@ export class IEdcTransferStatus {
 }
 
 export interface IPageContracts extends ISpringPage {
-    content: IContract[];
+  content: IContractBasic[];
 }

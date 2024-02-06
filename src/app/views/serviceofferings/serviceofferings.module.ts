@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ExploreComponent } from './explore/explore.component';
 import { EditComponent } from './edit/edit.component';
+import { WizardExtensionModule } from 'src/app/wizard-extension/wizard-extension.module';
 
 // CoreUI Modules
 import {
@@ -28,7 +29,7 @@ import {
   TabsModule,
   TooltipModule,
   UtilitiesModule,
-  ModalModule
+  ModalModule,
 } from '@coreui/angular';
 
 import { IconModule } from '@coreui/icons-angular';
@@ -55,47 +56,54 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 
 // Components Routing
 import { ServiceofferingsRoutingModule } from './serviceofferings-routing.module';
-import { WizardAppModule } from "../../sdwizard/wizardapp.module";
-import { CommonViewsModule } from "../common-views/common-views.module";
+import { WizardAppModule } from '../../sdwizard/wizardapp.module';
+import { CommonViewsModule } from '../common-views/common-views.module';
+import {
+  CardComponent,
+  GridComponent,
+  PaginatorComponent,
+} from '@merlot-education/m-basic-ui';
 
 @NgModule({
-    declarations: [
-        ExploreComponent,
-        EditComponent
-    ],
-    imports: [
-        CommonViewsModule,
-        CommonModule,
-        ServiceofferingsRoutingModule,
-        AccordionModule,
-        BadgeModule,
-        BreadcrumbModule,
-        ButtonModule,
-        CardModule,
-        CollapseModule,
-        GridModule,
-        UtilitiesModule,
-        SharedModule,
-        ListGroupModule,
-        IconModule,
-        ListGroupModule,
-        PlaceholderModule,
-        ProgressModule,
-        SpinnerModule,
-        TabsModule,
-        NavModule,
-        TooltipModule,
-        CarouselModule,
-        FormModule,
-        FormsModule,
-        ReactiveFormsModule,
-        DropdownModule,
-        PaginationModule,
-        PopoverModule,
-        TableModule,
-        DocsComponentsModule,
-        WizardAppModule,
-        ModalModule
-    ]
+  declarations: [ExploreComponent, EditComponent],
+  imports: [
+    CommonViewsModule,
+    CommonModule,
+    ServiceofferingsRoutingModule,
+    AccordionModule,
+    BadgeModule,
+    BreadcrumbModule,
+    ButtonModule,
+    CardModule,
+    CollapseModule,
+    GridModule,
+    UtilitiesModule,
+    SharedModule,
+    ListGroupModule,
+    IconModule,
+    ListGroupModule,
+    PlaceholderModule,
+    ProgressModule,
+    SpinnerModule,
+    TabsModule,
+    NavModule,
+    TooltipModule,
+    CarouselModule,
+    FormModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DropdownModule,
+    PaginationModule,
+    PopoverModule,
+    TableModule,
+    DocsComponentsModule,
+    WizardAppModule,
+    ModalModule,
+
+    PaginatorComponent,
+    CardComponent,
+    GridComponent,
+    WizardExtensionModule
+  ],
 })
 export class ServiceofferingsModule {}

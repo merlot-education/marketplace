@@ -2,7 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EditComponent } from './edit/edit.component';
 import { ExploreComponent } from './explore/explore.component';
+import { ImportComponent } from './import/import.component';
 import { KeycloakGuard } from 'src/app/keycloak.guard';
+import { fedAuthGuard, repAuthGuard } from 'src/app/auth.guard';
 
 
 const routes: Routes = [
@@ -30,7 +32,23 @@ const routes: Routes = [
         data: {
           title: 'Organisation bearbeiten',
         },
-        canActivate: [KeycloakGuard]
+        canActivate: [KeycloakGuard, repAuthGuard]
+      },
+      {
+        path: 'edit/:orgaId',
+        component: EditComponent,
+        data: {
+          title: 'Organisation bearbeiten',
+        },
+        canActivate: [KeycloakGuard, fedAuthGuard]
+      },
+      {
+        path: 'import', 
+        component: ImportComponent,
+        data: {
+          title: 'Organisation hinzufügen',
+        },
+        canActivate: [KeycloakGuard, fedAuthGuard]
       },
     ],
   },

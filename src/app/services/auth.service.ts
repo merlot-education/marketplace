@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { OrganizationsApiService } from './organizations-api.service';
+import { ActiveOrganizationRoleService } from './active-organization-role.service';
 import { IOrganizationData } from '../views/organization/organization-data';
 
 export interface OrganizationRole {
@@ -18,31 +19,19 @@ export interface OrganizationRole {
 export class AuthService {
   private token: string = '';
 
-  public isLoggedIn: boolean = false;
   public userProfile: KeycloakProfile = {};
-  public organizationRoles: {
-    [orgaRoleKey: string]: OrganizationRole;
-  } = {};
 
-  public activeOrganizationRole: BehaviorSubject<OrganizationRole> = new BehaviorSubject<OrganizationRole>({
-    orgaRoleString: '',
-    roleName: '',
-    roleFriendlyName: ''
-  });
-
-  private roleFriendlyNameMapper: { [key: string]: string } = {
-    OrgRep: 'Repräsentant',
-    OrgLegRep: 'Prokurist',
-  };
+  public finishedLoadingRoles = false;
 
   constructor(
     private keycloakService: KeycloakService,
-    private organizationApiService: OrganizationsApiService
+    private organizationApiService: OrganizationsApiService,
+    private activeOrgRoleService: ActiveOrganizationRoleService
   ) {
     this.keycloakService.isLoggedIn().then((result) => {
-      this.isLoggedIn = result;
+      this.activeOrgRoleService.isLoggedIn = result;
       // check if user is logged in, otherwise we do not set anything
-      if (this.isLoggedIn) {
+      if (this.activeOrgRoleService.isLoggedIn) {
         // if logged in, update the roles of the user, load the profile and get the token
         this.buildOrganizationRoles(this.keycloakService.getUserRoles());
         this.keycloakService.loadUserProfile().then((result) => {
@@ -55,47 +44,53 @@ export class AuthService {
     });
   }
 
+  public refreshActiveRoleOrgaData() {
+    this.organizationApiService
+      .getOrgaById(
+        this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription
+          .verifiableCredential.credentialSubject['@id']
+      )
+      .then((result) => {
+        this.activeOrgRoleService.organizationRoles[
+          this.activeOrgRoleService.activeOrganizationRole.value.orgaRoleString
+        ].orgaData = result;
+        this.changeActiveOrgaRole(
+          this.activeOrgRoleService.activeOrganizationRole.value.orgaRoleString
+        );
+      });
+  }
+
   logOut() {
     this.keycloakService.logout(window.location.origin);
   }
 
   logIn() {
     this.keycloakService.login({
-      redirectUri: window.location.origin
+      redirectUri: window.location.origin,
     });
   }
 
-  private getOrganizationRole(orgaRoleString: string): OrganizationRole {
-    let role_arr: string[] = orgaRoleString.split('_');
-    let roleName: string = role_arr[0]; // first part is the role name
-    return {
-      orgaRoleString: orgaRoleString,
-      roleName: roleName,
-      roleFriendlyName: this.roleFriendlyNameMapper[roleName]
-    };
-  }
-
   public changeActiveOrgaRole(orgaRoleString: string) {
-    this.activeOrganizationRole.next(this.organizationRoles[orgaRoleString]);
+    this.activeOrgRoleService.changeActiveOrgaRole(orgaRoleString);
   }
 
   private buildOrganizationRoles(userRoles: string[]) {
-    for (let r of userRoles) {
-      if (r.startsWith('OrgRep_') || r.startsWith('OrgLegRep_')) {
-        this.organizationRoles[r] = this.getOrganizationRole(r);
-        // if the active Role is not set, set its initial value to the first role we see
-        if (this.activeOrganizationRole.getValue().orgaRoleString === '') {
-          this.activeOrganizationRole.next(this.organizationRoles[r]);
-        }
-      }
-    }
+    this.activeOrgRoleService.addOrganizationRoles(userRoles);
+
+    let numOfOrgsToLoad = Object.keys(this.activeOrgRoleService.organizationRoles).length;
 
     // update organization data after building the list
-    for (let orgaRoleKey in this.organizationRoles) {
+    for (let orgaRoleKey in this.activeOrgRoleService.organizationRoles) {
       // try finding the organization of this role
       let orgaId: string = orgaRoleKey.split('_').slice(1).join('_'); // everything after the first part is the organization ID (which may include underscores again)
-      this.organizationApiService.getOrgaById(orgaId).then(orga => {
-        this.organizationRoles[orgaRoleKey].orgaData = orga;
+      this.organizationApiService.getOrgaById(orgaId).then((orga) => {
+        this.activeOrgRoleService.organizationRoles[orgaRoleKey].orgaData = orga;
+
+        numOfOrgsToLoad--;
+
+        if (numOfOrgsToLoad == 0) {
+          this.finishedLoadingRoles = true;
+        }
       });
     }
   }

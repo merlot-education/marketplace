@@ -1,59 +1,72 @@
-<div *ngIf="this.activePage.value.content.length !== 0">
-<c-row [xl]="3">
-    <c-col xs *ngFor="let contract of activePage.value.content">
-      <c-card class="mb-4">
-        <c-card-header><b>Vertrag</b>: {{ contract.id }}</c-card-header>
-        <c-card-body>
-          <c-row>
-            <c-col>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item" style="border: none">
-                    <strong>Erstelldatum:</strong><br />
-                    {{ contract.creationDate }}
-                </li>
-                <li class="list-group-item" style="border: none">
-                    <strong>Angebots-ID:</strong> <br />
-                    {{ contract.offering.selfDescription.verifiableCredential.credentialSubject['@id'] }}
-                </li>
-                <li class="list-group-item" style="border: none" *ngIf="contract.providerId !== authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']">
-                  <strong>Serviceanbieter:</strong><br />
-                  {{ contract.providerLegalName }}
-                </li>
-                <li class="list-group-item" style="border: none" *ngIf="contract.consumerId !== authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']">
-                    <strong>Kunde:</strong><br />
-                    {{ contract.consumerLegalName }}
-                  </li>
-                <li class="list-group-item" style="border: none">
-                    <strong>Servicename:</strong><br />
-                    {{ contract.offering.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:name']['@value'] }}
-                </li>
-                <li class="list-group-item" style="border: none">
-                  <strong>Status:</strong><br />
-                  {{ contractApiService.resolveFriendlyStatusName(contract.state) }}
-                </li>
-              </ul>
-              <div style="padding: 10px">
-                <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="'modalViewContract'" (click)="prepareEditContract(contract)">
-                  <div *ngIf="contract.state === 'IN_DRAFT'">
-                    Bearbeiten
-                  </div>
-                  <div *ngIf="contract.state !== 'IN_DRAFT'">
-                    Details
-                  </div>
-                </button>
-              </div>
-            </c-col>
-          </c-row>
-        </c-card-body>
-      </c-card>
-    </c-col>
-  </c-row>
+<div *ngIf="this.activePage.value.content.length !== 0 || applyStatusFilter">
 
-  <app-paging-footer [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE, authService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'])"></app-paging-footer>
+  <div style="padding:10px">
+    <c-form-check [inline]="true" switch sizing="xl">
+      <input cFormCheckInput id="filterCheck" type="checkbox" [(ngModel)]="applyStatusFilter"
+        (change)="filterByStatus(undefined, applyStatusFilter, selectedStatusFilter)" />
+      <label cFormCheckLabel for="filterCheck">Zeige nur Verträge mit Status: </label>
+    </c-form-check> <br />
+    <select class="form-select" (change)="filterByStatus($event.target, applyStatusFilter, selectedStatusFilter)">
+      <option *ngFor="let option of contractApiService.getAvailableStatusNames()" [value]="option">
+        {{contractApiService.resolveFriendlyStatusName(option)}}</option>
+    </select>
+  </div>
+
+  <m-grid>
+    <m-card *ngFor="let contract of activePage.value.content" [blueHeader]="isActiveProvider(contract)" title="<b>Vertrag</b>: {{ getContractTypeName(contract) }} <br/> ID: {{ contract.id.replace('Contract:', '') }}">
+      <c-row>
+        <c-col>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" style="border: none">
+              <strong>Erstelldatum:</strong><br />
+              {{ contract.creationDate | date:"medium" }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Angebots-ID:</strong> <br />
+              {{ contract.offering.selfDescription.verifiableCredential.credentialSubject['@id'] }}
+            </li>
+            <li class="list-group-item" style="border: none" *ngIf="!isActiveProvider(contract)">
+              <strong>Serviceanbieter:</strong><br />
+              {{ contract.providerLegalName }}
+            </li>
+            <li class="list-group-item" style="border: none" *ngIf="!isActiveConsumer(contract)">
+              <strong>Kunde:</strong><br />
+              {{ contract.consumerLegalName }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Servicename:</strong><br />
+              {{
+              contract.offering.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:name']['@value']
+              }}
+            </li>
+            <li class="list-group-item" style="border: none">
+              <strong>Status:</strong><br />
+              {{ contractApiService.resolveFriendlyStatusName(contract.state) }}
+            </li>
+          </ul>
+          <div style="padding: 10px">
+            <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="'modalViewContract'"
+              (click)="prepareEditContract(contract)">
+              <div *ngIf="contract.state === 'IN_DRAFT'">
+                Bearbeiten
+              </div>
+              <div *ngIf="contract.state !== 'IN_DRAFT'">
+                Details
+              </div>
+            </button>
+          </div>
+        </c-col>
+      </c-row>
+    </m-card>
+  </m-grid>
+
+  <m-paginator [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE)"></m-paginator>
 </div>
 
 <h1 *ngIf="initialLoading">Verträge werden geladen...</h1>
-<h1 *ngIf="!initialLoading && this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.</h1> <!--- TODO wird geladen -->
+<h1 *ngIf="!initialLoading && this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.
+</h1>
 
 
-<app-contractview [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors" (buttonClickCallback)="buttonClicked()"></app-contractview>
+<app-contractview [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors"
+  (buttonClickCallback)="buttonInContractViewClicked()"></app-contractview>

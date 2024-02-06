@@ -1,5 +1,0 @@
-<c-pagination align="left">
-    <div cPageItem [disabled]="pageOption.disabled" [active]="pageOption.active" *ngFor="let pageOption of pageOptions">
-      <a cPageLink [routerLink] (click)="handleNavigation(pageOption)">{{ pageOption.text }}</a>
-    </div>
-</c-pagination>

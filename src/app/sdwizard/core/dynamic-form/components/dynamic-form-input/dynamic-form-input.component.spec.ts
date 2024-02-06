@@ -1,6 +1,6 @@
 import {HttpClientModule} from '@angular/common/http';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {MaterialModule} from 'src/app/material.module';
+import {MaterialModule} from 'src/app/sdwizard/material.module';
 
 import {DynamicFormInputComponent} from './dynamic-form-input.component';
 

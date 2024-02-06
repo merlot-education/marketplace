@@ -1,16 +1,20 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 import {
   HashLocationStrategy,
   LocationStrategy,
+  registerLocaleData,
 } from '@angular/common';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { WizardAppModule } from './sdwizard/wizardapp.module';
+import { WizardExtensionModule } from './wizard-extension/wizard-extension.module';
+import { AddActiveRoleHeaderInterceptor } from './services/add-active-role-header.interceptor';
+import { AuthorizationInterceptor} from './services/authorization.interceptor'
 
 import {
   PERFECT_SCROLLBAR_CONFIG,
@@ -25,11 +29,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // Import containers
-import {
-  DefaultFooterComponent,
-  DefaultHeaderComponent,
-  DefaultLayoutComponent,
-} from './containers';
+import { DefaultLayoutComponent } from './containers';
 
 import {
   AvatarModule,
@@ -54,16 +54,17 @@ import {
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { environment } from 'src/environments/environment';
+import { LayoutModule } from '@merlot-education/m-dashboard-ui';
+
+import localeDe from '@angular/common/locales/de';
+
+registerLocaleData(localeDe);
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
 };
 
-const APP_CONTAINERS = [
-  DefaultFooterComponent,
-  DefaultHeaderComponent,
-  DefaultLayoutComponent,
-];
+const APP_CONTAINERS = [DefaultLayoutComponent];
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return async () => {
@@ -78,10 +79,10 @@ function initializeKeycloak(keycloak: KeycloakService) {
           onLoad: 'check-sso',
           silentCheckSsoRedirectUri:
             window.location.origin + '/assets/silent-check-sso.html',
-        }
+        },
       });
     } catch (error) {
-      console.log("failed to reach SSO server");
+      console.log('failed to reach SSO server');
     }
   };
 }
@@ -119,6 +120,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
     HttpClientModule,
     FormsModule,
     WizardAppModule,
+    LayoutModule,
+    WizardExtensionModule
   ],
   providers: [
     {
@@ -135,8 +138,19 @@ function initializeKeycloak(keycloak: KeycloakService) {
       multi: true,
       deps: [KeycloakService],
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AddActiveRoleHeaderInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthorizationInterceptor,
+      multi: true,
+    },
     IconSetService,
     Title,
+    {provide: LOCALE_ID, useValue: 'de'},
   ],
   bootstrap: [AppComponent],
 })

@@ -16,10 +16,10 @@
           <mat-form-field *ngIf="radioButtonSelected == controlType" class="full-width-input">
             <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span>
             </mat-label>
-            <input [formControlName]="input.id" [matTooltip]="input.name" [placeholder]="input.name" [type]="input.datatype" matInput>
+            <input [formControlName]="input.id" [matTooltip]="input.name" [placeholder]="input.name" [type]="$any(input.datatype)" matInput>
           </mat-form-field>
           <mat-error>
-            <app-show-errors *ngIf="radioButtonSelected == controlType" [ctrl]="form.get(input.id)"
+            <app-show-errors *ngIf="radioButtonSelected == controlType" [ctrl]="$any(form.get(input.id))"
                              [label]="input.name"></app-show-errors>
           </mat-error>
         </div>
@@ -30,7 +30,7 @@
             <input [formControlName]="input.id" [matTooltip]="input.name" [placeholder]="input.name" appNumeric matInput type="number">
           </mat-form-field>
           <mat-error>
-            <app-show-errors *ngIf="radioButtonSelected == controlType" [ctrl]="form.get(input.id)"
+            <app-show-errors *ngIf="radioButtonSelected == controlType" [ctrl]="$any(form.get(input.id))"
                              [label]="input.name"></app-show-errors>
           </mat-error>
         </div>
@@ -38,10 +38,10 @@
           <mat-form-field *ngIf="radioButtonSelected == controlType" class="full-width-input">
             <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span>
             </mat-label>
-            <input [id]="input.id" [matTooltip]="input.name" [placeholder]="input.name" appNumeric decimals="2" matInput type="number">
+            <input [id]="input.id" [matTooltip]="input.name" [placeholder]="input.name" appNumeric matInput type="number">
           </mat-form-field>
           <mat-error>
-            <app-show-errors *ngIf="radioButtonSelected == controlType" [ctrl]="form.get(input.id)"
+            <app-show-errors *ngIf="radioButtonSelected == controlType" [ctrl]="$any(form.get(input.id))"
                              [label]="input.name"></app-show-errors>
           </mat-error>
         </div>
@@ -52,7 +52,7 @@
             <input [formControlName]="input.id" [matTooltip]="input.name" [placeholder]="input.name" matInput>
           </mat-form-field>
           <mat-error>
-            <app-show-errors *ngIf="radioButtonSelected == controlType" [ctrl]="form.get(input.id)"
+            <app-show-errors *ngIf="radioButtonSelected == controlType" [ctrl]="$any(form.get(input.id))"
                              [label]="input.name"></app-show-errors>
           </mat-error>
         </div>
@@ -65,7 +65,7 @@
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
           <mat-error>
-            <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+            <app-show-errors [ctrl]="$any(form.get(input.id))" [label]="input.name"></app-show-errors>
           </mat-error>
         </div>
         <div *ngSwitchCase="'datetimepicker'">
@@ -73,11 +73,11 @@
             <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span>
             </mat-label>
             <input [formControlName]="input.id" [ngxMatDatetimePicker]="picker" matInput>
-            <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker-toggle [for]="$any(picker)" matSuffix></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
           </mat-form-field>
           <mat-error>
-            <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+            <app-show-errors [ctrl]="$any(form.get(input.id))" [label]="input.name"></app-show-errors>
           </mat-error>
         </div>
       </div>

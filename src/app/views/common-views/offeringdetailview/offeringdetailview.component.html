@@ -14,7 +14,7 @@
     </li>
     <li class="list-group-item" style="border: none">
       <strong>Erstelldatum:</strong><br />
-      {{ serviceOfferingData.metadata.creationDate }}
+      {{ serviceOfferingData.metadata.creationDate | date:"medium" }}
     </li>
     <ng-container *ngIf="serviceOfferingData.providerDetails">
       <li class="list-group-item" style="border: none">
@@ -26,33 +26,25 @@
       <strong>Status:</strong><br />
       {{ serviceOfferingApiService.resolveFriendlyStatusName(serviceOfferingData.metadata.state) }}
     </li>
-    <li class="list-group-item" style="border: none" *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:description']">
+    <li class="list-group-item" style="border: none" *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['dct:description']">
       <strong>Beschreibung:</strong><br />
-      {{ serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:description']['@value'] }}
+      {{ serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['dct:description']['@value'] }}
     </li>
     <li class="list-group-item" style="border: none">
       <strong>Letzte Änderung:</strong><br />
-      {{ serviceOfferingData.metadata.modifiedDate }}
+      {{ serviceOfferingData.metadata.modifiedDate | date:"medium"  }}
     </li>
     <li class="list-group-item" style="border: none" *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:exampleCosts']">
       <strong>Beispielkosten:</strong><br />
       {{ serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:exampleCosts']['@value'] }}
     </li>
-    <li class="list-group-item" style="border: none">
-      <strong>Allgemeine Geschäftsbedingungen:</strong><br />
+    <li class="list-group-item" style="border: none"  *ngIf="showVariableFields">
+      <strong>Serviceangebotspezifische Geschäftsbedingungen:</strong><br />
       <ul *ngFor="let tnc of serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:termsAndConditions']">
         <li>
-          <a [href]="tnc.content">{{ tnc['gax-trust-framework:content']['@value'] }}</a> (Hash: {{ tnc['gax-trust-framework:hash']['@value'] }})
+          <a [href]="tnc['gax-trust-framework:content']['@value']">{{ tnc['gax-trust-framework:content']['@value'] }}</a> (Hash: {{ tnc['gax-trust-framework:hash']['@value'] }})
         </li>
       </ul>
-    </li>
-    <li class="list-group-item" style="border: none" *ngIf="showVariableFields && serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:attachments']">
-        <strong>Anhänge:</strong><br />
-        <ul *ngFor="let attachment of serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:attachments']">
-            <li>
-            <a [href]="attachment['@value']">{{ attachment['@value'] }}</a>
-            </li>
-        </ul>
     </li>
     <div *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['@type'] === 'merlot:MerlotServiceOfferingSaaS'">
       <li class="list-group-item" style="border: none" *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:hardwareRequirements']">

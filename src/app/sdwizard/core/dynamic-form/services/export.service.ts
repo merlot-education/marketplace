@@ -183,31 +183,10 @@ export class ExportService {
     return valid;
   }
 
-  async saveFile(file: ShaclFile) {
-    const rdfStream = this.createRDFStream(file);
-    const selectedShape = file.shapes.find(shape => shape.selected);
-    // check for download format
-    let blob: Blob;
-    let fileName: string;
-    if (selectedShape.downloadFormat === DownloadFormat.turtle) {
-      console.log(rdfStream);
-      //blob = new Blob([rdfStream], {type: 'turtle'});
-      //fileName = selectedShape.name.concat('-instance.ttl');
-    } else if (selectedShape.downloadFormat === DownloadFormat.jsonld) {
-      let jsonSd = this.convertTurtleToJsonLd(`${rdfStream}`);
-      const jsonSdString = JSON.stringify(jsonSd, null, 2);
-      if (jsonSd["@type"] === "merlot:MerlotOrganization") {
-        return await this.organizationsApiService.saveOrganization(jsonSdString, jsonSd["@id"]);
-      } else {
-        return await this.serviceOfferingApiService.createServiceOffering(jsonSdString, jsonSd["@type"]);
-      }
-      
-
-      //blob = new Blob([this.convertTurtleToJsonLd(`${rdfStream}`)], {type: 'application/json'});
-      //fileName = selectedShape.name.concat('-instance.json');
-    }
-
-    //saveAs(blob, fileName);
+  saveFile(file: ShaclFile): Promise<any> {
+    let rdfStream = this.createRDFStream(file);
+    console.log(rdfStream);
+    return this.convertTurtleToJsonLd(`${rdfStream}`);
   }
 
   convertTurtleToJsonLd(ttl: string) {

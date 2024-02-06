@@ -12,7 +12,7 @@
       </div>
 
       <mat-error>
-        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+        <app-show-errors [ctrl]="$any(form.get(input.id))" [label]="input.name"></app-show-errors>
       </mat-error>
     </div>
 
@@ -28,7 +28,7 @@
       </div>
 
       <mat-error>
-        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+        <app-show-errors [ctrl]="$any(form.get(input.id))" [label]="input.name"></app-show-errors>
       </mat-error>
     </div>
     <div *ngSwitchCase="'textbox_decimal'">
@@ -43,7 +43,7 @@
       </div>
 
       <mat-error>
-        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+        <app-show-errors [ctrl]="$any(form.get(input.id))" [label]="input.name"></app-show-errors>
       </mat-error>
     </div>
     <div *ngSwitchCase="'textbox_uri'">
@@ -58,7 +58,7 @@
       </div>
 
       <mat-error>
-        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+        <app-show-errors [ctrl]="$any(form.get(input.id))" [label]="input.name"></app-show-errors>
       </mat-error>
     </div>
     <div *ngSwitchCase="'dropdown'">
@@ -71,7 +71,7 @@
         
       </div>
       <mat-error>
-        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+        <app-show-errors [ctrl]="$any(form.get(input.id))" [label]="input.name"></app-show-errors>
       </mat-error>
     </div>
 
@@ -88,7 +88,7 @@
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
       <mat-error>
-        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+        <app-show-errors [ctrl]="$any(form.get(input.id))" [label]="input.name"></app-show-errors>
       </mat-error>
     </div>
 
@@ -97,11 +97,11 @@
         <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span>
         </mat-label>
         <input [formControlName]="input.id" [ngxMatDatetimePicker]="picker" matInput>
-        <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker-toggle [for]="$any(picker)" matSuffix></mat-datepicker-toggle>
         <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
       </mat-form-field>
       <mat-error>
-        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+        <app-show-errors [ctrl]="$any(form.get(input.id))" [label]="input.name"></app-show-errors>
       </mat-error>
     </div>
 
@@ -111,7 +111,7 @@
       </mat-label>
       </mat-checkbox>
       <mat-error>
-        <app-show-errors [ctrl]="form.get(input.id)" [label]="input.name"></app-show-errors>
+        <app-show-errors [ctrl]="$any(form.get(input.id))" [label]="input.name"></app-show-errors>
       </mat-error>
     </div>
   </div>
