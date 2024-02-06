@@ -1,3 +1,6 @@
+
+@import "../../../../../node_modules/@merlot-education/m-basic-ui/src/scss/variables_light";
+
 .flex-container {
     display: flex;
     justify-content: left;
@@ -8,3 +11,16 @@
     flex-grow: 1;
     margin: 10px;
   }
+
+  .warning-symbol {
+    display: block;
+    margin: auto; 
+    color: $merlot-red;
+  }
+
+  .warning-box {
+    background-color: $merlot-blue; 
+    padding:2%; 
+    margin:1%;
+  }
+  

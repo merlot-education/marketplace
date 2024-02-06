@@ -4,7 +4,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ActivatedRoute } from '@angular/router';
-import { WizardExtensionComponent } from 'src/app/wizard-extension/wizard-extension.component';
+import { OrganisationWizardExtensionComponent } from 'src/app/wizard-extension/organisation-wizard-extension/organisation-wizard-extension.component';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -14,7 +14,7 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   protected selectedOrganization: IOrganizationData = undefined;
 
-  @ViewChild("wizardExtension") private wizardExtensionComponent: WizardExtensionComponent;
+  @ViewChild("wizardExtension") private wizardExtensionComponent: OrganisationWizardExtensionComponent;
 
   constructor(protected authService: AuthService, 
     protected activeOrgRoleService: ActiveOrganizationRoleService,
@@ -56,7 +56,7 @@ export class EditComponent implements OnInit, AfterViewInit {
       this.patchRegistrationNumberField('gax-trust-framework:leiCode', registrationNumberFields);
 
       this.selectedOrganization = result;
-      this.wizardExtensionComponent.loadShape("MerlotOrganization", 
+      this.wizardExtensionComponent.loadShape(
         this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject["@id"]).then(_ => {
           this.wizardExtensionComponent.prefillOrganisation(result);
         });

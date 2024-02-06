@@ -4,7 +4,7 @@ import { ActiveOrganizationRoleService } from 'src/app/services/active-organizat
 import { ITermsAndConditions, serviceFileNameDict } from '../serviceofferings-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
-import { WizardExtensionComponent } from 'src/app/wizard-extension/wizard-extension.component';
+import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
 import { skip } from 'rxjs';
 
 @Component({
@@ -18,7 +18,7 @@ export class EditComponent implements OnInit, AfterViewInit {
   serviceFiles: string[];
   private selectedServiceFile: string = "";
 
-  @ViewChild("wizardExtension") private wizardExtension: WizardExtensionComponent;
+  @ViewChild("wizardExtension") private wizardExtension: OfferingWizardExtensionComponent;
 
   private ignoredServiceFiles: string[] = ["Merlot ServiceOffering.json"];
 
