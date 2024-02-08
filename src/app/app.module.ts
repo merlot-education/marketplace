@@ -7,7 +7,6 @@ import {
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
@@ -66,27 +65,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 const APP_CONTAINERS = [DefaultLayoutComponent];
 
-function initializeKeycloak(keycloak: KeycloakService) {
-  return async () => {
-    try {
-      await keycloak.init({
-        config: {
-          url: environment.sso_url,
-          realm: 'POC1',
-          clientId: 'MARKETPLACE',
-        },
-        initOptions: {
-          onLoad: 'check-sso',
-          silentCheckSsoRedirectUri:
-            window.location.origin + '/assets/silent-check-sso.html',
-        },
-      });
-    } catch (error) {
-      console.log('failed to reach SSO server');
-    }
-  };
-}
-
 @NgModule({
   declarations: [AppComponent, ...APP_CONTAINERS],
   imports: [
@@ -116,7 +94,6 @@ function initializeKeycloak(keycloak: KeycloakService) {
     BadgeModule,
     ListGroupModule,
     CardModule,
-    KeycloakAngularModule,
     HttpClientModule,
     FormsModule,
     WizardAppModule,
@@ -131,12 +108,6 @@ function initializeKeycloak(keycloak: KeycloakService) {
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeKeycloak,
-      multi: true,
-      deps: [KeycloakService],
     },
     {
       provide: HTTP_INTERCEPTORS,
