@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { OrganizationsApiService } from './organizations-api.service';
 import { ActiveOrganizationRoleService } from './active-organization-role.service';
 import { IOrganizationData } from '../views/organization/organization-data';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 export interface OrganizationRole {
   orgaRoleString: string;
@@ -20,8 +21,11 @@ export class AuthService {
 
   constructor(
     private organizationApiService: OrganizationsApiService,
-    private activeOrgRoleService: ActiveOrganizationRoleService
+    private activeOrgRoleService: ActiveOrganizationRoleService,
+    private oauthService: OAuthService
   ) {
+    console.log(oauthService);
+    this.activeOrgRoleService.isLoggedIn = oauthService.hasValidAccessToken();
   }
 
   public refreshActiveRoleOrgaData() {
@@ -44,6 +48,7 @@ export class AuthService {
   }
 
   logIn() {
+    this.oauthService.loadDiscoveryDocumentAndTryLogin();
   }
 
   public changeActiveOrgaRole(orgaRoleString: string) {

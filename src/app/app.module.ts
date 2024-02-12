@@ -15,6 +15,8 @@ import { WizardExtensionModule } from './wizard-extension/wizard-extension.modul
 import { AddActiveRoleHeaderInterceptor } from './services/add-active-role-header.interceptor';
 import { AuthorizationInterceptor} from './services/authorization.interceptor'
 
+import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
+
 import {
   PERFECT_SCROLLBAR_CONFIG,
   PerfectScrollbarConfigInterface,
@@ -52,7 +54,6 @@ import {
 } from '@coreui/angular';
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
-import { environment } from 'src/environments/environment';
 import { LayoutModule } from '@merlot-education/m-dashboard-ui';
 
 import localeDe from '@angular/common/locales/de';
@@ -98,7 +99,13 @@ const APP_CONTAINERS = [DefaultLayoutComponent];
     FormsModule,
     WizardAppModule,
     LayoutModule,
-    WizardExtensionModule
+    WizardExtensionModule,
+    OAuthModule.forRoot({
+      resourceServer: {
+          allowedUrls: ['http://www.angular.at/api'],
+          sendAccessToken: true
+      }
+  })
   ],
   providers: [
     {
