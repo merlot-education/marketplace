@@ -20,6 +20,7 @@ export class AddActiveRoleHeaderInterceptor implements HttpInterceptor {
       const clonedRequest = req.clone(
         { 
           headers: req.headers.append('Active-Role', activeRole.orgaRoleString)
+            .append('Authorization', 'Bearer ' + this.activeOrgaRoleService.accessToken)
         });
       // Pass the cloned request instead of the original request to the next handle
       return next.handle(clonedRequest);

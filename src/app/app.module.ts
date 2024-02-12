@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import {
   HashLocationStrategy,
   LocationStrategy,
@@ -13,9 +13,9 @@ import { FormsModule } from '@angular/forms';
 import { WizardAppModule } from './sdwizard/wizardapp.module';
 import { WizardExtensionModule } from './wizard-extension/wizard-extension.module';
 import { AddActiveRoleHeaderInterceptor } from './services/add-active-role-header.interceptor';
-import { AuthorizationInterceptor} from './services/authorization.interceptor'
+import { AuthorizationInterceptor} from './services/authorization.interceptor';
 
-import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
+import { AuthModule, LogLevel } from 'angular-auth-oidc-client';
 
 import {
   PERFECT_SCROLLBAR_CONFIG,
@@ -100,12 +100,22 @@ const APP_CONTAINERS = [DefaultLayoutComponent];
     WizardAppModule,
     LayoutModule,
     WizardExtensionModule,
-    OAuthModule.forRoot({
-      resourceServer: {
-          allowedUrls: ['http://www.angular.at/api'],
-          sendAccessToken: true
-      }
-  })
+    AuthModule.forRoot({
+      config: {
+        authority: 'https://auth-service.dev.merlot-education.eu',
+        redirectUrl: window.location.origin,
+        customParamsCodeRequest: {
+          client_secret: 'demo-portal'
+        },
+        postLogoutRedirectUri: window.location.origin,
+        clientId: 'MPO',
+        scope: 'openid profile email',
+        responseType: 'code',
+        silentRenew: true,
+        useRefreshToken: true,
+        logLevel: LogLevel.Debug,
+      },
+    }),
   ],
   providers: [
     {

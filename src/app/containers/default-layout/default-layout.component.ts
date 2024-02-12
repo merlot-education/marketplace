@@ -37,11 +37,11 @@ export class DefaultLayoutComponent {
 
   public async ngOnInit() {
     let globalNavItems = structuredClone(navItems);
-    if (!this.activeOrgRoleService.isLoggedIn) {
+    if (!this.activeOrgRoleService.isLoggedIn.value) {
       this.navItems = this.buildAllowedNavItems(globalNavItems, null);
     }
     let tries = 0;
-    while (this.activeOrgRoleService.isLoggedIn) {
+    while (this.activeOrgRoleService.isLoggedIn.value) {
       this.selectedRoleOption = this.activeOrgRoleService.activeOrganizationRole.getValue().orgaRoleString;
       console.log('waiting for roles to load');
       await this.wait(200);

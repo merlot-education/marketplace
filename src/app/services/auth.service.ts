@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { OrganizationsApiService } from './organizations-api.service';
 import { ActiveOrganizationRoleService } from './active-organization-role.service';
 import { IOrganizationData } from '../views/organization/organization-data';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 export interface OrganizationRole {
   orgaRoleString: string;
@@ -22,10 +22,28 @@ export class AuthService {
   constructor(
     private organizationApiService: OrganizationsApiService,
     private activeOrgRoleService: ActiveOrganizationRoleService,
-    private oauthService: OAuthService
+    private oidcSecurityService: OidcSecurityService,
   ) {
-    console.log(oauthService);
-    this.activeOrgRoleService.isLoggedIn = oauthService.hasValidAccessToken();
+    this.activeOrgRoleService.isLoggedIn.subscribe((isLoggedIn) => {
+      if (isLoggedIn) {
+        console.log("rebuilding roles");
+        // if logged in, update the roles of the user, load the profile and get the token
+        switch (this.activeOrgRoleService.userData.Role) {
+          case "dataport":
+            this.buildOrganizationRoles(["OrgLegRep_did:web:marketplace.dev.merlot-education.eu#14e2471b-a276-3349-8a6e-caa941f9369b"]);
+            break;
+          case "capgemini":
+            this.buildOrganizationRoles(["OrgLegRep_did:web:marketplace.dev.merlot-education.eu#1c092e75-4a75-3746-9c76-a737389e3e49"]);
+            break;
+          case "gaia":
+            this.buildOrganizationRoles(["OrgLegRep_did:web:marketplace.dev.merlot-education.eu#c041ea73-3ecf-3a06-a5cd-919f5cef8e54"]);
+            break;
+          default:
+            this.buildOrganizationRoles([]);
+            break;
+        }
+      }
+    });
   }
 
   public refreshActiveRoleOrgaData() {
@@ -45,10 +63,13 @@ export class AuthService {
   }
 
   logOut() {
+    this.oidcSecurityService
+      .logoff()
+      .subscribe((result) => console.log(result));
   }
 
   logIn() {
-    this.oauthService.loadDiscoveryDocumentAndTryLogin();
+    this.oidcSecurityService.authorize();
   }
 
   public changeActiveOrgaRole(orgaRoleString: string) {
@@ -59,6 +80,7 @@ export class AuthService {
     this.activeOrgRoleService.addOrganizationRoles(userRoles);
 
     let numOfOrgsToLoad = Object.keys(this.activeOrgRoleService.organizationRoles).length;
+    this.finishedLoadingRoles = numOfOrgsToLoad === 0;
 
     // update organization data after building the list
     for (let orgaRoleKey in this.activeOrgRoleService.organizationRoles) {
