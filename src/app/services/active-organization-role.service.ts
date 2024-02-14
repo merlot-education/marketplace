@@ -8,13 +8,15 @@ import { OrganizationRole } from './auth.service'
 export class ActiveOrganizationRoleService {
   public isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  public userData: {
+  public userData?: {
     ID: string;
     Organisation: string;
     Role: string;
     issuerDID: string;
     sub: string;
     subjectDID: string;
+    Vorname: string;
+    Nachname: string;
   } = null;
 
   public accessToken: string = null;

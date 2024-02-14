@@ -37,32 +37,17 @@ export class DefaultLayoutComponent {
 
   public async ngOnInit() {
     let globalNavItems = structuredClone(navItems);
-    if (!this.activeOrgRoleService.isLoggedIn.value) {
-      this.navItems = this.buildAllowedNavItems(globalNavItems, null);
-    }
-    let tries = 0;
-    while (this.activeOrgRoleService.isLoggedIn.value) {
-      this.selectedRoleOption = this.activeOrgRoleService.activeOrganizationRole.getValue().orgaRoleString;
-      console.log('waiting for roles to load');
-      await this.wait(200);
-
-      if (this.authService.finishedLoadingRoles) {
+    this.navItems = this.buildAllowedNavItems(globalNavItems, null);
+    this.authService.finishedLoadingRoles.subscribe(finished => {
+      if (finished) {
+        this.selectedRoleOption = this.activeOrgRoleService.activeOrganizationRole.getValue().orgaRoleString;
         this.activeOrgRoleService.activeOrganizationRole.subscribe(role => {
           let globalNavItems = structuredClone(navItems);
           this.navItems = this.buildAllowedNavItems(globalNavItems, role);
         });
         this.loadRolesForMenu();
-        break;
       }
-
-      // TODO: remove this if there are no regular problems with roles (don't forget the tries variable above)
-      tries++;
-      if (tries > 10) {
-        console.warn(
-          'still trying to load roles from the auth service, if you keep seeing this warning, check in `buildOrganizationRoles`'
-        );
-      }
-    }
+    });
   }
 
   private loadRolesForMenu() {
@@ -79,6 +64,7 @@ export class DefaultLayoutComponent {
           ],
       });
     }
+    console.log(this.organizationRolesForLayout[0]);
   }
 
   private buildAllowedNavItems(navItems: IRoleNavData[], activeRole: OrganizationRole) {
