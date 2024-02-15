@@ -34,12 +34,6 @@ export class OrganizationsApiService {
     return orgaData;
   }
 
-  public async getConnectorsOfOrganization(orgaId: string) {
-    return await lastValueFrom(
-      this.http.get(environment.organizations_api_url + "organization/" + this.patchOrgaId(orgaId) + "/connectors/")
-    ) as ConnectorData[];
-  }
-
   public async getOrgaById(id: string): Promise<IOrganizationData> {
     return await (await lastValueFrom(
       this.http.get(environment.organizations_api_url + "organization/" + this.patchOrgaId(id))

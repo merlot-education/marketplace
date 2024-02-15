@@ -60,4 +60,5 @@ export interface IOrganizationMetadata {
   mailAddress: string;
   membershipClass: string;
   active: boolean;
+  connectors: ConnectorData[];
 }

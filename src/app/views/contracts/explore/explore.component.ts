@@ -53,7 +53,6 @@ export class ExploreComponent implements OnInit {
   private isCurrentlyFiltered: boolean = false;
 
   constructor(
-    private organizationsApiService: OrganizationsApiService,
     private serviceOfferingApiService: ServiceofferingApiService,
     protected authService: AuthService,
     protected activeOrgRoleService: ActiveOrganizationRoleService,
@@ -64,9 +63,7 @@ export class ExploreComponent implements OnInit {
 
   ngOnInit(): void {
     this.activeOrgRoleService.activeOrganizationRole.subscribe(value => {
-      this.organizationsApiService.getConnectorsOfOrganization(value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']).then(result => {
-        this.orgaConnectors = result;
-      });
+      this.orgaConnectors = value.orgaData.metadata.connectors
       this.refreshContracts(0, this.ITEMS_PER_PAGE);
     }); 
   }
