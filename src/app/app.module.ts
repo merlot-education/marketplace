@@ -107,6 +107,9 @@ const APP_CONTAINERS = [DefaultLayoutComponent];
         customParamsCodeRequest: {
           client_secret: 'demo-portal'
         },
+        customParamsRefreshTokenRequest: {
+          client_secret: 'demo-portal'
+        },
         postLogoutRedirectUri: window.location.origin,
         clientId: 'MPO',
         scope: 'openid profile email',
@@ -114,6 +117,7 @@ const APP_CONTAINERS = [DefaultLayoutComponent];
         silentRenew: true,
         useRefreshToken: true,
         logLevel: LogLevel.Debug,
+        renewTimeBeforeTokenExpiresInSeconds: 60,
       },
     }),
   ],

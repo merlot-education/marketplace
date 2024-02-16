@@ -33,19 +33,6 @@ export const navItems: IRoleNavData[] = [
     ],
   },
   {
-    name: 'Benutzerverwaltung',
-    url: '/users',
-    iconComponent: { name: 'cil-user' },
-    allowedRoles: ['Rep'],
-    children: [
-      {
-        name: 'Nutzer meiner Organisation anzeigen',
-        url: '/users/explore',
-        allowedRoles: ['Rep'],
-      },
-    ],
-  },
-  {
     name: 'Service Angebote',
     url: '/service-offerings',
     iconComponent: { name: 'cil-puzzle' },

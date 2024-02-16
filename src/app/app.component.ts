@@ -5,8 +5,10 @@ import { IconSetService } from '@coreui/icons-angular';
 import { iconSubset } from './icons/icon-subset';
 import { Title } from '@angular/platform-browser';
 
-import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { EventTypes, OidcSecurityService } from 'angular-auth-oidc-client';
 import { ActiveOrganizationRoleService } from './services/active-organization-role.service';
+import { PublicEventsService } from 'angular-auth-oidc-client';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +23,8 @@ export class AppComponent implements OnInit {
     private titleService: Title,
     private iconSetService: IconSetService,
     private oidcSecurityService: OidcSecurityService,
-    private activeOrgRoleService: ActiveOrganizationRoleService
+    private activeOrgRoleService: ActiveOrganizationRoleService,
+    private publicEventsService: PublicEventsService,
   ) {
     titleService.setTitle(this.title);
     // iconSet singleton
@@ -37,6 +40,13 @@ export class AppComponent implements OnInit {
 
         // update this last to trigger next steps
         activeOrgRoleService.isLoggedIn.next(isAuthenticated);
+      });
+      this.publicEventsService.registerForEvents()
+        .pipe(filter((notification) => notification.type === EventTypes.NewAuthenticationResult))
+        .subscribe(_ => {
+          oidcSecurityService.getAccessToken().subscribe(token => {
+            activeOrgRoleService.accessToken = token;
+          });
       });
   }
 
