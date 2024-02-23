@@ -28,7 +28,6 @@ export class AuthService {
       if (isLoggedIn) {
         console.log("rebuilding roles");
         console.log(this.activeOrgRoleService.userData);
-        // if logged in, update the roles of the user, load the profile and get the token
         this.buildOrganizationRoles([(this.activeOrgRoleService.userData.Role + "_" + this.activeOrgRoleService.userData.issuerDID)]);
       }
     });

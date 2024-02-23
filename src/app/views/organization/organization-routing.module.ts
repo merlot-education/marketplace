@@ -4,6 +4,7 @@ import { EditComponent } from './edit/edit.component';
 import { ExploreComponent } from './explore/explore.component';
 import { ImportComponent } from './import/import.component';
 import { fedAuthGuard, repAuthGuard } from 'src/app/auth.guard';
+import { OidcGuard } from 'src/app/oidc.guard';
 
 
 const routes: Routes = [
@@ -31,7 +32,7 @@ const routes: Routes = [
         data: {
           title: 'Organisation bearbeiten',
         },
-        canActivate: [repAuthGuard]
+        canActivate: [OidcGuard, repAuthGuard]
       },
       {
         path: 'edit/:orgaId',
@@ -39,7 +40,7 @@ const routes: Routes = [
         data: {
           title: 'Organisation bearbeiten',
         },
-        canActivate: [fedAuthGuard]
+        canActivate: [OidcGuard, fedAuthGuard]
       },
       {
         path: 'import', 
@@ -47,7 +48,7 @@ const routes: Routes = [
         data: {
           title: 'Organisation hinzufügen',
         },
-        canActivate: [fedAuthGuard]
+        canActivate: [OidcGuard, fedAuthGuard]
       },
     ],
   },

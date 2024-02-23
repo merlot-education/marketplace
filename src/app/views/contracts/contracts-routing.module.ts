@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ExploreComponent } from './explore/explore.component';
 import { repAuthGuard } from 'src/app/auth.guard';
+import { OidcGuard } from 'src/app/oidc.guard';
 
 
 const routes: Routes = [
@@ -17,7 +18,7 @@ const routes: Routes = [
         data: {
           title: 'Meine Verträge erkunden',
         },
-        canActivate: [repAuthGuard]
+        canActivate: [OidcGuard, repAuthGuard]
       },
     ],
   },

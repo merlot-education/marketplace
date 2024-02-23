@@ -5,6 +5,7 @@ import { DefaultLayoutComponent } from './containers';
 import { Page404Component } from './views/pages/page404/page404.component';
 import { Page500Component } from './views/pages/page500/page500.component';
 import { repAuthGuard } from './auth.guard';
+import { OidcGuard } from './oidc.guard';
 
 const routes: Routes = [
   {
@@ -43,7 +44,7 @@ const routes: Routes = [
         path: 'users',
         loadChildren: () =>
           import('./views/users/users.module').then((m) => m.UsersModule),
-          canActivate: [repAuthGuard]
+          canActivate: [OidcGuard, repAuthGuard]
       },
       {
         path: 'service-offerings',
@@ -54,7 +55,7 @@ const routes: Routes = [
         path: 'contracts',
         loadChildren: () =>
           import('./views/contracts/contracts.module').then((m) => m.ContractsModule),
-          canActivate: [repAuthGuard]
+          canActivate: [OidcGuard, repAuthGuard]
       },
       {
         path: 'pages',
