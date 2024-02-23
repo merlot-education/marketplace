@@ -5,9 +5,8 @@ import { IconSetService } from '@coreui/icons-angular';
 import { iconSubset } from './icons/icon-subset';
 import { Title } from '@angular/platform-browser';
 
-import { EventTypes, OidcSecurityService } from 'angular-auth-oidc-client';
+import { EventTypes, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
 import { ActiveOrganizationRoleService } from './services/active-organization-role.service';
-import { PublicEventsService } from 'angular-auth-oidc-client';
 import { filter } from 'rxjs';
 
 @Component({
