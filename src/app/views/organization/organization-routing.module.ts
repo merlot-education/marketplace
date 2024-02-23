@@ -3,8 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { EditComponent } from './edit/edit.component';
 import { ExploreComponent } from './explore/explore.component';
 import { ImportComponent } from './import/import.component';
-import { fedAuthGuard, repAuthGuard } from 'src/app/auth.guard';
-import { OidcGuard } from 'src/app/oidc.guard';
+import { fedAuthGuard, isAuthenticated, repAuthGuard } from 'src/app/auth.guard';
 
 
 const routes: Routes = [
@@ -32,7 +31,7 @@ const routes: Routes = [
         data: {
           title: 'Organisation bearbeiten',
         },
-        canActivate: [OidcGuard, repAuthGuard]
+        canActivate: [isAuthenticated, repAuthGuard]
       },
       {
         path: 'edit/:orgaId',
@@ -40,7 +39,7 @@ const routes: Routes = [
         data: {
           title: 'Organisation bearbeiten',
         },
-        canActivate: [OidcGuard, fedAuthGuard]
+        canActivate: [isAuthenticated, fedAuthGuard]
       },
       {
         path: 'import', 
@@ -48,7 +47,7 @@ const routes: Routes = [
         data: {
           title: 'Organisation hinzufügen',
         },
-        canActivate: [OidcGuard, fedAuthGuard]
+        canActivate: [isAuthenticated, fedAuthGuard]
       },
     ],
   },

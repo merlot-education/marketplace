@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ExploreComponent } from './explore/explore.component';
 import { EditComponent } from './edit/edit.component';
-import { repAuthGuard } from 'src/app/auth.guard';
-import { OidcGuard } from 'src/app/oidc.guard';
+import { isAuthenticated, repAuthGuard } from 'src/app/auth.guard';
 
 
 const routes: Routes = [
@@ -26,7 +25,7 @@ const routes: Routes = [
         data: {
           title: 'Service Angebot erstellen',
         },
-        canActivate: [OidcGuard, repAuthGuard]
+        canActivate: [isAuthenticated, repAuthGuard]
       },
     ],
   },
