@@ -67,9 +67,7 @@ export class ExploreComponent implements OnInit {
           }
 
           if (orga.activeRepresentant) {
-            this.organizationsApiService.getConnectorsOfOrganization(orga.selfDescription.verifiableCredential.credentialSubject['@id']).then(value => {
-              this.connectorInfo = value;
-            });
+              this.connectorInfo = orga.metadata.connectors;
           }
         } else if (this.activeOrgRoleService.isActiveAsFedAdmin()) {
           orga.activeRepresentant = false;

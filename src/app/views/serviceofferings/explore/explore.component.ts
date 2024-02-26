@@ -110,10 +110,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.activeOrgRoleService.isActiveAsRepresentative()) {
       this.activeOrgaSubscription = this.activeOrgRoleService.activeOrganizationRole.subscribe(value => {
-        this.organizationsApiService.getConnectorsOfOrganization(value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']).then(result => {
-        this.orgaConnectors = result;
-        this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
-      });
+        this.orgaConnectors = value.orgaData.metadata.connectors;
+        this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);   
     });
     }
     this.refreshOfferings();
