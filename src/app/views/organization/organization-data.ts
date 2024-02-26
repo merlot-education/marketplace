@@ -47,8 +47,6 @@ interface IVCardAddress {
 }
 
 export interface ConnectorData {
-  id: string;
-  orgaId: string;
   connectorId: string;
   connectorEndpoint: string;
   connectorAccessToken: string;
