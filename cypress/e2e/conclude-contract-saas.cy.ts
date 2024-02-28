@@ -5,8 +5,8 @@ it('conclude saas contract', {
     defaultCommandTimeout: 10000
 }, () => {
     let inDraft = "In Bearbeitung";
-    let consumerSigned = "Vom Kunden unterschrieben"
-    let released = "Veröffentlicht"
+    let consumerSigned = "Vom Kunden unterschrieben";
+    let released = "Veröffentlicht";
 
     // testuser creates a SaaS offering that can be booked:
     // log in as testuser
@@ -23,10 +23,10 @@ it('conclude saas contract', {
     let runtimeOptionsSelect = ["year(s)", "year(s)", "unlimited"];
 
     // click on navigation entry Serviceangebote, the submenu is extended
-    cy.contains('Service Angebote').click({ force: true })
+    cy.contains('Service Angebote').click({ force: true });
 
     // click on navigation entry Serviceangebot erstellen, the form will be displayed on the right side of the screen
-    cy.contains('Service Angebot erstellen').click({ force: true })
+    cy.contains('Service Angebot erstellen').click({ force: true });
 
     // select Webanwendung as type
     cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Webanwendung", { force: true });
@@ -44,7 +44,7 @@ it('conclude saas contract', {
         cy.wrap($el).parent().parent().parent().contains("Option für maximale Nutzerzahl").next().type(userCountOptions[index] + "", { force: true });
     });
 
-    // make sure publish button is no longer disabled
+    // make sure publish button is not disabled
     // click on button "Veröffentlichen"
     cy.contains("Veröffentlichen").should("not.be.disabled").scrollIntoView().click({ force: true });
 
@@ -74,7 +74,7 @@ it('conclude saas contract', {
         cy.contains("Vertragskonfiguration zum Service Angebot", { timeout: 30000 }).parent().parent().should("include.text", "Contract:").then((result) => {
             const contractIdRegex = /Contract:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/;
             let contractId = result.get(0).innerText.match(contractIdRegex)[0];
-            const contractIdArray = contractId.split(":")
+            const contractIdArray = contractId.split(":");
             let contractIdWithoutPrefix = contractIdArray[1];
 
             cy.contains("Vertragsentwurf speichern");
@@ -206,7 +206,7 @@ it('conclude saas contract', {
             cy.intercept('GET', environment.contract_api_url + "contract/" + contractId + "/contractPdf").as('downloadRequest');
 
              // download contract pdf
-             cy.contains("Schließen")
+             cy.contains("Schließen");
              cy.contains("Vertrag archivieren");
              cy.contains("Vertrag herunterladen").click({ force: true });
 
@@ -223,15 +223,14 @@ it('conclude saas contract', {
 
             // log in as testuser, archive the SaaS offering as it is not needed anymore, then log out:
             // log in as testuser
-            loginAsTestuser()
+            loginAsTestuser();
 
             archiveReleasedOffering(offeringId);
 
             logout();
         
             // check that the offering is no longer in the overview
-            cy.contains('Service Angebote').click()
-            
+            cy.contains('Service Angebote erkunden').click({ force: true })
             cy.get("c-card-body").contains(offeringId).should("not.exist");
         });
     });
