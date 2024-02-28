@@ -167,15 +167,69 @@ export function openOfferingDetails(offeringId: string, expectedStatus: string) 
     });
 }
 
-export function openContractForEdit(contractId: string, serviceName: string) {
-    const contractIdArray = contractId.split(":")
+export function openContractForEdit(contractIdWithoutPrefix: string, status: string, offeringName: string) {
     // search for contract in list
-    cy.contains("ID: " + contractIdArray[1]).within(() => {
-        //check status of created contract equals "In Bearbeitung"
-        cy.contains("Status").parent().should("include.text", "In Bearbeitung");
-        //check associated service of created contract
-        cy.contains("Servicename").parent().should("include.text", serviceName);
+    cy.contains("ID: " + contractIdWithoutPrefix).parent().parent().within(() => {
+        // check status of created contract equals the given status
+        cy.contains("Status").parent().should("include.text", status);
+        // check associated service of created contract
+        cy.contains("Servicename").parent().should("include.text", offeringName);
         // click on button Bearbeiten of the created contract
         cy.contains("Bearbeiten").click({force: true});
     });
+}
+
+export function openContractDetails(contractIdWithoutPrefix: string, status: string, offeringName: string) {
+    // search for contract in list
+    cy.contains("ID: " + contractIdWithoutPrefix).parent().parent().within(() => {
+        // check status of created contract equals the given status
+        cy.contains("Status").parent().should("include.text", status);
+        // check associated service of created contract
+        cy.contains("Servicename").parent().should("include.text", offeringName);
+        // click on button Bearbeiten of the created contract
+        cy.contains("Details").click({force: true});
+    });
+}
+
+export function checkContractInOverview(contractIdWithoutPrefix: string, status: string, offeringName: string){
+    cy.contains("ID: " + contractIdWithoutPrefix).parent().parent().within(() => {
+        // check status of created contract equals the given status
+        cy.contains("Status").parent().should("include.text", status);
+        // check associated service of created contract
+        cy.contains("Servicename").parent().should("include.text", offeringName);
+    });
+}
+
+export function archiveReleasedOffering(offeringId: string) {
+    // assumes contract is released state
+
+    // click on navigation entry Serviceangebote,  the submenu is extended
+    cy.contains('Service Angebote').click()
+
+    // click on navigation entry Serviceangebot erkunden, the form will be displayed on the right side of the screen
+    cy.contains('Service Angebote erkunden').click()
+    cy.url().should('include', 'service-offerings/explore')
+
+    // search for offering in list
+    cy.contains(offeringId).parent().parent().parent().within(() => {
+        // click on the card button "Details" to open the detail page
+        cy.contains("Details").click({force: true});
+    });
+
+    cy.contains("Details zum Service Angebot").parent().parent().within(() => {
+        cy.contains("Widerrufen").scrollIntoView().click({force: true});
+    });
+
+    // delete the offering
+    cy.contains("Details zum Service Angebot").parent().parent().within(() => {
+        cy.contains("Status").parent().should("include.text", "Widerrufen");
+    });
+
+    cy.contains("Löschen").click({force: true});
+
+    cy.contains("Details zum Service Angebot").parent().parent().within(() => {
+        cy.contains("Status").parent().should("include.text", "Archiviert");
+    });
+
+    cy.contains("Schließen").click({force: true});
 }
