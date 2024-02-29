@@ -1,4 +1,5 @@
-import { loginAsTestuser, loginAsTestuser2, openOfferingDetails, checkContractInOverview, openContractForEdit, openContractDetails, fillGeneralOfferingFields, logout, archiveReleasedOffering } from "./create-service-offer-common";
+import { loginAsTestuser, loginAsTestuser2, openOfferingDetails, fillGeneralOfferingFields, logout, archiveReleasedOffering } from "./create-service-offer-common";
+import { openContractForEdit, checkContractInOverview, openContractDetails} from "./conclude-contract-common";
 import { environment } from '../../src/environments/environment.dev';
 
 it('conclude saas contract', {
@@ -221,9 +222,25 @@ it('conclude saas contract', {
             // log out as testuser2
             logout();
 
-            // log in as testuser, archive the SaaS offering as it is not needed anymore, then log out:
+            // log in as testuser, archive contract and the SaaS offering as they are not needed anymore, then log out:
             // log in as testuser
             loginAsTestuser();
+
+            cy.contains("Meine Verträge").click({ force: true });
+
+            openContractDetails(contractIdWithoutPrefix, released, offeringName);
+
+            cy.contains("Vertrag herunterladen");
+            cy.contains("Schließen");
+            cy.contains("Vertrag archivieren").click({ force: true });
+            cy.wait(500);
+            cy.contains("Vertrag archivieren").should("not.exist");
+            cy.contains("Vertrag neu erstellen");
+            cy.contains("Vertrag herunterladen");
+            cy.contains("Schließen").click({ force: true });
+
+            // check that the contract for the data delivery offering has the status Archiviert
+            checkContractInOverview(contractIdWithoutPrefix, "Archiviert", offeringName);
 
             archiveReleasedOffering(offeringId);
 
