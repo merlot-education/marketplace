@@ -14,7 +14,7 @@ it('conclude saas contract', {
     loginAsTestuser();
 
     let offeringName = "Lernplattform (LMS) für betriebliche Weiterbildung (SaaS)";
-    let offeringDescription = "Bewältigen Sie Ihre Enterprise Anforderungen mit der perfekten Kombination aus Learning Management System und Learning Experience Platform. Nutzen Sie Daten über sich ändernde Skill- und Kompetenzanforderungen und den Fachkräftemarkt Ihrer Branche, um Ihre Weiterbildungsprozesse automatisch anzupassen. Dazu ermöglicht das LMS der imc AG als SaaS eine besonders einfache Anbindung an den MERLOT Datenraum, der sichere Verarbeitung und Verwertung von Ihren Daten garantiert und in dem Sie in Kontrolle Ihrer Daten bleiben.";
+    let offeringDescription = "Bewältigen Sie Ihre Enterprise Anforderungen mit der perfekten Kombination aus Learning Management System und Learning Experience Platform. Nutzen Sie Daten über sich ändernde Skill- und Kompetenzanforderungen und den Fachkräftemarkt Ihrer Branche, um Ihre Weiterbildungsprozesse automatisch anzupassen. Dazu ermöglicht das LMS der Gaia-X AISBL als SaaS eine besonders einfache Anbindung an den MERLOT Datenraum, der sichere Verarbeitung und Verwertung von Ihren Daten garantiert und in dem Sie in Kontrolle Ihrer Daten bleiben.";
     let offeringTncLink = "https://merlot.test.de/tnc"
     let offeringTncHash = "hash12345678";
     let offeringCosts = "Abonnement, Verhandlungsbasis";
@@ -63,6 +63,7 @@ it('conclude saas contract', {
         loginAsTestuser2();
 
         // select the SaaS offering and book it as testuser2
+        cy.contains("Service Angebote").click({ force: true });
         cy.contains("Service Angebote erkunden").click({ force: true });
 
         openOfferingDetails(offeringId, null);
@@ -85,10 +86,11 @@ it('conclude saas contract', {
 
             cy.contains("Meine Verträge").click({ force: true });
 
+            // open the contract draft which should be in state In Bearbeitung to edit it
             openContractForEdit(contractIdWithoutPrefix, inDraft, offeringName);
 
+            // select Laufzeit Unbegrenzt and Anzahl erlaubter Benutzer Unbegrenzt
             cy.contains("Laufzeit*:").next().next().select("Unbegrenzt");
-
             cy.contains("Anzahl erlaubter Benutzer*:").next().next().select("Unbegrenzt");
 
             // save and close the contract draft
@@ -96,7 +98,7 @@ it('conclude saas contract', {
             cy.wait(500);
             cy.contains("Schließen").click({ force: true });
 
-            // check that the just edited contract draft for the SaaS offering should still be in draft
+            // check that the just edited contract draft for the SaaS offering is still in draft
             checkContractInOverview(contractIdWithoutPrefix, inDraft, offeringName);
 
             // log out as testuser2
@@ -106,7 +108,7 @@ it('conclude saas contract', {
             // log in as testuser
             loginAsTestuser();
 
-            // check that the contract draft is there and open it
+            // check that the contract draft is there and has status In Bearbeitung, then open it
             cy.contains("Meine Verträge").click({ force: true });
 
             openContractForEdit(contractIdWithoutPrefix, inDraft, offeringName);
@@ -136,7 +138,7 @@ it('conclude saas contract', {
             // log in as testuser2
             loginAsTestuser2();
 
-            // check that the contract draft is there and open it
+            // check that the contract draft is there and has status In Bearbeitung, then open it
             cy.contains("Meine Verträge").click({ force: true });
 
             openContractForEdit(contractIdWithoutPrefix, inDraft, offeringName);

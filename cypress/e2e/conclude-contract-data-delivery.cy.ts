@@ -142,9 +142,7 @@ it('conclude and cancel data delivery contract', {
             // select Aktiver EDC Connector edc2, IONOS-S3 Quell-Bucket merlot-edc-gaiax and Quell-Dateipfad im IONOS-S3 Bucket jobs4dp/DPjobs01.json, Typ der Datenadresse IonosS3
             cy.contains("Aktiver EDC Connector*:").next().next().select("edc2");
             cy.contains("IONOS-S3 Quell-Bucket*").next().next().select("merlot-edc-gaiax");
-            cy.get('label:contains("Quell-Dateipfad im IONOS-S3 Bucket*") + input')
-                .type("jobs4dp/DPjobs01.json");
-
+            cy.get('label:contains("Quell-Dateipfad im IONOS-S3 Bucket*") + input').type("jobs4dp/DPjobs01.json");
             cy.contains("Typ der Datenadresse*").next().next().select("IonosS3");
 
             // click on the checkmark to agree on the AGBs
@@ -359,9 +357,7 @@ it('conclude data delivery contract', {
             // select Aktiver EDC Connector edc1, IONOS-S3 Quell-Bucket merlot-edc-gaiax and Quell-Dateipfad im IONOS-S3 Bucket Jobs4DP.json, Typ der Datenadresse IonosS3
             cy.contains("Aktiver EDC Connector*:").next().next().select("edc1");
             cy.contains("IONOS-S3 Quell-Bucket*").next().next().select("merlot-edc-gaiax");
-            cy.get('label:contains("Quell-Dateipfad im IONOS-S3 Bucket*") + input')
-                .type("Jobs4DP.json");
-
+            cy.get('label:contains("Quell-Dateipfad im IONOS-S3 Bucket*") + input').type("Jobs4DP.json");
             cy.contains("Typ der Datenadresse*").next().next().select("IonosS3");
 
             // click on the checkmark to agree on the AGBs and accept
