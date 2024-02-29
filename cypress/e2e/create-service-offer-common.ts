@@ -192,7 +192,9 @@ export function checkOfferingInOverview(offeringId: string, expectedStatus: stri
     });
 }
 
-export function createAndReleaseDataDeliveryOffering(offeringName: string, offeringDescription: string, offeringCosts: string, dataTransfertype: string, dataAccessType: string, dataExchangeOptions: number[], runtimeOptions: number[], runtimeOptionsSelect: string[], offeringTncLink: string, offeringTncHash: string) {
+export function createAndReleaseDataDeliveryOffering(offeringName: string, offeringDescription: string, offeringCosts: string, dataTransfertype: string, dataExchangeOptions: number[], runtimeOptions: number[], runtimeOptionsSelect: string[], offeringTncLink: string, offeringTncHash: string) {
+    let dataAccessType = "Download";
+    
     // click on navigation entry Serviceangebote,  the submenu is extended
     cy.contains('Service Angebote').click({ force: true });
 

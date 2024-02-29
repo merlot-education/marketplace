@@ -13,14 +13,13 @@ it('conclude and cancel data delivery contract', {
     let offeringDescription = "Ob Praktika, Ausbildungen, Werkstudentenjobs oder Festanstellungen... Wir schicken Ihnen immer die neusten Stellenanzeigen bei Gaia-X für Ihre Plattform, um Ihren Nutzern offene Jobangebote mit tollen Perspektiven und Entwicklungsmöglichkeiten in der IT-Industrie zu bieten und ein “perfect Match” zu finden. Lösungen sind unser Job!";
     let offeringCosts = "5€ pro Stellenanzeige, 10€ Prämie pro Match";
     let dataTransfertype = "Push";
-    let dataAccessType = "Download";
     let dataExchangeOptions = [2, 4, 12, 0];
     let runtimeOptions = [1, 2, 0];
     let runtimeOptionsSelect = ["year(s)", "year(s)", "unlimited"];
     let offeringTncLink = "https://merlot.test.de/tnc"
     let offeringTncHash = "hash12345678";
 
-    createAndReleaseDataDeliveryOffering(offeringName, offeringDescription, offeringCosts, dataTransfertype, dataAccessType, dataExchangeOptions, runtimeOptions, runtimeOptionsSelect, offeringTncLink, offeringTncHash);
+    createAndReleaseDataDeliveryOffering(offeringName, offeringDescription, offeringCosts, dataTransfertype, dataExchangeOptions, runtimeOptions, runtimeOptionsSelect, offeringTncLink, offeringTncHash);
     
     // the response that the offer is stored will be shown
     cy.contains("Selbstbeschreibung erfolgreich gespeichert!", { timeout: 30000 }).should("include.text", "ServiceOffering:").then((result) => {
@@ -194,14 +193,13 @@ it('conclude data delivery contract', {
     let offeringDescription = "Ob Praktika, Ausbildungen, Werkstudentenjobs oder Festanstellungen... Holen Sie sich bei Bedarf die aktuellen Stellenanzeigen bei Gaia-X für Ihre Plattform, um Ihren Nutzern offene Jobangebote mit tollen Perspektiven und Entwicklungsmöglichkeiten in der IT-Industrie zu bieten und ein “perfect Match” zu finden. Lösungen sind unser Job!";
     let offeringCosts = "5€ pro Stellenanzeige, 10€ Prämie pro Match";
     let dataTransfertype = "Pull";
-    let dataAccessType = "Download";
     let dataExchangeOptions = [2, 4, 12, 0];
     let runtimeOptions = [1, 2, 0];
     let runtimeOptionsSelect = ["year(s)", "year(s)", "unlimited"];
     let offeringTncLink = "https://merlot.test.de/tnc"
     let offeringTncHash = "hash12345678";
 
-    createAndReleaseDataDeliveryOffering(offeringName, offeringDescription, offeringCosts, dataTransfertype, dataAccessType, dataExchangeOptions, runtimeOptions, runtimeOptionsSelect, offeringTncLink, offeringTncHash);
+    createAndReleaseDataDeliveryOffering(offeringName, offeringDescription, offeringCosts, dataTransfertype, dataExchangeOptions, runtimeOptions, runtimeOptionsSelect, offeringTncLink, offeringTncHash);
     
     // the response that the offer is stored will be shown
     cy.contains("Selbstbeschreibung erfolgreich gespeichert!", { timeout: 30000 }).should("include.text", "ServiceOffering:").then((result) => {
