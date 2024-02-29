@@ -192,7 +192,7 @@ export function checkOfferingInOverview(offeringId: string, expectedStatus: stri
     });
 }
 
-export function createAndReleaseDataDeliveryOffering(offeringName: string, offeringDescription: string, offeringCosts: string, dataTransfertype: string, dataExchangeOptions: number[], runtimeOptions: number[], runtimeOptionsSelect: string[], offeringTncLink: string, offeringTncHash: string) {
+export function createAndReleaseDataDeliveryOffering(offeringName: string, offeringDescription: string, offeringCosts: string, dataTransfertype: string, dataExchangeOptions: number[], runtimeOptions: number[], runtimeOptionsSelect: string[]) {
     let dataAccessType = "Download";
     
     // click on navigation entry Serviceangebote,  the submenu is extended
@@ -212,7 +212,7 @@ export function createAndReleaseDataDeliveryOffering(offeringName: string, offer
     cy.contains("Veröffentlichen").should("be.disabled");
 
     // fill the form fields as specified above
-    fillGeneralOfferingFields(offeringName, offeringDescription, offeringTncLink, offeringTncHash, offeringCosts, runtimeOptions, runtimeOptionsSelect);
+    fillGeneralOfferingFields(offeringName, offeringDescription, null, null, offeringCosts, runtimeOptions, runtimeOptionsSelect);
     cy.contains("Datentransferart").next().select(dataTransfertype, { force: true });
     cy.contains("Datenzugriffsart").next().select(dataAccessType, { force: true });
     cy.contains("Datenaustauschanzahl-Option").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
@@ -230,7 +230,7 @@ export function createAndReleaseDataDeliveryOffering(offeringName: string, offer
     cy.contains("Veröffentlichen").should("not.be.disabled").scrollIntoView().click({ force: true });
 }
 
-export function createAndReleaseSaaSOffering(offeringName: string, offeringDescription: string, offeringTncLink: string, offeringTncHash: string, offeringCosts: string, offeringHWRequirements: string, userCountOptions: number[], runtimeOptions: number[], runtimeOptionsSelect: string[]){
+export function createAndReleaseSaaSOffering(offeringName: string, offeringDescription: string, offeringCosts: string, offeringHWRequirements: string, userCountOptions: number[], runtimeOptions: number[], runtimeOptionsSelect: string[]){
     // click on navigation entry Serviceangebote, the submenu is extended
     cy.contains('Service Angebote').click({ force: true });
 
@@ -241,7 +241,7 @@ export function createAndReleaseSaaSOffering(offeringName: string, offeringDescr
     cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Webanwendung", { force: true });
 
     // fill the form fields as specified above
-    fillGeneralOfferingFields(offeringName, offeringDescription, offeringTncLink, offeringTncHash, offeringCosts, runtimeOptions, runtimeOptionsSelect);
+    fillGeneralOfferingFields(offeringName, offeringDescription, null, null, offeringCosts, runtimeOptions, runtimeOptionsSelect);
     cy.contains("Anforderungen an die Hardware").next().type(offeringHWRequirements, { force: true });
     cy.contains("Nutzeranzahl-Option").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
         cy.get("button").click({ force: true }).click({ force: true }).click({ force: true });

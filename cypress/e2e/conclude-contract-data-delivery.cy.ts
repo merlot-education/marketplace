@@ -16,10 +16,8 @@ it('conclude and cancel data delivery contract', {
     let dataExchangeOptions = [2, 4, 12, 0];
     let runtimeOptions = [1, 2, 0];
     let runtimeOptionsSelect = ["year(s)", "year(s)", "unlimited"];
-    let offeringTncLink = "https://merlot.test.de/tnc"
-    let offeringTncHash = "hash12345678";
 
-    createAndReleaseDataDeliveryOffering(offeringName, offeringDescription, offeringCosts, dataTransfertype, dataExchangeOptions, runtimeOptions, runtimeOptionsSelect, offeringTncLink, offeringTncHash);
+    createAndReleaseDataDeliveryOffering(offeringName, offeringDescription, offeringCosts, dataTransfertype, dataExchangeOptions, runtimeOptions, runtimeOptionsSelect);
     
     // the response that the offer is stored will be shown
     cy.contains("Selbstbeschreibung erfolgreich gespeichert!", { timeout: 30000 }).should("include.text", "ServiceOffering:").then((result) => {
@@ -196,10 +194,8 @@ it('conclude data delivery contract', {
     let dataExchangeOptions = [2, 4, 12, 0];
     let runtimeOptions = [1, 2, 0];
     let runtimeOptionsSelect = ["year(s)", "year(s)", "unlimited"];
-    let offeringTncLink = "https://merlot.test.de/tnc"
-    let offeringTncHash = "hash12345678";
 
-    createAndReleaseDataDeliveryOffering(offeringName, offeringDescription, offeringCosts, dataTransfertype, dataExchangeOptions, runtimeOptions, runtimeOptionsSelect, offeringTncLink, offeringTncHash);
+    createAndReleaseDataDeliveryOffering(offeringName, offeringDescription, offeringCosts, dataTransfertype, dataExchangeOptions, runtimeOptions, runtimeOptionsSelect);
     
     // the response that the offer is stored will be shown
     cy.contains("Selbstbeschreibung erfolgreich gespeichert!", { timeout: 30000 }).should("include.text", "ServiceOffering:").then((result) => {

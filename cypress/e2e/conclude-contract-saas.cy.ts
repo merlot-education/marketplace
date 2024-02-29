@@ -11,15 +11,13 @@ it('conclude saas contract', {
 
     let offeringName = "Lernplattform (LMS) für betriebliche Weiterbildung (SaaS)";
     let offeringDescription = "Bewältigen Sie Ihre Enterprise Anforderungen mit der perfekten Kombination aus Learning Management System und Learning Experience Platform. Nutzen Sie Daten über sich ändernde Skill- und Kompetenzanforderungen und den Fachkräftemarkt Ihrer Branche, um Ihre Weiterbildungsprozesse automatisch anzupassen. Dazu ermöglicht das LMS der Gaia-X AISBL als SaaS eine besonders einfache Anbindung an den MERLOT Datenraum, der sichere Verarbeitung und Verwertung von Ihren Daten garantiert und in dem Sie in Kontrolle Ihrer Daten bleiben.";
-    let offeringTncLink = "https://merlot.test.de/tnc"
-    let offeringTncHash = "hash12345678";
     let offeringCosts = "Abonnement, Verhandlungsbasis";
     let offeringHWRequirements = "Software as a Service";
     let userCountOptions = [100, 500, 1000, 0];
     let runtimeOptions = [1, 2, 0];
     let runtimeOptionsSelect = ["year(s)", "year(s)", "unlimited"];
 
-    createAndReleaseSaaSOffering(offeringName, offeringDescription, offeringTncLink, offeringTncHash, offeringCosts, offeringHWRequirements, userCountOptions, runtimeOptions, runtimeOptionsSelect)
+    createAndReleaseSaaSOffering(offeringName, offeringDescription, offeringCosts, offeringHWRequirements, userCountOptions, runtimeOptions, runtimeOptionsSelect)
 
     // the response that the offer is stored will be shown
     cy.contains("Selbstbeschreibung erfolgreich gespeichert!", { timeout: 30000 }).should("include.text", "ServiceOffering:").then((result) => {
