@@ -1,4 +1,4 @@
-export function loginAsTestuser() {
+function loginAsUser(username: string, password: string) {
     cy.visit('/')
 
     //open merlot marketplace landing page, user is not logged in, use the welcome text to check that user is a visitor
@@ -7,8 +7,8 @@ export function loginAsTestuser() {
     // click login will redirect to keycloak, use testuser to login
     cy.get("#login-button").click();
 
-    cy.get("#username").type("testuser");
-    cy.get("#password").type("testuser");
+    cy.get("#username").type(username);
+    cy.get("#password").type(password);
     cy.get("#kc-login").click();
 
     // make sure welcome text changed
@@ -16,24 +16,12 @@ export function loginAsTestuser() {
     cy.get("#role-select").should("contain.text", "Gaia-X");
     cy.contains("Meine Verträge"); // todo maybe find a better way to make sure the navbar is loaded
 }
+export function loginAsTestuser() {
+    loginAsUser("testuser", "testuser")
+}
 
 export function loginAsTestuser2() {
-    cy.visit('/')
-
-    //open merlot marketplace landing page, user is not logged in, use the welcome text to check that user is a visitor
-    cy.get("#welcome-text").contains('Willkommen, Besucher!');
-
-    // click login will redirect to keycloak, use testuser to login
-    cy.get("#login-button").click();
-
-    cy.get("#username").type("testuser2");
-    cy.get("#password").type("testuser2");
-    cy.get("#kc-login").click();
-
-    // make sure welcome text changed
-    cy.get("#welcome-text").contains('Willkommen, Test User2!');
-    cy.get("#role-select").should("contain.text", "Dataport");
-    cy.contains("Meine Verträge"); // todo maybe find a better way to make sure the navbar is loaded
+    loginAsUser("testuser2", "testuser2")
 }
 
 export function logout() {
