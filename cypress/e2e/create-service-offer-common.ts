@@ -97,7 +97,7 @@ export function checkGeneralOfferingFields(offeringName: string, offeringDescrip
 
 export function deleteOffering(offeringId: string) {
     // assumes contract is in draft or revoked state
-    loginAsTestuser()
+    loginAsUser("testuser", "testuser", "Test User", "Gaia-X")
 
     // click on navigation entry Serviceangebote,  the submenu is extended
     cy.contains('Service Angebote').click()
@@ -180,4 +180,78 @@ export function archiveReleasedOffering(offeringId: string) {
     });
 
     cy.contains("Schließen").click({force: true});
+}
+
+export function checkOfferingInOverview(offeringId: string, expectedStatus: string) {
+    // search for offering in list
+    cy.contains(offeringId).parent().parent().parent().within(() => {
+        if (expectedStatus) {
+            // check status of published offer equals expected status
+            cy.contains("Status").parent().should("include.text", expectedStatus);
+        }
+    });
+}
+
+export function createAndReleaseDataDeliveryOffering(offeringName: string, offeringDescription: string, offeringCosts: string, dataTransfertype: string, dataAccessType: string, dataExchangeOptions: number[], runtimeOptions: number[], runtimeOptionsSelect: string[], offeringTncLink: string, offeringTncHash: string) {
+    // click on navigation entry Serviceangebote,  the submenu is extended
+    cy.contains('Service Angebote').click({ force: true });
+
+    // click on navigation entry Serviceangebot erstellen, the form will be displayed on the right side of the screen
+    cy.contains('Service Angebot erstellen').click({ force: true })
+    cy.url().should('include', 'service-offerings/edit');
+
+    // select Datenlieferung as type
+    cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Datenlieferung", { force: true });
+    cy.contains('Datenaustauschanzahl-Option');
+    cy.contains('Nutzeranzahl-Option').should('not.exist');
+    cy.contains('Laufzeit-Option');
+
+    // make sure we cannot publish the offering yet
+    cy.contains("Veröffentlichen").should("be.disabled");
+
+    // fill the form fields as specified above
+    fillGeneralOfferingFields(offeringName, offeringDescription, offeringTncLink, offeringTncHash, offeringCosts, runtimeOptions, runtimeOptionsSelect);
+    cy.contains("Datentransferart").next().select(dataTransfertype, { force: true });
+    cy.contains("Datenzugriffsart").next().select(dataAccessType, { force: true });
+    cy.contains("Datenaustauschanzahl-Option").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
+        cy.get("button").click({ force: true }).click({ force: true }).click({ force: true });
+    });
+    cy.get('mat-expansion-panel-header:visible:contains("Datenaustauschanzahl-Option")').should("have.length", dataExchangeOptions.length).each(($el, index, $list) => {
+        if (index !== 0) {
+            cy.wrap($el).click({ force: true });
+        }
+        cy.wrap($el).parent().parent().parent().contains("Option für maximale Anzahl an Datenaustauschen").next().type(dataExchangeOptions[index] + "", { force: true });
+    });
+
+    // make sure publish button is not disabled
+    // click on button "Veröffentlichen"
+    cy.contains("Veröffentlichen").should("not.be.disabled").scrollIntoView().click({ force: true });
+}
+
+export function createAndReleaseSaaSOffering(offeringName: string, offeringDescription: string, offeringTncLink: string, offeringTncHash: string, offeringCosts: string, offeringHWRequirements: string, userCountOptions: number[], runtimeOptions: number[], runtimeOptionsSelect: string[]){
+    // click on navigation entry Serviceangebote, the submenu is extended
+    cy.contains('Service Angebote').click({ force: true });
+
+    // click on navigation entry Serviceangebot erstellen, the form will be displayed on the right side of the screen
+    cy.contains('Service Angebot erstellen').click({ force: true });
+
+    // select Webanwendung as type
+    cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Webanwendung", { force: true });
+
+    // fill the form fields as specified above
+    fillGeneralOfferingFields(offeringName, offeringDescription, offeringTncLink, offeringTncHash, offeringCosts, runtimeOptions, runtimeOptionsSelect);
+    cy.contains("Anforderungen an die Hardware").next().type(offeringHWRequirements, { force: true });
+    cy.contains("Nutzeranzahl-Option").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
+        cy.get("button").click({ force: true }).click({ force: true }).click({ force: true });
+    });
+    cy.get('mat-expansion-panel-header:visible:contains("Nutzeranzahl-Option")').should("have.length", userCountOptions.length).each(($el, index, $list) => {
+        if (index !== 0) {
+            cy.wrap($el).click({ force: true });
+        }
+        cy.wrap($el).parent().parent().parent().contains("Option für maximale Nutzerzahl").next().type(userCountOptions[index] + "", { force: true });
+    });
+
+    // make sure publish button is not disabled
+    // click on button "Veröffentlichen"
+    cy.contains("Veröffentlichen").should("not.be.disabled").scrollIntoView().click({ force: true });
 }

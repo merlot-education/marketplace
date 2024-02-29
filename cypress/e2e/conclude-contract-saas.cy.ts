@@ -1,4 +1,4 @@
-import { loginAsUser, openOfferingDetails, fillGeneralOfferingFields, logout, archiveReleasedOffering } from "./create-service-offer-common";
+import { loginAsUser, openOfferingDetails, createAndReleaseSaaSOffering, logout, archiveReleasedOffering } from "./create-service-offer-common";
 import { inDraft, consumerSigned, released, testuser, testuser2, testuserName, testuserOrga, testuser2Name, testuser2Orga, openContractForEdit, checkContractInOverview, openContractDetails} from "./conclude-contract-common";
 import { environment } from '../../src/environments/environment.dev';
 
@@ -19,31 +19,7 @@ it('conclude saas contract', {
     let runtimeOptions = [1, 2, 0];
     let runtimeOptionsSelect = ["year(s)", "year(s)", "unlimited"];
 
-    // click on navigation entry Serviceangebote, the submenu is extended
-    cy.contains('Service Angebote').click({ force: true });
-
-    // click on navigation entry Serviceangebot erstellen, the form will be displayed on the right side of the screen
-    cy.contains('Service Angebot erstellen').click({ force: true });
-
-    // select Webanwendung as type
-    cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Webanwendung", { force: true });
-
-    // fill the form fields as specified above
-    fillGeneralOfferingFields(offeringName, offeringDescription, offeringTncLink, offeringTncHash, offeringCosts, runtimeOptions, runtimeOptionsSelect);
-    cy.contains("Anforderungen an die Hardware").next().type(offeringHWRequirements, { force: true });
-    cy.contains("Nutzeranzahl-Option").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
-        cy.get("button").click({ force: true }).click({ force: true }).click({ force: true });
-    });
-    cy.get('mat-expansion-panel-header:visible:contains("Nutzeranzahl-Option")').should("have.length", userCountOptions.length).each(($el, index, $list) => {
-        if (index !== 0) {
-            cy.wrap($el).click({ force: true });
-        }
-        cy.wrap($el).parent().parent().parent().contains("Option für maximale Nutzerzahl").next().type(userCountOptions[index] + "", { force: true });
-    });
-
-    // make sure publish button is not disabled
-    // click on button "Veröffentlichen"
-    cy.contains("Veröffentlichen").should("not.be.disabled").scrollIntoView().click({ force: true });
+    createAndReleaseSaaSOffering(offeringName, offeringDescription, offeringTncLink, offeringTncHash, offeringCosts, offeringHWRequirements, userCountOptions, runtimeOptions, runtimeOptionsSelect)
 
     // the response that the offer is stored will be shown
     cy.contains("Selbstbeschreibung erfolgreich gespeichert!", { timeout: 30000 }).should("include.text", "ServiceOffering:").then((result) => {

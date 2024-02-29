@@ -1,4 +1,4 @@
-import { loginAsUser, openOfferingDetails, fillGeneralOfferingFields, logout, archiveReleasedOffering } from "./create-service-offer-common";
+import { loginAsUser, openOfferingDetails, checkOfferingInOverview, logout, archiveReleasedOffering, createAndReleaseDataDeliveryOffering } from "./create-service-offer-common";
 import { consumerSigned, released, revoked, testuser, testuser2, testuserName, testuserOrga, testuser2Name, testuser2Orga, checkContractInOverview, openContractDetails} from "./conclude-contract-common";
 
 it('conclude and cancel data delivery contract', {
@@ -20,40 +20,9 @@ it('conclude and cancel data delivery contract', {
     let offeringTncLink = "https://merlot.test.de/tnc"
     let offeringTncHash = "hash12345678";
 
-    // click on navigation entry Serviceangebote,  the submenu is extended
-    cy.contains('Service Angebote').click({ force: true });
-
-    // click on navigation entry Serviceangebot erstellen, the form will be displayed on the right side of the screen
-    cy.contains('Service Angebot erstellen').click({ force: true })
-    cy.url().should('include', 'service-offerings/edit');
-
-    // select Datenlieferung as type
-    cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Datenlieferung", { force: true });
-    cy.contains('Datenaustauschanzahl-Option');
-    cy.contains('Nutzeranzahl-Option').should('not.exist');
-    cy.contains('Laufzeit-Option');
-
-    // make sure we cannot publish the offering yet
-    cy.contains("Veröffentlichen").should("be.disabled");
-
-    // fill the form fields as specified above
-    fillGeneralOfferingFields(offeringName, offeringDescription, offeringTncLink, offeringTncHash, offeringCosts, runtimeOptions, runtimeOptionsSelect);
-    cy.contains("Datentransferart").next().select(dataTransfertype, { force: true });
-    cy.contains("Datenzugriffsart").next().select(dataAccessType, { force: true });
-    cy.contains("Datenaustauschanzahl-Option").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
-        cy.get("button").click({ force: true }).click({ force: true }).click({ force: true });
-    });
-    cy.get('mat-expansion-panel-header:visible:contains("Datenaustauschanzahl-Option")').should("have.length", dataExchangeOptions.length).each(($el, index, $list) => {
-        if (index !== 0) {
-            cy.wrap($el).click({ force: true });
-        }
-        cy.wrap($el).parent().parent().parent().contains("Option für maximale Anzahl an Datenaustauschen").next().type(dataExchangeOptions[index] + "", { force: true });
-    });
-
-
-    // make sure publish button is not disabled
-    // click on button "Veröffentlichen"
-    cy.contains("Veröffentlichen").should("not.be.disabled").scrollIntoView().click({ force: true });
+    createAndReleaseDataDeliveryOffering(offeringName, offeringDescription, offeringCosts, dataTransfertype, dataAccessType, dataExchangeOptions, runtimeOptions, runtimeOptionsSelect, offeringTncLink, offeringTncHash);
+    
+    // the response that the offer is stored will be shown
     cy.contains("Selbstbeschreibung erfolgreich gespeichert!", { timeout: 30000 }).should("include.text", "ServiceOffering:").then((result) => {
 
         // store id of created offering
@@ -61,6 +30,7 @@ it('conclude and cancel data delivery contract', {
 
         // click on navigation entry Angebote erkunden, the created offer is shown on top of the page
         cy.contains("Service Angebote erkunden").click();
+        checkOfferingInOverview(offeringId, null);
 
         // log out as testuser
         logout();
@@ -231,40 +201,9 @@ it('conclude data delivery contract', {
     let offeringTncLink = "https://merlot.test.de/tnc"
     let offeringTncHash = "hash12345678";
 
-    // click on navigation entry Serviceangebote,  the submenu is extended
-    cy.contains('Service Angebote').click({ force: true });
-
-    // click on navigation entry Serviceangebot erstellen, the form will be displayed on the right side of the screen
-    cy.contains('Service Angebot erstellen').click({ force: true })
-    cy.url().should('include', 'service-offerings/edit');
-
-    // select Datenlieferung as type
-    cy.contains('Art des Service Angebots').next().should("not.be.empty").select("Datenlieferung", { force: true });
-    cy.contains('Datenaustauschanzahl-Option');
-    cy.contains('Nutzeranzahl-Option').should('not.exist');
-    cy.contains('Laufzeit-Option');
-
-    // make sure we cannot publish the offering yet
-    cy.contains("Veröffentlichen").should("be.disabled");
-
-    // fill the form fields as specified above
-    fillGeneralOfferingFields(offeringName, offeringDescription, offeringTncLink, offeringTncHash, offeringCosts, runtimeOptions, runtimeOptionsSelect);
-    cy.contains("Datentransferart").next().select(dataTransfertype, { force: true });
-    cy.contains("Datenzugriffsart").next().select(dataAccessType, { force: true });
-    cy.contains("Datenaustauschanzahl-Option").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
-        cy.get("button").click({ force: true }).click({ force: true }).click({ force: true });
-    });
-    cy.get('mat-expansion-panel-header:visible:contains("Datenaustauschanzahl-Option")').should("have.length", dataExchangeOptions.length).each(($el, index, $list) => {
-        if (index !== 0) {
-            cy.wrap($el).click({ force: true });
-        }
-        cy.wrap($el).parent().parent().parent().contains("Option für maximale Anzahl an Datenaustauschen").next().type(dataExchangeOptions[index] + "", { force: true });
-    });
-
-
-    // make sure publish button is not disabled
-    // click on button "Veröffentlichen"
-    cy.contains("Veröffentlichen").should("not.be.disabled").scrollIntoView().click({ force: true });
+    createAndReleaseDataDeliveryOffering(offeringName, offeringDescription, offeringCosts, dataTransfertype, dataAccessType, dataExchangeOptions, runtimeOptions, runtimeOptionsSelect, offeringTncLink, offeringTncHash);
+    
+    // the response that the offer is stored will be shown
     cy.contains("Selbstbeschreibung erfolgreich gespeichert!", { timeout: 30000 }).should("include.text", "ServiceOffering:").then((result) => {
 
         // store id of created offering
@@ -272,6 +211,7 @@ it('conclude data delivery contract', {
 
         // click on navigation entry Angebote erkunden, the created offer is shown on top of the page
         cy.contains("Service Angebote erkunden").click();
+        checkOfferingInOverview(offeringId, null);
 
         // log out as testuser
         logout();
@@ -433,4 +373,3 @@ it('conclude data delivery contract', {
         });
     });
 });
-
