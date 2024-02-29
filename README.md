@@ -11,8 +11,10 @@
 ## First checkout
 Per the Github documentation, available [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry), a personal access token (classic) is needed to authenticate into the GitHub Packages Registry, where some packages needed by this project are stored.
 It's necessary to follow that documentation and create a token with at least a read:packages scope, and then place it in a .npmrc file using this format:
-```@merlot-education:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=<personal_access_token_here>```
+```
+@merlot-education:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=<personal_access_token_here>
+```
 
 * `npm install`
 * `ng update`
