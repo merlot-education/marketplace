@@ -1,8 +1,8 @@
-import { loginAsTestuser, fillGeneralOfferingFields, openOfferingDetails, checkGeneralOfferingFields, logout, deleteOffering } from "./create-service-offer-common";
+import { loginAsUser, fillGeneralOfferingFields, openOfferingDetails, checkGeneralOfferingFields, logout, deleteOffering } from "./create-service-offer-common";
 
 
 beforeEach(() => {
-    loginAsTestuser();
+    loginAsUser("testuser", "testuser", "Test User", "Gaia-X");
 });
 
 it('create coop contract service offering', {

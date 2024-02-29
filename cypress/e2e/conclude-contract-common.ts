@@ -1,3 +1,14 @@
+export let inDraft = "In Bearbeitung";
+export let consumerSigned = "Vom Kunden unterschrieben";
+export let released = "Veröffentlicht";
+export let revoked = "Widerrufen";
+export let testuser = "testuser"
+export let testuser2 = "testuser2";
+export let testuserName = "Test User";
+export let testuser2Name = "Test User2";
+export let testuserOrga = "Gaia-X";
+export let testuser2Orga = "Dataport";
+
 export function openContractForEdit(contractIdWithoutPrefix: string, status: string, offeringName: string) {
     // search for contract in list
     cy.contains("ID: " + contractIdWithoutPrefix).parent().parent().within(() => {

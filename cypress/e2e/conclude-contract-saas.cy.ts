@@ -1,17 +1,13 @@
-import { loginAsTestuser, loginAsTestuser2, openOfferingDetails, fillGeneralOfferingFields, logout, archiveReleasedOffering } from "./create-service-offer-common";
-import { openContractForEdit, checkContractInOverview, openContractDetails} from "./conclude-contract-common";
+import { loginAsUser, openOfferingDetails, fillGeneralOfferingFields, logout, archiveReleasedOffering } from "./create-service-offer-common";
+import { inDraft, consumerSigned, released, testuser, testuser2, testuserName, testuserOrga, testuser2Name, testuser2Orga, openContractForEdit, checkContractInOverview, openContractDetails} from "./conclude-contract-common";
 import { environment } from '../../src/environments/environment.dev';
 
 it('conclude saas contract', {
     defaultCommandTimeout: 10000
 }, () => {
-    let inDraft = "In Bearbeitung";
-    let consumerSigned = "Vom Kunden unterschrieben";
-    let released = "Veröffentlicht";
-
     // testuser creates a SaaS offering that can be booked:
     // log in as testuser
-    loginAsTestuser();
+    loginAsUser(testuser, testuser, testuserName, testuserOrga);
 
     let offeringName = "Lernplattform (LMS) für betriebliche Weiterbildung (SaaS)";
     let offeringDescription = "Bewältigen Sie Ihre Enterprise Anforderungen mit der perfekten Kombination aus Learning Management System und Learning Experience Platform. Nutzen Sie Daten über sich ändernde Skill- und Kompetenzanforderungen und den Fachkräftemarkt Ihrer Branche, um Ihre Weiterbildungsprozesse automatisch anzupassen. Dazu ermöglicht das LMS der Gaia-X AISBL als SaaS eine besonders einfache Anbindung an den MERLOT Datenraum, der sichere Verarbeitung und Verwertung von Ihren Daten garantiert und in dem Sie in Kontrolle Ihrer Daten bleiben.";
@@ -60,7 +56,7 @@ it('conclude saas contract', {
 
         // testuser2 detects the just created service offer for the LMS. testuser2 books offer and selects options before saving the contract draft:
         // log in as testuser2
-        loginAsTestuser2();
+        loginAsUser(testuser2, testuser2, testuser2Name, testuser2Orga);
 
         // select the SaaS offering and book it as testuser2
         cy.contains("Service Angebote").click({ force: true });
@@ -106,7 +102,7 @@ it('conclude saas contract', {
 
             // testuser checks contract drafts and updates options:
             // log in as testuser
-            loginAsTestuser();
+            loginAsUser(testuser, testuser, testuserName, testuserOrga);
 
             // check that the contract draft is there and has status In Bearbeitung, then open it
             cy.contains("Meine Verträge").click({ force: true });
@@ -136,7 +132,7 @@ it('conclude saas contract', {
 
             // testuser2 takes compromise and signs:
             // log in as testuser2
-            loginAsTestuser2();
+            loginAsUser(testuser2, testuser2, testuser2Name, testuser2Orga);
 
             // check that the contract draft is there and has status In Bearbeitung, then open it
             cy.contains("Meine Verträge").click({ force: true });
@@ -169,7 +165,7 @@ it('conclude saas contract', {
 
             // testuser detects signed contract and agrees:
             // log in as testuser
-            loginAsTestuser();
+            loginAsUser(testuser, testuser, testuserName, testuserOrga);
 
             // check that contract draft is there, has the status Vom Kunden unterschrieben and open it
             cy.contains("Meine Verträge").click({ force: true });
@@ -198,7 +194,7 @@ it('conclude saas contract', {
 
             // testuser2 downloads contract pdf:
             // log in as testuser2
-            loginAsTestuser2();
+            loginAsUser(testuser2, testuser2, testuser2Name, testuser2Orga);
 
             // check that the contract draft for the SaaS offering has the status Veröffentlicht and open it
             cy.contains("Meine Verträge").click({ force: true });
@@ -226,7 +222,7 @@ it('conclude saas contract', {
 
             // log in as testuser, archive contract and the SaaS offering as they are not needed anymore, then log out:
             // log in as testuser
-            loginAsTestuser();
+            loginAsUser(testuser, testuser, testuserName, testuserOrga);
 
             cy.contains("Meine Verträge").click({ force: true });
 
