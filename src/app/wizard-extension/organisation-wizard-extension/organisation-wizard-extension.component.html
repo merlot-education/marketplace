@@ -48,6 +48,94 @@
         <div cFormText style="color: #7f7f7f;">
             <small>Mitgliedschaftsstatus der Organisation</small>
         </div>
+        <br>
+        <div *ngIf="activeOrgRoleService.isActiveAsRepresentative()">
+            <div>EDC-Connectoren der Organisation 
+                <button cButton color="primary" variant="ghost" (click)="addConnector()" size="sm">
+                    <svg
+                    class=""
+                    cIcon
+                    name="cib-addthis"
+                    size="xl"
+                ></svg></button></div>
+            <mat-accordion>
+                <mat-expansion-panel *ngFor="let connector of orgaMetadata.connectors; let i = index">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <div>
+                                EDC-Connector 
+                                <button cButton variant="ghost" (click)="removeConnector(i)" color="primary" size="sm">
+                                    <svg
+                                    class=""
+                                    cIcon
+                                    name="cil-trash"
+                                    size="xl"
+                                ></svg></button>
+                                <span *ngIf="!isConnectorValid(connector)" style="color: red"><svg class="warning-symbol" cIcon name='cil-warning' size='l'></svg><small>
+                                    Bitte überprüfen Sie die technischen Parameter für diesen EDC-Connector.
+                                </small></span>
+                                
+                            </div>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="mb-3">
+                        <label class="form-label">Connector-ID</label>
+                        <input class="form-control" [(ngModel)]="connector.connectorId" name="connectorId{{i}}">
+                        <div cFormText style="color: #7f7f7f;">
+                            <small>ID des EDC-Connectors</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Connector-Endpunkt</label>
+                        <input class="form-control" [(ngModel)]="connector.connectorEndpoint" name="connectorEndpoint{{i}}">
+                        <div cFormText style="color: #7f7f7f;">
+                            <small>Endpunkt des EDC-Connectors</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Connector-Access-Token</label>
+                        <input class="form-control" [(ngModel)]="connector.connectorAccessToken" name="connectorAccessToken{{i}}">
+                        <div cFormText style="color: #7f7f7f;">
+                            <small>Access-Token des EDC-Connectors</small>
+                        </div>
+                    </div>
+
+                    <div>
+                        IONOS-S3-Buckets
+                        <button cButton color="primary" variant="ghost" (click)="addBucket(connector)" size="sm">
+                            <svg
+                            class=""
+                            cIcon
+                            name="cib-addthis"
+                            size="xl"
+                        ></svg></button>
+                        <span *ngIf="!areBucketsOfConnectorValid(connector)" style="color: red"><svg class="warning-symbol" cIcon name='cil-warning' size='l'></svg><small>
+                            Bitte überprüfen Sie die Angaben über die IONOS-S3-Buckets für diesen EDC-Connector.
+                        </small></span>
+                    </div>
+                    
+                    <div *ngFor="let bucket of connector.bucketNames; let j = index; trackBy:customTrackBy">
+                        <div class="mb-3">
+                            <label class="form-label">Bucket</label>
+                            <button cButton variant="ghost" (click)="removeBucket(connector, j)" color="primary" size="sm">
+                                <svg
+                                class=""
+                                cIcon
+                                name="cil-trash"
+                                size="xl"
+                            ></svg></button>
+                            <input class="form-control" [(ngModel)]="connector.bucketNames[j]" name="connectorBucket{{i}}_{{j}}"> 
+                            <div cFormText style="color: #7f7f7f;">
+                                <small>Name des Buckets</small>
+                            </div>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
     </div>
 </c-container>
 <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
