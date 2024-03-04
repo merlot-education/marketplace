@@ -11,6 +11,13 @@
             <option *ngFor="let option of serviceFiles" [value]="option">{{serviceFileNameDict[option].name}}</option>
           </select>
 
+          <div *ngIf="isOfferingDataDeliveryOffering() && !isAnyConnectorAvailable()" class="warning-box">
+            <svg class="warning-symbol" cIcon name='cil-warning' size='xl' width='24'></svg>
+            <b>
+            Für Ihre Organisation liegen derzeit keine EDC Connector Daten vor. Wenn Sie über das MPO gesteuerte Datentransfere durchführen wollen, muss jedoch mindestens 
+            ein EDC Connector eingetragen sein. Das Hinzufügen von EDC Connectoren und der assoziierten IONOS-S3 Buckets ist über "Meine Organisation bearbeiten" möglich.
+            </b>
+          </div>
         </div>
       </div>
 

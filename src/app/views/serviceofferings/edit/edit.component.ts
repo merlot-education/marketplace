@@ -140,4 +140,13 @@ export class EditComponent implements OnInit, AfterViewInit {
     }
     
   }
+
+  isOfferingDataDeliveryOffering(): boolean {
+    return this.selectedServiceFile.includes("DataDelivery");
+  }
+
+  isAnyConnectorAvailable(): boolean {
+    let connectors = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.metadata.connectors;
+    return connectors && connectors.length !== 0;
+  }
 }

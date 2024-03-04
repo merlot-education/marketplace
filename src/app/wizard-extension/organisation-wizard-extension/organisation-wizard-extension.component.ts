@@ -116,14 +116,16 @@ export class OrganisationWizardExtensionComponent {
   }
 
   public isMailAddressFilled(): boolean {
-    return this.orgaMetadata.mailAddress !== null && this.orgaMetadata.mailAddress.trim().length !== 0;
+    return this.isFieldFilled(this.orgaMetadata.mailAddress);
   }
 
   public isMembershipClassFilled(): boolean {
-    return this.orgaMetadata.membershipClass !== null && this.orgaMetadata.membershipClass.trim().length !== 0;
+    return this.isFieldFilled(this.orgaMetadata.membershipClass);
   }
 
   public areAllConnectorsValid(): boolean {
+    // check if all given connectors are valid
+    // if there are no connectors at all, that is also valid
     for (const connector of this.orgaMetadata.connectors) {
       if (!this.isConnectorValid(connector)) {
         return false;
@@ -134,12 +136,11 @@ export class OrganisationWizardExtensionComponent {
 
   public isConnectorValid(connector: ConnectorData): boolean {
     // Check if id, endpoint and access token are not empty
-    if (!connector.connectorId || !connector.connectorEndpoint || !connector.connectorAccessToken) {
+    if (!this.isFieldFilled(connector.connectorId) || !this.isFieldFilled(connector.connectorEndpoint) || !this.isFieldFilled(connector.connectorAccessToken)) {
       return false;
     }
 
-    // Check if the list of buckets is valid
-    if(!this.areBucketsOfConnectorValid(connector)) {
+    if (!this.isBucketListOfConnectorValid(connector)) {
       return false;
     }
       
@@ -147,17 +148,25 @@ export class OrganisationWizardExtensionComponent {
   }
     
 
-  public areBucketsOfConnectorValid(connector: ConnectorData): boolean {
+  public isBucketListOfConnectorValid(connector: ConnectorData): boolean {
     // Check if the list of buckets is empty
-    if (connector.bucketNames.length === 0) {
+    if (!connector.bucketNames || connector.bucketNames.length === 0) {
       return false;
     }
 
-    // Check if all buckets are not empty
+    // Check if all bucket names are not empty
     for (const bucket of connector.bucketNames) {
-      if (!bucket) {
+      if (!this.isFieldFilled(bucket)) {
         return false;
       }
+    }
+
+    return true;
+  }
+
+  public isFieldFilled(str: string){
+    if (!str || str.trim().length === 0) {
+      return false;
     }
 
     return true;

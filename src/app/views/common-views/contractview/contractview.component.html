@@ -12,6 +12,14 @@
             müssen. Die Kontaktdaten der Organisation finden Sie in ihrem Vertrag.
           </b>
         </div>
+
+        <div *ngIf="isDataDeliveryContract(contractDetails) && availableConnectors.length === 0" class="warning-box">
+          <svg class="warning-symbol" cIcon name='cil-warning' size='xl' width='24'></svg>
+          <b>
+          Für Ihre Organisation liegen derzeit keine EDC Connector Daten vor. Wenn Sie über das MPO gesteuerte Datentransfere durchführen wollen, muss jedoch mindestens 
+          ein EDC Connector eingetragen sein. Das Hinzufügen von EDC Connectoren und der assoziierten IONOS-S3 Buckets ist über "Meine Organisation bearbeiten" möglich.
+          </b>
+        </div>
         <h3>Angebots-Details</h3>
         <app-offeringdetailview [serviceOfferingData]="contractDetails.offering" [showVariableFields]="false"></app-offeringdetailview>
         <h3>Vertrags-Details</h3>
@@ -135,7 +143,7 @@
             <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
               <strong>Aktiver EDC Connector*:</strong><br />
               <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.selectedProviderConnectorId" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
-                <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).provisioning.selectedProviderConnectorId === ''"></option>
+                <option [value]="" *ngIf="getSelectedProviderConnectorId() === ''"></option>
                 <option [value]="connector.connectorId" *ngFor="let connector of availableConnectors">
                   {{ connector.connectorId }}
                 </option>
@@ -146,10 +154,16 @@
               <strong>IONOS-S3 Quell-Bucket*</strong><br />
               <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.dataAddressSourceBucketName" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
                 <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).provisioning.dataAddressSourceBucketName === ''"></option>
-                <option [value]="bucket" *ngFor="let bucket of getConnectorBuckets(asDataDeliveryContract(contractDetails).provisioning.selectedProviderConnectorId)">
+                <option [value]="bucket" *ngFor="let bucket of getConnectorBuckets(getSelectedProviderConnectorId())">
                   {{ bucket }}
                 </option>
               </select>
+
+              <div *ngIf="isConnectorIdValid(getSelectedProviderConnectorId()) && !isBucketListForConnectorIdValid(getSelectedProviderConnectorId())" style="color: red">
+                <small>
+                Es ist kein IONOS-S3 Bucket mit diesem EDC Connector verknüpft. Sie können den EDC Connector und die Liste der assoziierten IONOS-S3 Buckets über "Meine Organisation bearbeiten" bearbeiten.
+                </small>
+              </div>
             </li>
   
             <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
@@ -172,7 +186,7 @@
             <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
               <strong>Aktiver EDC Connector*:</strong><br />
               <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.selectedConsumerConnectorId" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
-                <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).provisioning.selectedConsumerConnectorId === ''"></option>
+                <option [value]="" *ngIf="getSelectedConsumerConnectorId() === ''"></option>
                 <option [value]="connector.connectorId" *ngFor="let connector of availableConnectors">
                   {{ connector.connectorId }}
                 </option>
@@ -183,10 +197,16 @@
               <strong>IONOS-S3 Ziel-Bucket*</strong><br />
               <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.dataAddressTargetBucketName" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
                 <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).provisioning.dataAddressTargetBucketName === ''"></option>
-                <option [value]="bucket" *ngFor="let bucket of getConnectorBuckets(asDataDeliveryContract(contractDetails).provisioning.selectedConsumerConnectorId)">
+                <option [value]="bucket" *ngFor="let bucket of getConnectorBuckets(getSelectedConsumerConnectorId())">
                   {{ bucket }}
                 </option>
               </select>
+
+              <div *ngIf="isConnectorIdValid(getSelectedConsumerConnectorId()) && !isBucketListForConnectorIdValid(getSelectedConsumerConnectorId())" style="color: red">
+                <small>
+                Es ist kein IONOS-S3 Bucket mit diesem EDC Connector verknüpft. Sie können den EDC Connector und die Liste der assoziierten IONOS-S3 Buckets über "Meine Organisation bearbeiten" bearbeiten.
+                </small>
+              </div>
             </li>
   
             <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
