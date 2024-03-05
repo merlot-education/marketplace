@@ -84,7 +84,7 @@
                         <label class="form-label">Connector-ID</label>
                         <input class="form-control" [(ngModel)]="connector.connectorId" name="connectorId{{i}}">
                         <div cFormText style="color: #7f7f7f;">
-                            <small>ID des EDC Connectors</small>
+                            <small>ID des EDC Connectors, eindeutig für diese Organisation.</small>
                         </div>
                         <div *ngIf="!isFieldFilled(connector.connectorId)" style="color: red">
                             <small>
@@ -95,9 +95,9 @@
 
                     <div class="mb-3">
                         <label class="form-label">Connector-Endpunkt</label>
-                        <input class="form-control" [(ngModel)]="connector.connectorEndpoint" name="connectorEndpoint{{i}}">
+                        <input class="form-control" [(ngModel)]="connector.connectorEndpoint" name="connectorEndpoint{{i}}" placeholder="http://example.com/myedc">
                         <div cFormText style="color: #7f7f7f;">
-                            <small>Endpunkt des EDC Connectors</small>
+                            <small>Basis-Endpunkt des <a href="https://github.com/merlot-education/merlot-edc">MERLOT konformen</a> EDC Connectors, unter welchem die weiteren APIs erreichbar sind.</small>
                         </div>
                         <div *ngIf="!isFieldFilled(connector.connectorEndpoint)" style="color: red">
                             <small>
@@ -110,11 +110,11 @@
                         <label class="form-label">Connector-Access-Token</label>
                         <input class="form-control" [(ngModel)]="connector.connectorAccessToken" name="connectorAccessToken{{i}}">
                         <div cFormText style="color: #7f7f7f;">
-                            <small>Access-Token des EDC Connectors</small>
+                            <small>Zugriffs-Token (edc.api.auth.key) des EDC Connectors für die EDC-Management-API.</small>
                         </div>
                         <div *ngIf="!isFieldFilled(connector.connectorAccessToken)" style="color: red">
                             <small>
-                            Access-Token des EDC Connectors ist erforderlich.
+                                Zugriffs-Token des EDC Connectors ist erforderlich.
                             </small>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                             ></svg></button>
                             <input class="form-control" [(ngModel)]="connector.bucketNames[j]" name="connectorBucket{{i}}_{{j}}"> 
                             <div cFormText style="color: #7f7f7f;">
-                                <small>Name des IONOS-S3 Buckets</small>
+                                <small>Global eindeutiger Name des IONOS-S3 Buckets</small>
                             </div>
                             <div *ngIf="!isFieldFilled(bucket)" style="color: red">
                                 <small>
