@@ -372,7 +372,7 @@ export class ContractviewComponent {
     return true;
   }
 
-  protected isBucketListForConnectorIdValid(connectorId: string): boolean {
+  protected isAnyBucketAvailableForConnector(connectorId: string): boolean {
     let bucketList = this.getConnectorBuckets(connectorId);
 
     if (!bucketList || bucketList.length === 0) {
