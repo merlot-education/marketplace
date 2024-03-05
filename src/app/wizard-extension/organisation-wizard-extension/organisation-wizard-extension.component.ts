@@ -173,6 +173,9 @@ export class OrganisationWizardExtensionComponent {
   }
 
   public addConnector() {
+    if (!this.orgaMetadata.connectors) {
+      this.orgaMetadata.connectors = []
+    }
     const connector: ConnectorData = {
       connectorId: '', 
       connectorEndpoint: '',
