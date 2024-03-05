@@ -158,13 +158,9 @@ export class EditComponent implements OnInit, AfterViewInit {
       if (!this.isValidString(connector.connectorId) || !this.isValidString(connector.connectorEndpoint) || !this.isValidString(connector.connectorAccessToken)) {
         return false;
       }
-
-      // Check if the list of buckets is empty
-      if (!connector.bucketNames || connector.bucketNames.length === 0) {
-        return false;
-      }
   
-      // Check if all bucket names are not empty
+      // Check if all bucket names are valid
+      // if there are no buckets at all, that is also valid
       for (const bucket of connector.bucketNames) {
         if (!this.isValidString(bucket)) {
           return false;

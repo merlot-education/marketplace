@@ -149,12 +149,8 @@ export class OrganisationWizardExtensionComponent {
     
 
   public isConnectorBucketListValid(connector: ConnectorData): boolean {
-    // Check if the list of buckets is empty
-    if (!connector.bucketNames || connector.bucketNames.length === 0) {
-      return false;
-    }
-
-    // Check if all bucket names are not empty
+    // check if all bucket names are valid
+    // if there are no bucket names at all, that is also valid
     for (const bucket of connector.bucketNames) {
       if (!this.isFieldFilled(bucket)) {
         return false;
