@@ -6,7 +6,20 @@ import { OrganizationRole } from './auth.service'
   providedIn: 'root',
 })
 export class ActiveOrganizationRoleService {
-  public isLoggedIn: boolean = false;
+  public isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+  public userData?: {
+    ID: string;
+    Organisation: string;
+    Role: string;
+    issuerDID: string;
+    sub: string;
+    subjectDID: string;
+    Vorname: string;
+    Nachname: string;
+  } = null;
+
+  public accessToken: string = null;
 
   public organizationRoles: {
     [orgaRoleKey: string]: OrganizationRole;

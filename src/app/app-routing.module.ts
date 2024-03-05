@@ -4,8 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DefaultLayoutComponent } from './containers';
 import { Page404Component } from './views/pages/page404/page404.component';
 import { Page500Component } from './views/pages/page500/page500.component';
-import { KeycloakGuard } from './keycloak.guard'
-import { repAuthGuard } from './auth.guard';
+import { repAuthGuard, isAuthenticated } from './auth.guard';
 
 const routes: Routes = [
   {
@@ -44,7 +43,7 @@ const routes: Routes = [
         path: 'users',
         loadChildren: () =>
           import('./views/users/users.module').then((m) => m.UsersModule),
-          canActivate: [KeycloakGuard, repAuthGuard]
+          canActivate: [isAuthenticated, repAuthGuard]
       },
       {
         path: 'service-offerings',
@@ -55,7 +54,7 @@ const routes: Routes = [
         path: 'contracts',
         loadChildren: () =>
           import('./views/contracts/contracts.module').then((m) => m.ContractsModule),
-          canActivate: [KeycloakGuard, repAuthGuard]
+          canActivate: [isAuthenticated, repAuthGuard]
       },
       {
         path: 'pages',
