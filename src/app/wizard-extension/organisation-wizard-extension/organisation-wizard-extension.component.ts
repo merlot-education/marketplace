@@ -110,9 +110,9 @@ export class OrganisationWizardExtensionComponent {
   public isOrganizationMetadataFilled(): boolean {
     let membershipClassOk = this.isMembershipClassFilled();
     let mailAddressOk = this.isMailAddressFilled();
-    let allConnectorsOk = this.activeOrgRoleService.isActiveAsRepresentative ? this.areAllConnectorsValid() : true;
+    let isConnectorListOk = this.activeOrgRoleService.isActiveAsRepresentative ? this.isConnectorListValid() : true;
 
-    return membershipClassOk && mailAddressOk && allConnectorsOk;
+    return membershipClassOk && mailAddressOk && isConnectorListOk;
   }
 
   public isMailAddressFilled(): boolean {
@@ -123,7 +123,7 @@ export class OrganisationWizardExtensionComponent {
     return this.isFieldFilled(this.orgaMetadata.membershipClass);
   }
 
-  public areAllConnectorsValid(): boolean {
+  public isConnectorListValid(): boolean {
     // check if all given connectors are valid
     // if there are no connectors at all, that is also valid
     for (const connector of this.orgaMetadata.connectors) {
@@ -140,7 +140,7 @@ export class OrganisationWizardExtensionComponent {
       return false;
     }
 
-    if (!this.isBucketListOfConnectorValid(connector)) {
+    if (!this.isConnectorBucketListValid(connector)) {
       return false;
     }
       
@@ -148,7 +148,7 @@ export class OrganisationWizardExtensionComponent {
   }
     
 
-  public isBucketListOfConnectorValid(connector: ConnectorData): boolean {
+  public isConnectorBucketListValid(connector: ConnectorData): boolean {
     // Check if the list of buckets is empty
     if (!connector.bucketNames || connector.bucketNames.length === 0) {
       return false;
@@ -187,6 +187,9 @@ export class OrganisationWizardExtensionComponent {
   }
 
   public addBucket(connector: ConnectorData) {
+    if (!connector.bucketNames) {
+      connector.bucketNames = []
+    }
     connector.bucketNames.push('');
   }
 

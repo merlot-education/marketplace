@@ -149,4 +149,36 @@ export class EditComponent implements OnInit, AfterViewInit {
     let connectors = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.metadata.connectors;
     return connectors && connectors.length !== 0;
   }
+
+  isConnectorListValid(): boolean {
+    let connectors = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.metadata.connectors;
+    // check if all given connectors are valid
+    // if there are no connectors at all, that is also valid
+    for (const connector of connectors) {
+      if (!this.isInvalidString(connector.connectorId) || !this.isInvalidString(connector.connectorEndpoint) || !this.isInvalidString(connector.connectorAccessToken)) {
+        return false;
+      }
+
+      // Check if the list of buckets is empty
+      if (!connector.bucketNames || connector.bucketNames.length === 0) {
+        return false;
+      }
+  
+      // Check if all bucket names are not empty
+      for (const bucket of connector.bucketNames) {
+        if (!this.isInvalidString(bucket)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  isInvalidString(str: string){
+    if (!str || str.trim().length === 0) {
+      return false;
+    }
+
+    return true;
+  }
 }

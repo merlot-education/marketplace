@@ -59,7 +59,7 @@
                     size="xl"
                 ></svg></button></div>
             <mat-accordion>
-                <mat-expansion-panel *ngFor="let connector of orgaMetadata.connectors; let i = index">
+                <mat-expansion-panel *ngFor="let connector of orgaMetadata.connectors; let i = index" [expanded]="i === 0">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <div>
@@ -97,7 +97,7 @@
                         <label class="form-label">Connector-Endpunkt</label>
                         <input class="form-control" [(ngModel)]="connector.connectorEndpoint" name="connectorEndpoint{{i}}">
                         <div cFormText style="color: #7f7f7f;">
-                            <small>Endpunkt des EDC-Connectors</small>
+                            <small>Endpunkt des EDC Connectors</small>
                         </div>
                         <div *ngIf="!isFieldFilled(connector.connectorEndpoint)" style="color: red">
                             <small>
@@ -128,9 +128,9 @@
                             name="cib-addthis"
                             size="xl"
                         ></svg></button>
-                        <div *ngIf="!isBucketListOfConnectorValid(connector)" style="color: red">
+                        <div *ngIf="!isConnectorBucketListValid(connector)" style="color: red">
                             <small>
-                            {{ connector.bucketNames.length === 0 ? "Bitte geben Sie mindestens einen IONOS-S3 Bucket an." : "Bitte überprüfen Sie die Angaben über die IONOS-S3 Buckets." }}
+                            {{ !connector.bucketNames || connector.bucketNames.length === 0 ? "Bitte geben Sie mindestens einen IONOS-S3 Bucket an." : "Bitte überprüfen Sie die Angaben über die IONOS-S3 Buckets." }}
                             </small>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                             ></svg></button>
                             <input class="form-control" [(ngModel)]="connector.bucketNames[j]" name="connectorBucket{{i}}_{{j}}"> 
                             <div cFormText style="color: #7f7f7f;">
-                                <small>Name des Buckets</small>
+                                <small>Name des IONOS-S3 Buckets</small>
                             </div>
                             <div *ngIf="!isFieldFilled(bucket)" style="color: red">
                                 <small>
