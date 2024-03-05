@@ -155,7 +155,7 @@ export class EditComponent implements OnInit, AfterViewInit {
     // check if all given connectors are valid
     // if there are no connectors at all, that is also valid
     for (const connector of connectors) {
-      if (!this.isInvalidString(connector.connectorId) || !this.isInvalidString(connector.connectorEndpoint) || !this.isInvalidString(connector.connectorAccessToken)) {
+      if (!this.isValidString(connector.connectorId) || !this.isValidString(connector.connectorEndpoint) || !this.isValidString(connector.connectorAccessToken)) {
         return false;
       }
 
@@ -166,7 +166,7 @@ export class EditComponent implements OnInit, AfterViewInit {
   
       // Check if all bucket names are not empty
       for (const bucket of connector.bucketNames) {
-        if (!this.isInvalidString(bucket)) {
+        if (!this.isValidString(bucket)) {
           return false;
         }
       }
@@ -174,7 +174,7 @@ export class EditComponent implements OnInit, AfterViewInit {
     return true;
   }
 
-  isInvalidString(str: string){
+  isValidString(str: string){
     if (!str || str.trim().length === 0) {
       return false;
     }
