@@ -355,4 +355,30 @@ export class ContractviewComponent {
       this.saveButtonDisabled = false;
     });
   }
+
+  protected getSelectedProviderConnectorId(): string {
+    return this.asDataDeliveryContract(this.contractDetails).provisioning.selectedProviderConnectorId;
+  }
+
+  protected getSelectedConsumerConnectorId(): string {
+    return this.asDataDeliveryContract(this.contractDetails).provisioning.selectedConsumerConnectorId;
+  }
+
+  protected isConnectorIdValid(connectorId: string): boolean {
+    if (!connectorId || connectorId.trim().length === 0 || !this.availableConnectors.find(con => con.connectorId === connectorId)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  protected isAnyBucketAvailableForConnector(connectorId: string): boolean {
+    let bucketList = this.getConnectorBuckets(connectorId);
+
+    if (!bucketList || bucketList.length === 0) {
+      return false;
+    }
+
+    return true;
+  }
 }

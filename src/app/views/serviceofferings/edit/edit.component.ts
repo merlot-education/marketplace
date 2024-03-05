@@ -140,4 +140,41 @@ export class EditComponent implements OnInit, AfterViewInit {
     }
     
   }
+
+  isOfferingDataDeliveryOffering(): boolean {
+    return this.selectedServiceFile.includes("DataDelivery");
+  }
+
+  isAnyConnectorAvailable(): boolean {
+    let connectors = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.metadata.connectors;
+    return connectors && connectors.length !== 0;
+  }
+
+  isConnectorListValid(): boolean {
+    let connectors = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.metadata.connectors;
+    // check if all given connectors are valid
+    // if there are no connectors at all, that is also valid
+    for (const connector of connectors) {
+      if (!this.isValidString(connector.connectorId) || !this.isValidString(connector.connectorEndpoint) || !this.isValidString(connector.connectorAccessToken)) {
+        return false;
+      }
+  
+      // Check if all bucket names are valid
+      // if there are no buckets at all, that is also valid
+      for (const bucket of connector.bucketNames) {
+        if (!this.isValidString(bucket)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  isValidString(str: string){
+    if (!str || str.trim().length === 0) {
+      return false;
+    }
+
+    return true;
+  }
 }

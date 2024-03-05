@@ -48,6 +48,117 @@
         <div cFormText style="color: #7f7f7f;">
             <small>Mitgliedschaftsstatus der Organisation</small>
         </div>
+        <br>
+        <div *ngIf="activeOrgRoleService.isActiveAsRepresentative()">
+            <div>EDC Connectoren der Organisation 
+                <button cButton color="primary" variant="ghost" (click)="addConnector()" size="sm">
+                    <svg
+                    class=""
+                    cIcon
+                    name="cib-addthis"
+                    size="xl"
+                ></svg></button></div>
+            <mat-accordion>
+                <mat-expansion-panel *ngFor="let connector of orgaMetadata.connectors; let i = index" [expanded]="i === 0">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <div>
+                                EDC Connector 
+                                <button cButton variant="ghost" (click)="removeConnector(i)" color="primary" size="sm">
+                                    <svg
+                                    class=""
+                                    cIcon
+                                    name="cil-trash"
+                                    size="xl"
+                                ></svg></button>
+                                <div *ngIf="!isConnectorValid(connector)" style="color: red">
+                                    <small>
+                                    Bitte überprüfen Sie die technischen Parameter dieses EDC Connectors.
+                                    </small>
+                                </div>
+                            </div>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="mb-3">
+                        <label class="form-label">Connector-ID</label>
+                        <input class="form-control" [(ngModel)]="connector.connectorId" name="connectorId{{i}}">
+                        <div cFormText style="color: #7f7f7f;">
+                            <small>ID des EDC Connectors, eindeutig für diese Organisation.</small>
+                        </div>
+                        <div *ngIf="!isFieldFilled(connector.connectorId)" style="color: red">
+                            <small>
+                            ID des EDC Connectors ist erforderlich.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Connector-Endpunkt</label>
+                        <input class="form-control" [(ngModel)]="connector.connectorEndpoint" name="connectorEndpoint{{i}}" placeholder="http://example.com/myedc">
+                        <div cFormText style="color: #7f7f7f;">
+                            <small>Basis-Endpunkt des <a href="https://github.com/merlot-education/merlot-edc">MERLOT konformen</a> EDC Connectors, unter welchem die weiteren APIs erreichbar sind.</small>
+                        </div>
+                        <div *ngIf="!isFieldFilled(connector.connectorEndpoint)" style="color: red">
+                            <small>
+                            Endpunkt des EDC Connectors ist erforderlich.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Connector-Access-Token</label>
+                        <input class="form-control" [(ngModel)]="connector.connectorAccessToken" name="connectorAccessToken{{i}}">
+                        <div cFormText style="color: #7f7f7f;">
+                            <small>Zugriffs-Token (edc.api.auth.key) des EDC Connectors für die EDC-Management-API.</small>
+                        </div>
+                        <div *ngIf="!isFieldFilled(connector.connectorAccessToken)" style="color: red">
+                            <small>
+                                Zugriffs-Token des EDC Connectors ist erforderlich.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div>
+                        IONOS-S3 Buckets
+                        <button cButton color="primary" variant="ghost" (click)="addBucket(connector)" size="sm">
+                            <svg
+                            class=""
+                            cIcon
+                            name="cib-addthis"
+                            size="xl"
+                        ></svg></button>
+                        <div *ngIf="!isConnectorBucketListValid(connector)" style="color: red">
+                            <small>
+                            "Bitte überprüfen Sie die Angaben über die IONOS-S3 Buckets."
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div *ngFor="let bucket of connector.bucketNames; let j = index; trackBy:customTrackBy">
+                        <div class="mb-3" style="margin-left: 23px;">
+                            <label class="form-label">Bucket</label>
+                            <button cButton variant="ghost" (click)="removeBucket(connector, j)" color="primary" size="sm">
+                                <svg
+                                class=""
+                                cIcon
+                                name="cil-trash"
+                                size="xl"
+                            ></svg></button>
+                            <input class="form-control" [(ngModel)]="connector.bucketNames[j]" name="connectorBucket{{i}}_{{j}}"> 
+                            <div cFormText style="color: #7f7f7f;">
+                                <small>Global eindeutiger Name des IONOS-S3 Buckets</small>
+                            </div>
+                            <div *ngIf="!isFieldFilled(bucket)" style="color: red">
+                                <small>
+                                Name des IONOS-S3 Buckets ist erforderlich.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
     </div>
 </c-container>
 <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">

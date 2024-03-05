@@ -3,7 +3,7 @@ import { OrganizationsApiService } from '../../services/organizations-api.servic
 import { StatusMessageComponent } from '../../views/common-views/status-message/status-message.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
-import { IOrganizationData, IOrganizationMetadata } from 'src/app/views/organization/organization-data';
+import { ConnectorData, IOrganizationData, IOrganizationMetadata } from 'src/app/views/organization/organization-data';
 import { ModalComponent } from '@coreui/angular';
 import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wizard-extension.component';
 
@@ -110,17 +110,95 @@ export class OrganisationWizardExtensionComponent {
   public isOrganizationMetadataFilled(): boolean {
     let membershipClassOk = this.isMembershipClassFilled();
     let mailAddressOk = this.isMailAddressFilled();
+    let isConnectorListOk = this.activeOrgRoleService.isActiveAsRepresentative ? this.isConnectorListValid() : true;
 
-    return membershipClassOk && mailAddressOk;
+    return membershipClassOk && mailAddressOk && isConnectorListOk;
   }
 
   public isMailAddressFilled(): boolean {
-    return this.orgaMetadata.mailAddress !== null && this.orgaMetadata.mailAddress.trim().length !== 0;
+    return this.isFieldFilled(this.orgaMetadata.mailAddress);
   }
 
   public isMembershipClassFilled(): boolean {
-    return this.orgaMetadata.membershipClass !== null && this.orgaMetadata.membershipClass.trim().length !== 0;
+    return this.isFieldFilled(this.orgaMetadata.membershipClass);
   }
+
+  public isConnectorListValid(): boolean {
+    // check if all given connectors are valid
+    // if there are no connectors at all, that is also valid
+    for (const connector of this.orgaMetadata.connectors) {
+      if (!this.isConnectorValid(connector)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public isConnectorValid(connector: ConnectorData): boolean {
+    // Check if id, endpoint and access token are not empty
+    if (!this.isFieldFilled(connector.connectorId) || !this.isFieldFilled(connector.connectorEndpoint) || !this.isFieldFilled(connector.connectorAccessToken)) {
+      return false;
+    }
+
+    if (!this.isConnectorBucketListValid(connector)) {
+      return false;
+    }
+      
+    return true
+  }
+    
+
+  public isConnectorBucketListValid(connector: ConnectorData): boolean {
+    // check if all bucket names are valid
+    // if there are no bucket names at all, that is also valid
+    for (const bucket of connector.bucketNames) {
+      if (!this.isFieldFilled(bucket)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  public isFieldFilled(str: string){
+    if (!str || str.trim().length === 0) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public addConnector() {
+    if (!this.orgaMetadata.connectors) {
+      this.orgaMetadata.connectors = []
+    }
+    const connector: ConnectorData = {
+      connectorId: '', 
+      connectorEndpoint: '',
+      connectorAccessToken: '',
+      bucketNames: []
+    };
+    this.orgaMetadata.connectors.push(connector);
+  }
+
+  public removeConnector(index: number) {
+    this.orgaMetadata.connectors.splice(index, 1);
+  }
+
+  public addBucket(connector: ConnectorData) {
+    if (!connector.bucketNames) {
+      connector.bucketNames = []
+    }
+    connector.bucketNames.push('');
+  }
+
+  public removeBucket(connector: ConnectorData, index: number) {
+    connector.bucketNames.splice(index, 1);
+  }
+
+  public customTrackBy(index: number, obj: any): any {
+    return index;
+}
 
   protected isWizardFormInvalid(): boolean {
     return this.baseWizardExtension?.isWizardFormInvalid();
