@@ -2,7 +2,7 @@
 
 The MERLOT Marketplace Frontend is the main interaction point for users with the merlot marketplace.
 
-It provides an easy-to-use GUI for communication with the MERLOT backend services, with features such as enrolled organisation viewing/editing, user listing, service offering viewing/editing and contracting.
+It provides an easy-to-use GUI for communication with the MERLOT backend services, with features such as enrolled organisation viewing/editing, user listing, service offering viewing/editing and contracting. It does not contain any major logic or data processing itself and hence depends on a running backend.
 
 ## Development
 
