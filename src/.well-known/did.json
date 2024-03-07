@@ -1,0 +1,20 @@
+{
+    "@context": [
+      "https://www.w3.org/ns/did/v1",
+      "https://w3id.org/security/suites/jws-2020/v1"
+    ],
+    "id": "did:web:marketplace.dev.merlot-education.eu",
+    "verificationMethod": [
+        {
+          "id": "did:web:marketplace.dev.merlot-education.eu",
+          "type": "JsonWebKey2020",
+          "controller": "did:web:marketplace.dev.merlot-education.eu",
+          "publicKeyJwk": {
+            "kty": "RSA",
+            "n": "zZG2EC1Wu5XLAtXK7LUKW6xq96ixUPO2L35i7-63W6QiOhaJUjyFEuhZfyueB2vWL4viVJcP4xkPjt0A4T50Y13-CiYy4D6jeQnUhMUAlaTbhflBViBwdS5Ng_ed9Nry1LaIBSoJHn4KwERpKyMYcOCCwzeQJFGOUn9TB19Ezzm4xmn79HTjDdluPatlyzIb3H8HMdqXCS9FfS43ubjAu97XAY-GsxUVQZwLN1BMfgvFVc7ZYbBxdiTRQgTqCykfpff93hquL_npNWsXVVVfzuHnpSar-9NSMcHJpkLryCnJla31JLy8w1no1PbGjls-1XsNXA9ZvcgDDtRrvpHR9zg_6U6xF-Wog56YUgW6KcCGcvHGxsA6-zy9tZD01kdrhgtGOID1MCOtPwcLCrs56-ZhiabV-A4A23uOyNYW-s0LpNPW4rNUmfXfjzF6GB0Uq86__9lHHRocJ7X8HDqkhhUaMHJ3om3i7U-sFznE2RFovI3_UJZ1cUFJmIwM9TE7kpm6k6t9ZNnzgP6A-eLeH2QMxxZBIXdQ8fIezzsy4m0RFxZRilQuNKO9rzFVJvmkRv4qn1KMoyAE0DB6656MYRVc2kSNRmPAuTzd7T7t9gimu9DdqeercGizdvzOuUlzAmCN0XvazzgC75ZyuPN8Hm4mL_N79UgayybvA04_Ch8",
+            "e": "AQAB",
+            "x5u": "https://marketplace.dev.merlot-education.eu/.well-known/cert.ss.pem"
+          }
+        }
+    ]
+}
