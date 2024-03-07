@@ -14,12 +14,12 @@ This is by far the easiest way to get everything up and running locally.
 
 
     ├── src/app
-    │   ├── containers    # shared layout throughout all frontend components
-    │   ├── icons         # selected icon sets
-    │   ├── sdwizard      # self-description creation wizard based on XFSC Self-Description Wizard Frontend
-    │   ├── services      # shared services for interacting with the MERLOT backend
-    │   ├── views         # Frontend components for all GUI functionality 
-    │   ├── views         # MERLOT specific extension of the aforementioned SD-Wizard
+    │   ├── containers        # shared layout throughout all frontend components
+    │   ├── icons             # selected icon sets
+    │   ├── sdwizard          # self-description creation wizard based on XFSC Self-Description Wizard Frontend
+    │   ├── services          # shared services for interacting with the MERLOT backend
+    │   ├── views             # Frontend components for all GUI functionality 
+    │   ├── wizard-extension  # MERLOT specific extension of the aforementioned SD-Wizard
 
 
 ## Dependencies
