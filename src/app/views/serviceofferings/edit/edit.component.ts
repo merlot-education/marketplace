@@ -160,7 +160,7 @@ export class EditComponent implements OnInit, AfterViewInit {
       }
 
       // if EDC is not configured for IONOS (only method right now), reject
-      if (!connector.ionosS3ExtensionConfig || !connector.ionosS3ExtensionConfig.buckets || connector.ionosS3ExtensionConfig.buckets.length == 0) {
+      if (!connector.ionosS3ExtensionConfig?.buckets || connector.ionosS3ExtensionConfig.buckets.length == 0) {
         return false;
       }
   
