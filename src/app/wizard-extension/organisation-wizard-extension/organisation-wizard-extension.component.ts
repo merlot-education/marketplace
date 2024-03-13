@@ -148,11 +148,7 @@ export class OrganisationWizardExtensionComponent {
   }
 
   protected isIonosS3ExtensionConfigValid(connector: ConnectorData): boolean {
-    // check if all bucket names are valid
-    // if there are no bucket names at all, that is also valid
-    // TODO
-
-    return true;
+    return this.isConnectorBucketListValid(connector);
   }
     
 
@@ -170,7 +166,7 @@ export class OrganisationWizardExtensionComponent {
 
     // check if all bucket names are valid
     for (const bucket of connector.ionosS3ExtensionConfig.buckets) {
-      if (!this.isFieldFilled(bucket.name)) {
+      if (!this.isValidBucket(bucket)) {
         return false;
       }
     }
