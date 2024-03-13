@@ -161,8 +161,8 @@ export class EditComponent implements OnInit, AfterViewInit {
   
       // Check if all bucket names are valid
       // if there are no buckets at all, that is also valid
-      for (const bucket of connector.bucketNames) {
-        if (!this.isValidString(bucket)) {
+      for (const bucket of connector.ionosS3ExtensionConfig.buckets) {
+        if (!this.isValidString(bucket.name)) {
           return false;
         }
       }

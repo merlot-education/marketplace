@@ -47,7 +47,7 @@ export class ContractviewComponent {
 
   protected getConnectorBuckets(connectorId: string) {
     try {
-      return this.availableConnectors.find(con => con.connectorId === connectorId).bucketNames;
+      return this.availableConnectors.find(con => con.connectorId === connectorId).ionosS3ExtensionConfig?.buckets.map(b => b.name);
     } catch (e) {
       return [];
     }

@@ -79,7 +79,7 @@
         <tbody>
           <tr *ngFor="let ci of connectorInfo">
             <td>{{ ci.connectorId }}</td>
-            <td>{{ ci.bucketNames.join(', ') }}</td>
+            <td *ngIf="ci.ionosS3ExtensionConfig">{{ getConnectorBucketsString(ci) }}</td>
           </tr>
         </tbody>
       </table>

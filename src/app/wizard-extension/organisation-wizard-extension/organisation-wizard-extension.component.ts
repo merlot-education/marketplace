@@ -3,7 +3,7 @@ import { OrganizationsApiService } from '../../services/organizations-api.servic
 import { StatusMessageComponent } from '../../views/common-views/status-message/status-message.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
-import { ConnectorData, IOrganizationData, IOrganizationMetadata } from 'src/app/views/organization/organization-data';
+import { ConnectorData, IOrganizationData, IOrganizationMetadata, IonosS3Bucket } from 'src/app/views/organization/organization-data';
 import { ModalComponent } from '@coreui/angular';
 import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wizard-extension.component';
 
@@ -146,18 +146,40 @@ export class OrganisationWizardExtensionComponent {
       
     return true
   }
+
+  protected isIonosS3ExtensionConfigValid(connector: ConnectorData): boolean {
+    // check if all bucket names are valid
+    // if there are no bucket names at all, that is also valid
+    // TODO
+
+    return true;
+  }
     
 
   public isConnectorBucketListValid(connector: ConnectorData): boolean {
+
+    if (!connector.ionosS3ExtensionConfig) {
+      return true;
+    }
+
+    // if no buckets provided, the config is invalid
+    if (!connector.ionosS3ExtensionConfig.buckets 
+        || connector.ionosS3ExtensionConfig.buckets.length == 0) {
+          return false;
+    }
+
     // check if all bucket names are valid
-    // if there are no bucket names at all, that is also valid
-    for (const bucket of connector.bucketNames) {
-      if (!this.isFieldFilled(bucket)) {
+    for (const bucket of connector.ionosS3ExtensionConfig.buckets) {
+      if (!this.isFieldFilled(bucket.name)) {
         return false;
       }
     }
 
     return true;
+  }
+
+  protected isValidBucket(bucket: IonosS3Bucket) {
+    return this.isFieldFilled(bucket.name) && this.isFieldFilled(bucket.storageEndpoint);
   }
 
   public isFieldFilled(str: string){
@@ -175,8 +197,7 @@ export class OrganisationWizardExtensionComponent {
     const connector: ConnectorData = {
       connectorId: '', 
       connectorEndpoint: '',
-      connectorAccessToken: '',
-      bucketNames: []
+      connectorAccessToken: ''
     };
     this.orgaMetadata.connectors.push(connector);
   }
@@ -185,15 +206,31 @@ export class OrganisationWizardExtensionComponent {
     this.orgaMetadata.connectors.splice(index, 1);
   }
 
-  public addBucket(connector: ConnectorData) {
-    if (!connector.bucketNames) {
-      connector.bucketNames = []
+  public addIonosS3ExtensionConfig(connector: ConnectorData) {
+    connector.ionosS3ExtensionConfig = {
+      buckets: [{
+        name: "",
+        storageEndpoint: ""
+      }]
     }
-    connector.bucketNames.push('');
+  }
+
+  public removeIonosS3ExtensionConfig(connector: ConnectorData) {
+    connector.ionosS3ExtensionConfig = null;
+  }
+
+  public addBucket(connector: ConnectorData) {
+    if (!connector.ionosS3ExtensionConfig.buckets) {
+      connector.ionosS3ExtensionConfig.buckets = []
+    }
+    connector.ionosS3ExtensionConfig.buckets.push({
+      name: '',
+      storageEndpoint: ""
+    });
   }
 
   public removeBucket(connector: ConnectorData, index: number) {
-    connector.bucketNames.splice(index, 1);
+    connector.ionosS3ExtensionConfig.buckets.splice(index, 1);
   }
 
   public customTrackBy(index: number, obj: any): any {
