@@ -10,9 +10,10 @@ import { OfferingWizardExtensionComponent } from './offering-wizard-extension/of
 import { BaseWizardExtensionComponent } from './base-wizard-extension/base-wizard-extension.component';
 import { MaterialModule } from '../sdwizard/material.module'
 import { IconModule } from '@coreui/icons-angular';
+import { OrganisationIonosS3ConfigComponent } from './organisation-ionos-s3-config/organisation-ionos-s3-config.component';
 
 @NgModule({
-    declarations: [OrganisationWizardExtensionComponent, OfferingWizardExtensionComponent, BaseWizardExtensionComponent],
+    declarations: [OrganisationWizardExtensionComponent, OfferingWizardExtensionComponent, BaseWizardExtensionComponent, OrganisationIonosS3ConfigComponent],
     exports: [
         OrganisationWizardExtensionComponent,
         OfferingWizardExtensionComponent

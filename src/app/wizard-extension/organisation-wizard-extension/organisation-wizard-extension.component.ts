@@ -3,9 +3,10 @@ import { OrganizationsApiService } from '../../services/organizations-api.servic
 import { StatusMessageComponent } from '../../views/common-views/status-message/status-message.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
-import { ConnectorData, IOrganizationData, IOrganizationMetadata, IonosS3Bucket } from 'src/app/views/organization/organization-data';
+import { ConnectorData, IOrganizationData, IOrganizationMetadata } from 'src/app/views/organization/organization-data';
 import { ModalComponent } from '@coreui/angular';
 import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wizard-extension.component';
+import { OrganisationIonosS3ConfigComponent } from '../organisation-ionos-s3-config/organisation-ionos-s3-config.component';
 
 
 @Component({
@@ -17,6 +18,8 @@ export class OrganisationWizardExtensionComponent {
   @ViewChild("baseWizardExtension") private baseWizardExtension: BaseWizardExtensionComponent;
   @ViewChild("saveStatusMessage") private saveStatusMessage: StatusMessageComponent;
   @ViewChild("modalConfirmation") private modalConfirmation: ModalComponent;
+  @ViewChild("ionosS3Config") private ionosS3Config: OrganisationIonosS3ConfigComponent;
+  
 
   public submitCompleteEvent: EventEmitter<any> = new EventEmitter();
 
@@ -140,42 +143,11 @@ export class OrganisationWizardExtensionComponent {
       return false;
     }
 
-    if (!this.isConnectorBucketListValid(connector)) {
+    if (connector.ionosS3ExtensionConfig && !this.ionosS3Config?.isIonosS3ExtensionConfigValid()) {
       return false;
     }
       
     return true
-  }
-
-  protected isIonosS3ExtensionConfigValid(connector: ConnectorData): boolean {
-    return this.isConnectorBucketListValid(connector);
-  }
-    
-
-  public isConnectorBucketListValid(connector: ConnectorData): boolean {
-
-    if (!connector.ionosS3ExtensionConfig) {
-      return true;
-    }
-
-    // if no buckets provided, the config is invalid
-    if (!connector.ionosS3ExtensionConfig.buckets 
-        || connector.ionosS3ExtensionConfig.buckets.length == 0) {
-          return false;
-    }
-
-    // check if all bucket names are valid
-    for (const bucket of connector.ionosS3ExtensionConfig.buckets) {
-      if (!this.isValidBucket(bucket)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  protected isValidBucket(bucket: IonosS3Bucket) {
-    return this.isFieldFilled(bucket.name) && this.isFieldFilled(bucket.storageEndpoint);
   }
 
   public isFieldFilled(str: string){
@@ -200,33 +172,6 @@ export class OrganisationWizardExtensionComponent {
 
   public removeConnector(index: number) {
     this.orgaMetadata.connectors.splice(index, 1);
-  }
-
-  public addIonosS3ExtensionConfig(connector: ConnectorData) {
-    connector.ionosS3ExtensionConfig = {
-      buckets: [{
-        name: "",
-        storageEndpoint: ""
-      }]
-    }
-  }
-
-  public removeIonosS3ExtensionConfig(connector: ConnectorData) {
-    connector.ionosS3ExtensionConfig = null;
-  }
-
-  public addBucket(connector: ConnectorData) {
-    if (!connector.ionosS3ExtensionConfig.buckets) {
-      connector.ionosS3ExtensionConfig.buckets = []
-    }
-    connector.ionosS3ExtensionConfig.buckets.push({
-      name: "",
-      storageEndpoint: ""
-    });
-  }
-
-  public removeBucket(connector: ConnectorData, index: number) {
-    connector.ionosS3ExtensionConfig.buckets.splice(index, 1);
   }
 
   public customTrackBy(index: number, obj: any): any {
