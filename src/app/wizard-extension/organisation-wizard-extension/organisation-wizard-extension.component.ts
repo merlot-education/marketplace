@@ -16,7 +16,7 @@ import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wiza
 export class OrganisationWizardExtensionComponent {
   @ViewChild("baseWizardExtension") private baseWizardExtension: BaseWizardExtensionComponent;
   @ViewChild("saveStatusMessage") private saveStatusMessage: StatusMessageComponent;
-  @ViewChild('modalConfirmation') private modalConfirmation: ModalComponent;
+  @ViewChild("modalConfirmation") private modalConfirmation: ModalComponent;
 
   public submitCompleteEvent: EventEmitter<any> = new EventEmitter();
 
@@ -191,9 +191,9 @@ export class OrganisationWizardExtensionComponent {
       this.orgaMetadata.connectors = []
     }
     const connector: ConnectorData = {
-      connectorId: '', 
-      connectorEndpoint: '',
-      connectorAccessToken: ''
+      connectorId: "", 
+      connectorEndpoint: "",
+      connectorAccessToken: ""
     };
     this.orgaMetadata.connectors.push(connector);
   }
@@ -220,7 +220,7 @@ export class OrganisationWizardExtensionComponent {
       connector.ionosS3ExtensionConfig.buckets = []
     }
     connector.ionosS3ExtensionConfig.buckets.push({
-      name: '',
+      name: "",
       storageEndpoint: ""
     });
   }
