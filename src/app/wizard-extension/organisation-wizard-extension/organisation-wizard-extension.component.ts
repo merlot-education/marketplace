@@ -174,10 +174,6 @@ export class OrganisationWizardExtensionComponent {
     this.orgaMetadata.connectors.splice(index, 1);
   }
 
-  public customTrackBy(index: number, obj: any): any {
-    return index;
-}
-
   protected isWizardFormInvalid(): boolean {
     return this.baseWizardExtension?.isWizardFormInvalid();
   }
