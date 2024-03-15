@@ -6,6 +6,7 @@ import { ActiveOrganizationRoleService } from 'src/app/services/active-organizat
 import { ConnectorData, IOrganizationData, IOrganizationMetadata } from 'src/app/views/organization/organization-data';
 import { ModalComponent } from '@coreui/angular';
 import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wizard-extension.component';
+import { OrganisationIonosS3ConfigComponent } from '../organisation-ionos-s3-config/organisation-ionos-s3-config.component';
 
 
 @Component({
@@ -16,7 +17,9 @@ import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wiza
 export class OrganisationWizardExtensionComponent {
   @ViewChild("baseWizardExtension") private baseWizardExtension: BaseWizardExtensionComponent;
   @ViewChild("saveStatusMessage") private saveStatusMessage: StatusMessageComponent;
-  @ViewChild('modalConfirmation') private modalConfirmation: ModalComponent;
+  @ViewChild("modalConfirmation") private modalConfirmation: ModalComponent;
+  @ViewChild("ionosS3Config") private ionosS3Config: OrganisationIonosS3ConfigComponent;
+  
 
   public submitCompleteEvent: EventEmitter<any> = new EventEmitter();
 
@@ -140,24 +143,11 @@ export class OrganisationWizardExtensionComponent {
       return false;
     }
 
-    if (!this.isConnectorBucketListValid(connector)) {
+    if (connector.ionosS3ExtensionConfig && !this.ionosS3Config?.isIonosS3ExtensionConfigValid()) {
       return false;
     }
       
     return true
-  }
-    
-
-  public isConnectorBucketListValid(connector: ConnectorData): boolean {
-    // check if all bucket names are valid
-    // if there are no bucket names at all, that is also valid
-    for (const bucket of connector.bucketNames) {
-      if (!this.isFieldFilled(bucket)) {
-        return false;
-      }
-    }
-
-    return true;
   }
 
   public isFieldFilled(str: string){
@@ -173,10 +163,9 @@ export class OrganisationWizardExtensionComponent {
       this.orgaMetadata.connectors = []
     }
     const connector: ConnectorData = {
-      connectorId: '', 
-      connectorEndpoint: '',
-      connectorAccessToken: '',
-      bucketNames: []
+      connectorId: "", 
+      connectorEndpoint: "",
+      connectorAccessToken: ""
     };
     this.orgaMetadata.connectors.push(connector);
   }
@@ -184,21 +173,6 @@ export class OrganisationWizardExtensionComponent {
   public removeConnector(index: number) {
     this.orgaMetadata.connectors.splice(index, 1);
   }
-
-  public addBucket(connector: ConnectorData) {
-    if (!connector.bucketNames) {
-      connector.bucketNames = []
-    }
-    connector.bucketNames.push('');
-  }
-
-  public removeBucket(connector: ConnectorData, index: number) {
-    connector.bucketNames.splice(index, 1);
-  }
-
-  public customTrackBy(index: number, obj: any): any {
-    return index;
-}
 
   protected isWizardFormInvalid(): boolean {
     return this.baseWizardExtension?.isWizardFormInvalid();

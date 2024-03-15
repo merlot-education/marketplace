@@ -79,7 +79,6 @@
                             </div>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-
                     <div class="mb-3">
                         <label class="form-label">Connector-ID</label>
                         <input class="form-control" [(ngModel)]="connector.connectorId" name="connectorId{{i}}">
@@ -118,44 +117,10 @@
                             </small>
                         </div>
                     </div>
-
-                    <div>
-                        IONOS-S3 Buckets
-                        <button cButton color="primary" variant="ghost" (click)="addBucket(connector)" size="sm">
-                            <svg
-                            class=""
-                            cIcon
-                            name="cib-addthis"
-                            size="xl"
-                        ></svg></button>
-                        <div *ngIf="!isConnectorBucketListValid(connector)" style="color: red">
-                            <small>
-                            "Bitte überprüfen Sie die Angaben über die IONOS-S3 Buckets."
-                            </small>
-                        </div>
-                    </div>
                     
-                    <div *ngFor="let bucket of connector.bucketNames; let j = index; trackBy:customTrackBy">
-                        <div class="mb-3" style="margin-left: 23px;">
-                            <label class="form-label">Bucket</label>
-                            <button cButton variant="ghost" (click)="removeBucket(connector, j)" color="primary" size="sm">
-                                <svg
-                                class=""
-                                cIcon
-                                name="cil-trash"
-                                size="xl"
-                            ></svg></button>
-                            <input class="form-control" [(ngModel)]="connector.bucketNames[j]" name="connectorBucket{{i}}_{{j}}"> 
-                            <div cFormText style="color: #7f7f7f;">
-                                <small>Global eindeutiger Name des IONOS-S3 Buckets</small>
-                            </div>
-                            <div *ngIf="!isFieldFilled(bucket)" style="color: red">
-                                <small>
-                                Name des IONOS-S3 Buckets ist erforderlich.
-                                </small>
-                            </div>
-                        </div>
-                    </div>
+                    <app-organisation-ionos-s3-config #ionosS3Config [connector]="connector">
+                    </app-organisation-ionos-s3-config>
+                    
                 </mat-expansion-panel>
             </mat-accordion>
         </div>

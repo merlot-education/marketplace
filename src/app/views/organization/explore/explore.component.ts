@@ -111,4 +111,8 @@ export class ExploreComponent implements OnInit {
   protected editOrganization(orga: IOrganizationData) {
     this.router.navigate(["organization/edit/", orga.selfDescription.verifiableCredential.credentialSubject['@id']]);
   }
+
+  protected getConnectorBucketsString(cd: ConnectorData) {
+    return cd.ionosS3ExtensionConfig.buckets.map(b => b.name).join(", ");
+  }
 }

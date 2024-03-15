@@ -50,7 +50,16 @@ export interface ConnectorData {
   connectorId: string;
   connectorEndpoint: string;
   connectorAccessToken: string;
-  bucketNames: string[];
+  ionosS3ExtensionConfig?: IonosS3ExtensionConfig;
+}
+
+export interface IonosS3ExtensionConfig {
+  buckets: IonosS3Bucket[];
+}
+
+export interface IonosS3Bucket {
+  name: string;
+  storageEndpoint: string;
 }
 
 export interface IOrganizationMetadata {

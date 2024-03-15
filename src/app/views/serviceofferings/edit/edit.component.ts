@@ -158,11 +158,15 @@ export class EditComponent implements OnInit, AfterViewInit {
       if (!this.isValidString(connector.connectorId) || !this.isValidString(connector.connectorEndpoint) || !this.isValidString(connector.connectorAccessToken)) {
         return false;
       }
+
+      // if EDC is not configured for IONOS (only method right now), reject
+      if (!connector.ionosS3ExtensionConfig?.buckets || connector.ionosS3ExtensionConfig.buckets.length == 0) {
+        return false;
+      }
   
       // Check if all bucket names are valid
-      // if there are no buckets at all, that is also valid
-      for (const bucket of connector.bucketNames) {
-        if (!this.isValidString(bucket)) {
+      for (const bucket of connector.ionosS3ExtensionConfig.buckets) {
+        if (!this.isValidString(bucket.name)) {
           return false;
         }
       }
