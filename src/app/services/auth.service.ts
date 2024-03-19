@@ -91,6 +91,9 @@ export class AuthService {
         if (numOfOrgsToLoad == 0) {
           this.finishedLoadingRoles = true;
         }
+      }).catch(e => {
+        console.log("failed to fetch organisation.", e);
+        this.finishedLoadingRoles = true;
       });
     }
   }
