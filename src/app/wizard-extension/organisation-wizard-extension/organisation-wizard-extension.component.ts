@@ -113,7 +113,7 @@ export class OrganisationWizardExtensionComponent {
   public isOrganizationMetadataFilled(): boolean {
     let membershipClassOk = this.isMembershipClassFilled();
     let mailAddressOk = this.isMailAddressFilled();
-    let isConnectorListOk = this.activeOrgRoleService.isActiveAsRepresentative ? this.isConnectorListValid() : true;
+    let isConnectorListOk = this.activeOrgRoleService.isActiveAsRepresentative() ? this.isConnectorListValid() : true;
 
     return membershipClassOk && mailAddressOk && isConnectorListOk;
   }

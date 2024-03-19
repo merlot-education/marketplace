@@ -1,3 +1,18 @@
+
+<c-container fluid class="justify-content-center">
+    <div
+        [ngClass]="{ 'position-center': true }"
+        fxFlex="70%"
+        fxFlex.sm="100%"
+        fxFlex.xs="100%"
+        *ngIf="isShapeLoaded()">
+        <div class="mb-3">
+            <label class="form-label">Selbstbeschreibungs-ID*</label>
+            <input class="form-control" [value]="orgaMetadata.orgaId" [disabled]="true">
+        </div>
+    </div>
+</c-container>
+
 <app-base-wizard-extension #baseWizardExtension></app-base-wizard-extension>
 <c-container fluid class="justify-content-center">
     <div
@@ -120,6 +135,34 @@
                     
                     <app-organisation-ionos-s3-config #ionosS3Config [connector]="connector">
                     </app-organisation-ionos-s3-config>
+                    
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <div>
+                                Signatur-Einstellungen
+                            </div>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="mb-3">
+                        <label class="form-label">Private Key</label>
+                        <input class="form-control" [(ngModel)]="orgaMetadata.organisationSignerConfigDto.privateKey">
+                        <div cFormText style="color: #7f7f7f;">
+                            <small>TODO</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Verifizierungsmethode</label>
+                        <input class="form-control" [(ngModel)]="orgaMetadata.organisationSignerConfigDto.verificationMethod">
+                        <div cFormText style="color: #7f7f7f;">
+                            <small>TODO</small>
+                        </div>
+                    </div>
                     
                 </mat-expansion-panel>
             </mat-accordion>
