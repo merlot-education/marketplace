@@ -1,7 +1,25 @@
 <c-row>
   <c-col xs>
-    <m-card title="Organisation bearbeiten">
-      <app-organisation-wizard-extension #wizardExtension></app-organisation-wizard-extension>
-    </m-card>
+    <div [hidden]="!jsonViewHidden"><button id="json-view-button" cButton color="primary" style="margin-bottom: 10px;"
+        (click)="toogleJsonView()">
+        Selbstbeschreibung der Organisation einsehen
+      </button>
+      <m-card title="Organisation bearbeiten">
+        <app-organisation-wizard-extension #wizardExtension></app-organisation-wizard-extension>
+      </m-card>
+      </div>
+
+      <div [hidden]="jsonViewHidden"><button id="json-download-button" cButton color="primary" style="margin-bottom: 10px;"
+          (click)="downloadJsonFile()">
+          Selbstbeschreibung herunterladen
+        </button>
+        <button id="orga-edit-button" cButton color="primary" style="margin-bottom: 10px; margin-left: 10px;"
+          (click)="toogleJsonView()">
+          Organisation bearbeiten
+        </button>
+        <m-card title="Selbstbeschreibung der Organisation">
+          <ngx-json-viewer [json]="selectedOrganization.selfDescription" *ngIf="selectedOrganization"></ngx-json-viewer>
+        </m-card>
+      </div>
   </c-col>
 </c-row>

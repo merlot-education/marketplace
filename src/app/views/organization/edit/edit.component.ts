@@ -13,6 +13,7 @@ import { OrganisationWizardExtensionComponent } from 'src/app/wizard-extension/o
 export class EditComponent implements OnInit, AfterViewInit {
 
   protected selectedOrganization: IOrganizationData = undefined;
+  protected jsonViewHidden: boolean = true;
 
   @ViewChild("wizardExtension") private wizardExtensionComponent: OrganisationWizardExtensionComponent;
 
@@ -39,6 +40,35 @@ export class EditComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+  }
+
+  toogleJsonView() {
+    this.jsonViewHidden = !this.jsonViewHidden;
+  }
+
+  downloadJsonFile() {
+    // Convert the object to a JSON string
+    const jsonData = JSON.stringify(this.selectedOrganization.selfDescription);
+
+    // Create a Blob from the JSON string
+    const blob = new Blob([jsonData], { type: 'application/json' });
+
+    // Create a URL for the Blob
+    const url = window.URL.createObjectURL(blob);
+
+    // Create an anchor element with download attribute
+    const a = document.createElement('a');
+    a.href = url;
+    const id = this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject['@id'];
+    a.download = 'selfdescription_' + id + '.json';
+
+    // Programmatically click the anchor element to trigger the download
+    document.body.appendChild(a);
+    a.click();
+
+    // Clean up
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   }
 
   private selectOrganization(orgaId: string) {
