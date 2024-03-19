@@ -152,7 +152,7 @@
                         <label class="form-label">Private Key</label>
                         <input class="form-control" [(ngModel)]="orgaMetadata.organisationSignerConfigDto.privateKey">
                         <div cFormText style="color: #7f7f7f;">
-                            <small>TODO</small>
+                            <small>Der Private Key zur unten genannten Verifizierungsmethode. Wird zum signieren von Selbstbeschreibungen verwendet.</small>
                         </div>
                     </div>
 
@@ -160,7 +160,7 @@
                         <label class="form-label">Verifizierungsmethode</label>
                         <input class="form-control" [(ngModel)]="orgaMetadata.organisationSignerConfigDto.verificationMethod">
                         <div cFormText style="color: #7f7f7f;">
-                            <small>TODO</small>
+                            <small>Die zugehörige Verifizierungsmethode zum oben genannten Private Key, welche den Public Key referenziert. Derzeit wird ausschließlich did:web unterstützt.</small>
                         </div>
                     </div>
                     
