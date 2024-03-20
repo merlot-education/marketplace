@@ -5,6 +5,7 @@ import { ActiveOrganizationRoleService } from 'src/app/services/active-organizat
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { OrganisationWizardExtensionComponent } from 'src/app/wizard-extension/organisation-wizard-extension/organisation-wizard-extension.component';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -33,10 +34,11 @@ export class EditComponent implements OnInit, AfterViewInit {
             this.selectOrganization(orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
         }
       });
-      this.wizardExtensionComponent.submitCompleteEvent.subscribe(_ => {
-        this.authService.refreshActiveRoleOrgaData();
-      });
     }
+    this.wizardExtensionComponent.submitCompleteEvent.subscribe(_ => {
+      this.authService.refreshActiveRoleOrgaData();
+      this.refreshSelectedOrganization(this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject['@id'])
+    });
   }
 
   ngOnInit(): void {
@@ -69,6 +71,22 @@ export class EditComponent implements OnInit, AfterViewInit {
     // Clean up
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
+  }
+
+  private refreshSelectedOrganization(orgaId: string) {
+    this.organizationsApiService.getOrgaById(orgaId).then(result => {
+      console.log(result);
+      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
+      result.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
+      let registrationNumberFields = result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber'];
+      this.patchRegistrationNumberField('gax-trust-framework:local', registrationNumberFields);
+      this.patchRegistrationNumberField('gax-trust-framework:EUID', registrationNumberFields);
+      this.patchRegistrationNumberField('gax-trust-framework:EORI', registrationNumberFields);
+      this.patchRegistrationNumberField('gax-trust-framework:vatID', registrationNumberFields);
+      this.patchRegistrationNumberField('gax-trust-framework:leiCode', registrationNumberFields);
+
+      this.selectedOrganization = result;
+    });
   }
 
   private selectOrganization(orgaId: string) {

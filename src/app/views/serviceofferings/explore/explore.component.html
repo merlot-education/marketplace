@@ -112,8 +112,28 @@
         selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'] }}"</h5>
     </c-modal-header>
     <c-modal-body>
+
+      <div [hidden]="!jsonViewHidden"><button id="json-view-button" cButton color="primary" style="margin-bottom: 10px;"
+        (click)="toogleJsonView()">
+        Selbstbeschreibung des Service Angebots einsehen
+      </button>
       <app-offeringdetailview [serviceOfferingData]="selectedOfferingDetails"
         [showVariableFields]="true"></app-offeringdetailview>
+    </div>
+
+    <div [hidden]="jsonViewHidden"><button id="json-download-button" cButton color="primary"
+        style="margin-bottom: 10px;" (click)="downloadJsonFile()">
+        Selbstbeschreibung herunterladen
+      </button>
+      <button id="offering-edit-button" cButton color="primary" style="margin-bottom: 10px; margin-left: 10px;"
+        (click)="toogleJsonView()">
+        Service Angebot ansehen
+      </button>
+      <m-card title="Selbstbeschreibung des Service Angebots">
+        <ngx-json-viewer [json]="selectedOfferingDetails.selfDescription"></ngx-json-viewer>
+      </m-card>
+    </div>
+      
     </c-modal-body>
     <c-modal-footer>
       <button cButton color="secondary" [cModalToggle]="modalViewDetails.id">Schließen</button>

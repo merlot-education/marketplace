@@ -115,4 +115,29 @@ export class ExploreComponent implements OnInit {
   protected getConnectorBucketsString(cd: ConnectorData) {
     return cd.ionosS3ExtensionConfig.buckets.map(b => b.name).join(", ");
   }
+
+  downloadJsonFile(selfDescription: any) {
+    // Convert the object to a JSON string
+    const jsonData = JSON.stringify(selfDescription);
+
+    // Create a Blob from the JSON string
+    const blob = new Blob([jsonData], { type: 'application/json' });
+
+    // Create a URL for the Blob
+    const url = window.URL.createObjectURL(blob);
+
+    // Create an anchor element with download attribute
+    const a = document.createElement('a');
+    a.href = url;
+    const id = selfDescription.verifiableCredential.credentialSubject['@id'];
+    a.download = 'selfdescription_' + id + '.json';
+
+    // Programmatically click the anchor element to trigger the download
+    document.body.appendChild(a);
+    a.click();
+
+    // Clean up
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
 }

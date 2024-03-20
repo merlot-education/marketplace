@@ -90,6 +90,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   selectedOfferingDetails: IOfferings = null;
   selectedOfferingPublic: boolean = false;
+  protected jsonViewHidden: boolean = true;
 
   contractTemplate: IContract = undefined;
   protected orgaConnectors: ConnectorData[] = [];
@@ -303,5 +304,34 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   protected shouldShowBookButton(offering: IOfferings): boolean {
     return this.activeOrgRoleService.isLoggedIn && (offering.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] !== this.activeOrgRoleService.getActiveOrgaId())
+  }
+
+  toogleJsonView() {
+    this.jsonViewHidden = !this.jsonViewHidden;
+  }
+
+  downloadJsonFile() {
+    // Convert the object to a JSON string
+    const jsonData = JSON.stringify(this.selectedOfferingDetails.selfDescription);
+
+    // Create a Blob from the JSON string
+    const blob = new Blob([jsonData], { type: 'application/json' });
+
+    // Create a URL for the Blob
+    const url = window.URL.createObjectURL(blob);
+
+    // Create an anchor element with download attribute
+    const a = document.createElement('a');
+    a.href = url;
+    const id = this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'];
+    a.download = 'selfdescription_' + id + '.json';
+
+    // Programmatically click the anchor element to trigger the download
+    document.body.appendChild(a);
+    a.click();
+
+    // Clean up
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   }
 }
