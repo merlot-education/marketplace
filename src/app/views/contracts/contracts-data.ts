@@ -75,7 +75,7 @@ export interface IDataDeliveryContractProvisioning
   dataAddressSourceFileName: string;
   selectedProviderConnectorId: string;
   dataAddressTargetBucketName: string;
-  dataAddressTargetFileName: string;
+  dataAddressTargetPath: string;
   selectedConsumerConnectorId: string;
 }
 

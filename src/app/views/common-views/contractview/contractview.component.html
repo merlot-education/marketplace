@@ -211,9 +211,9 @@
   
             <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
               <div class="mb-3">
-                <label class="form-label"><strong>Ziel-Dateipfad im IONOS-S3 Bucket*</strong></label>
-                <input class="form-control" placeholder="MyFile1.json" 
-                  [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.dataAddressTargetFileName" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
+                <label class="form-label"><strong>Ziel-Pfad (Ordner) im IONOS-S3 Bucket*</strong></label>
+                <input class="form-control" placeholder="ZielPfad/" 
+                  [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.dataAddressTargetPath" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
               </div>
             </li>
   
