@@ -312,7 +312,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   downloadJsonFile() {
     // Convert the object to a JSON string
-    const jsonData = JSON.stringify(this.selectedOfferingDetails.selfDescription);
+    const jsonData = JSON.stringify(this.selectedOfferingDetails.selfDescription, null, 2);
 
     // Create a Blob from the JSON string
     const blob = new Blob([jsonData], { type: 'application/json' });

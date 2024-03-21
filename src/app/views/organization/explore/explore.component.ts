@@ -118,7 +118,7 @@ export class ExploreComponent implements OnInit {
 
   downloadJsonFile(selfDescription: any) {
     // Convert the object to a JSON string
-    const jsonData = JSON.stringify(selfDescription);
+    const jsonData = JSON.stringify(selfDescription, null, 2);
 
     // Create a Blob from the JSON string
     const blob = new Blob([jsonData], { type: 'application/json' });

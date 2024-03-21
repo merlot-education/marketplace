@@ -50,7 +50,7 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   downloadJsonFile() {
     // Convert the object to a JSON string
-    const jsonData = JSON.stringify(this.selectedOrganization.selfDescription);
+    const jsonData = JSON.stringify(this.selectedOrganization.selfDescription, null, 2);
 
     // Create a Blob from the JSON string
     const blob = new Blob([jsonData], { type: 'application/json' });
