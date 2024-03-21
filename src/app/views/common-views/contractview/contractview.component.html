@@ -174,7 +174,7 @@
               </div>
             </li>
   
-            <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
+            <li class="list-group-item" style="border: none">
               <strong>Typ der Datenadresse*</strong><br />
               <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.dataAddressType" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
                 <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).provisioning.dataAddressType === ''"></option>
