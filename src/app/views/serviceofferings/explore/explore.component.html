@@ -48,6 +48,10 @@
               (click)="updateServiceOfferingEdit(offering)" *ngIf="offering.state === 'IN_DRAFT'">
               Bearbeiten
             </button>
+            <button id="json-download-button" type="button" class="btn btn-secondary flex-item-grow me-1" 
+            (click)="downloadJsonFile(offering.id)">
+              SD
+            </button>
           </div>
         </c-col>
       </c-row>
@@ -87,6 +91,10 @@
               [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = true; requestDetails(offering.id)">
               Details
             </button>
+            <button id="json-download-button" type="button" class="btn btn-secondary flex-item-grow me-1" 
+            (click)="downloadJsonFile(offering.id)">
+              SD
+            </button>
           </div>
         </c-col>
       </c-row>
@@ -122,7 +130,7 @@
     </div>
 
     <div [hidden]="jsonViewHidden"><button id="json-download-button" cButton color="primary"
-        style="margin-bottom: 10px;" (click)="downloadJsonFile()">
+        style="margin-bottom: 10px;" (click)="downloadJsonFile(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'])">
         Selbstbeschreibung herunterladen
       </button>
       <button id="offering-edit-button" cButton color="primary" style="margin-bottom: 10px; margin-left: 10px;"
