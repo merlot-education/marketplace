@@ -61,14 +61,14 @@ it('conclude and cancel data delivery contract', {
             cy.contains("Schließen");
 
             // select Laufzeit 1 year(s), Anzahl erlaubter Datenaustausche Bis zu 12, Aktiver EDC Connector edc1, 
-            // IONOS-S3 Ziel-Bucket merlot-edc-dataport and Ziel-Pfad (Ordner) im IONOS-S3 Bucket Gaia-X_Jobs.json
+            // IONOS-S3 Ziel-Bucket merlot-edc-dataport and Ziel-Pfad (Ordner) im IONOS-S3 Bucket Gaia-X_Jobs/
 
             cy.contains("Laufzeit*:").next().next().select("1 year(s)");
             cy.contains("Anzahl erlaubter Datenaustausche*:").next().next().select("Bis zu 12");
             cy.contains("Aktiver EDC Connector*:").next().next().select("edc1");
             cy.contains("IONOS-S3 Ziel-Bucket*").next().next().select("merlot-edc-dataport");
             cy.get('label:contains("Ziel-Pfad (Ordner) im IONOS-S3 Bucket*") + input')
-                .type("Gaia-X_Jobs.json");
+                .type("Gaia-X_Jobs/");
 
             // click on the checkmark to agree on the AGBs
             cy.get('#checkAGB').click().should('be.checked');
@@ -239,14 +239,14 @@ it('conclude data delivery contract', {
             cy.contains("Schließen");
 
             // select Laufzeit 2 year(s), Anzahl erlaubter Datenaustausche Unbegrenzt, Aktiver EDC Connector edc2, 
-            // IONOS-S3 Ziel-Bucket merlot-edc-dataport and Ziel-Pfad (Ordner) im IONOS-S3 Bucket Gaia-XJobs/OpenJobs.json
+            // IONOS-S3 Ziel-Bucket merlot-edc-dataport and Ziel-Pfad (Ordner) im IONOS-S3 Bucket Gaia-XJobs/OpenJobs/
 
             cy.contains("Laufzeit*:").next().next().select("2 year(s)");
             cy.contains("Anzahl erlaubter Datenaustausche*:").next().next().select("Unbegrenzt");
             cy.contains("Aktiver EDC Connector*:").next().next().select("edc2");
             cy.contains("IONOS-S3 Ziel-Bucket*").next().next().select("merlot-edc-dataport");
             cy.get('label:contains("Ziel-Pfad (Ordner) im IONOS-S3 Bucket*") + input')
-                .type("Gaia-XJobs/OpenJobs.json");
+                .type("Gaia-XJobs/OpenJobs/");
 
             // click on the checkmark to agree on the AGBs
             cy.get('#checkAGB').click().should('be.checked');
