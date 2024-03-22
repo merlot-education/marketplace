@@ -5,6 +5,7 @@ import { ActiveOrganizationRoleService } from 'src/app/services/active-organizat
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { OrganisationWizardExtensionComponent } from 'src/app/wizard-extension/organisation-wizard-extension/organisation-wizard-extension.component';
+import { SdDownloadService } from 'src/app/services/sd-download.service';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -13,12 +14,14 @@ import { OrganisationWizardExtensionComponent } from 'src/app/wizard-extension/o
 export class EditComponent implements OnInit, AfterViewInit {
 
   protected selectedOrganization: IOrganizationData = undefined;
+  protected jsonViewHidden: boolean = true;
 
   @ViewChild("wizardExtension") private wizardExtensionComponent: OrganisationWizardExtensionComponent;
 
   constructor(protected authService: AuthService, 
     protected activeOrgRoleService: ActiveOrganizationRoleService,
     protected organizationsApiService: OrganizationsApiService, 
+    protected sdDownloadService: SdDownloadService,
     private route: ActivatedRoute) {
   }
   ngAfterViewInit(): void {
@@ -32,13 +35,34 @@ export class EditComponent implements OnInit, AfterViewInit {
             this.selectOrganization(orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
         }
       });
-      this.wizardExtensionComponent.submitCompleteEvent.subscribe(_ => {
-        this.authService.refreshActiveRoleOrgaData();
-      });
     }
+    this.wizardExtensionComponent.submitCompleteEvent.subscribe(_ => {
+      this.authService.refreshActiveRoleOrgaData();
+      this.refreshSelectedOrganization(this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject['@id'])
+    });
   }
 
   ngOnInit(): void {
+  }
+
+  toogleJsonView() {
+    this.jsonViewHidden = !this.jsonViewHidden;
+  }
+
+  private refreshSelectedOrganization(orgaId: string) {
+    this.organizationsApiService.getOrgaById(orgaId).then(result => {
+      console.log(result);
+      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
+      result.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
+      let registrationNumberFields = result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber'];
+      this.patchRegistrationNumberField('gax-trust-framework:local', registrationNumberFields);
+      this.patchRegistrationNumberField('gax-trust-framework:EUID', registrationNumberFields);
+      this.patchRegistrationNumberField('gax-trust-framework:EORI', registrationNumberFields);
+      this.patchRegistrationNumberField('gax-trust-framework:vatID', registrationNumberFields);
+      this.patchRegistrationNumberField('gax-trust-framework:leiCode', registrationNumberFields);
+
+      this.selectedOrganization = result;
+    });
   }
 
   private selectOrganization(orgaId: string) {
