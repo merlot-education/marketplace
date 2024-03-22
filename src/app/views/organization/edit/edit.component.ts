@@ -5,7 +5,6 @@ import { ActiveOrganizationRoleService } from 'src/app/services/active-organizat
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { OrganisationWizardExtensionComponent } from 'src/app/wizard-extension/organisation-wizard-extension/organisation-wizard-extension.component';
-import { JsonPipe } from '@angular/common';
 
 @Component({
   templateUrl: './edit.component.html',
