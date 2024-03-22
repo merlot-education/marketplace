@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConnectorData, IOrganizationData, IPageOrganizations } from "../organization-data";
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
+import { SdDownloadService } from 'src/app/services/sd-download.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { BehaviorSubject } from 'rxjs';
@@ -45,6 +46,7 @@ export class ExploreComponent implements OnInit {
     private organizationsApiService: OrganizationsApiService,
     protected authService: AuthService,
     protected activeOrgRoleService: ActiveOrganizationRoleService,
+    protected sdDownloadService: SdDownloadService,
     private router: Router
   ) { }
 
@@ -114,30 +116,5 @@ export class ExploreComponent implements OnInit {
 
   protected getConnectorBucketsString(cd: ConnectorData) {
     return cd.ionosS3ExtensionConfig.buckets.map(b => b.name).join(", ");
-  }
-
-  downloadJsonFile(selfDescription: any) {
-    // Convert the object to a JSON string
-    const jsonData = JSON.stringify(selfDescription, null, 2);
-
-    // Create a Blob from the JSON string
-    const blob = new Blob([jsonData], { type: 'application/json' });
-
-    // Create a URL for the Blob
-    const url = window.URL.createObjectURL(blob);
-
-    // Create an anchor element with download attribute
-    const a = document.createElement('a');
-    a.href = url;
-    const id = selfDescription.verifiableCredential.credentialSubject['@id'];
-    a.download = 'selfdescription_' + id + '.json';
-
-    // Programmatically click the anchor element to trigger the download
-    document.body.appendChild(a);
-    a.click();
-
-    // Clean up
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
   }
 }

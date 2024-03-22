@@ -10,7 +10,7 @@
     </div>
 
     <div [hidden]="jsonViewHidden"><button id="json-download-button" cButton color="primary"
-        style="margin-bottom: 10px;" (click)="downloadJsonFile()">
+        style="margin-bottom: 10px;" (click)="sdDownloadService.downloadParticipantSd(selectedOrganization.id)">
         Selbstbeschreibung herunterladen
       </button>
       <button id="orga-edit-button" cButton color="primary" style="margin-bottom: 10px; margin-left: 10px;"

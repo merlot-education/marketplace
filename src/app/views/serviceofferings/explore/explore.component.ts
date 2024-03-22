@@ -9,6 +9,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { IContract } from '../../contracts/contracts-data';
 import { ConnectorData } from '../../organization/organization-data';
 import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
+import { SdDownloadService } from 'src/app/services/sd-download.service';
 
 
 @Component({
@@ -105,6 +106,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
     protected serviceOfferingApiService : ServiceofferingApiService,
     protected organizationsApiService: OrganizationsApiService,
     private contractApiService: ContractApiService,
+    protected sdDownloadService: SdDownloadService,
     protected activeOrgRoleService: ActiveOrganizationRoleService) {
   }
 
@@ -308,33 +310,5 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   toogleJsonView() {
     this.jsonViewHidden = !this.jsonViewHidden;
-  }
-
-  downloadJsonFile(id: string) {
-    this.serviceOfferingApiService.fetchServiceOfferingDetails(id).then(result => {
-      let selfDescription = result.selfDescription;
-      // Convert the object to a JSON string
-      const jsonData = JSON.stringify(selfDescription, null, 2);
-
-      // Create a Blob from the JSON string
-      const blob = new Blob([jsonData], { type: 'application/json' });
-
-      // Create a URL for the Blob
-      const url = window.URL.createObjectURL(blob);
-
-      // Create an anchor element with download attribute
-      const a = document.createElement('a');
-      a.href = url;
-      const id = selfDescription.verifiableCredential.credentialSubject["@id"];
-      a.download = 'selfdescription_' + id + '.json';
-
-      // Programmatically click the anchor element to trigger the download
-      document.body.appendChild(a);
-      a.click();
-
-      // Clean up
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    })
   }
 }

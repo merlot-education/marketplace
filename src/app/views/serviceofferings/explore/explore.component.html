@@ -49,7 +49,7 @@
               Bearbeiten
             </button>
             <button id="json-download-button" type="button" class="btn btn-secondary flex-item-grow me-1" 
-            (click)="downloadJsonFile(offering.id)">
+            (click)="sdDownloadService.downloadServiceOfferingSd(offering.id)">
               SD
             </button>
           </div>
@@ -92,7 +92,7 @@
               Details
             </button>
             <button id="json-download-button" type="button" class="btn btn-secondary flex-item-grow me-1" 
-            (click)="downloadJsonFile(offering.id)">
+            (click)="sdDownloadService.downloadServiceOfferingSd(offering.id)">
               SD
             </button>
           </div>
@@ -130,7 +130,7 @@
     </div>
 
     <div [hidden]="jsonViewHidden"><button id="json-download-button" cButton color="primary"
-        style="margin-bottom: 10px;" (click)="downloadJsonFile(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'])">
+        style="margin-bottom: 10px;" (click)="sdDownloadService.downloadServiceOfferingSd(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'])">
         Selbstbeschreibung herunterladen
       </button>
       <button id="offering-edit-button" cButton color="primary" style="margin-bottom: 10px; margin-left: 10px;"

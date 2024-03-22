@@ -93,7 +93,7 @@
             Bearbeiten 
           </button>
           <button id="json-download-button" type="button" class="btn btn-secondary flex-item-grow me-1" 
-          (click)="downloadJsonFile(organization.selfDescription)">
+          (click)="sdDownloadService.downloadParticipantSd(organization.id)">
             SD
           </button>
         </div>
