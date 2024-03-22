@@ -18,13 +18,15 @@
           fxFlex.sm="100%"
           fxFlex.xs="100%"
         >
-          <div class="mb-3" [hidden]="true">
-            <label class="form-label">Angebots-ID*</label>
+          <div class="mb-3" [hidden]="hiddenFormFields.includes('id')">
+            <label class="form-label">Selbstbeschreibungs-ID*</label>
             <input
               type="text"
               class="form-control"
               formControlName="user_prefix"
               placeholder="did:example:123456789abcdefghi"
+              [readonly]="true"
+              [disabled]="true"
             />
           </div>
 
