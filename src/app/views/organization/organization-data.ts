@@ -68,4 +68,10 @@ export interface IOrganizationMetadata {
   membershipClass: string;
   active: boolean;
   connectors: ConnectorData[];
+  organisationSignerConfigDto: IOrganisationSignerConfig;
+}
+
+export interface IOrganisationSignerConfig {
+  privateKey: string;
+  verificationMethod: string;
 }
