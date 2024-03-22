@@ -65,7 +65,7 @@ it('testuser can log in, check organization and assigned person data, edit organ
 
     // click on Änderungen speichern, the page shows the following response "Selbstbeschreibung erfolgreich gespeichert! ID: Participant:40"
     cy.contains('Änderungen speichern').should("not.be.disabled").click();
-    cy.contains("Selbstbeschreibung erfolgreich gespeichert! (ID: did:web:marketplace.dev.merlot-education.eu#c041ea73-3ecf-3a06-a5cd-919f5cef8e54)", { timeout: 30000 });
+    cy.contains("Selbstbeschreibung erfolgreich gespeichert! (ID: did:web:marketplace.dev.merlot-education.eu:participant:c041ea73-3ecf-3a06-a5cd-919f5cef8e54)", { timeout: 30000 });
 
     // click on navigation entry "Benutzerverwaltung", the submenu is extended
     cy.contains('Benutzerverwaltung').click({force: true});

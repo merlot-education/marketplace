@@ -121,9 +121,10 @@ export function deleteOffering(offeringId: string) {
         cy.contains("Status").parent().should("include.text", "Gelöscht");
         cy.contains("Endgültig löschen").scrollIntoView().click({force: true});
     });
-
+    // wait for refresh of list
+    cy.wait(1000);
     // make sure the offering is no longer in the list
-    cy.get("c-card-body").contains(offeringId).should("not.exist");
+    cy.get("c-card-body:visible").contains(offeringId).should("not.exist");
 }
 
 export function openOfferingForEdit(offeringId: string) {
