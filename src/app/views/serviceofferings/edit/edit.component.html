@@ -14,17 +14,25 @@
           <div *ngIf="isOfferingDataDeliveryOffering() && !isAnyConnectorAvailable()" class="warning-box">
             <svg class="warning-symbol" cIcon name='cil-warning' size='xl' width='24'></svg>
             <b>
-            Für Ihre Organisation liegen derzeit keine EDC Connector Daten vor. Wenn über das MPO Datentransfere durchgeführt werden sollen, müssen jedoch EDC Connector 
+            Für Ihre Organisation liegen derzeit keine EDC Connector Daten vor. Wenn über das MPO Datentransfers durchgeführt werden sollen, müssen jedoch EDC Connector 
             Daten eingetragen sein. Das Hinzufügen von EDC Connectoren und der assoziierten IONOS-S3 Buckets ist über "Meine Organisation bearbeiten" möglich.
             </b>
           </div>
           <div *ngIf="isOfferingDataDeliveryOffering() && isAnyConnectorAvailable() ? !isConnectorListValid() : false" class="warning-box">
             <svg class="warning-symbol" cIcon name='cil-warning' size='xl' width='24'></svg>
             <b>
-            Für Ihre Organisation liegen derzeit fehlerhafte EDC Connector Daten vor. Wenn über das MPO Datentransfere durchgeführt werden sollen, müssen diese Angaben 
+            Für Ihre Organisation liegen derzeit fehlerhafte EDC Connector Daten vor. Wenn über das MPO Datentransfers durchgeführt werden sollen, müssen diese Angaben 
             korrigiert werden. Die Bearbeitung der EDC Connectoren und der assoziierten IONOS-S3 Buckets ist über "Meine Organisation bearbeiten" möglich.
             </b>
           </div>
+          <div *ngIf="!isSignerConfigValid()" class="warning-box">
+            <svg class="warning-symbol" cIcon name='cil-warning' size='xl' width='24'></svg>
+            <b>
+            Für Ihre Organisation liegen derzeit keine (gültigen) Signatur-Einstellungen vor. Zum Signieren von Selbstbeschreibungen werden ein private Key und eine dazugehörige Verifizierungsmethode benötigt.
+            Sie können den private Key und die Verifizierungsmethode auf der Seite "Meine Organisation bearbeiten" hinzufügen und bearbeiten.
+            </b>
+        </div>
+
         </div>
       </div>
 
