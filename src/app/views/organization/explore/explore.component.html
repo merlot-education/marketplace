@@ -91,20 +91,6 @@
           </table>
         </li>
       </ul>
-      <table cTable [responsive]="true" *ngIf="organization.activeRepresentant">
-        <thead>
-          <tr>
-            <th scope="col">EDC Id</th>
-            <th scope="col">S3 Buckets</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let ci of connectorInfo">
-            <td>{{ ci.connectorId }}</td>
-            <td *ngIf="ci.ionosS3ExtensionConfig">{{ getConnectorBucketsString(ci) }}</td>
-          </tr>
-        </tbody>
-      </table>
       <div class="d-flex flex-row docs-highlight mb-2 justify-content-end">
         <div class="p-2 docs-highlight">
           <button type="button" class="btn btn-primary flex-item-grow" 
