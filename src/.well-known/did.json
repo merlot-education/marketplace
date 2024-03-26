@@ -13,6 +13,7 @@
             "kty": "RSA",
             "n": "7T8VtTXnZ8X24MG49obvzpVa7ZQV4tr9fpwaBJ0IWytidK6tzcatxI4P7NBFnxoh7Io6W6sRQB-1eZEUA8vs9wpPGwGPLipnCCONJ3TbPsQfjl28TstO3G5y0qnivaLtzunvLgpsms-S98rauI5z5_i7F04fCHkmcd3ku_iII551l5WyHBPpfLVeG4HYIuI3Dyv9P1qLOnsy1HGsTDzxFZvP3g_rsBvqVhqUs6WXsk-fkUbwCEZAvlhti3HhnRyRJmnnPdAc7BDdVe18H07YR5fwHqyBykHA9uf1aSgRgOfqYhwRwqYC6t3IQH-isqyzWZqaT_mIFQ-rNiSGxzZGmQ",
             "e": "AQAB",
+            "alg": "PS256",
             "x5u": "https://marketplace.dev.merlot-education.eu/.well-known/cert.ss.pem"
           }
         }
