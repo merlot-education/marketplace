@@ -166,11 +166,11 @@ export class CommonContractConfigComponent {
   }
 
   protected getSelectedProviderConnectorId(): string {
-    return this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning.selectedProviderConnectorId;
+    return this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning?.selectedProviderConnectorId;
   }
 
   protected getSelectedConsumerConnectorId(): string {
-    return this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning.selectedConsumerConnectorId;
+    return this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning?.selectedConsumerConnectorId;
   }
 
   protected isConnectorIdValid(connectorId: string): boolean {

@@ -15,7 +15,13 @@ export class ConsumerContractConfigComponent {
   @Input() contractDetails: IContract = undefined;
   @Input() availableConnectors : ConnectorData[] = [];
 
+  protected selectedTransferMethod: string;
+
   constructor() {
+  }
+
+  ngOnInit(): void {
+    this.selectedTransferMethod = this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning?.dataAddressType;
   }
 
   protected getConnectorBuckets(connectorId: string) {
@@ -24,6 +30,20 @@ export class ConsumerContractConfigComponent {
     } catch (e) {
       return [];
     }
+  }
+
+  protected onChangeTransferType() {
+    if (this.selectedTransferMethod === undefined || this.selectedTransferMethod === "") {
+      this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning = null;
+    } else if (this.selectedTransferMethod === "IonosS3") {
+      let ionosProvisioning : IIonosS3ConsumerTransferProvisioning = {
+        dataAddressTargetBucketName: '',
+        dataAddressTargetPath: '',
+        dataAddressType: 'IonosS3',
+        selectedConsumerConnectorId: ''
+      };
+      this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning = ionosProvisioning;
+    } 
   }
 
   protected isContractInDraft(contractDetails: IContract): boolean {
@@ -47,11 +67,11 @@ export class ConsumerContractConfigComponent {
   }
   
   protected getSelectedProviderConnectorId(): string {
-    return this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning.selectedProviderConnectorId;
+    return this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning?.selectedProviderConnectorId;
   }
 
   protected getSelectedConsumerConnectorId(): string {
-    return this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning.selectedConsumerConnectorId;
+    return this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning?.selectedConsumerConnectorId;
   }
 
   protected isConnectorIdValid(connectorId: string): boolean {

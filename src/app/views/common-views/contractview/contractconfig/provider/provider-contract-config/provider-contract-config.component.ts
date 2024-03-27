@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { IContract, IDataDeliveryContract, IIonosS3ProviderTransferProvisioning } from '../../../../../contracts/contracts-data';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
 
@@ -7,16 +7,20 @@ import { ConnectorData } from 'src/app/views/organization/organization-data';
   templateUrl: './provider-contract-config.component.html',
   styleUrls: ['./provider-contract-config.component.scss']
 })
-export class ProviderContractConfigComponent {
+export class ProviderContractConfigComponent implements OnInit {
   protected asDataDeliveryContract(val): IDataDeliveryContract { return val };
-
   protected asIonosProviderTransferProvisioning(val): IIonosS3ProviderTransferProvisioning { return val };
 
   @Input() contractDetails: IContract = undefined;
   @Input() availableConnectors : ConnectorData[] = [];
 
+  protected selectedTransferMethod: string;
 
   constructor() {
+  }
+  
+  ngOnInit(): void {
+    this.selectedTransferMethod = this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning?.dataAddressType;
   }
 
   protected getConnectorBuckets(connectorId: string) {
@@ -27,6 +31,19 @@ export class ProviderContractConfigComponent {
     }
   }
 
+  protected onChangeTransferType() {
+    if (this.selectedTransferMethod === undefined || this.selectedTransferMethod === "") {
+      this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning = null;
+    } else if (this.selectedTransferMethod === "IonosS3") {
+      let ionosProvisioning : IIonosS3ProviderTransferProvisioning = {
+        dataAddressSourceBucketName: '',
+        dataAddressSourceFileName: '',
+        dataAddressType: 'IonosS3',
+        selectedProviderConnectorId: ''
+      };
+      this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning = ionosProvisioning;
+    } 
+  }
 
   protected isContractInDraft(contractDetails: IContract): boolean {
     return contractDetails.details.state === 'IN_DRAFT';
@@ -49,11 +66,11 @@ export class ProviderContractConfigComponent {
   }
 
   protected getSelectedProviderConnectorId(): string {
-    return this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning.selectedProviderConnectorId;
+    return this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning?.selectedProviderConnectorId;
   }
 
   protected getSelectedConsumerConnectorId(): string {
-    return this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning.selectedConsumerConnectorId;
+    return this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning?.selectedConsumerConnectorId;
   }
 
   protected isConnectorIdValid(connectorId: string): boolean {

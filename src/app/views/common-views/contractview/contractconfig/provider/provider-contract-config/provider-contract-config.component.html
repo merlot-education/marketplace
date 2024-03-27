@@ -1,5 +1,14 @@
 <div *ngIf="isDataDeliveryContract(contractDetails)">
+
     <li class="list-group-item" style="border: none">
+        <strong>Typ der Datenadresse*</strong><br />
+        <select class="form-select" [(ngModel)]="selectedTransferMethod" (change)="onChangeTransferType()" [disabled]="!isContractInDraft(contractDetails) && !isContractSignedConsumer(contractDetails)">
+            <option [value]="''"></option>
+            <option [value]="'IonosS3'">IonosS3</option>
+        </select>
+    </li>
+
+    <li class="list-group-item" style="border: none" *ngIf="asDataDeliveryContract(contractDetails).provisioning.providerTransferProvisioning">
         <strong>Aktiver EDC Connector*:</strong><br />
         <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.providerTransferProvisioning.selectedProviderConnectorId" [disabled]="!isContractInDraft(contractDetails) && !isContractSignedConsumer(contractDetails)">
         <option [value]="" *ngIf="getSelectedProviderConnectorId() === ''"></option>
@@ -8,16 +17,9 @@
         </option>
         </select>
     </li>
-
-    <li class="list-group-item" style="border: none">
-        <strong>Typ der Datenadresse*</strong><br />
-        <select class="form-select" [(ngModel)]="asIonosProviderTransferProvisioning(asDataDeliveryContract(contractDetails).provisioning.providerTransferProvisioning).dataAddressType" [disabled]="!isContractInDraft(contractDetails) && !isContractSignedConsumer(contractDetails)">
-        <option [value]="" *ngIf="asIonosProviderTransferProvisioning(asDataDeliveryContract(contractDetails).provisioning.providerTransferProvisioning).dataAddressType === ''"></option>
-        <option [value]="'IonosS3'">IonosS3</option>
-        </select>
-    </li>
     
     <div *ngIf="isIonosProviderTransferProvisioning(contractDetails)">
+
         <li class="list-group-item" style="border: none">
             <strong>IONOS-S3 Quell-Bucket*</strong><br />
             <select class="form-select" [(ngModel)]="asIonosProviderTransferProvisioning(asDataDeliveryContract(contractDetails).provisioning.providerTransferProvisioning).dataAddressSourceBucketName" [disabled]="!isContractInDraft(contractDetails) && !isContractSignedConsumer(contractDetails)">

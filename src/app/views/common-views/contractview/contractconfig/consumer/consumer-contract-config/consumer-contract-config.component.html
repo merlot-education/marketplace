@@ -1,5 +1,14 @@
 <div *ngIf="isDataDeliveryContract(contractDetails)">
+
     <li class="list-group-item" style="border: none">
+        <strong>Typ der Datenadresse*</strong><br />
+        <select class="form-select" [(ngModel)]="selectedTransferMethod" (change)="onChangeTransferType()" [disabled]="!isContractInDraft(contractDetails)">
+        <option [value]="''"></option>
+        <option [value]="'IonosS3'">IonosS3</option>
+        </select>
+    </li>
+
+    <li class="list-group-item" style="border: none" *ngIf="asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning">
         <strong>Aktiver EDC Connector*:</strong><br />
         <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning.selectedConsumerConnectorId" [disabled]="!isContractInDraft(contractDetails)">
         <option [value]="" *ngIf="getSelectedConsumerConnectorId() === ''"></option>
@@ -9,15 +18,8 @@
         </select>
     </li>
 
-    <li class="list-group-item" style="border: none">
-        <strong>Typ der Datenadresse*</strong><br />
-        <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning.dataAddressType" [disabled]="!isContractInDraft(contractDetails)">
-        <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning.dataAddressType === ''"></option>
-        <option [value]="'IonosS3'">IonosS3</option>
-        </select>
-    </li>
-
     <div *ngIf="isIonosConsumerTransferProvisioning(contractDetails)">
+
         <li class="list-group-item" style="border: none">
             <strong>IONOS-S3 Ziel-Bucket*</strong><br />
             <select class="form-select" [(ngModel)]="asIonosConsumerTransferProvisioning(asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning).dataAddressTargetBucketName" [disabled]="!isContractInDraft(contractDetails)">
