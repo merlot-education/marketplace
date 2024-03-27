@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConnectorData, IOrganizationData, IPageOrganizations } from "../organization-data";
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
+import { SdDownloadService } from 'src/app/services/sd-download.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { BehaviorSubject } from 'rxjs';
@@ -45,6 +46,7 @@ export class ExploreComponent implements OnInit {
     private organizationsApiService: OrganizationsApiService,
     protected authService: AuthService,
     protected activeOrgRoleService: ActiveOrganizationRoleService,
+    protected sdDownloadService: SdDownloadService,
     private router: Router
   ) { }
 

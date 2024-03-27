@@ -1,6 +1,6 @@
 {
   "name": "marketplace",
-  "version": "1.10.4",
+  "version": "1.10.5",
   "config": {
     "coreui_library_short_version": "4.3",
     "coreui_library_docs_url": "https://coreui.io/angular/docs/"
@@ -45,6 +45,7 @@
     "file-saver": "^2.0.5",
     "keycloak-angular": "^13.1.0",
     "n3": "^1.17.0",
+    "ngx-json-viewer": "^3.2.1",
     "ngx-perfect-scrollbar": "^10.1.1",
     "ngx-rerender": "^1.2.0",
     "rxjs": "~7.8.0",

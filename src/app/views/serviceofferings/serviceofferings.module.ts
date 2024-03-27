@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ExploreComponent } from './explore/explore.component';
 import { EditComponent } from './edit/edit.component';
 import { WizardExtensionModule } from 'src/app/wizard-extension/wizard-extension.module';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 // CoreUI Modules
 import {
@@ -103,7 +104,8 @@ import {
     PaginatorComponent,
     CardComponent,
     GridComponent,
-    WizardExtensionModule
+    WizardExtensionModule,
+    NgxJsonViewerModule
   ],
 })
 export class ServiceofferingsModule {}
