@@ -1,12 +1,12 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { IContract, IDataDeliveryContract, ISaasContract } from '../../../../../contracts/contracts-data';
+import { IContract, IDataDeliveryContract, ISaasContract } from '../../../../contracts/contracts-data';
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
-import { IRuntime } from '../../../../../serviceofferings/serviceofferings-data';
+import { IRuntime } from '../../../../serviceofferings/serviceofferings-data';
 import { saveAs } from 'file-saver';
-import { StatusMessageComponent } from '../../../../status-message/status-message.component';
+import { StatusMessageComponent } from '../../../status-message/status-message.component';
 
 @Component({
   selector: 'app-common-contract-config',

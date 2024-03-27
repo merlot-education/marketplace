@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IContract, IDataDeliveryContract, IIonosS3ConsumerTransferProvisioning } from '../../../../../contracts/contracts-data';
+import { IContract, IDataDeliveryContract, IIonosS3ConsumerTransferProvisioning } from '../../../../contracts/contracts-data';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
 
 @Component({
