@@ -1,0 +1,54 @@
+<div *ngIf="isDataDeliveryContract(contractDetails)">
+    <li class="list-group-item" style="border: none">
+        <strong>Aktiver EDC Connector*:</strong><br />
+        <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.providerTransferProvisioning.selectedProviderConnectorId" [disabled]="!isContractInDraft(contractDetails) && !isContractSignedConsumer(contractDetails)">
+        <option [value]="" *ngIf="getSelectedProviderConnectorId() === ''"></option>
+        <option [value]="connector.connectorId" *ngFor="let connector of availableConnectors">
+            {{ connector.connectorId }}
+        </option>
+        </select>
+    </li>
+
+    <li class="list-group-item" style="border: none">
+        <strong>Typ der Datenadresse*</strong><br />
+        <select class="form-select" [(ngModel)]="asIonosProviderTransferProvisioning(asDataDeliveryContract(contractDetails).provisioning.providerTransferProvisioning).dataAddressType" [disabled]="!isContractInDraft(contractDetails) && !isContractSignedConsumer(contractDetails)">
+        <option [value]="" *ngIf="asIonosProviderTransferProvisioning(asDataDeliveryContract(contractDetails).provisioning.providerTransferProvisioning).dataAddressType === ''"></option>
+        <option [value]="'IonosS3'">IonosS3</option>
+        </select>
+    </li>
+    
+    <div *ngIf="isIonosProviderTransferProvisioning(contractDetails)">
+        <li class="list-group-item" style="border: none">
+            <strong>IONOS-S3 Quell-Bucket*</strong><br />
+            <select class="form-select" [(ngModel)]="asIonosProviderTransferProvisioning(asDataDeliveryContract(contractDetails).provisioning.providerTransferProvisioning).dataAddressSourceBucketName" [disabled]="!isContractInDraft(contractDetails) && !isContractSignedConsumer(contractDetails)">
+            <option [value]="" *ngIf="asIonosProviderTransferProvisioning(asDataDeliveryContract(contractDetails).provisioning.providerTransferProvisioning).dataAddressSourceBucketName === ''"></option>
+            <option [value]="bucket" *ngFor="let bucket of getConnectorBuckets(getSelectedProviderConnectorId())">
+                {{ bucket }}
+            </option>
+            </select>
+        
+            <div *ngIf="isConnectorIdValid(getSelectedProviderConnectorId()) && !isAnyBucketAvailableForConnector(getSelectedProviderConnectorId())" style="color: red">
+            <small>
+            Es ist kein IONOS-S3 Bucket mit diesem EDC Connector verknüpft. Sie können den EDC Connector und die Liste der assoziierten IONOS-S3 Buckets über "Meine Organisation bearbeiten" bearbeiten.
+            </small>
+            </div>
+        </li>
+        
+        <li class="list-group-item" style="border: none">
+            <div class="mb-3">
+            <label class="form-label"><strong>Quell-Dateipfad im IONOS-S3 Bucket*</strong></label>
+            <input class="form-control" placeholder="MyFile1.json" 
+                [(ngModel)]="asIonosProviderTransferProvisioning(asDataDeliveryContract(contractDetails).provisioning.providerTransferProvisioning).dataAddressSourceFileName" [disabled]="!isContractInDraft(contractDetails) && !isContractSignedConsumer(contractDetails)">
+            </div>
+        </li>
+    </div>
+</div>
+
+
+<li class="list-group-item" style="border: none">
+<c-form-check inline>
+    <input cFormCheckInput id="checkMerlotAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.providerTncAccepted" [disabled]="!isContractInDraft(contractDetails) && !isContractSignedConsumer(contractDetails)">
+    <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Allgemeine Geschäftsbedingungen des Service-Angebotes & des Merlot Marktplatzes gelesen und akzeptiert*</b></label>
+</c-form-check>
+</li>
+          
