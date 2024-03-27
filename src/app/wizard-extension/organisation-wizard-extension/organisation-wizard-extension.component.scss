@@ -1,6 +1,20 @@
+@import "../../../../node_modules/@merlot-education/m-basic-ui/src/scss/variables_light";
+
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
+  }
+
+.warning-symbol {
+    display: block;
+    margin: auto; 
+    color: $merlot-red;
+  }
+
+.warning-box {
+    background-color: $merlot-blue; 
+    padding:2%; 
+    margin:1%;
   }
