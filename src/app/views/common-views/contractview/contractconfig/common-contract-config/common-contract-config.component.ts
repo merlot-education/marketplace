@@ -165,14 +165,6 @@ export class CommonContractConfigComponent {
     });
   }
 
-  protected getSelectedProviderConnectorId(): string {
-    return this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning?.selectedProviderConnectorId;
-  }
-
-  protected getSelectedConsumerConnectorId(): string {
-    return this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning?.selectedConsumerConnectorId;
-  }
-
   protected isConnectorIdValid(connectorId: string): boolean {
     if (!connectorId || connectorId.trim().length === 0 || !this.availableConnectors.find(con => con.connectorId === connectorId)) {
       return false;

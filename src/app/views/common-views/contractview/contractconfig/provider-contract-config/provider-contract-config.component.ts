@@ -38,8 +38,8 @@ export class ProviderContractConfigComponent implements OnInit {
       let ionosProvisioning : IIonosS3ProviderTransferProvisioning = {
         dataAddressSourceBucketName: '',
         dataAddressSourceFileName: '',
-        dataAddressType: 'IonosS3',
-        selectedProviderConnectorId: ''
+        dataAddressType: 'IonosS3Source',
+        selectedConnectorId: ''
       };
       this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning = ionosProvisioning;
     } 
@@ -66,11 +66,11 @@ export class ProviderContractConfigComponent implements OnInit {
   }
 
   protected getSelectedProviderConnectorId(): string {
-    return this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning?.selectedProviderConnectorId;
+    return this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning?.selectedConnectorId;
   }
 
   protected getSelectedConsumerConnectorId(): string {
-    return this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning?.selectedConsumerConnectorId;
+    return this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning?.selectedConnectorId;
   }
 
   protected isConnectorIdValid(connectorId: string): boolean {

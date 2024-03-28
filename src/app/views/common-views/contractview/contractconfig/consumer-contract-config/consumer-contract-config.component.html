@@ -10,7 +10,7 @@
 
     <li class="list-group-item" style="border: none" *ngIf="asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning">
         <strong>Aktiver EDC Connector*:</strong><br />
-        <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning.selectedConsumerConnectorId" [disabled]="!isContractInDraft(contractDetails)">
+        <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning.selectedConnectorId" [disabled]="!isContractInDraft(contractDetails)">
         <option [value]="" *ngIf="getSelectedConsumerConnectorId() === ''"></option>
         <option [value]="connector.connectorId" *ngFor="let connector of availableConnectors">
             {{ connector.connectorId }}
