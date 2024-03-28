@@ -33,14 +33,6 @@ export class CommonContractConfigComponent {
     return index;  
   }
 
-  protected getConnectorBuckets(connectorId: string) {
-    try {
-      return this.availableConnectors.find(con => con.connectorId === connectorId).ionosS3ExtensionConfig?.buckets.map(b => b.name);
-    } catch (e) {
-      return [];
-    }
-  }
-
   protected userIsActiveProvider(): boolean {
     return this.activeOrgRoleService.getActiveOrgaId() == this.contractDetails.details.providerId;
   }
@@ -165,21 +157,4 @@ export class CommonContractConfigComponent {
     });
   }
 
-  protected isConnectorIdValid(connectorId: string): boolean {
-    if (!connectorId || connectorId.trim().length === 0 || !this.availableConnectors.find(con => con.connectorId === connectorId)) {
-      return false;
-    }
-
-    return true;
-  }
-
-  protected isAnyBucketAvailableForConnector(connectorId: string): boolean {
-    let bucketList = this.getConnectorBuckets(connectorId);
-
-    if (!bucketList || bucketList.length === 0) {
-      return false;
-    }
-
-    return true;
-  }
 }
