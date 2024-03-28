@@ -70,13 +70,23 @@ export interface IContractProvisioning {
 
 export interface IDataDeliveryContractProvisioning
   extends IContractProvisioning {
+    consumerTransferProvisioning: ITransferProvisioning;
+    providerTransferProvisioning: ITransferProvisioning;
+}
+
+export interface ITransferProvisioning {
   dataAddressType: string;
+  selectedConnectorId: string;
+}
+
+export interface IIonosS3ProviderTransferProvisioning extends ITransferProvisioning {
   dataAddressSourceBucketName: string;
   dataAddressSourceFileName: string;
-  selectedProviderConnectorId: string;
+}
+
+export interface IIonosS3ConsumerTransferProvisioning extends ITransferProvisioning {
   dataAddressTargetBucketName: string;
   dataAddressTargetPath: string;
-  selectedConsumerConnectorId: string;
 }
 
 export interface IDataDeliveryContractNegotiation extends IContractNegotiation {

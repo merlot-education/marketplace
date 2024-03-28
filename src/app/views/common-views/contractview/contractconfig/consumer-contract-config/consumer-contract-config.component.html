@@ -1,0 +1,64 @@
+<ul class="list-group list-group-flush">
+    <div *ngIf="isDataDeliveryContract(contractDetails)">
+
+        <li class="list-group-item" style="border: none">
+            <strong>Typ der Datenadresse*</strong><br />
+            <select class="form-select" [(ngModel)]="selectedTransferMethod" (change)="onChangeTransferType()" [disabled]="!isContractInDraft(contractDetails)">
+            <option [value]="''"></option>
+            <option [value]="'IonosS3Dest'">Ionos S3</option>
+            </select>
+        </li>
+
+        <li class="list-group-item" style="border: none" *ngIf="asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning">
+            <strong>Aktiver EDC Connector*:</strong><br />
+            <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning.selectedConnectorId" [disabled]="!isContractInDraft(contractDetails)">
+            <option [value]="" *ngIf="getSelectedConsumerConnectorId() === ''"></option>
+            <option [value]="connector.connectorId" *ngFor="let connector of availableConnectors">
+                {{ connector.connectorId }}
+            </option>
+            </select>
+        </li>
+
+        <div *ngIf="isIonosConsumerTransferProvisioning(contractDetails)">
+
+            <li class="list-group-item" style="border: none">
+                <strong>IONOS-S3 Ziel-Bucket*</strong><br />
+                <select class="form-select" [(ngModel)]="asIonosConsumerTransferProvisioning(asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning).dataAddressTargetBucketName" [disabled]="!isContractInDraft(contractDetails)">
+                <option [value]="" *ngIf="asIonosConsumerTransferProvisioning(asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning).dataAddressTargetBucketName === ''"></option>
+                <option [value]="bucket" *ngFor="let bucket of getConnectorBuckets(getSelectedConsumerConnectorId())">
+                    {{ bucket }}
+                </option>
+                </select>
+            
+                <div *ngIf="isConnectorIdValid(getSelectedConsumerConnectorId()) && !isAnyBucketAvailableForConnector(getSelectedConsumerConnectorId())" style="color: red">
+                <small>
+                Es ist kein IONOS-S3 Bucket mit diesem EDC Connector verknüpft. Sie können den EDC Connector und die Liste der assoziierten IONOS-S3 Buckets über "Meine Organisation bearbeiten" bearbeiten.
+                </small>
+                </div>
+            </li>
+            
+            <li class="list-group-item" style="border: none">
+                <div class="mb-3">
+                <label class="form-label"><strong>Ziel-Pfad (Ordner) im IONOS-S3 Bucket*</strong></label>
+                <input class="form-control" placeholder="ZielPfad/" 
+                    [(ngModel)]="asIonosConsumerTransferProvisioning(asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning).dataAddressTargetPath" [disabled]="!isContractInDraft(contractDetails)">
+                </div>
+            </li>
+        </div>
+        
+    </div>
+
+
+    <li class="list-group-item" style="border: none">
+    <c-form-check inline>
+        <input cFormCheckInput id="checkAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.consumerTncAccepted" [disabled]="!isContractInDraft(contractDetails)"/>
+        <label cFormCheckLabel for="checkAGB" style="padding-left: 10px;"><b>Allgemeine Geschäftsbedingungen des Service-Angebotes & des Merlot Marktplatzes gelesen und akzeptiert*</b></label>
+    </c-form-check>
+    </li>
+    <li class="list-group-item" style="border: none" *ngIf="hasContractAttachments(contractDetails)">
+    <c-form-check inline>
+        <input cFormCheckInput id="checkSpecificAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.consumerAttachmentsAccepted" [disabled]="!isContractInDraft(contractDetails)"/>
+        <label cFormCheckLabel for="checkSpecificAGB" style="padding-left: 10px;"><b>Anlagen des Vertrages gelesen und akzeptiert*</b></label>
+    </c-form-check>
+    </li>
+</ul>

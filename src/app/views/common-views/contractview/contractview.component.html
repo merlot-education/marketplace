@@ -58,213 +58,30 @@
               </li>
             </ul>
           </li>
-          <li class="list-group-item" style="border: none" *ngIf="shouldShowAttachments(contractDetails)">
-            <input type="file" class="file-input" [accept]="'application/pdf'"
-              (change)="addAttachment($event)" [hidden]="true" #fileUpload>
-
-            <div class="file-upload">
-              <strong>Vertragsspezifische Anhänge:</strong>
-              <button cButton color="primary" variant="ghost" [disabled]="saveButtonDisabled" (click)="fileUpload.click()" size="sm" *ngIf="canAddAttachments(contractDetails)">
-                <svg
-                class=""
-                cIcon
-                name="cib-addthis"
-                size="xl"
-              ></svg></button>
-            </div>
-            <ul *ngFor="let attachment of contractDetails.negotiation.attachments;let index = index;trackBy: trackByFn">
-              <li>
-                <div>
-                  <a href="javascript:void(0);" (click)="downloadAttachment(attachment)">{{ attachment }}</a>
-                  <button cButton variant="ghost" [disabled]="saveButtonDisabled" (click)="deleteAttachment(attachment)" color="primary" size="sm" *ngIf="userIsActiveProvider() && isContractInDraft(contractDetails)">
-                    <svg
-                    class=""
-                    cIcon
-                    name="cil-trash"
-                    size="xl"
-                  ></svg></button>
-                </div>
-              </li>
-            </ul>
-            <app-status-message 
-              [successMessage]="'Anhänge erfolgreich aktualisiert.'"
-              [errorMessage]="'Fehler beim Speichern des Anhangs.'"
-              [infoMessage]="'Anhänge werden aktualisiert.'"
-              #attachmentStatusMessage>
-            </app-status-message>
-          </li>
-          <li class="list-group-item" style="border: none">
-            <strong>Laufzeit*:</strong><br />
-            <select class="form-select" [(ngModel)]="contractDetails.negotiation.runtimeSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
-              <option [value]="" *ngIf="contractDetails.negotiation.runtimeSelection === ''"></option>
-              <option [ngValue]="rt['merlot:runtimeCount']['@value'] + ' ' + rt['merlot:runtimeMeasurement']['@value']" *ngFor="let rt of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:runtimeOption']">
-                <ng-container *ngIf="isRuntimeUnlimited(rt); else notUnlimitedRuntime">
-                  Unbegrenzt
-                </ng-container>
-                <ng-template #notUnlimitedRuntime>
-                  {{ rt['merlot:runtimeCount']['@value'] }} {{ rt['merlot:runtimeMeasurement']['@value'] }}
-                </ng-template>
-              </option>
-            </select>
-            
-          </li>
-          <div *ngIf="isSaasContract(contractDetails)">
-            <li class="list-group-item" style="border: none" *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:userCountOption'] !== null">
-              <strong>Anzahl erlaubter Benutzer*:</strong><br />
-              <select class="form-select" [(ngModel)]="asSaasContract(contractDetails).negotiation.userCountSelection" [disabled]="!isContractInDraft(contractDetails)">
-                <option [value]="" *ngIf="asSaasContract(contractDetails).negotiation.userCountSelection === ''"></option>
-                <option [ngValue]="'' + auc['merlot:userCountUpTo']['@value']" *ngFor="let auc of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:userCountOption']">
-                  <ng-container *ngIf="auc['merlot:userCountUpTo']['@value'] === 0; else notUnlimitedUserCount">
-                    Unbegrenzt
-                  </ng-container>
-                  <ng-template #notUnlimitedUserCount>
-                    Bis zu {{ auc['merlot:userCountUpTo']['@value'] }}
-                  </ng-template>
-                </option>
-              </select>
-            </li>
-          </div>
-          <div *ngIf="isDataDeliveryContract(contractDetails)">
-            <li class="list-group-item" style="border: none" *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:exchangeCountOption'] !== null">
-              <strong>Anzahl erlaubter Datenaustausche*:</strong><br />
-              <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).negotiation.exchangeCountSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
-                <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).negotiation.exchangeCountSelection === ''"></option>
-                <option [ngValue]="'' + dec['merlot:exchangeCountUpTo']['@value']" *ngFor="let dec of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:exchangeCountOption']">
-                  <ng-container *ngIf="dec['merlot:exchangeCountUpTo']['@value'] === 0; else notUnlimitedExchangeCount">
-                    Unbegrenzt
-                  </ng-container>
-                  <ng-template #notUnlimitedExchangeCount>
-                    Bis zu {{ dec['merlot:exchangeCountUpTo']['@value'] }}
-                  </ng-template>
-                </option>
-              </select>
-            </li>
-  
-            <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
-              <strong>Aktiver EDC Connector*:</strong><br />
-              <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.selectedProviderConnectorId" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
-                <option [value]="" *ngIf="getSelectedProviderConnectorId() === ''"></option>
-                <option [value]="connector.connectorId" *ngFor="let connector of availableConnectors">
-                  {{ connector.connectorId }}
-                </option>
-              </select>
-            </li>
-  
-            <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
-              <strong>IONOS-S3 Quell-Bucket*</strong><br />
-              <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.dataAddressSourceBucketName" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
-                <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).provisioning.dataAddressSourceBucketName === ''"></option>
-                <option [value]="bucket" *ngFor="let bucket of getConnectorBuckets(getSelectedProviderConnectorId())">
-                  {{ bucket }}
-                </option>
-              </select>
-
-              <div *ngIf="isConnectorIdValid(getSelectedProviderConnectorId()) && !isAnyBucketAvailableForConnector(getSelectedProviderConnectorId())" style="color: red">
-                <small>
-                Es ist kein IONOS-S3 Bucket mit diesem EDC Connector verknüpft. Sie können den EDC Connector und die Liste der assoziierten IONOS-S3 Buckets über "Meine Organisation bearbeiten" bearbeiten.
-                </small>
-              </div>
-            </li>
-  
-            <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
-              <div class="mb-3">
-                <label class="form-label"><strong>Quell-Dateipfad im IONOS-S3 Bucket*</strong></label>
-                <input class="form-control" placeholder="MyFile1.json" 
-                  [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.dataAddressSourceFileName" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
-              </div>
-            </li>
-  
-            <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
-              <strong>Typ der Datenadresse*</strong><br />
-              <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.dataAddressType" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
-                <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).provisioning.dataAddressType === ''"></option>
-                <option [value]="'IonosS3'">IonosS3</option>
-              </select>
-            </li>
-  
-  
-            <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
-              <strong>Aktiver EDC Connector*:</strong><br />
-              <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.selectedConsumerConnectorId" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
-                <option [value]="" *ngIf="getSelectedConsumerConnectorId() === ''"></option>
-                <option [value]="connector.connectorId" *ngFor="let connector of availableConnectors">
-                  {{ connector.connectorId }}
-                </option>
-              </select>
-            </li>
-  
-            <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
-              <strong>IONOS-S3 Ziel-Bucket*</strong><br />
-              <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.dataAddressTargetBucketName" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
-                <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).provisioning.dataAddressTargetBucketName === ''"></option>
-                <option [value]="bucket" *ngFor="let bucket of getConnectorBuckets(getSelectedConsumerConnectorId())">
-                  {{ bucket }}
-                </option>
-              </select>
-
-              <div *ngIf="isConnectorIdValid(getSelectedConsumerConnectorId()) && !isAnyBucketAvailableForConnector(getSelectedConsumerConnectorId())" style="color: red">
-                <small>
-                Es ist kein IONOS-S3 Bucket mit diesem EDC Connector verknüpft. Sie können den EDC Connector und die Liste der assoziierten IONOS-S3 Buckets über "Meine Organisation bearbeiten" bearbeiten.
-                </small>
-              </div>
-            </li>
-  
-            <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
-              <div class="mb-3">
-                <label class="form-label"><strong>Ziel-Pfad (Ordner) im IONOS-S3 Bucket*</strong></label>
-                <input class="form-control" placeholder="ZielPfad/" 
-                  [(ngModel)]="asDataDeliveryContract(contractDetails).provisioning.dataAddressTargetPath" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
-              </div>
-            </li>
-  
-          </div>
-          <li class="list-group-item" style="border: none">
-            <div class="mb-3">
-              <label class="form-label"><strong>Zusatzvereinbarungen</strong></label>
-              <input class="form-control" placeholder="Keine Zusatzvereinbarungen" 
-                [disabled]="userIsActiveConsumer() || contractDetails.details.state !== 'IN_DRAFT'" 
-                [(ngModel)]="contractDetails.negotiation.additionalAgreements">
-            </div>
-          </li>
-          
-  
-          <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer()">
-            <c-form-check inline>
-              <input cFormCheckInput id="checkAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.consumerTncAccepted" [disabled]="contractDetails.details.state !== 'IN_DRAFT'"/>
-              <label cFormCheckLabel for="checkAGB" style="padding-left: 10px;"><b>Allgemeine Geschäftsbedingungen des Service-Angebotes & des Merlot Marktplatzes gelesen und akzeptiert*</b></label>
-            </c-form-check>
-          </li>
-          <li class="list-group-item" style="border: none" *ngIf="userIsActiveConsumer() && hasContractAttachments(contractDetails)">
-            <c-form-check inline>
-              <input cFormCheckInput id="checkSpecificAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.consumerAttachmentsAccepted" [disabled]="contractDetails.details.state !== 'IN_DRAFT'"/>
-              <label cFormCheckLabel for="checkSpecificAGB" style="padding-left: 10px;"><b>Anlagen des Vertrages gelesen und akzeptiert*</b></label>
-            </c-form-check>
-          </li>
-          <li class="list-group-item" style="border: none" *ngIf="userIsActiveProvider()">
-            <c-form-check inline>
-              <input cFormCheckInput id="checkMerlotAGB" type="checkbox" [(ngModel)]="contractDetails.negotiation.providerTncAccepted" [disabled]="contractDetails.details.state !== 'IN_DRAFT' && contractDetails.details.state !== 'SIGNED_CONSUMER'">
-              <label cFormCheckLabel for="checkMerlotAGB" style="padding-left: 10px;"><b>Allgemeine Geschäftsbedingungen des Service-Angebotes & des Merlot Marktplatzes gelesen und akzeptiert*</b></label>
-            </c-form-check>
-          </li>
-          <app-status-message 
-              [successMessage]="'Vertragskonfiguration gespeichert.'"
-              [errorMessage]="'Fehler beim Speichern der Vertragskonfiguration.'"
-              [infoMessage]="''"
-              #contractStatusMessage>
-          </app-status-message>
-          <app-status-message 
-              [successMessage]="'EDC-Übertragung erfolgreich.'"
-              [errorMessage]="'Fehler bei der EDC-Übertragung.'"
-              [infoMessage]="'EDC-Übertragung läuft.'"
-              #edcStatusMessage>
-          </app-status-message>
-          <app-status-message 
-              [successMessage]="''"
-              [errorMessage]="'Vertrag konnte nicht heruntergeladen werden.'"
-              [infoMessage]="''"
-              #contractPdfDownloadMessage>
-          </app-status-message>
         </ul>
+
+        <app-common-contract-config [contractDetails]="contractDetails" [availableConnectors]="availableConnectors"></app-common-contract-config>
+        <app-consumer-contract-config *ngIf="userIsActiveConsumer()" [contractDetails]="contractDetails" [availableConnectors]="availableConnectors"></app-consumer-contract-config>
+        <app-provider-contract-config *ngIf="userIsActiveProvider()" [contractDetails]="contractDetails" [availableConnectors]="availableConnectors"></app-provider-contract-config>
+
+        <app-status-message 
+            [successMessage]="'Vertragskonfiguration gespeichert.'"
+            [errorMessage]="'Fehler beim Speichern der Vertragskonfiguration.'"
+            [infoMessage]="''"
+            #contractStatusMessage>
+        </app-status-message>
+        <app-status-message 
+            [successMessage]="'EDC-Übertragung erfolgreich.'"
+            [errorMessage]="'Fehler bei der EDC-Übertragung.'"
+            [infoMessage]="'EDC-Übertragung läuft.'"
+            #edcStatusMessage>
+        </app-status-message>
+        <app-status-message 
+            [successMessage]="''"
+            [errorMessage]="'Vertrag konnte nicht heruntergeladen werden.'"
+            [infoMessage]="''"
+            #contractPdfDownloadMessage>
+        </app-status-message>
       </ng-container>
     </c-modal-body>
     <c-modal-footer>
