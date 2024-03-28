@@ -22,7 +22,6 @@ export class ConsumerContractConfigComponent {
 
   ngOnInit(): void {
     this.selectedTransferMethod = this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning?.dataAddressType;
-    console.log(this.selectedTransferMethod);
   }
 
   protected getConnectorBuckets(connectorId: string) {

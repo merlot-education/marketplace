@@ -34,7 +34,7 @@ export class ProviderContractConfigComponent implements OnInit {
   protected onChangeTransferType() {
     if (this.selectedTransferMethod === undefined || this.selectedTransferMethod === "") {
       this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning = null;
-    } else if (this.selectedTransferMethod === "IonosS3") {
+    } else if (this.selectedTransferMethod === "IonosS3Source") {
       let ionosProvisioning : IIonosS3ProviderTransferProvisioning = {
         dataAddressSourceBucketName: '',
         dataAddressSourceFileName: '',
