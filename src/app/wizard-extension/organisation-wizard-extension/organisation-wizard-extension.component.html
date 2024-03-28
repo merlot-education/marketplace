@@ -179,7 +179,7 @@
         <div class="mb-3">
             <label class="form-label">Selbstbeschreibung unterschrieben von:</label>
             {{
-                orgaMetadata.signedBy
+                orgaMetadata.signedBy ? orgaMetadata.signedBy : "Unbekannt"
             }}
             <div cFormText style="color: #7f7f7f;">
                 <small>Urheber der letzten Signatur dieser Selbstbeschreibung</small>

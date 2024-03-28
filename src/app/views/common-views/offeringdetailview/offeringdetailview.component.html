@@ -111,7 +111,7 @@
       <li class="list-group-item" style="border: none">
         <strong>Selbstbeschreibung unterschrieben von:</strong><br />
         {{
-          serviceOfferingData.metadata.signedBy
+          serviceOfferingData.metadata.signedBy ? serviceOfferingData.metadata.signedBy : "Unbekannt"
         }}
       </li>
   </ul>
