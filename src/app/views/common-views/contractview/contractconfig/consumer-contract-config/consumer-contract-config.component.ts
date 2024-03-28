@@ -17,9 +17,6 @@ export class ConsumerContractConfigComponent {
 
   protected selectedTransferMethod: string;
 
-  constructor() {
-  }
-
   ngOnInit(): void {
     this.selectedTransferMethod = this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning?.dataAddressType;
   }

@@ -15,9 +15,6 @@ export class ProviderContractConfigComponent implements OnInit {
   @Input() availableConnectors : ConnectorData[] = [];
 
   protected selectedTransferMethod: string;
-
-  constructor() {
-  }
   
   ngOnInit(): void {
     this.selectedTransferMethod = this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning?.dataAddressType;

@@ -58,30 +58,30 @@
               </li>
             </ul>
           </li>
-
-          <app-common-contract-config [contractDetails]="contractDetails" [availableConnectors]="availableConnectors"></app-common-contract-config>
-          <app-consumer-contract-config *ngIf="userIsActiveConsumer()" [contractDetails]="contractDetails" [availableConnectors]="availableConnectors"></app-consumer-contract-config>
-          <app-provider-contract-config *ngIf="userIsActiveProvider()" [contractDetails]="contractDetails" [availableConnectors]="availableConnectors"></app-provider-contract-config>
-
-          <app-status-message 
-              [successMessage]="'Vertragskonfiguration gespeichert.'"
-              [errorMessage]="'Fehler beim Speichern der Vertragskonfiguration.'"
-              [infoMessage]="''"
-              #contractStatusMessage>
-          </app-status-message>
-          <app-status-message 
-              [successMessage]="'EDC-Übertragung erfolgreich.'"
-              [errorMessage]="'Fehler bei der EDC-Übertragung.'"
-              [infoMessage]="'EDC-Übertragung läuft.'"
-              #edcStatusMessage>
-          </app-status-message>
-          <app-status-message 
-              [successMessage]="''"
-              [errorMessage]="'Vertrag konnte nicht heruntergeladen werden.'"
-              [infoMessage]="''"
-              #contractPdfDownloadMessage>
-          </app-status-message>
         </ul>
+
+        <app-common-contract-config [contractDetails]="contractDetails" [availableConnectors]="availableConnectors"></app-common-contract-config>
+        <app-consumer-contract-config *ngIf="userIsActiveConsumer()" [contractDetails]="contractDetails" [availableConnectors]="availableConnectors"></app-consumer-contract-config>
+        <app-provider-contract-config *ngIf="userIsActiveProvider()" [contractDetails]="contractDetails" [availableConnectors]="availableConnectors"></app-provider-contract-config>
+
+        <app-status-message 
+            [successMessage]="'Vertragskonfiguration gespeichert.'"
+            [errorMessage]="'Fehler beim Speichern der Vertragskonfiguration.'"
+            [infoMessage]="''"
+            #contractStatusMessage>
+        </app-status-message>
+        <app-status-message 
+            [successMessage]="'EDC-Übertragung erfolgreich.'"
+            [errorMessage]="'Fehler bei der EDC-Übertragung.'"
+            [infoMessage]="'EDC-Übertragung läuft.'"
+            #edcStatusMessage>
+        </app-status-message>
+        <app-status-message 
+            [successMessage]="''"
+            [errorMessage]="'Vertrag konnte nicht heruntergeladen werden.'"
+            [infoMessage]="''"
+            #contractPdfDownloadMessage>
+        </app-status-message>
       </ng-container>
     </c-modal-body>
     <c-modal-footer>
