@@ -4,7 +4,7 @@
         <strong>Typ der Datenadresse*</strong><br />
         <select class="form-select" [(ngModel)]="selectedTransferMethod" (change)="onChangeTransferType()" [disabled]="!isContractInDraft(contractDetails)">
         <option [value]="''"></option>
-        <option [value]="'IonosS3'">IonosS3</option>
+        <option [value]="'IonosS3Dest'">Ionos S3</option>
         </select>
     </li>
 

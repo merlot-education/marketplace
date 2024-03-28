@@ -21,7 +21,8 @@ export class ConsumerContractConfigComponent {
   }
 
   ngOnInit(): void {
-    this.selectedTransferMethod = this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning?.dataAddressType;
+    this.selectedTransferMethod = this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning?.dataAddressType;
+    console.log(this.selectedTransferMethod);
   }
 
   protected getConnectorBuckets(connectorId: string) {
@@ -35,7 +36,7 @@ export class ConsumerContractConfigComponent {
   protected onChangeTransferType() {
     if (this.selectedTransferMethod === undefined || this.selectedTransferMethod === "") {
       this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning = null;
-    } else if (this.selectedTransferMethod === "IonosS3") {
+    } else if (this.selectedTransferMethod === "IonosS3Dest") {
       let ionosProvisioning : IIonosS3ConsumerTransferProvisioning = {
         dataAddressTargetBucketName: '',
         dataAddressTargetPath: '',
@@ -59,7 +60,7 @@ export class ConsumerContractConfigComponent {
   }
 
   protected isIonosConsumerTransferProvisioning(contractDetails: IContract): boolean {
-    return this.asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning?.dataAddressType === "IonosS3";
+    return this.asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning?.dataAddressType === "IonosS3Dest";
   }
 
   protected hasContractAttachments(contractDetails: IContract): boolean {

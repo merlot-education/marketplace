@@ -58,7 +58,7 @@ export class ProviderContractConfigComponent implements OnInit {
   }
 
   protected isIonosProviderTransferProvisioning(contractDetails: IContract): boolean {
-    return this.asDataDeliveryContract(contractDetails).provisioning.providerTransferProvisioning?.dataAddressType === "IonosS3";
+    return this.asDataDeliveryContract(contractDetails).provisioning.providerTransferProvisioning?.dataAddressType === "IonosS3Source";
   }
 
   protected hasContractAttachments(contractDetails: IContract): boolean {
