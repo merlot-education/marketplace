@@ -1,3 +1,10 @@
+<div *ngIf="activeOrgRoleService.isActiveAsRepresentative() && orgaMetadata && !isSignerConfigValid()" class="warning-box">
+    <svg class="warning-symbol" cIcon name='cil-warning' size='xl' width='24'></svg>
+    <b>
+    Für Ihre Organisation liegen derzeit keine (gültigen) Signatur-Einstellungen vor. Zum Signieren von Selbstbeschreibungen werden ein Private Key und eine dazugehörige Verifizierungsmethode benötigt.
+    Sie können den Private Key und die Verifizierungsmethode auf dieser Seite hinzufügen und bearbeiten.
+    </b>
+</div>
 
 <c-container fluid class="justify-content-center">
     <div
@@ -150,6 +157,11 @@
                         <mat-panel-title>
                             <div>
                                 Signatur-Einstellungen
+                                <div *ngIf="!isSignerConfigValid()" style="color: red">
+                                    <small>
+                                        Bitte überprüfen Sie die Signatur-Einstellungen.
+                                    </small>
+                                </div>
                             </div>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -161,6 +173,11 @@
                         <div cFormText style="color: #7f7f7f;">
                             <small>Der Private Key zur unten genannten Verifizierungsmethode. Wird zum Signieren von Selbstbeschreibungen verwendet.</small>
                         </div>
+                        <div *ngIf="!isFieldFilled(orgaMetadata.organisationSignerConfigDto.privateKey)" style="color: red">
+                            <small>
+                                Private Key ist erforderlich.
+                            </small>
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -168,6 +185,11 @@
                         <input class="form-control" [(ngModel)]="orgaMetadata.organisationSignerConfigDto.verificationMethod">
                         <div cFormText style="color: #7f7f7f;">
                             <small>Die zugehörige Verifizierungsmethode zum oben genannten Private Key, welche den Public Key referenziert. Derzeit wird ausschließlich did:web unterstützt.</small>
+                        </div>
+                        <div *ngIf="!isFieldFilled(orgaMetadata.organisationSignerConfigDto.verificationMethod)" style="color: red">
+                            <small>
+                                Verifizierungsmethode ist erforderlich.
+                            </small>
                         </div>
                     </div>
                     

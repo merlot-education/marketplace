@@ -174,6 +174,13 @@ export class EditComponent implements OnInit, AfterViewInit {
     return true;
   }
 
+  public isSignerConfigValid(): boolean {
+    let orgaMetadata = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.metadata;
+    return orgaMetadata.organisationSignerConfigDto 
+    && this.isValidString(orgaMetadata.organisationSignerConfigDto.privateKey) 
+    && this.isValidString(orgaMetadata.organisationSignerConfigDto.verificationMethod);
+  }
+
   isValidString(str: string){
     if (!str || str.trim().length === 0) {
       return false;
