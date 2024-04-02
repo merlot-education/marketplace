@@ -69,7 +69,7 @@ export interface IOrganizationMetadata {
   active: boolean;
   connectors: ConnectorData[];
   organisationSignerConfigDto: IOrganisationSignerConfig;
-  signedBy: string;
+  signedBy?: string;
 }
 
 export interface IOrganisationSignerConfig {

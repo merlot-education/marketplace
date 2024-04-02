@@ -13,7 +13,7 @@ export interface IOfferings {
     state: string;
     creationDate: string;
     modifiedDate: string;
-    signedBy: string;
+    signedBy?: string;
   };
   providerDetails: {
     providerId: string;
