@@ -33,9 +33,12 @@ import {
 
 import { IconModule } from '@coreui/icons-angular';
 import { StatusMessageComponent } from './status-message/status-message.component';
+import { ProviderContractConfigComponent } from './contractview/contractconfig/provider-contract-config/provider-contract-config.component';
+import { ConsumerContractConfigComponent } from './contractview/contractconfig/consumer-contract-config/consumer-contract-config.component';
+import { CommonContractConfigComponent } from './contractview/contractconfig/common-contract-config/common-contract-config.component';
 
 @NgModule({
-  declarations: [ContractviewComponent, OfferingdetailviewComponent, StatusMessageComponent],
+  declarations: [ContractviewComponent, OfferingdetailviewComponent, StatusMessageComponent, ProviderContractConfigComponent, ConsumerContractConfigComponent, CommonContractConfigComponent],
   imports: [
     CommonModule,
     AccordionModule,
