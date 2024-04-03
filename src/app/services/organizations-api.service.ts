@@ -63,4 +63,9 @@ export class OrganizationsApiService {
     return await lastValueFrom(this.http.post(
       environment.organizations_api_url + "organization", formData)) as IOrganizationData;
   }
+
+  public async uploadOrganization(formData: FormData) {
+    return await lastValueFrom(this.http.post(
+      environment.organizations_api_url + "organization/sdUpload", formData)) as IOrganizationData;
+  }
 }

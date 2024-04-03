@@ -6,6 +6,7 @@ import { OrganizationsApiService } from 'src/app/services/organizations-api.serv
 import { ActivatedRoute } from '@angular/router';
 import { OrganisationWizardExtensionComponent } from 'src/app/wizard-extension/organisation-wizard-extension/organisation-wizard-extension.component';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
+import { SdUploadComponent } from '../../common-views/sd-upload/sd-upload.component';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -17,6 +18,7 @@ export class EditComponent implements OnInit, AfterViewInit {
   protected jsonViewHidden: boolean = true;
 
   @ViewChild("wizardExtension") private wizardExtensionComponent: OrganisationWizardExtensionComponent;
+  @ViewChild("sdUpload") private sdUploadComponent: SdUploadComponent;
 
   constructor(protected authService: AuthService, 
     protected activeOrgRoleService: ActiveOrganizationRoleService,
@@ -39,6 +41,10 @@ export class EditComponent implements OnInit, AfterViewInit {
     this.wizardExtensionComponent.submitCompleteEvent.subscribe(_ => {
       this.authService.refreshActiveRoleOrgaData();
       this.refreshSelectedOrganization(this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject['@id'])
+    });
+    this.sdUploadComponent.uploadCompleteEvent.subscribe(_ => {
+      this.authService.refreshActiveRoleOrgaData();
+      this.selectOrganization(this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject['@id'])
     });
   }
 

@@ -36,9 +36,10 @@ import { StatusMessageComponent } from './status-message/status-message.componen
 import { ProviderContractConfigComponent } from './contractview/contractconfig/provider-contract-config/provider-contract-config.component';
 import { ConsumerContractConfigComponent } from './contractview/contractconfig/consumer-contract-config/consumer-contract-config.component';
 import { CommonContractConfigComponent } from './contractview/contractconfig/common-contract-config/common-contract-config.component';
+import { SdUploadComponent } from './sd-upload/sd-upload.component';
 
 @NgModule({
-  declarations: [ContractviewComponent, OfferingdetailviewComponent, StatusMessageComponent, ProviderContractConfigComponent, ConsumerContractConfigComponent, CommonContractConfigComponent],
+  declarations: [ContractviewComponent, OfferingdetailviewComponent, StatusMessageComponent, ProviderContractConfigComponent, ConsumerContractConfigComponent, CommonContractConfigComponent, SdUploadComponent],
   imports: [
     CommonModule,
     AccordionModule,
@@ -69,6 +70,6 @@ import { CommonContractConfigComponent } from './contractview/contractconfig/com
     TableModule,
     ModalModule,
   ],
-  exports: [ContractviewComponent, OfferingdetailviewComponent, StatusMessageComponent],
+  exports: [ContractviewComponent, OfferingdetailviewComponent, StatusMessageComponent, SdUploadComponent],
 })
 export class CommonViewsModule {}

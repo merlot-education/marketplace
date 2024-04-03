@@ -4,6 +4,17 @@
         (click)="toogleJsonView()">
         Selbstbeschreibung der Organisation einsehen
       </button>
+
+      <m-card title="Selbstbeschreibung hochladen">
+        Sie können Ihre Organisation alternativ zur unten bereitgestellten Maske auch über das Hochladen einer Selbstbeschreibung berarbeiten.
+        Die Organisations-Selbstbeschreibung muss dafür signiert sein und als JSON-Datei vorliegen.
+
+          <div *ngIf="activeOrgRoleService.isActiveAsFedAdmin()">
+            Als Föderationsadministrator können Sie außerdem Selbstbeschreibungen neuer Organisationen hochladen, um diese in MERLOT aufzunehmen.
+          </div>
+          <app-sd-upload #sdUpload></app-sd-upload>
+      </m-card>
+
       <m-card title="Organisation bearbeiten">
         <app-organisation-wizard-extension #wizardExtension></app-organisation-wizard-extension>
       </m-card>

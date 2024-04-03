@@ -1,0 +1,26 @@
+<div>
+    <input type="file" class="file-input" [accept]="'application/json'" (change)="importSdJson($event)" [hidden]="true"
+        #jsonFileUpload>
+
+    <button id="json-import-button" cButton color="primary" style="margin: 10px;"
+        (click)="jsonFileUpload.click(); hideAllMessages()">
+        Selbstbeschreibung der Organisation auswählen
+    </button>
+    <div style="margin: 10px;"><strong>Ausgewählte Datei: </strong>{{currentJsonFile === null ? 'Keine
+        Datei ausgewählt.' : currentJsonFile.name}}
+        <app-status-message [successMessage]="'Selbstbeschreibung erfolgreich ausgewählt.'"
+            [errorMessage]="'Fehler beim Auswählen der Selbstbeschreibung.'"
+            [infoMessage]="'Selbstbeschreibung wird ausgewählt.'" #importSdJsonStatusMessage>
+        </app-status-message>
+    </div>
+
+    <button id="upload-json-button" cButton color="primary" style="margin: 10px;" (click)="uploadOrganizationSdJson()"
+        [disabled]="!isJsonFileValid">
+        Selbstbeschreibung der Organisation hochladen
+    </button>
+    <div style="margin: 10px;"><app-status-message [successMessage]="'Selbstbeschreibung erfolgreich hochgeladen.'"
+            [errorMessage]="'Fehler beim Hochladen der Selbstbeschreibung.'"
+            [infoMessage]="'Selbstbeschreibung wird hochgeladen.'" #uploadSdJsonStatusMessage>
+        </app-status-message>
+    </div>
+</div>
