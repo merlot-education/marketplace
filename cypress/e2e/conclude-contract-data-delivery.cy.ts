@@ -65,6 +65,7 @@ it('conclude and cancel data delivery contract', {
 
             cy.contains("Laufzeit*:").next().next().select("1 year(s)");
             cy.contains("Anzahl erlaubter Datenaustausche*:").next().next().select("Bis zu 12");
+            cy.contains("Typ der Datenadresse*").next().next().select("Ionos S3");
             cy.contains("Aktiver EDC Connector*:").next().next().select("edc1");
             cy.contains("IONOS-S3 Ziel-Bucket*").next().next().select("merlot-edc-dataport");
             cy.get('label:contains("Ziel-Pfad (Ordner) im IONOS-S3 Bucket*") + input')
@@ -99,6 +100,7 @@ it('conclude and cancel data delivery contract', {
             // all technical settings of the consumer are invisible for the data provider
             cy.contains("Laufzeit*:").next().next().should('be.disabled').contains("1 year(s)");
             cy.contains("Anzahl erlaubter Datenaustausche*:").next().next().should('be.disabled').contains("Bis zu 12");
+            cy.contains("Typ der Datenadresse*").next().next().select("Ionos S3");
             cy.contains("IONOS-S3 Ziel-Bucket*").should("not.exist");
             cy.contains("Ziel-Pfad (Ordner) im IONOS-S3 Bucket*").should("not.exist");
 
@@ -106,7 +108,6 @@ it('conclude and cancel data delivery contract', {
             cy.contains("Aktiver EDC Connector*:").next().next().select("edc2");
             cy.contains("IONOS-S3 Quell-Bucket*").next().next().select("merlot-edc-gaiax");
             cy.get('label:contains("Quell-Dateipfad im IONOS-S3 Bucket*") + input').type("jobs4dp/DPjobs01.json");
-            cy.contains("Typ der Datenadresse*").next().next().select("IonosS3");
 
             // click on the checkmark to agree on the AGBs
             cy.get('#checkMerlotAGB').click().should('be.checked');
@@ -243,6 +244,7 @@ it('conclude data delivery contract', {
 
             cy.contains("Laufzeit*:").next().next().select("2 year(s)");
             cy.contains("Anzahl erlaubter Datenaustausche*:").next().next().select("Unbegrenzt");
+            cy.contains("Typ der Datenadresse*").next().next().select("Ionos S3");
             cy.contains("Aktiver EDC Connector*:").next().next().select("edc2");
             cy.contains("IONOS-S3 Ziel-Bucket*").next().next().select("merlot-edc-dataport");
             cy.get('label:contains("Ziel-Pfad (Ordner) im IONOS-S3 Bucket*") + input')
@@ -277,6 +279,7 @@ it('conclude data delivery contract', {
             // all technical settings of the consumer are invisible for the data provider
             cy.contains("Laufzeit*:").next().next().should('be.disabled').contains("2 year(s)");
             cy.contains("Anzahl erlaubter Datenaustausche*:").next().next().should('be.disabled').contains("Unbegrenzt");
+            cy.contains("Typ der Datenadresse*").next().next().select("Ionos S3");
             cy.contains("IONOS-S3 Ziel-Bucket*").should("not.exist");
             cy.contains("Ziel-Pfad (Ordner) im IONOS-S3 Bucket*").should("not.exist");
 
@@ -284,7 +287,6 @@ it('conclude data delivery contract', {
             cy.contains("Aktiver EDC Connector*:").next().next().select("edc1");
             cy.contains("IONOS-S3 Quell-Bucket*").next().next().select("merlot-edc-gaiax");
             cy.get('label:contains("Quell-Dateipfad im IONOS-S3 Bucket*") + input').type("Jobs4DP.json");
-            cy.contains("Typ der Datenadresse*").next().next().select("IonosS3");
 
             // click on the checkmark to agree on the AGBs and accept
             cy.get('#checkMerlotAGB').click().should('be.checked');
