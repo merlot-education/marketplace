@@ -44,10 +44,10 @@ export class OrganizationsApiService {
     return await lastValueFrom(this.http.get(environment.organizations_api_url + "shapes/merlotParticipant"));
   }
 
-  public async saveOrganization(sdJson: IOrganizationData) {
+  public async saveOrganization(sdJson: IOrganizationData): Promise<IOrganizationData> {
     console.log(sdJson);
     const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
-    return await lastValueFrom(this.http.put(environment.organizations_api_url + "organization", sdJson, {headers: headers}));
+    return await lastValueFrom(this.http.put(environment.organizations_api_url + "organization", sdJson, {headers: headers})) as IOrganizationData;
   }
 
   public async fetchFederators(): Promise<IOrganizationData[]> {

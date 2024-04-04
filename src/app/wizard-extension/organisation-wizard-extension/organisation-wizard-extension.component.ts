@@ -104,6 +104,7 @@ export class OrganisationWizardExtensionComponent {
       this.baseWizardExtension.setCredentialId(result["id"]);
       this.saveStatusMessage.showSuccessMessage("ID: " + result["id"]);
       this.submitCompleteEvent.emit(null);
+      this.prefillOrganisation(result);
     }).catch((e: HttpErrorResponse) => {
       this.saveStatusMessage.showErrorMessage(e.error.message);
     })
