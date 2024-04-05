@@ -6,7 +6,7 @@
     "id": "did:web:marketplace.dev.merlot-education.eu",
     "verificationMethod": [
         {
-          "id": "did:web:marketplace.dev.merlot-education.eu",
+          "id": "did:web:marketplace.dev.merlot-education.eu#JWK2020",
           "type": "JsonWebKey2020",
           "controller": "did:web:marketplace.dev.merlot-education.eu",
           "publicKeyJwk": {
