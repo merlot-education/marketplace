@@ -70,6 +70,14 @@ export interface IOrganizationMetadata {
   connectors: ConnectorData[];
   organisationSignerConfigDto: IOrganisationSignerConfig;
   signedBy?: string;
+  dapsCertificates: IDapsCertificate[];
+}
+
+export interface IDapsCertificate {
+  clientName: string;
+  clientId: string;
+  keystore: string;
+  password: string;
 }
 
 export interface IOrganisationSignerConfig {
