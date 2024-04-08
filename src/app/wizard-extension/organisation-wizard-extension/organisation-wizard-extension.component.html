@@ -237,7 +237,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Audience</label>
-                                <input class="form-control" value="idsc:IDS_CONNECTORS_ALL" [disabled]="true">
+                                <input class="form-control" [value]="environment.daps_audience" [disabled]="true">
                                 <div cFormText style="color: #7f7f7f;">
                                     <small>
                                         Audience des DAPS Servers. 
