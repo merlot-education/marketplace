@@ -64,7 +64,6 @@ export class DefaultLayoutComponent {
           ],
       });
     }
-    console.log(this.organizationRolesForLayout[0]);
   }
 
   private buildAllowedNavItems(navItems: IRoleNavData[], activeRole: OrganizationRole) {
