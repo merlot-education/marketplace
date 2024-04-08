@@ -68,28 +68,47 @@
           organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalAddress']['vcard:country-name']['@value']
           }}
         </li>
+        <li class="list-group-item" style="border: none">
+          <strong>ID:</strong><br />
+          {{
+          organization.selfDescription.verifiableCredential.credentialSubject['@id']
+          }}
+        </li>
+        <li class="list-group-item" style="border: none">
+          <table cTable [responsive]="true" *ngIf="organization.activeRepresentant">
+            <thead>
+              <tr>
+                <th scope="col">EDC</th>
+                <th scope="col">S3 Buckets</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let ci of connectorInfo">
+                <td>{{ ci.connectorId }}</td>
+                <td *ngIf="ci.ionosS3ExtensionConfig">{{ getConnectorBucketsString(ci) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </li>
+        <li class="list-group-item" style="border: none">
+          <strong>Selbstbeschreibung unterschrieben von:</strong><br />
+          {{
+          organization.metadata.signedBy ? organization.metadata.signedBy : "Unbekannt"
+          }}
+        </li>
       </ul>
-      <table cTable [responsive]="true" *ngIf="organization.activeRepresentant">
-        <thead>
-          <tr>
-            <th scope="col">EDC Id</th>
-            <th scope="col">S3 Buckets</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let ci of connectorInfo">
-            <td>{{ ci.connectorId }}</td>
-            <td>{{ ci.bucketNames.join(', ') }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
+      <div class="d-flex flex-row docs-highlight mb-2 justify-content-end">
         <div class="p-2 docs-highlight">
           <button type="button" class="btn btn-primary flex-item-grow" 
+          style="margin-right: 10px;"
           *ngIf="activeOrgRoleService.isActiveAsFedAdmin()"
           (click)="editOrganization(organization)"
           >
             Bearbeiten 
+          </button>
+          <button id="json-download-button" type="button" class="btn btn-secondary flex-item-grow me-1" 
+          (click)="sdDownloadService.downloadParticipantSd(organization.id)">
+            SD
           </button>
         </div>
       </div>

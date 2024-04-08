@@ -1,7 +1,7 @@
-import { loginAsTestuser, fillGeneralOfferingFields, openOfferingForEdit, openOfferingDetails, checkGeneralOfferingFields, logout, deleteOffering } from "./create-service-offer-common";
+import { loginAsUser, fillGeneralOfferingFields, openOfferingForEdit, openOfferingDetails, checkGeneralOfferingFields, logout, deleteOffering } from "./create-service-offer-common";
 
 beforeEach(() => {
-    loginAsTestuser();
+    loginAsUser("testuser", "testuser", "Test User", "Gaia-X");
 });
 
 it('create data delivery service offering', {
@@ -133,7 +133,7 @@ it('create data delivery service offering', {
         });
 
         // log back in as testuser
-        loginAsTestuser();
+        loginAsUser("testuser", "testuser", "Test User", "Gaia-X");
 
         // click on navigation entry Serviceangebote,  the submenu is extended
         cy.contains('Service Angebote').click({force: true})

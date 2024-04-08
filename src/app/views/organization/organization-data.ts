@@ -47,12 +47,19 @@ interface IVCardAddress {
 }
 
 export interface ConnectorData {
-  id: string;
-  orgaId: string;
   connectorId: string;
   connectorEndpoint: string;
   connectorAccessToken: string;
-  bucketNames: string[];
+  ionosS3ExtensionConfig?: IonosS3ExtensionConfig;
+}
+
+export interface IonosS3ExtensionConfig {
+  buckets: IonosS3Bucket[];
+}
+
+export interface IonosS3Bucket {
+  name: string;
+  storageEndpoint: string;
 }
 
 export interface IOrganizationMetadata {
@@ -60,4 +67,12 @@ export interface IOrganizationMetadata {
   mailAddress: string;
   membershipClass: string;
   active: boolean;
+  connectors: ConnectorData[];
+  organisationSignerConfigDto: IOrganisationSignerConfig;
+  signedBy?: string;
+}
+
+export interface IOrganisationSignerConfig {
+  privateKey: string;
+  verificationMethod: string;
 }

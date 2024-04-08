@@ -1,3 +1,25 @@
+<div *ngIf="activeOrgRoleService.isActiveAsRepresentative() && orgaMetadata && !isSignerConfigValid()" class="warning-box">
+    <svg class="warning-symbol" cIcon name='cil-warning' size='xl' width='24'></svg>
+    <b>
+    Für Ihre Organisation liegen derzeit keine (gültigen) Signatur-Einstellungen vor. Zum Signieren von Selbstbeschreibungen werden ein Private Key und eine dazugehörige Verifizierungsmethode benötigt.
+    Sie können den Private Key und die Verifizierungsmethode auf dieser Seite hinzufügen und bearbeiten.
+    </b>
+</div>
+
+<c-container fluid class="justify-content-center">
+    <div
+        [ngClass]="{ 'position-center': true }"
+        fxFlex="70%"
+        fxFlex.sm="100%"
+        fxFlex.xs="100%"
+        *ngIf="isShapeLoaded()">
+        <div class="mb-3">
+            <label class="form-label">Selbstbeschreibungs-ID*</label>
+            <input class="form-control" [value]="orgaMetadata.orgaId" [disabled]="true">
+        </div>
+    </div>
+</c-container>
+
 <app-base-wizard-extension #baseWizardExtension></app-base-wizard-extension>
 <c-container fluid class="justify-content-center">
     <div
@@ -47,6 +69,143 @@
         </div>
         <div cFormText style="color: #7f7f7f;">
             <small>Mitgliedschaftsstatus der Organisation</small>
+        </div>
+        <br>
+        <div *ngIf="activeOrgRoleService.isActiveAsRepresentative()">
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <div>EDC Connectoren der Organisation 
+                                <button cButton color="primary" variant="ghost" (click)="addConnector()" size="sm">
+                                    <svg
+                                    class=""
+                                    cIcon
+                                    name="cib-addthis"
+                                    size="xl"
+                                ></svg></button></div>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-expansion-panel *ngFor="let connector of orgaMetadata.connectors; let i = index">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <div>
+                                    EDC Connector 
+                                    <button cButton variant="ghost" (click)="removeConnector(i)" color="primary" size="sm">
+                                        <svg
+                                        class=""
+                                        cIcon
+                                        name="cil-trash"
+                                        size="xl"
+                                    ></svg></button>
+                                    <div *ngIf="!isConnectorValid(connector)" style="color: red">
+                                        <small>
+                                        Bitte überprüfen Sie die technischen Parameter dieses EDC Connectors.
+                                        </small>
+                                    </div>
+                                </div>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="mb-3">
+                            <label class="form-label">Connector-ID</label>
+                            <input class="form-control" [(ngModel)]="connector.connectorId" name="connectorId{{i}}">
+                            <div cFormText style="color: #7f7f7f;">
+                                <small>ID des EDC Connectors, eindeutig für diese Organisation.</small>
+                            </div>
+                            <div *ngIf="!isFieldFilled(connector.connectorId)" style="color: red">
+                                <small>
+                                ID des EDC Connectors ist erforderlich.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Connector-Endpunkt</label>
+                            <input class="form-control" [(ngModel)]="connector.connectorEndpoint" name="connectorEndpoint{{i}}" placeholder="http://example.com/myedc">
+                            <div cFormText style="color: #7f7f7f;">
+                                <small>Basis-Endpunkt des <a href="https://github.com/merlot-education/merlot-edc">MERLOT konformen</a> EDC Connectors, unter welchem die weiteren APIs erreichbar sind.</small>
+                            </div>
+                            <div *ngIf="!isFieldFilled(connector.connectorEndpoint)" style="color: red">
+                                <small>
+                                Endpunkt des EDC Connectors ist erforderlich.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Connector-Access-Token</label>
+                            <input class="form-control" [(ngModel)]="connector.connectorAccessToken" name="connectorAccessToken{{i}}">
+                            <div cFormText style="color: #7f7f7f;">
+                                <small>Zugriffs-Token (edc.api.auth.key) des EDC Connectors für die EDC-Management-API.</small>
+                            </div>
+                            <div *ngIf="!isFieldFilled(connector.connectorAccessToken)" style="color: red">
+                                <small>
+                                    Zugriffs-Token des EDC Connectors ist erforderlich.
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <app-organisation-ionos-s3-config #ionosS3Config [connector]="connector">
+                        </app-organisation-ionos-s3-config>
+                        
+                    </mat-expansion-panel>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <div>
+                                Signatur-Einstellungen
+                                <div *ngIf="!isSignerConfigValid()" style="color: red">
+                                    <small>
+                                        Bitte überprüfen Sie die Signatur-Einstellungen.
+                                    </small>
+                                </div>
+                            </div>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="mb-3">
+                        <label class="form-label">Private Key</label>
+                        <textarea rows="10" class="form-control" [(ngModel)]="orgaMetadata.organisationSignerConfigDto.privateKey">
+                        </textarea>
+                        <div cFormText style="color: #7f7f7f;">
+                            <small>Der Private Key zur unten genannten Verifizierungsmethode. Wird zum Signieren von Selbstbeschreibungen verwendet.</small>
+                        </div>
+                        <div *ngIf="!isFieldFilled(orgaMetadata.organisationSignerConfigDto.privateKey)" style="color: red">
+                            <small>
+                                Private Key ist erforderlich.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Verifizierungsmethode</label>
+                        <input class="form-control" [(ngModel)]="orgaMetadata.organisationSignerConfigDto.verificationMethod">
+                        <div cFormText style="color: #7f7f7f;">
+                            <small>Die zugehörige Verifizierungsmethode zum oben genannten Private Key, welche den Public Key referenziert. Derzeit wird ausschließlich did:web unterstützt.</small>
+                        </div>
+                        <div *ngIf="!isFieldFilled(orgaMetadata.organisationSignerConfigDto.verificationMethod)" style="color: red">
+                            <small>
+                                Verifizierungsmethode ist erforderlich.
+                            </small>
+                        </div>
+                    </div>
+                    
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+        <br>
+        <br>
+        <div class="mb-3">
+            <label class="form-label">Selbstbeschreibung unterschrieben von:</label>
+            {{
+                orgaMetadata.signedBy ? orgaMetadata.signedBy : "Unbekannt"
+            }}
+            <div cFormText style="color: #7f7f7f;">
+                <small>Urheber der letzten Signatur dieser Selbstbeschreibung</small>
+            </div>
         </div>
     </div>
 </c-container>

@@ -140,4 +140,52 @@ export class EditComponent implements OnInit, AfterViewInit {
     }
     
   }
+
+  isOfferingDataDeliveryOffering(): boolean {
+    return this.selectedServiceFile.includes("DataDelivery");
+  }
+
+  isAnyConnectorAvailable(): boolean {
+    let connectors = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.metadata.connectors;
+    return connectors && connectors.length !== 0;
+  }
+
+  isConnectorListValid(): boolean {
+    let connectors = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.metadata.connectors;
+    // check if all given connectors are valid
+    // if there are no connectors at all, that is also valid
+    for (const connector of connectors) {
+      if (!this.isValidString(connector.connectorId) || !this.isValidString(connector.connectorEndpoint) || !this.isValidString(connector.connectorAccessToken)) {
+        return false;
+      }
+
+      // if EDC is not configured for IONOS (only method right now), reject
+      if (!connector.ionosS3ExtensionConfig?.buckets || connector.ionosS3ExtensionConfig.buckets.length == 0) {
+        return false;
+      }
+  
+      // Check if all bucket names are valid
+      for (const bucket of connector.ionosS3ExtensionConfig.buckets) {
+        if (!this.isValidString(bucket.name)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  public isSignerConfigValid(): boolean {
+    let orgaMetadata = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.metadata;
+    return orgaMetadata.organisationSignerConfigDto 
+    && this.isValidString(orgaMetadata.organisationSignerConfigDto.privateKey) 
+    && this.isValidString(orgaMetadata.organisationSignerConfigDto.verificationMethod);
+  }
+
+  isValidString(str: string){
+    if (!str || str.trim().length === 0) {
+      return false;
+    }
+
+    return true;
+  }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConnectorData, IOrganizationData, IPageOrganizations } from "../organization-data";
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
+import { SdDownloadService } from 'src/app/services/sd-download.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { BehaviorSubject } from 'rxjs';
@@ -45,6 +46,7 @@ export class ExploreComponent implements OnInit {
     private organizationsApiService: OrganizationsApiService,
     protected authService: AuthService,
     protected activeOrgRoleService: ActiveOrganizationRoleService,
+    protected sdDownloadService: SdDownloadService,
     private router: Router
   ) { }
 
@@ -67,9 +69,7 @@ export class ExploreComponent implements OnInit {
           }
 
           if (orga.activeRepresentant) {
-            this.organizationsApiService.getConnectorsOfOrganization(orga.selfDescription.verifiableCredential.credentialSubject['@id']).then(value => {
-              this.connectorInfo = value;
-            });
+              this.connectorInfo = orga.metadata.connectors;
           }
         } else if (this.activeOrgRoleService.isActiveAsFedAdmin()) {
           orga.activeRepresentant = false;
@@ -112,5 +112,9 @@ export class ExploreComponent implements OnInit {
 
   protected editOrganization(orga: IOrganizationData) {
     this.router.navigate(["organization/edit/", orga.selfDescription.verifiableCredential.credentialSubject['@id']]);
+  }
+
+  protected getConnectorBucketsString(cd: ConnectorData) {
+    return cd.ionosS3ExtensionConfig.buckets.map(b => b.name).join(", ");
   }
 }

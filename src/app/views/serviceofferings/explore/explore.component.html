@@ -48,6 +48,10 @@
               (click)="updateServiceOfferingEdit(offering)" *ngIf="offering.state === 'IN_DRAFT'">
               Bearbeiten
             </button>
+            <button id="json-download-button" type="button" class="btn btn-secondary flex-item-grow me-1" 
+            (click)="sdDownloadService.downloadServiceOfferingSd(offering.id)">
+              SD
+            </button>
           </div>
         </c-col>
       </c-row>
@@ -87,6 +91,10 @@
               [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = true; requestDetails(offering.id)">
               Details
             </button>
+            <button id="json-download-button" type="button" class="btn btn-secondary flex-item-grow me-1" 
+            (click)="sdDownloadService.downloadServiceOfferingSd(offering.id)" *ngIf="activeOrgRoleService.isLoggedIn">
+              SD
+            </button>
           </div>
         </c-col>
       </c-row>
@@ -112,8 +120,28 @@
         selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'] }}"</h5>
     </c-modal-header>
     <c-modal-body>
+
+      <div [hidden]="!jsonViewHidden"><button id="json-view-button" cButton color="primary" style="margin-bottom: 10px;"
+        (click)="toogleJsonView()">
+        Selbstbeschreibung des Service Angebots einsehen
+      </button>
       <app-offeringdetailview [serviceOfferingData]="selectedOfferingDetails"
         [showVariableFields]="true"></app-offeringdetailview>
+    </div>
+
+    <div [hidden]="jsonViewHidden"><button id="json-download-button" cButton color="primary"
+        style="margin-bottom: 10px;" (click)="sdDownloadService.downloadServiceOfferingSd(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'])">
+        Selbstbeschreibung herunterladen
+      </button>
+      <button id="offering-edit-button" cButton color="primary" style="margin-bottom: 10px; margin-left: 10px;"
+        (click)="toogleJsonView()">
+        Service Angebot ansehen
+      </button>
+      <m-card title="Selbstbeschreibung des Service Angebots">
+        <ngx-json-viewer [json]="selectedOfferingDetails.selfDescription"></ngx-json-viewer>
+      </m-card>
+    </div>
+      
     </c-modal-body>
     <c-modal-footer>
       <button cButton color="secondary" [cModalToggle]="modalViewDetails.id">Schließen</button>

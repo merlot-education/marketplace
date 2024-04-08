@@ -6,7 +6,6 @@ import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
-import { IRuntime } from '../../serviceofferings/serviceofferings-data';
 import { saveAs } from 'file-saver';
 import { StatusMessageComponent } from '../status-message/status-message.component';
 
@@ -20,14 +19,10 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 })
 export class ContractviewComponent {
 
-  protected asDataDeliveryContract(val): IDataDeliveryContract { return val };
-  protected asSaasContract(val): ISaasContract { return val };
-
   @Input() contractDetails: IContract = undefined;
   @Input() availableConnectors : ConnectorData[] = [];
   @Output() buttonClickCallback: EventEmitter<any> = new EventEmitter();
 
-  @ViewChild('attachmentStatusMessage') private attachmentStatusMessage: StatusMessageComponent;
   @ViewChild('contractStatusMessage') private contractStatusMessage: StatusMessageComponent;
   @ViewChild('edcStatusMessage') private edcStatusMessage: StatusMessageComponent;
   @ViewChild('contractPdfDownloadMessage') private contractPdfDownloadMessage: StatusMessageComponent;
@@ -39,18 +34,6 @@ export class ContractviewComponent {
     private activeOrgRoleService: ActiveOrganizationRoleService,
     protected serviceOfferingApiService: ServiceofferingApiService,
     protected organizationsApiService: OrganizationsApiService) {
-  }
-
-  protected trackByFn(index, item) {
-    return index;  
-  }
-
-  protected getConnectorBuckets(connectorId: string) {
-    try {
-      return this.availableConnectors.find(con => con.connectorId === connectorId).bucketNames;
-    } catch (e) {
-      return [];
-    }
   }
 
   protected handleButtonClick(targetFunction: (contractApiService: ContractApiService, contractDetails: IContract) => Promise<IContract>, contractDetails: IContract) {
@@ -177,7 +160,6 @@ export class ContractviewComponent {
       this.saveButtonDisabled = false;
       this.contractStatusMessage.hideAllMessages();
       this.edcStatusMessage.hideAllMessages();
-      this.attachmentStatusMessage.hideAllMessages();
       this.contractPdfDownloadMessage.hideAllMessages();
       // TODO clear contract on close again
     }
@@ -190,7 +172,6 @@ export class ContractviewComponent {
   protected userIsActiveConsumer(): boolean {
     return this.activeOrgRoleService.getActiveOrgaId() == this.contractDetails.details.consumerId;
   }
-
 
   protected isContractInDraft(contractDetails: IContract): boolean {
     return contractDetails.details.state === 'IN_DRAFT';
@@ -212,36 +193,8 @@ export class ContractviewComponent {
     return contractDetails.details.state === 'ARCHIVED';
   }
 
-  protected shouldShowAttachments(contractDetails: IContract): boolean {
-    return this.userIsActiveProvider() && this.isContractInDraft(contractDetails) || (contractDetails.negotiation.attachments.length > 0);
-  }
-
-  protected canAddAttachments(contractDetails: IContract): boolean {
-    return this.userIsActiveProvider() && this.isContractInDraft(contractDetails) && (contractDetails.negotiation.attachments.length <= 10);
-  }
-
-  protected shouldShowAttachmentAsLink(contractDetails: IContract): boolean {
-    return this.userIsActiveConsumer() || !this.isContractInDraft(contractDetails);
-  }
-
-  protected shouldShowAttachmentAsTextbox(contractDetails: IContract): boolean {
-    return this.userIsActiveProvider() && this.isContractInDraft(contractDetails);
-  }
-
-  protected isRuntimeUnlimited(runtime: IRuntime): boolean {
-    return runtime['merlot:runtimeCount']['@value'] === 0 || runtime['merlot:runtimeMeasurement']['@value'] === 'unlimited'
-  }
-
-  protected isSaasContract(contractDetails: IContract): boolean {
-    return contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['@type'] === 'merlot:MerlotServiceOfferingSaaS';
-  }
-
   protected isDataDeliveryContract(contractDetails: IContract): boolean {
     return contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['@type'] === 'merlot:MerlotServiceOfferingDataDelivery';
-  }
-
-  protected hasContractAttachments(contractDetails: IContract): boolean {
-    return contractDetails.negotiation.attachments.length > 0;
   }
 
   protected shouldShowSaveButton(contractDetails: IContract): boolean {
@@ -274,68 +227,6 @@ export class ContractviewComponent {
 
   protected shouldShowRegenerateButton(contractDetails: IContract): boolean {
     return this.isContractArchived(contractDetails) || this.isContractDeleted(contractDetails);
-  }
-
-  protected addAttachment(event: Event) {
-
-    this.saveButtonDisabled = true;
-
-    const file:File = (event.target as HTMLInputElement).files[0];
-    if (!file) {
-      this.saveButtonDisabled = false;
-      return;
-    }
-
-    (event.target as HTMLInputElement).value = null;
-
-    let fileName = file.name;
-    const formData = new FormData();
-    formData.append("file", file);
-
-    if (file.type !== 'application/pdf') {
-      console.log("not pdf");
-      this.attachmentStatusMessage.showErrorMessage("Ausgewählte Datei ist keine PDF.");
-      this.saveButtonDisabled = false;
-      return;
-    }
-
-    if (file.size > 2 * 1000 * 1000) { // size is in bytes
-      console.log("file too large");
-      this.attachmentStatusMessage.showErrorMessage("Ausgewählte Datei ist zu groß, max. 2 MB erlaubt.");
-      this.saveButtonDisabled = false;
-      return;
-    }
-
-    this.attachmentStatusMessage.showInfoMessage("Anhang wird hochgeladen...");
-
-    this.contractApiService.addAttachment(this.contractDetails.details.id, formData).then(result => {
-      this.contractDetails = result;
-      this.attachmentStatusMessage.showSuccessMessage(fileName + " wurde hochgeladen.", 5000);
-      this.saveButtonDisabled = false;
-    }).catch((e: HttpErrorResponse) => {
-      this.attachmentStatusMessage.showErrorMessage(e.error.message);
-      this.saveButtonDisabled = false;
-    });
-  }
-
-  protected deleteAttachment(attachmentName: string) {
-    this.saveButtonDisabled = true;
-    this.attachmentStatusMessage.showInfoMessage("Anhang wird gelöscht...");
-    this.contractApiService.deleteAttachment(this.contractDetails.details.id, attachmentName).then(result => {
-      this.contractDetails = result;
-      this.attachmentStatusMessage.showSuccessMessage(attachmentName + " wurde gelöscht.", 5000);
-      this.saveButtonDisabled = false;
-    }).catch((e: HttpErrorResponse) => {
-      this.attachmentStatusMessage.showErrorMessage(e.error.message);
-      this.saveButtonDisabled = false;
-    });
-  }
-
-  protected downloadAttachment(attachmentName: string) {
-    this.attachmentStatusMessage.hideAllMessages();
-    this.contractApiService.downloadAttachment(this.contractDetails.details.id, attachmentName).then(result => {
-      saveAs(result, attachmentName);
-    });
   }
 
   protected hasContractPdfDownload(contract: IContract): boolean {

@@ -9,6 +9,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { IContract } from '../../contracts/contracts-data';
 import { ConnectorData } from '../../organization/organization-data';
 import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
+import { SdDownloadService } from 'src/app/services/sd-download.service';
 
 
 @Component({
@@ -90,6 +91,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   selectedOfferingDetails: IOfferings = null;
   selectedOfferingPublic: boolean = false;
+  protected jsonViewHidden: boolean = true;
 
   contractTemplate: IContract = undefined;
   protected orgaConnectors: ConnectorData[] = [];
@@ -104,16 +106,15 @@ export class ExploreComponent implements OnInit, OnDestroy {
     protected serviceOfferingApiService : ServiceofferingApiService,
     protected organizationsApiService: OrganizationsApiService,
     private contractApiService: ContractApiService,
+    protected sdDownloadService: SdDownloadService,
     protected activeOrgRoleService: ActiveOrganizationRoleService) {
   }
 
   ngOnInit(): void {
     if (this.activeOrgRoleService.isActiveAsRepresentative()) {
       this.activeOrgaSubscription = this.activeOrgRoleService.activeOrganizationRole.subscribe(value => {
-        this.organizationsApiService.getConnectorsOfOrganization(value.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']).then(result => {
-        this.orgaConnectors = result;
-        this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
-      });
+        this.orgaConnectors = value.orgaData.metadata.connectors;
+        this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);   
     });
     }
     this.refreshOfferings();
@@ -305,5 +306,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   protected shouldShowBookButton(offering: IOfferings): boolean {
     return this.activeOrgRoleService.isLoggedIn.value && (offering.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] !== this.activeOrgRoleService.getActiveOrgaId())
+  }
+
+  toogleJsonView() {
+    this.jsonViewHidden = !this.jsonViewHidden;
   }
 }

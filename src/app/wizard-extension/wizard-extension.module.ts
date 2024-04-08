@@ -8,9 +8,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { OrganisationWizardExtensionComponent } from './organisation-wizard-extension/organisation-wizard-extension.component';
 import { OfferingWizardExtensionComponent } from './offering-wizard-extension/offering-wizard-extension.component';
 import { BaseWizardExtensionComponent } from './base-wizard-extension/base-wizard-extension.component';
+import { MaterialModule } from '../sdwizard/material.module'
+import { IconModule } from '@coreui/icons-angular';
+import { OrganisationIonosS3ConfigComponent } from './organisation-ionos-s3-config/organisation-ionos-s3-config.component';
 
 @NgModule({
-    declarations: [OrganisationWizardExtensionComponent, OfferingWizardExtensionComponent, BaseWizardExtensionComponent],
+    declarations: [OrganisationWizardExtensionComponent, OfferingWizardExtensionComponent, BaseWizardExtensionComponent, OrganisationIonosS3ConfigComponent],
     exports: [
         OrganisationWizardExtensionComponent,
         OfferingWizardExtensionComponent
@@ -24,7 +27,9 @@ import { BaseWizardExtensionComponent } from './base-wizard-extension/base-wizar
         ButtonGroupModule,
         FormsModule,
         GridModule,
-        ModalModule
+        ModalModule,
+        MaterialModule,
+        IconModule 
     ]
 })
 export class WizardExtensionModule { }

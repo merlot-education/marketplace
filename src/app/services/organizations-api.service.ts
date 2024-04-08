@@ -12,7 +12,7 @@ export class OrganizationsApiService {
   private merlotFederationOrga: IOrganizationData = undefined;
 
   constructor(private http: HttpClient) {
-    this.getOrgaById("did:web:" + environment.marketplace_url + "#df15587a-0760-32b5-9c42-bb7be66e8076").then(result => {
+    this.getOrgaById("did:web:" + environment.marketplace_url + ":participant:df15587a-0760-32b5-9c42-bb7be66e8076").then(result => {
       this.merlotFederationOrga = result;
     });
   }
@@ -34,12 +34,6 @@ export class OrganizationsApiService {
     return orgaData;
   }
 
-  public async getConnectorsOfOrganization(orgaId: string) {
-    return await lastValueFrom(
-      this.http.get(environment.organizations_api_url + "organization/" + this.patchOrgaId(orgaId) + "/connectors/")
-    ) as ConnectorData[];
-  }
-
   public async getOrgaById(id: string): Promise<IOrganizationData> {
     return await (await lastValueFrom(
       this.http.get(environment.organizations_api_url + "organization/" + this.patchOrgaId(id))
@@ -50,10 +44,10 @@ export class OrganizationsApiService {
     return await lastValueFrom(this.http.get(environment.organizations_api_url + "shapes/merlotParticipant"));
   }
 
-  public async saveOrganization(sdJson: IOrganizationData) {
+  public async saveOrganization(sdJson: IOrganizationData): Promise<IOrganizationData> {
     console.log(sdJson);
     const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
-    return await lastValueFrom(this.http.put(environment.organizations_api_url + "organization", sdJson, {headers: headers}));
+    return await lastValueFrom(this.http.put(environment.organizations_api_url + "organization", sdJson, {headers: headers})) as IOrganizationData;
   }
 
   public async fetchFederators(): Promise<IOrganizationData[]> {

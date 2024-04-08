@@ -1,0 +1,98 @@
+
+<div *ngIf="!connector.ionosS3ExtensionConfig">
+    IONOS S3 Erweiterung Konfiguration
+    <button cButton color="primary" variant="ghost" (click)="addIonosS3ExtensionConfig()" size="sm">
+        <svg
+        class=""
+        cIcon
+        name="cib-addthis"
+        size="xl"
+    ></svg></button>
+</div>
+<mat-expansion-panel *ngIf="connector.ionosS3ExtensionConfig">
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            <div>
+                IONOS S3 Erweiterung Konfiguration
+                <button cButton variant="ghost" (click)="removeIonosS3ExtensionConfig()" color="primary" size="sm">
+                    <svg
+                    class=""
+                    cIcon
+                    name="cil-trash"
+                    size="xl"
+                ></svg></button>
+                <div *ngIf="connector.ionosS3ExtensionConfig && !isIonosS3ExtensionConfigValid()" style="color: red">
+                    <small>
+                    Bitte überprüfen Sie die Konfiguration der IONOS S3 Erweiterung.
+                    </small>
+                </div>
+            </div>
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                <div>
+                    IONOS S3 Buckets
+                    <button cButton color="primary" variant="ghost" (click)="addBucket()" size="sm">
+                        <svg
+                        class=""
+                        cIcon
+                        name="cib-addthis"
+                        size="xl"
+                    ></svg></button>
+                    <div *ngIf="!isConnectorBucketListValid()" style="color: red">
+                        <small>
+                        Bitte überprüfen Sie die Angaben über die IONOS S3 Buckets.
+                        </small>
+                    </div>
+                </div>
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-expansion-panel *ngFor="let bucket of connector.ionosS3ExtensionConfig.buckets; let j = index; trackBy:customTrackBy">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <div>
+                        Bucket
+                        <button cButton variant="ghost" (click)="removeBucket(j)" color="primary" size="sm" *ngIf="connector.ionosS3ExtensionConfig.buckets.length > 1">
+                            <svg
+                            class=""
+                            cIcon
+                            name="cil-trash"
+                            size="xl"
+                        ></svg></button>
+                        <div *ngIf="!isValidBucket(connector.ionosS3ExtensionConfig.buckets[j])" style="color: red">
+                            <small>
+                                Bitte überprüfen Sie die Konfiguration dieses IONOS S3 Buckets.
+                            </small>
+                        </div>
+                    </div>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="mb-3">
+                <label class="form-label">Bucket-Name</label>
+                <input class="form-control" [(ngModel)]="connector.ionosS3ExtensionConfig.buckets[j].name" name="connectorBucket{{j}}_name"> 
+                <div cFormText style="color: #7f7f7f;">
+                    <small>Global eindeutiger Name des IONOS S3 Buckets</small>
+                </div>
+                <div *ngIf="!isFieldFilled(connector.ionosS3ExtensionConfig.buckets[j].name)" style="color: red">
+                    <small>
+                    Name des IONOS S3 Buckets ist erforderlich.
+                    </small>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Speicher-Endpunkt</label>
+                <input class="form-control" [(ngModel)]="connector.ionosS3ExtensionConfig.buckets[j].storageEndpoint" name="{{j}}_storageEndpoint"> 
+                <div cFormText style="color: #7f7f7f;">
+                    <small>Speicher-Endpunkt des IONOS S3 Buckets.</small>
+                </div>
+                <div *ngIf="!isFieldFilled(connector.ionosS3ExtensionConfig.buckets[j].storageEndpoint)" style="color: red">
+                    <small>
+                        Speicher-Endpunkt des IONOS S3 Buckets ist erforderlich.
+                    </small>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-expansion-panel>
+</mat-expansion-panel>
