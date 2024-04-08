@@ -215,17 +215,17 @@
                         </mat-expansion-panel-header>
                         <br>
                         <div class="mb-3">
-                            <label class="form-label">Name des Clients</label>
-                            <input class="form-control" [(ngModel)]="cert.clientName" [disabled]="true">
+                            <label class="form-label">ID des Clients</label>
+                            <input class="form-control" [value]="cert.clientId" [disabled]="true">
                             <div cFormText style="color: #7f7f7f;">
-                                <small>Name des Clients im DAPS Server.</small>
+                                <small>ID des Clients im DAPS Server. Muss beim jeweiligen EDC als edc.participant.id und edc.oauth.client.id gesetzt werden. Weiterhin müssen edc.oauth.certificate.alias=1 und edc.oauth.private.key.alias=1 gesetzt werden.</small>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">ID des Clients</label>
-                            <input class="form-control" [(ngModel)]="cert.clientId" [disabled]="true">
+                            <label class="form-label">Name des Clients</label>
+                            <input class="form-control" [value]="cert.clientName" [disabled]="true">
                             <div cFormText style="color: #7f7f7f;">
-                                <small>ID des Clients im DAPS Server. Muss beim jeweiligen EDC als edc.participant.id und edc.oauth.client.id gesetzt werden. Weiterhin müssen edc.oauth.certificate.alias=1 und edc.oauth.private.key.alias=1 gesetzt werden.</small>
+                                <small>Name des Clients im DAPS Server.</small>
                             </div>
                         </div>
                         <div class="mb-3">
@@ -238,9 +238,37 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Passwort des Keystores</label>
-                            <input class="form-control" [(ngModel)]="cert.password" [disabled]="true">
+                            <input class="form-control" [value]="cert.password" [disabled]="true">
                             <div cFormText style="color: #7f7f7f;">
                                 <small>Passwort für die Keystore-Datei. Muss beim jeweiligen EDC als edc.keystore.password gesetzt werden.</small>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">JWKS-URL</label>
+                            <input class="form-control" [value]="environment.daps_server_url + '/jwks.json'" [disabled]="true">
+                            <div cFormText style="color: #7f7f7f;">
+                                <small>URL der JWKS Datei des DAPS Servers. Muss beim jeweiligen EDC als edc.oauth.provider.jwks.url gesetzt werden.</small>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Token-URL</label>
+                            <input class="form-control" [value]="environment.daps_server_url + '/token'" [disabled]="true">
+                            <div cFormText style="color: #7f7f7f;">
+                                <small>URL des Token-Endpunkts des DAPS Servers. Muss beim jeweiligen EDC als edc.oauth.token.url gesetzt werden.</small>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Token-Scope</label>
+                            <input class="form-control" value="idsc:IDS_CONNECTOR_ATTRIBUTES_ALL" [disabled]="true">
+                            <div cFormText style="color: #7f7f7f;">
+                                <small>Scope der ausgestellten Token des DAPS Servers. Muss beim jeweiligen EDC als edc.iam.token.scope gesetzt werden.</small>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Audience</label>
+                            <input class="form-control" value="idsc:IDS_CONNECTORS_ALL" [disabled]="true">
+                            <div cFormText style="color: #7f7f7f;">
+                                <small>Audience des DAPS Servers. Muss beim jeweiligen EDC als edc.oauth.provider.audience gesetzt werden.</small>
                             </div>
                         </div>
                     </mat-expansion-panel>

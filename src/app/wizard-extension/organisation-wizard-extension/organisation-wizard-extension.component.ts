@@ -7,6 +7,7 @@ import { ConnectorData, IOrganizationData, IOrganizationMetadata, IOrganisationS
 import { ModalComponent } from '@coreui/angular';
 import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wizard-extension.component';
 import { OrganisationIonosS3ConfigComponent } from '../organisation-ionos-s3-config/organisation-ionos-s3-config.component';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -26,6 +27,8 @@ export class OrganisationWizardExtensionComponent {
   protected submitButtonsDisabled: boolean = false;  
   protected orgaActiveSelection: string = "false";
   protected orgaMetadata: IOrganizationMetadata = null;
+
+  protected environment = environment;
 
   constructor(
       protected organizationsApiService: OrganizationsApiService,

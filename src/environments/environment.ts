@@ -11,6 +11,7 @@ export const environment = {
   serviceoffering_api_url: 'http://localhost:8084/api/',
   contract_api_url: 'http://localhost:8086/api/',
   wizard_api_url: 'http://localhost:8084/api/shapes',
+  daps_server_url: 'http://localhost:4567'
 };
 
 /*
