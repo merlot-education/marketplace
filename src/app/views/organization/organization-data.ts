@@ -78,6 +78,7 @@ export interface IDapsCertificate {
   clientId: string;
   keystore: string;
   password: string;
+  scope: string;
 }
 
 export interface IOrganisationSignerConfig {

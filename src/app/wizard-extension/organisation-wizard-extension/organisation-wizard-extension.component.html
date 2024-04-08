@@ -227,7 +227,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Token-Scope</label>
-                                <input class="form-control" value="idsc:IDS_CONNECTOR_ATTRIBUTES_ALL" [disabled]="true">
+                                <input class="form-control" [value]="cert.scope" [disabled]="true">
                                 <div cFormText style="color: #7f7f7f;">
                                     <small>
                                         Scope der ausgestellten Token des DAPS Servers. 
