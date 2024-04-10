@@ -117,6 +117,7 @@ const APP_CONTAINERS = [DefaultLayoutComponent];
         responseType: 'code',
         silentRenew: true,
         useRefreshToken: true,
+        ignoreNonceAfterRefresh: true,
         logLevel: LogLevel.Debug,
         renewTimeBeforeTokenExpiresInSeconds: 60,
       },
