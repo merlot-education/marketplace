@@ -4,6 +4,7 @@ import { ActiveOrganizationRoleService } from './active-organization-role.servic
 import { IOrganizationData } from '../views/organization/organization-data';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject } from 'rxjs';
+import { jwtDecode }from 'jwt-decode';
 
 export interface OrganizationRole {
   orgaRoleString: string;
@@ -28,7 +29,20 @@ export class AuthService {
       if (isLoggedIn) {
         console.log("rebuilding roles");
         console.log(this.activeOrgRoleService.userData);
-        this.buildOrganizationRoles([(this.activeOrgRoleService.userData.Role + "_" + this.activeOrgRoleService.userData.issuerDID)]);
+        let roles = []
+        if ('Role' in this.activeOrgRoleService.userData && 'issuerDID' in this.activeOrgRoleService.userData) {
+          // login from ssi
+          roles = [(this.activeOrgRoleService.userData.Role + "_" + this.activeOrgRoleService.userData.issuerDID)];
+          this.activeOrgRoleService.firstName = this.activeOrgRoleService.userData.Vorname;
+          this.activeOrgRoleService.lastName = this.activeOrgRoleService.userData.Nachname;
+        } else {
+          // login from keycloak
+          let token: any = jwtDecode(this.activeOrgRoleService.accessToken);
+          roles = token.realm_access.roles;
+          this.activeOrgRoleService.firstName = this.activeOrgRoleService.userData.given_name;
+          this.activeOrgRoleService.lastName = this.activeOrgRoleService.userData.family_name;
+        }
+        this.buildOrganizationRoles(roles);
       }
     });
   }
@@ -82,7 +96,7 @@ export class AuthService {
         }
       }).catch(e => {
         console.log("failed to fetch organisation.", e);
-        this.finishedLoadingRoles = true;
+        this.finishedLoadingRoles.next(true);
       });
     }
   }

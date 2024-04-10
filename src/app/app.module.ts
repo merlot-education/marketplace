@@ -57,6 +57,7 @@ import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { LayoutModule } from '@merlot-education/m-dashboard-ui';
 
 import localeDe from '@angular/common/locales/de';
+import { environment } from 'src/environments/environment';
 
 registerLocaleData(localeDe);
 
@@ -102,7 +103,7 @@ const APP_CONTAINERS = [DefaultLayoutComponent];
     WizardExtensionModule,
     AuthModule.forRoot({
       config: {
-        authority: 'https://auth-service.dev.merlot-education.eu',
+        authority: environment.login_authority_url,
         redirectUrl: window.location.origin,
         customParamsCodeRequest: {
           client_secret: 'demo-portal'
@@ -111,7 +112,7 @@ const APP_CONTAINERS = [DefaultLayoutComponent];
           client_secret: 'demo-portal'
         },
         postLogoutRedirectUri: window.location.origin,
-        clientId: 'MPO',
+        clientId: environment.login_client_id,
         scope: 'openid profile email',
         responseType: 'code',
         silentRenew: true,

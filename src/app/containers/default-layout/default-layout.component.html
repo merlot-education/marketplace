@@ -5,7 +5,7 @@
   (logoutClicked)="authService.logOut()"
   [navItems]="navItems"
   [isLoggedIn]="activeOrgRoleService.isLoggedIn.value"
-  [displayName]="activeOrgRoleService.userData?.Vorname + ' ' + activeOrgRoleService.userData?.Nachname"
+  [displayName]="activeOrgRoleService.firstName + ' ' + activeOrgRoleService.lastName"
   [organizationRoles]="organizationRolesForLayout"
   (selectedRoleChanged)="selectedRoleChanged($event.target)"
   [activeRole]="selectedRoleOption">
