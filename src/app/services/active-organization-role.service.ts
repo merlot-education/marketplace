@@ -6,7 +6,14 @@ import { OrganizationRole } from './auth.service'
   providedIn: 'root',
 })
 export class ActiveOrganizationRoleService {
-  public isLoggedIn: boolean = false;
+  public isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+  public userData?: any = null;
+
+  public firstName?: string = null;
+  public lastName?: string = null; 
+
+  public accessToken: string = null;
 
   public organizationRoles: {
     [orgaRoleKey: string]: OrganizationRole;
@@ -50,6 +57,7 @@ export class ActiveOrganizationRoleService {
         }
       }
     }
+    console.log(this.organizationRoles);
   }
 
   private roleFriendlyNameMapper: { [key: string]: string } = {

@@ -51,7 +51,7 @@ export class ExploreComponent implements OnInit {
   ) { }
 
   private updateOrgaRepresentation() {
-    if (this.activeOrgRoleService.isLoggedIn) {
+    if (this.activeOrgRoleService.isLoggedIn.value) {
       let representedOrgaIds = Object.values(this.activeOrgRoleService.organizationRoles).filter(orga => orga.roleName === "OrgLegRep").map(orga => orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
       let administratedOrgaIds = Object.values(this.activeOrgRoleService.organizationRoles).filter(orga => orga.roleName === "FedAdmin").map(orga => orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
       

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { KeycloakService } from 'keycloak-angular';
-import { KeycloakProfile } from 'keycloak-js';
 import { OrganizationsApiService } from './organizations-api.service';
 import { ActiveOrganizationRoleService } from './active-organization-role.service';
 import { IOrganizationData } from '../views/organization/organization-data';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { BehaviorSubject } from 'rxjs';
+import { jwtDecode }from 'jwt-decode';
 
 export interface OrganizationRole {
   orgaRoleString: string;
@@ -17,29 +17,32 @@ export interface OrganizationRole {
   providedIn: 'root',
 })
 export class AuthService {
-  private token: string = '';
 
-  public userProfile: KeycloakProfile = {};
-
-  public finishedLoadingRoles = false;
+  public finishedLoadingRoles: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor(
-    private keycloakService: KeycloakService,
     private organizationApiService: OrganizationsApiService,
-    private activeOrgRoleService: ActiveOrganizationRoleService
+    private activeOrgRoleService: ActiveOrganizationRoleService,
+    private oidcSecurityService: OidcSecurityService,
   ) {
-    this.keycloakService.isLoggedIn().then((result) => {
-      this.activeOrgRoleService.isLoggedIn = result;
-      // check if user is logged in, otherwise we do not set anything
-      if (this.activeOrgRoleService.isLoggedIn) {
-        // if logged in, update the roles of the user, load the profile and get the token
-        this.buildOrganizationRoles(this.keycloakService.getUserRoles());
-        this.keycloakService.loadUserProfile().then((result) => {
-          this.userProfile = result;
-        });
-        this.keycloakService.getToken().then((result) => {
-          this.token = result;
-        });
+    this.activeOrgRoleService.isLoggedIn.subscribe((isLoggedIn) => {
+      if (isLoggedIn) {
+        console.log("rebuilding roles");
+        console.log(this.activeOrgRoleService.userData);
+        let roles = []
+        if ('Role' in this.activeOrgRoleService.userData && 'issuerDID' in this.activeOrgRoleService.userData) {
+          // login from ssi
+          roles = [(this.activeOrgRoleService.userData.Role + "_" + this.activeOrgRoleService.userData.issuerDID)];
+          this.activeOrgRoleService.firstName = this.activeOrgRoleService.userData.Vorname;
+          this.activeOrgRoleService.lastName = this.activeOrgRoleService.userData.Nachname;
+        } else {
+          // login from keycloak
+          let token: any = jwtDecode(this.activeOrgRoleService.accessToken);
+          roles = token.realm_access.roles;
+          this.activeOrgRoleService.firstName = this.activeOrgRoleService.userData.given_name;
+          this.activeOrgRoleService.lastName = this.activeOrgRoleService.userData.family_name;
+        }
+        this.buildOrganizationRoles(roles);
       }
     });
   }
@@ -61,13 +64,13 @@ export class AuthService {
   }
 
   logOut() {
-    this.keycloakService.logout(window.location.origin);
+    this.oidcSecurityService
+      .logoff()
+      .subscribe((result) => console.log(result));
   }
 
   logIn() {
-    this.keycloakService.login({
-      redirectUri: window.location.origin,
-    });
+    this.oidcSecurityService.authorize();
   }
 
   public changeActiveOrgaRole(orgaRoleString: string) {
@@ -78,6 +81,7 @@ export class AuthService {
     this.activeOrgRoleService.addOrganizationRoles(userRoles);
 
     let numOfOrgsToLoad = Object.keys(this.activeOrgRoleService.organizationRoles).length;
+    this.finishedLoadingRoles.next(numOfOrgsToLoad === 0);
 
     // update organization data after building the list
     for (let orgaRoleKey in this.activeOrgRoleService.organizationRoles) {
@@ -87,13 +91,12 @@ export class AuthService {
         this.activeOrgRoleService.organizationRoles[orgaRoleKey].orgaData = orga;
 
         numOfOrgsToLoad--;
-
         if (numOfOrgsToLoad == 0) {
-          this.finishedLoadingRoles = true;
+          this.finishedLoadingRoles.next(true);
         }
       }).catch(e => {
         console.log("failed to fetch organisation.", e);
-        this.finishedLoadingRoles = true;
+        this.finishedLoadingRoles.next(true);
       });
     }
   }

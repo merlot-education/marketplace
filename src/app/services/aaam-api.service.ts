@@ -21,12 +21,6 @@ export class AaamApiService {
   }
 
   public async getUsersFromOrganization(organizationId: string) {
-    if (this.activeOrgRoleService.isLoggedIn) {
-      return await lastValueFrom(this.http.get(environment.aaam_api_url + "fromOrganization/" + this.patchOrgaId(organizationId))) as IUserData[];
-    } else {
-      console.log("Error: Not logged in.");
-      return []
-    }
-    
+    return [];
   }
 }

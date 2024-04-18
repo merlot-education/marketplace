@@ -160,7 +160,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   protected refreshOrgaOfferings(page: number, size: number, statusFilter: string = undefined) {
     this.activeOrgaOfferingPage.next(this.emptyPage);
-    if (this.activeOrgRoleService.isLoggedIn && this.activeOrgRoleService.isActiveAsRepresentative()) {
+    if (this.activeOrgRoleService.isLoggedIn.value && this.activeOrgRoleService.isActiveAsRepresentative()) {
       this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, statusFilter).then(result => {
       this.activeOrgaOfferingPage.next(result);
       this.initialLoading = false;
@@ -305,7 +305,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   protected shouldShowBookButton(offering: IOfferings): boolean {
-    return this.activeOrgRoleService.isLoggedIn && (offering.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] !== this.activeOrgRoleService.getActiveOrgaId())
+    return this.activeOrgRoleService.isLoggedIn.value && (offering.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] !== this.activeOrgRoleService.getActiveOrgaId())
   }
 
   toogleJsonView() {

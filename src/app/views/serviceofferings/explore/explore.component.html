@@ -87,7 +87,7 @@
             </li>
           </ul>
           <div style="padding: 10px">
-            <button type="button" class="btn btn-primary flex-item-grow" *ngIf="activeOrgRoleService.isLoggedIn && activeOrgRoleService.isActiveAsRepresentative()"
+            <button type="button" class="btn btn-primary flex-item-grow" *ngIf="activeOrgRoleService.isLoggedIn.value && activeOrgRoleService.isActiveAsRepresentative()"
               [cModalToggle]="modalViewDetails.id" (click)="selectedOfferingPublic = true; requestDetails(offering.id)">
               Details
             </button>

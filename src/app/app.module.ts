@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import {
   HashLocationStrategy,
   LocationStrategy,
@@ -7,14 +7,15 @@ import {
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { WizardAppModule } from './sdwizard/wizardapp.module';
 import { WizardExtensionModule } from './wizard-extension/wizard-extension.module';
 import { AddActiveRoleHeaderInterceptor } from './services/add-active-role-header.interceptor';
-import { AuthorizationInterceptor} from './services/authorization.interceptor'
+import { AuthorizationInterceptor} from './services/authorization.interceptor';
+
+import { AuthModule, LogLevel } from 'angular-auth-oidc-client';
 
 import {
   PERFECT_SCROLLBAR_CONFIG,
@@ -53,10 +54,10 @@ import {
 } from '@coreui/angular';
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
-import { environment } from 'src/environments/environment';
 import { LayoutModule } from '@merlot-education/m-dashboard-ui';
 
 import localeDe from '@angular/common/locales/de';
+import { environment } from 'src/environments/environment';
 
 registerLocaleData(localeDe);
 
@@ -65,27 +66,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 };
 
 const APP_CONTAINERS = [DefaultLayoutComponent];
-
-function initializeKeycloak(keycloak: KeycloakService) {
-  return async () => {
-    try {
-      await keycloak.init({
-        config: {
-          url: environment.sso_url,
-          realm: 'POC1',
-          clientId: 'MARKETPLACE',
-        },
-        initOptions: {
-          onLoad: 'check-sso',
-          silentCheckSsoRedirectUri:
-            window.location.origin + '/assets/silent-check-sso.html',
-        },
-      });
-    } catch (error) {
-      console.log('failed to reach SSO server');
-    }
-  };
-}
 
 @NgModule({
   declarations: [AppComponent, ...APP_CONTAINERS],
@@ -116,12 +96,32 @@ function initializeKeycloak(keycloak: KeycloakService) {
     BadgeModule,
     ListGroupModule,
     CardModule,
-    KeycloakAngularModule,
     HttpClientModule,
     FormsModule,
     WizardAppModule,
     LayoutModule,
-    WizardExtensionModule
+    WizardExtensionModule,
+    AuthModule.forRoot({
+      config: {
+        authority: environment.login_authority_url,
+        redirectUrl: window.location.origin,
+        customParamsCodeRequest: {
+          client_secret: 'demo-portal'
+        },
+        customParamsRefreshTokenRequest: {
+          client_secret: 'demo-portal'
+        },
+        postLogoutRedirectUri: window.location.origin,
+        clientId: environment.login_client_id,
+        scope: 'openid profile email',
+        responseType: 'code',
+        silentRenew: true,
+        useRefreshToken: true,
+        ignoreNonceAfterRefresh: true,
+        logLevel: LogLevel.Debug,
+        renewTimeBeforeTokenExpiresInSeconds: 60,
+      },
+    }),
   ],
   providers: [
     {
@@ -131,12 +131,6 @@ function initializeKeycloak(keycloak: KeycloakService) {
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeKeycloak,
-      multi: true,
-      deps: [KeycloakService],
     },
     {
       provide: HTTP_INTERCEPTORS,

@@ -11,6 +11,8 @@ export const environment = {
   serviceoffering_api_url: 'http://localhost:8084/api/',
   contract_api_url: 'http://localhost:8086/api/',
   wizard_api_url: 'http://localhost:8084/api/shapes',
+  login_authority_url: "http://key-server:8080/realms/POC1",
+  login_client_id: "MARKETPLACE",
   daps_server_url: 'http://localhost:4567',
   daps_audience: 'idsc:IDS_CONNECTORS_ALL'
 };

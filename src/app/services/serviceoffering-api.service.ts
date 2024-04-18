@@ -43,7 +43,7 @@ export class ServiceofferingApiService {
 
   // get all service offerings for the active organization
   public async fetchOrganizationServiceOfferings(page: number, size: number, state?: string): Promise<IPageBasicOfferings> {
-    if (this.activeOrgRoleService.isLoggedIn) {
+    if (this.activeOrgRoleService.isLoggedIn.value) {
       let activeOrgaId = this.activeOrgRoleService.getActiveOrgaId();
       let target_url = environment.serviceoffering_api_url + "organization/" + this.patchOrgaId(activeOrgaId) + "?page=" + page + "&size=" + size;
       if (state !== undefined) {
@@ -57,7 +57,7 @@ export class ServiceofferingApiService {
 
   // get details to a specific service offering (authenticated)
   public async fetchServiceOfferingDetails(id: string): Promise<IOfferings> {
-    if (this.activeOrgRoleService.isLoggedIn) {
+    if (this.activeOrgRoleService.isLoggedIn.value) {
       return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "serviceoffering/" + id)) as IOfferings;
     }
       
