@@ -43,10 +43,8 @@ export interface IContractDetails {
   consumerActive: boolean;
   state: string;
   providerSignerUser: string;
-  providerSignature: string;
   providerSignatureDate: string;
   consumerSignerUser: string;
-  consumerSignature: string;
   consumerSignatureDate: string;
 }
 

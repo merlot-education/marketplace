@@ -230,7 +230,7 @@ export class ContractviewComponent {
   }
 
   protected hasContractPdfDownload(contract: IContract): boolean {
-    return (!!contract.details.consumerSignature && !!contract.details.providerSignature);
+    return (!!contract.details.consumerSignerUser && !!contract.details.providerSignerUser);
   }
 
   protected downloadContractPdf(contract: IContract) {
