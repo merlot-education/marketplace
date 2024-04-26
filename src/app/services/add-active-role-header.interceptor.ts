@@ -18,7 +18,7 @@ export class AddActiveRoleHeaderInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let activeRole = this.activeOrgaRoleService.activeOrganizationRole.value;
     let matchUrl = false;
-    for (let url of [environment.aaam_api_url, environment.organizations_api_url, 
+    for (let url of [environment.organizations_api_url, 
                       environment.serviceoffering_api_url, environment.contract_api_url, 
                       environment.wizard_api_url]) {
       matchUrl ||= req.url.startsWith(url);
