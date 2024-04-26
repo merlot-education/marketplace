@@ -42,9 +42,9 @@ export interface IContractDetails {
   consumerLegalName: string;
   consumerActive: boolean;
   state: string;
-  providerSignerUser: string;
+  providerSignerUserName: string;
   providerSignatureDate: string;
-  consumerSignerUser: string;
+  consumerSignerUserName: string;
   consumerSignatureDate: string;
 }
 
