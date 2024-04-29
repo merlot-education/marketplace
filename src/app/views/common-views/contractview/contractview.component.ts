@@ -133,13 +133,18 @@ export class ContractviewComponent {
             id: '',
             state: ''
           }
-          while (transferState.state !== "COMPLETED") {
+          while (transferState.state !== "COMPLETED" && transferState.state !== "TERMINATED") {
             transferState = await this.contractApiService.getEdcTransferStatus(contractDetails.details.id, transferId.id);
             this.edcStatusMessage.showInfoMessage("EDC Datentransfer gestartet. Aktueller Status: " + transferState.state);
             console.log(transferState);
             await sleep(1000);
           }
-          this.edcStatusMessage.showSuccessMessage("", 5000);
+          if (transferState.state === "COMPLETED") {
+            this.edcStatusMessage.showSuccessMessage("", 5000);
+          }
+          if (transferState.state === "TERMINATED") {
+            this.edcStatusMessage.showErrorMessage("", 5000);
+          }
         } catch (e) {
           this.edcStatusMessage.showErrorMessage("Transferfehler: " + e.message);
         }
