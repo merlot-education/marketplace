@@ -84,4 +84,5 @@ export interface IDapsCertificate {
 export interface IOrganisationSignerConfig {
   privateKey: string;
   verificationMethod: string;
+  merlotVerificationMethod :  string;
 }
