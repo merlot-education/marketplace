@@ -11,7 +11,7 @@
           "controller": "did:web:marketplace.dev.merlot-education.eu",
           "publicKeyJwk": {
             "kty": "RSA",
-            "n": "7T8VtTXnZ8X24MG49obvzpVa7ZQV4tr9fpwaBJ0IWytidK6tzcatxI4P7NBFnxoh7Io6W6sRQB-1eZEUA8vs9wpPGwGPLipnCCONJ3TbPsQfjl28TstO3G5y0qnivaLtzunvLgpsms-S98rauI5z5_i7F04fCHkmcd3ku_iII551l5WyHBPpfLVeG4HYIuI3Dyv9P1qLOnsy1HGsTDzxFZvP3g_rsBvqVhqUs6WXsk-fkUbwCEZAvlhti3HhnRyRJmnnPdAc7BDdVe18H07YR5fwHqyBykHA9uf1aSgRgOfqYhwRwqYC6t3IQH-isqyzWZqaT_mIFQ-rNiSGxzZGmQ",
+            "n": "AO0_FbU152fF9uDBuPaG786VWu2UFeLa_X6cGgSdCFsrYnSurc3GrcSOD-zQRZ8aIeyKOlurEUAftXmRFAPL7PcKTxsBjy4qZwgjjSd02z7EH45dvE7LTtxuctKp4r2i7c7p7y4KbJrPkvfK2riOc-f4uxdOHwh5JnHd5Lv4iCOedZeVshwT6Xy1XhuB2CLiNw8r_T9aizp7MtRxrEw88RWbz94P67Ab6lYalLOll7JPn5FG8AhGQL5YbYtx4Z0ckSZp5z3QHOwQ3VXtfB9O2EeX8B6sgcpBwPbn9WkoEYDn6mIcEcKmAurdyEB_orKss1mamk_5iBUPqzYkhsc2Rpk=",
             "e": "AQAB",
             "alg": "PS256",
             "x5u": "https://marketplace.dev.merlot-education.eu/.well-known/cert.ss.pem"
