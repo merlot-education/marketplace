@@ -252,7 +252,7 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <div class="mb-3">
+                    <div hidden class="mb-3">
                         <label class="form-label">Private Key</label>
                         <textarea rows="10" class="form-control" [value]="orgaMetadata.organisationSignerConfigDto.privateKey" [disabled]="true">
                         </textarea>
@@ -261,7 +261,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
+                    <div hidden class="mb-3">
                         <label class="form-label">Verifizierungsmethode</label>
                         <input class="form-control" [value]="orgaMetadata.organisationSignerConfigDto.verificationMethod" [disabled]="true">
                         <div cFormText style="color: #7f7f7f;">
