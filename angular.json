@@ -30,10 +30,7 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "preserveSymlinks": true,
-            "assets": ["src/favicon.ico", "src/assets", "src/silent-renew.html", "src/.well-known/did.json",
-            { "glob": "did.json", "input": "src/.well-known/", "output": "/" },
-            "src/.well-known/cert.ss.pem",
-            { "glob": "cert.ss.pem", "input": "src/.well-known/", "output": "/" }],
+            "assets": ["src/favicon.ico", "src/assets", "src/silent-renew.html"],
             "styles": ["src/scss/styles.scss"],
             "scripts": [],
             "allowedCommonJsDependencies": [

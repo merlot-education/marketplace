@@ -1,11 +1,3 @@
-<div *ngIf="activeOrgRoleService.isActiveAsRepresentative() && orgaMetadata && !isSignerConfigValid()" class="warning-box">
-    <svg class="warning-symbol" cIcon name='cil-warning' size='xl' width='24'></svg>
-    <b>
-    Für Ihre Organisation liegen derzeit keine (gültigen) Signatur-Einstellungen vor. Zum Signieren von Selbstbeschreibungen werden ein Private Key und eine dazugehörige Verifizierungsmethode benötigt.
-    Sie können den Private Key und die Verifizierungsmethode auf dieser Seite hinzufügen und bearbeiten.
-    </b>
-</div>
-
 <c-container fluid class="justify-content-center">
     <div
         [ngClass]="{ 'position-center': true }"
@@ -256,42 +248,36 @@
                         <mat-panel-title>
                             <div>
                                 Signatur-Einstellungen
-                                <div *ngIf="!isSignerConfigValid()" style="color: red">
-                                    <small>
-                                        Bitte überprüfen Sie die Signatur-Einstellungen.
-                                    </small>
-                                </div>
                             </div>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <div class="mb-3">
+                    <div hidden class="mb-3">
                         <label class="form-label">Private Key</label>
-                        <textarea rows="10" class="form-control" [(ngModel)]="orgaMetadata.organisationSignerConfigDto.privateKey">
+                        <textarea rows="10" class="form-control" [value]="orgaMetadata.organisationSignerConfigDto.privateKey" [disabled]="true">
                         </textarea>
                         <div cFormText style="color: #7f7f7f;">
-                            <small>Der Private Key zur unten genannten Verifizierungsmethode. Wird zum Signieren von Selbstbeschreibungen verwendet.</small>
+                            <small>Der Private Key zur unten genannten Verifizierungsmethode. Kann zum Signieren von Selbstbeschreibungen verwendet werden.</small>
                         </div>
-                        <div *ngIf="!isFieldFilled(orgaMetadata.organisationSignerConfigDto.privateKey)" style="color: red">
-                            <small>
-                                Private Key ist erforderlich.
-                            </small>
+                    </div>
+
+                    <div hidden class="mb-3">
+                        <label class="form-label">Verifizierungsmethode</label>
+                        <input class="form-control" [value]="orgaMetadata.organisationSignerConfigDto.verificationMethod" [disabled]="true">
+                        <div cFormText style="color: #7f7f7f;">
+                            <small>Die zugehörige Verifizierungsmethode zum oben genannten Private Key, welche den Public Key referenziert. Derzeit wird ausschließlich did:web unterstützt.</small>
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Verifizierungsmethode</label>
-                        <input class="form-control" [(ngModel)]="orgaMetadata.organisationSignerConfigDto.verificationMethod">
+                        <label class="form-label">Merlot-Verifizierungsmethode</label>
+                        <input class="form-control" [value]="orgaMetadata.organisationSignerConfigDto.merlotVerificationMethod" [disabled]="true">
                         <div cFormText style="color: #7f7f7f;">
-                            <small>Die zugehörige Verifizierungsmethode zum oben genannten Private Key, welche den Public Key referenziert. Derzeit wird ausschließlich did:web unterstützt.</small>
-                        </div>
-                        <div *ngIf="!isFieldFilled(orgaMetadata.organisationSignerConfigDto.verificationMethod)" style="color: red">
                             <small>
-                                Verifizierungsmethode ist erforderlich.
-                            </small>
+                            Die mitgliedsspezifische Verifizierungsmethode (did:web) zum Private Key von Merlot. Die Verifizierungsmethode referenziert
+                            den Public Key zum Private Key von Merlot, welcher derzeit von allen Mitgliedern zum Signieren von Selbstbeschreibungen genutzt wird.</small>
                         </div>
                     </div>
-                    
                 </mat-expansion-panel>
             </mat-accordion>
         </div>
