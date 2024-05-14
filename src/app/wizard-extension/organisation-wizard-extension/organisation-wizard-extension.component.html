@@ -273,7 +273,9 @@
                         <label class="form-label">Merlot-Verifizierungsmethode</label>
                         <input class="form-control" [value]="orgaMetadata.organisationSignerConfigDto.merlotVerificationMethod" [disabled]="true">
                         <div cFormText style="color: #7f7f7f;">
-                            <small>Die Merlot-Verifizierungsmethode (did:web), welche zur Zeit standardmäßig von allen Mitgliedern zum Signieren von Selbstbeschreibungen genutzt wird.</small>
+                            <small>
+                            Die mitgliedsspezifische Verifizierungsmethode (did:web) zum Private Key von Merlot. Die Verifizierungsmethode referenziert
+                            den Public Key zum Private Key von Merlot, welcher derzeit von allen Mitgliedern zum Signieren von Selbstbeschreibungen genutzt wird.</small>
                         </div>
                     </div>
                 </mat-expansion-panel>
