@@ -13,12 +13,14 @@ it('testuser can log in', {
   // click login will redirect to keycloak, use testuser to login
   cy.get("#login-button").click();
 
-  cy.get("#username").type("testuser");
-  cy.get("#password").type("testuser");
-  cy.get("#kc-login").click();
+  cy.log("!!!!!!!!!!")
+  cy.log("!!!!!!!!!!")
+  cy.log("LOG IN AS Test User (Gaia-X) NOW")
+  cy.log("!!!!!!!!!!")
+  cy.log("!!!!!!!!!!")
 
   // at this point we should be redirected again to the MPO and the welcome text should have changed and roles should be visible
-  cy.get("#welcome-text").contains('Willkommen, Test User!');
+  cy.get("#welcome-text", {timeout: 30000}).contains('Willkommen, Test User!', {timeout: 30000});
   cy.get("#role-select").should("be.visible");
 
   // logout again, after this the welcome text should be for a visitor again

@@ -1,4 +1,6 @@
-export function loginAsUser(username: string, password: string, name: string, organization: string) {
+import { testuserName, testuserOrga } from "./conclude-contract-common";
+
+export function loginAsUser(name: string, organization: string) {
     cy.visit('/')
 
     //open merlot marketplace landing page, user is not logged in, use the welcome text to check that user is a visitor
@@ -7,12 +9,15 @@ export function loginAsUser(username: string, password: string, name: string, or
     // click login will redirect to keycloak, use testuser to login
     cy.get("#login-button").click();
 
-    cy.get("#username").type(username);
-    cy.get("#password").type(password);
-    cy.get("#kc-login").click();
+    cy.log("!!!!!!!!!!")
+    cy.log("!!!!!!!!!!")
+    cy.log("LOG IN AS " + name + " (" + organization + ") NOW")
+    cy.log("!!!!!!!!!!")
+    cy.log("!!!!!!!!!!")
+  
 
     // make sure welcome text changed
-    cy.get("#welcome-text").contains('Willkommen, ' + name + '!');
+    cy.get("#welcome-text", {timeout: 30000}).contains('Willkommen, ' + name + '!', {timeout: 30000});
     cy.get("#role-select").should("contain.text", organization);
     cy.contains("Meine Verträge"); // todo maybe find a better way to make sure the navbar is loaded
 }
@@ -97,7 +102,7 @@ export function checkGeneralOfferingFields(offeringName: string, offeringDescrip
 
 export function deleteOffering(offeringId: string) {
     // assumes contract is in draft or revoked state
-    loginAsUser("testuser", "testuser", "Test User", "Gaia-X")
+    loginAsUser(testuserName, testuserOrga)
 
     // click on navigation entry Serviceangebote,  the submenu is extended
     cy.contains('Service Angebote').click()

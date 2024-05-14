@@ -1,12 +1,12 @@
 import { loginAsUser, openOfferingDetails, checkOfferingInOverview, logout, archiveReleasedOffering, createAndReleaseDataDeliveryOffering } from "./create-service-offer-common";
-import { consumerSigned, released, revoked, testuser, testuser2, testuserName, testuserOrga, testuser2Name, testuser2Orga, checkContractInOverview, openContractDetails} from "./conclude-contract-common";
+import { consumerSigned, released, revoked, testuserName, testuserOrga, testuser2Name, testuser2Orga, checkContractInOverview, openContractDetails} from "./conclude-contract-common";
 
 it('conclude and cancel data delivery contract', {
     defaultCommandTimeout: 10000
 }, () => {
     // testuser creates a data delivery offering that can be booked:
     // log in as testuser
-    loginAsUser(testuser, testuser, testuserName, testuserOrga);
+    loginAsUser(testuserName, testuserOrga);
 
     // prepare some data to fill in the form
     let offeringName = "Brandneue Jobangebote";
@@ -34,7 +34,7 @@ it('conclude and cancel data delivery contract', {
 
         // testuser2 detects the just created data delivery service offer (push) for open job positions. testuser2 books offer and selects options before saving the contract draft:
         // log in as testuser2
-        loginAsUser(testuser2, testuser2, testuser2Name, testuser2Orga);
+        loginAsUser(testuser2Name, testuser2Orga);
 
         // select the data delivery offering and book it as testuser2
         cy.contains("Service Angebote").click();
@@ -89,7 +89,7 @@ it('conclude and cancel data delivery contract', {
 
             // testuser detects signed contract, selects options, agrees to contract and starts data transfer:
             // log in as testuser
-            loginAsUser(testuser, testuser, testuserName, testuserOrga);
+            loginAsUser(testuserName, testuserOrga);
 
             // check that contract draft is there, has the status Vom Kunden unterschrieben and open it
             cy.contains("Meine Verträge").click({ force: true });
@@ -131,7 +131,7 @@ it('conclude and cancel data delivery contract', {
 
             // testuser2 cancels contract:
             // log in as testuser2
-            loginAsUser(testuser2, testuser2, testuser2Name, testuser2Orga);
+            loginAsUser(testuser2Name, testuser2Orga);
 
             // check that the contract for the data delivery offering has the status Veröffentlicht and open it
             cy.contains("Meine Verträge").click({ force: true });
@@ -159,7 +159,7 @@ it('conclude and cancel data delivery contract', {
 
             // log in as testuser, detect the cancelled contract, archive the data delivery offering as it is not needed anymore, then log out:
             // log in as testuser
-            loginAsUser(testuser, testuser, testuserName, testuserOrga);
+            loginAsUser(testuserName, testuserOrga);
 
             cy.contains("Meine Verträge").click({ force: true });
 
@@ -185,7 +185,7 @@ it('conclude data delivery contract', {
 }, () => {
     // testuser creates a data delivery offering that can be booked:
     // log in as testuser
-    loginAsUser(testuser, testuser, testuserName, testuserOrga);
+    loginAsUser(testuserName, testuserOrga);
 
     // prepare some data to fill in the form
     let offeringName = "Holen Sie sich aktuelle Jobangebote";
@@ -213,7 +213,7 @@ it('conclude data delivery contract', {
 
         // testuser2 detects the just created datadelivery service offer (pull) for open job positions. testuser2 books offer and selects options before saving the contract draft:
         // log in as testuser2
-        loginAsUser(testuser2, testuser2, testuser2Name, testuser2Orga);
+        loginAsUser(testuser2Name, testuser2Orga);
 
         // select the data delivery offering and book it as testuser2
         cy.contains("Service Angebote").click();
@@ -268,7 +268,7 @@ it('conclude data delivery contract', {
 
             // testuser detects signed contract, selects options and agrees to contract:
             // log in as testuser
-            loginAsUser(testuser, testuser, testuserName, testuserOrga);
+            loginAsUser(testuserName, testuserOrga);
 
             // check that contract draft is there, has the status Vom Kunden unterschrieben and open it
             cy.contains("Meine Verträge").click({ force: true });
@@ -310,7 +310,7 @@ it('conclude data delivery contract', {
 
             // testuser2 starts datatransfer:
             // log in as testuser2
-            loginAsUser(testuser2, testuser2, testuser2Name, testuser2Orga);
+            loginAsUser(testuser2Name, testuser2Orga);
 
             // check that the contract for the data delivery offering has the status Veröffentlicht and open it
             cy.contains("Meine Verträge").click({ force: true });
@@ -337,7 +337,7 @@ it('conclude data delivery contract', {
 
             // log in as testuser, revoke the contract and archive the data delivery offering as they are not needed anymore, then log out:
             // log in as testuser
-            loginAsUser(testuser, testuser, testuserName, testuserOrga);
+            loginAsUser(testuserName, testuserOrga);
 
             cy.contains("Meine Verträge").click({ force: true });
 

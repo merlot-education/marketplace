@@ -1,8 +1,9 @@
+import { testuserName, testuserOrga } from "./conclude-contract-common";
 import { loginAsUser, fillGeneralOfferingFields, openOfferingDetails, checkGeneralOfferingFields, logout, deleteOffering } from "./create-service-offer-common";
 
 
 beforeEach(() => {
-    loginAsUser("testuser", "testuser", "Test User", "Gaia-X");
+    loginAsUser(testuserName, testuserOrga);
 });
 
 it('create coop contract service offering', {

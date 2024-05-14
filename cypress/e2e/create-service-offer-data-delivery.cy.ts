@@ -1,7 +1,8 @@
+import { testuserName, testuserOrga } from "./conclude-contract-common";
 import { loginAsUser, fillGeneralOfferingFields, openOfferingForEdit, openOfferingDetails, checkGeneralOfferingFields, logout, deleteOffering } from "./create-service-offer-common";
 
 beforeEach(() => {
-    loginAsUser("testuser", "testuser", "Test User", "Gaia-X");
+    loginAsUser(testuserName, testuserOrga);
 });
 
 it('create data delivery service offering', {
@@ -133,7 +134,7 @@ it('create data delivery service offering', {
         });
 
         // log back in as testuser
-        loginAsUser("testuser", "testuser", "Test User", "Gaia-X");
+        loginAsUser(testuserName, testuserOrga);
 
         // click on navigation entry Serviceangebote,  the submenu is extended
         cy.contains('Service Angebote').click({force: true})

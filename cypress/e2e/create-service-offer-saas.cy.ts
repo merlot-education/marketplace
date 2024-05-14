@@ -1,8 +1,9 @@
+import { testuserName, testuserOrga } from "./conclude-contract-common";
 import { loginAsUser, fillGeneralOfferingFields, openOfferingForEdit, openOfferingDetails, checkGeneralOfferingFields, logout, deleteOffering } from "./create-service-offer-common";
 
 
 beforeEach(() => {
-    loginAsUser("testuser", "testuser", "Test User", "Gaia-X");
+    loginAsUser(testuserName, testuserOrga);
 });
 
 it('create saas service offering', {
@@ -126,7 +127,7 @@ it('create saas service offering', {
 
         // log back in as testuser
         // click login will redirect to keycloak, use testuser to login
-        loginAsUser("testuser", "testuser", "Test User", "Gaia-X");
+        loginAsUser(testuserName, testuserOrga);
 
         // click on navigation entry Serviceangebote,  the submenu is extended
         cy.contains('Service Angebote').click({force: true})

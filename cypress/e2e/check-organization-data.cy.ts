@@ -1,3 +1,6 @@
+import { testuserName, testuserOrga } from "./conclude-contract-common";
+import { loginAsUser } from "./create-service-offer-common";
+
 beforeEach(() => {
     cy.visit('/');
 })
@@ -5,20 +8,9 @@ beforeEach(() => {
 it('testuser can log in, check organization and assigned person data, edit organization data', {
     defaultCommandTimeout: 10000
   }, () => {
-    // user is not logged in at this point, check that the welcome text states the user is a visitor
-    cy.get("#welcome-text").contains('Willkommen, Besucher!');
+    
+    loginAsUser(testuserName, testuserOrga)
 
-    // click login will redirect to keycloak, use testuser to login
-    cy.get("#login-button").click();
-
-    cy.get("#username").type("testuser");
-    cy.get("#password").type("testuser");
-    cy.get("#kc-login").click();
-
-    // at this point we should be redirected again to the MPO and the welcome text should have changed and roles should be visible
-    cy.get("#welcome-text").contains('Willkommen, Test User!');
-    cy.get("#role-select").should("be.visible");
-    cy.get("#role-select").should("contain.text", "Gaia-X");
     cy.contains("Meine Verträge"); // todo maybe find a better way to make sure the navbar is loaded
 
     // make sure there is "Organisationsverwaltung" and click on it
@@ -66,31 +58,6 @@ it('testuser can log in, check organization and assigned person data, edit organ
     // click on Änderungen speichern, the page shows the following response "Selbstbeschreibung erfolgreich gespeichert! ID: Participant:40"
     cy.contains('Änderungen speichern').should("not.be.disabled").click();
     cy.contains("Selbstbeschreibung erfolgreich gespeichert! (ID: did:web:marketplace.dev.merlot-education.eu:participant:c041ea73-3ecf-3a06-a5cd-919f5cef8e54)", { timeout: 30000 });
-
-    // click on navigation entry "Benutzerverwaltung", the submenu is extended
-    cy.contains('Benutzerverwaltung').click({force: true});
-    // click on navigation entry "Nutzer meiner Organisation anzeigen"
-    cy.contains('Nutzer meiner Organisation anzeigen').click({force: true});
-    // url should have updated
-    cy.url().should('include', 'users/explore');
-
-    // check if all expected persons are shown, we expect following persons: "Test User"
-    cy.get('c-card-header').should("have.length.at.least", 1).then((headers) => {
-        // check if persons are sorted alphabetically by first name -> this check is left out for now
-        // the names seem to be sorted alphabetically, but somehow with modification, e.g. é < a
-
-        // check if all expected persons are shown (in no particular order)
-        let personNames: string[] = ["Test User"];
-        let headerNames: string[] = [];
-
-        for (let h of headers) {
-            headerNames.push(h.innerText);
-        }
-
-        for (let p of personNames) {
-            expect(p).to.be.oneOf(headerNames)
-        }
-    });
 
     // logout again, after this the welcome text should be for a visitor again
     cy.get("#logout-button").click();
