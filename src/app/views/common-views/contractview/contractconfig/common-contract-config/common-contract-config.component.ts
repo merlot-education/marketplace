@@ -83,11 +83,11 @@ export class CommonContractConfigComponent {
   }
 
   protected isSaasContract(contractDetails: IContract): boolean {
-    return contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['.type'] === 'merlot:MerlotServiceOfferingSaaS';
+    return contractDetails.offering.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingSaaS';
   }
 
   protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['.type'] === 'merlot:MerlotServiceOfferingDataDelivery';
+    return contractDetails.offering.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingDataDelivery';
   }
 
   protected hasContractAttachments(contractDetails: IContract): boolean {

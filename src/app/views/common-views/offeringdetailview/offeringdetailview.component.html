@@ -2,7 +2,7 @@
   <ul class="list-group list-group-flush">
     <li class="list-group-item" style="border: none">
       <strong>Angebotstyp:</strong> <br />
-      {{ serviceOfferingApiService.resolveFriendlyTypeName(serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['.type']) }}
+      {{ serviceOfferingApiService.resolveFriendlyTypeName(serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['type']) }}
     </li>
     <li class="list-group-item" style="border: none">
       <strong>Service ID:</strong> <br />
@@ -46,7 +46,7 @@
         </li>
       </ul>
     </li>
-    <div *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['.type'] === 'merlot:MerlotServiceOfferingSaaS'">
+    <div *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingSaaS'">
       <li class="list-group-item" style="border: none" *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:hardwareRequirements']">
         <strong>Hardware-Anforderungen:</strong><br />
         {{ serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:hardwareRequirements']['@value'] }}
@@ -67,7 +67,7 @@
         </ul>
       </li>
     </div>
-    <div *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['.type'] === 'merlot:MerlotServiceOfferingDataDelivery'">
+    <div *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingDataDelivery'">
       <li class="list-group-item" style="border: none">
         <strong>Datenzugriffsart:</strong><br />
         {{ serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:dataAccessType']['@value'] }}
