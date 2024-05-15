@@ -297,6 +297,12 @@ export class BaseWizardExtensionComponent {
     this.wizard.shape.fields = this.wizard.emptyChildrenFields(this.wizard.shape.fields);
     let jsonSd = this.exportService.saveFile(this.wizard.file);
 
+    jsonSd["id"] = jsonSd["@id"]
+    delete jsonSd["@id"]
+    jsonSd["type"] = jsonSd["@type"]
+    delete jsonSd["@type"]
+    delete jsonSd[""]
+
     return jsonSd;
   }
 

@@ -51,7 +51,7 @@ export class AuthService {
     this.organizationApiService
       .getOrgaById(
         this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription
-          .verifiableCredential.credentialSubject['@id']
+          .verifiableCredential.credentialSubject.id
       )
       .then((result) => {
         this.activeOrgRoleService.organizationRoles[

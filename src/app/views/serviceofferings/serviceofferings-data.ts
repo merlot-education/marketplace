@@ -22,8 +22,8 @@ export interface IOfferings {
   selfDescription: {
     verifiableCredential: {
       credentialSubject: {
-        '@id': string;
-        '@type': string;
+        'id': string;
+        'type': string;
         'gax-core:offeredBy': INodeKindIRITypeId;
         'gax-trust-framework:providedBy': INodeKindIRITypeId;
         'gax-trust-framework:name': IStringTypeValue;

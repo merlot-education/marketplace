@@ -39,7 +39,7 @@ export class OfferingWizardExtensionComponent {
   }
 
   private async saveSelfDescription(jsonSd: any) {
-    return await this.serviceofferingApiService.createServiceOffering(JSON.stringify(jsonSd, null, 2), jsonSd["@type"]);
+    return await this.serviceofferingApiService.createServiceOffering(JSON.stringify(jsonSd, null, 2), jsonSd.type);
   }
 
   protected onSubmit(publishAfterSave: boolean): void {
@@ -60,7 +60,7 @@ export class OfferingWizardExtensionComponent {
     }
 
     this.saveSelfDescription(jsonSd).then(result => {
-      console.log(result);
+      console.log("result", result);
       this.baseWizardExtension.setCredentialId(result["id"]);
       this.saveStatusMessage.showSuccessMessage("ID: " + result["id"]);
 

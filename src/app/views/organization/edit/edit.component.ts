@@ -30,15 +30,15 @@ export class EditComponent implements OnInit, AfterViewInit {
       this.selectOrganization(selectedOrgaId);
     } else {
       this.activeOrgRoleService.activeOrganizationRole.subscribe(orga => {
-        if (orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id'] 
-          != this.selectedOrganization?.selfDescription.verifiableCredential.credentialSubject['@id']) {
-            this.selectOrganization(orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+        if (orga.orgaData.selfDescription.verifiableCredential.credentialSubject.id 
+          != this.selectedOrganization?.selfDescription.verifiableCredential.credentialSubject.id) {
+            this.selectOrganization(orga.orgaData.selfDescription.verifiableCredential.credentialSubject.id);
         }
       });
     }
     this.wizardExtensionComponent.submitCompleteEvent.subscribe(_ => {
       this.authService.refreshActiveRoleOrgaData();
-      this.refreshSelectedOrganization(this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject['@id'])
+      this.refreshSelectedOrganization(this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject.id)
     });
   }
 
@@ -81,7 +81,7 @@ export class EditComponent implements OnInit, AfterViewInit {
 
       this.selectedOrganization = result;
       this.wizardExtensionComponent.loadShape(
-        this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject["@id"]).then(_ => {
+        this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject.id).then(_ => {
           this.wizardExtensionComponent.prefillOrganisation(result);
         });
     });
@@ -89,7 +89,7 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   private patchRegistrationNumberField(registrationNumberType: string, registrationNumberField: IRegistrationNumber) {
     if (!registrationNumberField[registrationNumberType]) { // if it does not exist, add dummy values
-      registrationNumberField[registrationNumberType] = {'@value': "", '@type': "" }
+      registrationNumberField[registrationNumberType] = {'@value': "", '.type': "" }
     } 
     registrationNumberField[registrationNumberType]['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
   }

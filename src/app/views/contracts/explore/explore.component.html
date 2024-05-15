@@ -25,7 +25,7 @@
             </li>
             <li class="list-group-item" style="border: none">
               <strong>Angebots-ID:</strong> <br />
-              {{ contract.offering.selfDescription.verifiableCredential.credentialSubject['@id'] }}
+              {{ contract.offering.selfDescription.verifiableCredential.credentialSubject.id }}
             </li>
             <li class="list-group-item" style="border: none" *ngIf="!isActiveProvider(contract)">
               <strong>Serviceanbieter:</strong><br />

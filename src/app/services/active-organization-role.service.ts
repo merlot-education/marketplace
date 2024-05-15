@@ -28,7 +28,7 @@ export class ActiveOrganizationRoleService {
 
   public getActiveOrgaId(): string {
     return this.activeOrganizationRole.value.orgaData?.selfDescription
-      .verifiableCredential.credentialSubject['@id'];
+      .verifiableCredential.credentialSubject.id;
   }
 
   public getActiveOrgaName(): string {
