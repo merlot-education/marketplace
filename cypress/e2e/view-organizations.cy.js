@@ -20,11 +20,11 @@ it('open organizations overview', {
 
     // look at card headers
     cy.get('c-card-header').then((headers) => {
-        let headerNames: string[] = [];
+        let headerNames = [];
         for (let h of headers) {
             headerNames.push(h.innerText);
         }
-        let headerNamesSorted: string[] = [...headerNames].sort((a, b) => a.localeCompare(b));
+        let headerNamesSorted = [...headerNames].sort((a, b) => a.localeCompare(b));
 
         // make sure the organisations are sorted by name alphabetically
         for (let i = 0; i < headerNames.length; i++) {
@@ -59,11 +59,11 @@ it('open organizations overview', {
     // repeat checking for headers and bodies
     // look at card headers
     cy.get('c-card-header').then((headers) => {
-        let headerNames: string[] = [];
+        let headerNames = [];
         for (let h of headers) {
             headerNames.push(h.innerText);
         }
-        let headerNamesSorted: string[] = [...headerNames].sort((a, b) => a.localeCompare(b));
+        let headerNamesSorted = [...headerNames].sort((a, b) => a.localeCompare(b));
 
         // make sure the organisations are sorted by name alphabetically
         for (let i = 0; i < headerNames.length; i++) {

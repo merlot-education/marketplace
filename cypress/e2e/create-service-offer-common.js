@@ -1,6 +1,6 @@
-import { testuserName, testuserOrga } from "./conclude-contract-common";
+import { testuserName, testuserOrga } from "./conclude-contract-common.js";
 
-export function loginAsUser(name: string, organization: string) {
+export function loginAsUser(name, organization) {
     cy.visit('/')
 
     //open merlot marketplace landing page, user is not logged in, use the welcome text to check that user is a visitor
@@ -28,10 +28,10 @@ export function logout() {
     cy.get("#welcome-text").contains('Willkommen, Besucher!');
 }
 
-export function fillGeneralOfferingFields(offeringName: string, offeringDescription: string, 
-    offeringTncLink: string, offeringTncHash: string, 
-    offeringCosts: string, runtimeOptions: number[], 
-    runtimeOptionsSelect: string[]) {
+export function fillGeneralOfferingFields(offeringName, offeringDescription, 
+    offeringTncLink, offeringTncHash, 
+    offeringCosts, runtimeOptions, 
+    runtimeOptionsSelect) {
     cy.contains("Servicename").next().type(offeringName, {force: true});
     cy.contains("Service Bereitsteller").siblings("input").should('not.have.value', '');
     cy.contains("Service Anbieter").siblings("input").should('not.have.value', '');
@@ -72,10 +72,10 @@ export function fillGeneralOfferingFields(offeringName: string, offeringDescript
     });
 }
 
-export function checkGeneralOfferingFields(offeringName: string, offeringDescription: string, 
-    offeringTncLink: string, offeringTncHash: string, 
-    offeringCosts: string, runtimeOptions: number[], 
-    runtimeOptionsSelect: string[]) {
+export function checkGeneralOfferingFields(offeringName, offeringDescription, 
+    offeringTncLink, offeringTncHash, 
+    offeringCosts, runtimeOptions, 
+    runtimeOptionsSelect) {
     cy.contains("Name").parent().should("include.text", offeringName);
     cy.contains("Erstelldatum");
     cy.contains("Anbieter");
@@ -100,7 +100,7 @@ export function checkGeneralOfferingFields(offeringName: string, offeringDescrip
     }
 }
 
-export function deleteOffering(offeringId: string) {
+export function deleteOffering(offeringId) {
     // assumes contract is in draft or revoked state
     loginAsUser(testuserName, testuserOrga)
 
@@ -132,7 +132,7 @@ export function deleteOffering(offeringId: string) {
     cy.get("c-card-body:visible").contains(offeringId).should("not.exist");
 }
 
-export function openOfferingForEdit(offeringId: string) {
+export function openOfferingForEdit(offeringId) {
     // search for offering in list
     cy.contains(offeringId).parent().parent().parent().within(() => {
         //check status of created offer equals "In Bearbeitung"
@@ -142,7 +142,7 @@ export function openOfferingForEdit(offeringId: string) {
     });
 }
 
-export function openOfferingDetails(offeringId: string, expectedStatus: string) {
+export function openOfferingDetails(offeringId, expectedStatus) {
     // search for offering in list
     cy.contains(offeringId).parent().parent().parent().within(() => {
         if (expectedStatus) {
@@ -154,7 +154,7 @@ export function openOfferingDetails(offeringId: string, expectedStatus: string) 
     });
 }
 
-export function archiveReleasedOffering(offeringId: string) {
+export function archiveReleasedOffering(offeringId) {
     // assumes contract is released state
 
     // click on navigation entry Serviceangebote,  the submenu is extended
@@ -188,7 +188,7 @@ export function archiveReleasedOffering(offeringId: string) {
     cy.contains("Schließen").click({force: true});
 }
 
-export function checkOfferingInOverview(offeringId: string, expectedStatus: string) {
+export function checkOfferingInOverview(offeringId, expectedStatus) {
     // search for offering in list
     cy.contains(offeringId).parent().parent().parent().within(() => {
         if (expectedStatus) {
@@ -198,7 +198,7 @@ export function checkOfferingInOverview(offeringId: string, expectedStatus: stri
     });
 }
 
-export function createAndReleaseDataDeliveryOffering(offeringName: string, offeringDescription: string, offeringCosts: string, dataTransfertype: string, dataExchangeOptions: number[], runtimeOptions: number[], runtimeOptionsSelect: string[]) {
+export function createAndReleaseDataDeliveryOffering(offeringName, offeringDescription, offeringCosts, dataTransfertype, dataExchangeOptions, runtimeOptions, runtimeOptionsSelect) {
     let dataAccessType = "Download";
     
     // click on navigation entry Serviceangebote,  the submenu is extended
@@ -236,7 +236,7 @@ export function createAndReleaseDataDeliveryOffering(offeringName: string, offer
     cy.contains("Veröffentlichen").should("not.be.disabled").scrollIntoView().click({ force: true });
 }
 
-export function createAndReleaseSaaSOffering(offeringName: string, offeringDescription: string, offeringCosts: string, offeringHWRequirements: string, userCountOptions: number[], runtimeOptions: number[], runtimeOptionsSelect: string[]){
+export function createAndReleaseSaaSOffering(offeringName, offeringDescription, offeringCosts, offeringHWRequirements, userCountOptions, runtimeOptions, runtimeOptionsSelect){
     // click on navigation entry Serviceangebote, the submenu is extended
     cy.contains('Service Angebote').click({ force: true });
 

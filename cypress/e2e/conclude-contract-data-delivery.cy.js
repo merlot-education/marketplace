@@ -1,5 +1,5 @@
-import { loginAsUser, openOfferingDetails, checkOfferingInOverview, logout, archiveReleasedOffering, createAndReleaseDataDeliveryOffering } from "./create-service-offer-common";
-import { consumerSigned, released, revoked, testuserName, testuserOrga, testuser2Name, testuser2Orga, checkContractInOverview, openContractDetails} from "./conclude-contract-common";
+import { loginAsUser, openOfferingDetails, checkOfferingInOverview, logout, archiveReleasedOffering, createAndReleaseDataDeliveryOffering } from "./create-service-offer-common.js";
+import { consumerSigned, released, revoked, testuserName, testuserOrga, testuser2Name, testuser2Orga, checkContractInOverview, openContractDetails} from "./conclude-contract-common.js";
 
 it('conclude and cancel data delivery contract', {
     defaultCommandTimeout: 10000

@@ -1,5 +1,5 @@
-import { testuserName, testuserOrga } from "./conclude-contract-common";
-import { loginAsUser } from "./create-service-offer-common";
+import { testuserName, testuserOrga } from "./conclude-contract-common.js";
+import { loginAsUser } from "./create-service-offer-common.js";
 
 beforeEach(() => {
     cy.visit('/');
