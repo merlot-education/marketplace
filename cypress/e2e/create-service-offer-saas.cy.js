@@ -1,5 +1,5 @@
-import { testuserName, testuserOrga } from "./conclude-contract-common";
-import { loginAsUser, fillGeneralOfferingFields, openOfferingForEdit, openOfferingDetails, checkGeneralOfferingFields, logout, deleteOffering } from "./create-service-offer-common";
+import { testuserName, testuserOrga } from "./conclude-contract-common.js";
+import { loginAsUser, fillGeneralOfferingFields, openOfferingForEdit, openOfferingDetails, checkGeneralOfferingFields, logout, deleteOffering } from "./create-service-offer-common.js";
 
 
 beforeEach(() => {

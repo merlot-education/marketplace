@@ -7,7 +7,7 @@ export let testuser2Name = "Test User2";
 export let testuserOrga = "Gaia-X";
 export let testuser2Orga = "Dataport";
 
-export function openContractForEdit(contractIdWithoutPrefix: string, status: string, offeringName: string) {
+export function openContractForEdit(contractIdWithoutPrefix, status, offeringName) {
     // search for contract in list
     cy.contains("ID: " + contractIdWithoutPrefix).parent().parent().within(() => {
         // check status of created contract equals the given status
@@ -19,7 +19,7 @@ export function openContractForEdit(contractIdWithoutPrefix: string, status: str
     });
 }
 
-export function openContractDetails(contractIdWithoutPrefix: string, status: string, offeringName: string) {
+export function openContractDetails(contractIdWithoutPrefix, status, offeringName) {
     // search for contract in list
     cy.contains("ID: " + contractIdWithoutPrefix).parent().parent().within(() => {
         // check status of created contract equals the given status
@@ -31,7 +31,7 @@ export function openContractDetails(contractIdWithoutPrefix: string, status: str
     });
 }
 
-export function checkContractInOverview(contractIdWithoutPrefix: string, status: string, offeringName: string){
+export function checkContractInOverview(contractIdWithoutPrefix, status, offeringName){
     cy.contains("ID: " + contractIdWithoutPrefix).parent().parent().within(() => {
         // check status of created contract equals the given status
         cy.contains("Status").parent().should("include.text", status);
