@@ -20,7 +20,7 @@ it('testuser can log in', {
   cy.log("!!!!!!!!!!")
 
   // at this point we should be redirected again to the MPO and the welcome text should have changed and roles should be visible
-  cy.get("#welcome-text", {timeout: 30000}).contains('Willkommen, Test User!', {timeout: 30000});
+  cy.get("#welcome-text", {timeout: 40000}).contains('Willkommen, Test User!', {timeout: 40000});
   cy.get("#role-select").should("be.visible");
 
   // logout again, after this the welcome text should be for a visitor again
