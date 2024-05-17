@@ -52,18 +52,18 @@ export class ExploreComponent implements OnInit {
 
   private updateOrgaRepresentation() {
     if (this.activeOrgRoleService.isLoggedIn.value) {
-      let representedOrgaIds = Object.values(this.activeOrgRoleService.organizationRoles).filter(orga => orga.roleName === "OrgLegRep").map(orga => orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
-      let administratedOrgaIds = Object.values(this.activeOrgRoleService.organizationRoles).filter(orga => orga.roleName === "FedAdmin").map(orga => orga.orgaData.selfDescription.verifiableCredential.credentialSubject['@id']);
+      let representedOrgaIds = Object.values(this.activeOrgRoleService.organizationRoles).filter(orga => orga.roleName === "OrgLegRep").map(orga => orga.orgaData.selfDescription.verifiableCredential.credentialSubject.id);
+      let administratedOrgaIds = Object.values(this.activeOrgRoleService.organizationRoles).filter(orga => orga.roleName === "FedAdmin").map(orga => orga.orgaData.selfDescription.verifiableCredential.credentialSubject.id);
       
       for (let orga of this.activeOrganizationsPage.value.content) {
         if (this.activeOrgRoleService.isActiveAsRepresentative()) {
           orga.activeFedAdmin = false;
           orga.passiveFedAdmin = false;
 
-          if (orga.selfDescription.verifiableCredential.credentialSubject['@id'] === this.activeOrgRoleService.getActiveOrgaId()) {
+          if (orga.selfDescription.verifiableCredential.credentialSubject.id === this.activeOrgRoleService.getActiveOrgaId()) {
             orga.activeRepresentant = true;
             orga.passiveRepresentant = true;
-          } else if (representedOrgaIds.includes(orga.selfDescription.verifiableCredential.credentialSubject['@id'])) {
+          } else if (representedOrgaIds.includes(orga.selfDescription.verifiableCredential.credentialSubject.id)) {
             orga.activeRepresentant = false;
             orga.passiveRepresentant = true;
           }
@@ -75,10 +75,10 @@ export class ExploreComponent implements OnInit {
           orga.activeRepresentant = false;
           orga.passiveRepresentant = false;
 
-          if (orga.selfDescription.verifiableCredential.credentialSubject['@id'] === this.activeOrgRoleService.getActiveOrgaId()) {
+          if (orga.selfDescription.verifiableCredential.credentialSubject.id === this.activeOrgRoleService.getActiveOrgaId()) {
             orga.activeFedAdmin = true;
             orga.passiveFedAdmin = true;
-          } else if (administratedOrgaIds.includes(orga.selfDescription.verifiableCredential.credentialSubject['@id'])) {
+          } else if (administratedOrgaIds.includes(orga.selfDescription.verifiableCredential.credentialSubject.id)) {
             orga.activeFedAdmin = false;
             orga.passiveFedAdmin = true;
           }
@@ -111,7 +111,7 @@ export class ExploreComponent implements OnInit {
   }
 
   protected editOrganization(orga: IOrganizationData) {
-    this.router.navigate(["organization/edit/", orga.selfDescription.verifiableCredential.credentialSubject['@id']]);
+    this.router.navigate(["organization/edit/", orga.selfDescription.verifiableCredential.credentialSubject.id]);
   }
 
   protected getConnectorBucketsString(cd: ConnectorData) {

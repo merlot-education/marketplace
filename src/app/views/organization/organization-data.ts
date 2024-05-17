@@ -7,7 +7,7 @@ export interface IOrganizationData {
   selfDescription: {
     verifiableCredential: {
       credentialSubject: {
-        '@id': string;
+        id: string;
         'gax-trust-framework:legalName': IStringTypeValue;
         'gax-trust-framework:registrationNumber': IRegistrationNumber;
         'gax-trust-framework:legalAddress': IVCardAddress;

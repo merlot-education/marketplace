@@ -62,7 +62,7 @@ export class OrganisationWizardExtensionComponent {
   private async saveSelfDescription(jsonSd: any) {
     this.orgaMetadata.active = this.activeStringToBoolean(this.orgaActiveSelection);
     const editedOrganisationData : IOrganizationData = {
-      id: jsonSd["@id"],
+      id: jsonSd["id"],
       metadata: this.orgaMetadata,
       selfDescription: {
         verifiableCredential: {

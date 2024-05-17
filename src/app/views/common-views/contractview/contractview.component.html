@@ -1,6 +1,6 @@
 <c-modal #modalViewContract id="modalViewContract" size="xl" alignment="center" (visibleChange)="handleEventContractModal($event)">
     <c-modal-header>
-      <h5 *ngIf="contractDetails" cModalTitle>Vertragskonfiguration zum Service Angebot "{{ contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['@id'] }}"</h5>
+      <h5 *ngIf="contractDetails" cModalTitle>Vertragskonfiguration zum Service Angebot "{{ contractDetails.offering.selfDescription.verifiableCredential.credentialSubject.id }}"</h5>
     </c-modal-header>
     <c-modal-body>
       <ng-container *ngIf="contractDetails">

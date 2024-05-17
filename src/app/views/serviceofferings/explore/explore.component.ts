@@ -145,7 +145,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   private refreshOfferings() {
     if (this.showingModal) {
-      this.requestDetails(this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id']);
+      this.requestDetails(this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id);
     }
     this.refreshPublicOfferings(0, this.ITEMS_PER_PAGE);
     this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
@@ -223,7 +223,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   regenerateOffering(id: string) {
     this.serviceOfferingApiService.regenerateServiceOffering(id).then(result => {
       // prepare new id for refreshing
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id'] = result["id"];
+      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id = result["id"];
       this.refreshOfferings();
     });
   }
@@ -262,7 +262,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
       this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:providedBy']['disabled'] = true;
       
       this.wizardExtension.loadShape(this.findFilenameByShapeType(offering.type), 
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['@id']).then(_ => {
+      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id).then(_ => {
         this.wizardExtension.prefillFields(this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject);
       });
     });
