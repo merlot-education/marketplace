@@ -1,6 +1,6 @@
-import { loginAsUser, openOfferingDetails, createAndReleaseSaaSOffering, logout, archiveReleasedOffering } from "./create-service-offer-common";
-import { inDraft, consumerSigned, released, testuserName, testuserOrga, testuser2Name, testuser2Orga, openContractForEdit, checkContractInOverview, openContractDetails} from "./conclude-contract-common";
-import { environment } from '../../src/environments/environment.dev';
+import { loginAsUser, openOfferingDetails, createAndReleaseSaaSOffering, logout, archiveReleasedOffering } from "./create-service-offer-common.js";
+import { inDraft, consumerSigned, released, testuserName, testuserOrga, testuser2Name, testuser2Orga, openContractForEdit, checkContractInOverview, openContractDetails} from "./conclude-contract-common.js";
+import { environment } from '../../src/environments/environment.dev.ts';
 
 it('conclude saas contract', {
     defaultCommandTimeout: 10000
