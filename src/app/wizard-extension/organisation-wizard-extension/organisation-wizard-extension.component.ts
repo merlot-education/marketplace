@@ -16,7 +16,10 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./organisation-wizard-extension.component.scss']
 })
 export class OrganisationWizardExtensionComponent {
-  @ViewChild("baseWizardExtension") private baseWizardExtension: BaseWizardExtensionComponent;
+  @ViewChild("gxParticipantWizard") private gxParticipantWizard: BaseWizardExtensionComponent;
+  @ViewChild("gxRegistrationNumberWizard") private gxRegistrationNumberWizard: BaseWizardExtensionComponent;
+  @ViewChild("merlotParticipantWizard") private merlotParticipantWizard: BaseWizardExtensionComponent;
+
   @ViewChild("saveStatusMessage") private saveStatusMessage: StatusMessageComponent;
   @ViewChild("modalConfirmation") private modalConfirmation: ModalComponent;
   @ViewChild("ionosS3Config") private ionosS3Config: OrganisationIonosS3ConfigComponent;
@@ -37,11 +40,13 @@ export class OrganisationWizardExtensionComponent {
 
   public async loadShape(id: string): Promise<void> {
     console.log("Loading MERLOT Organisation shape");
-    await this.baseWizardExtension.loadShape(this.organizationsApiService.getMerlotParticipantShape(), id);
+    await this.gxParticipantWizard.loadShape(this.organizationsApiService.getGxParticipantShape(), id);
+    await this.gxRegistrationNumberWizard.loadShape(this.organizationsApiService.getGxRegistrationNumberShape(), id);
+    await this.merlotParticipantWizard.loadShape(this.organizationsApiService.getMerlotParticipantShape(), id);
   }
 
   public isShapeLoaded(): boolean {
-    return this.baseWizardExtension?.isShapeLoaded();
+    return this.gxParticipantWizard?.isShapeLoaded() && this.gxRegistrationNumberWizard?.isShapeLoaded() && this.merlotParticipantWizard?.isShapeLoaded();
   }
 
   private activeStringToBoolean(active: string) { 
@@ -56,7 +61,7 @@ export class OrganisationWizardExtensionComponent {
     this.orgaMetadata = orga.metadata;
 
     this.orgaActiveSelection = this.activeBooleanToString(orga.metadata.active);
-    this.baseWizardExtension.prefillFields(orga.selfDescription.verifiableCredential.credentialSubject);
+    //this.baseWizardExtension.prefillFields(orga.selfDescription.verifiableCredential.credentialSubject);
   }
 
   private async saveSelfDescription(jsonSd: any) {
@@ -91,7 +96,7 @@ export class OrganisationWizardExtensionComponent {
     this.submitButtonsDisabled = true;
     this.saveStatusMessage.hideAllMessages();
 
-    let jsonSd = this.baseWizardExtension.generateJsonSd();
+    /*let jsonSd = this.baseWizardExtension.generateJsonSd();
 
     this.saveSelfDescription(jsonSd).then(result => {
       console.log(result);
@@ -106,11 +111,13 @@ export class OrganisationWizardExtensionComponent {
       this.saveStatusMessage.showErrorMessage("Unbekannter Fehler");
     }).finally(() => {
       this.submitButtonsDisabled = false;
-    });
+    });*/
   }
 
   public ngOnDestroy() {
-    this.baseWizardExtension.ngOnDestroy();
+    this.gxParticipantWizard.ngOnDestroy();
+    this.gxRegistrationNumberWizard.ngOnDestroy();
+    this.merlotParticipantWizard.ngOnDestroy();
     this.saveStatusMessage.hideAllMessages();
     this.submitButtonsDisabled = false;
   }
@@ -181,6 +188,6 @@ export class OrganisationWizardExtensionComponent {
   }
 
   protected isWizardFormInvalid(): boolean {
-    return this.baseWizardExtension?.isWizardFormInvalid();
+    return this.gxParticipantWizard?.isWizardFormInvalid() || this.gxRegistrationNumberWizard?.isWizardFormInvalid() || this.merlotParticipantWizard?.isWizardFormInvalid();
   }
 }

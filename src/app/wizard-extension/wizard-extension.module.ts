@@ -11,6 +11,7 @@ import { BaseWizardExtensionComponent } from './base-wizard-extension/base-wizar
 import { MaterialModule } from '../sdwizard/material.module'
 import { IconModule } from '@coreui/icons-angular';
 import { OrganisationIonosS3ConfigComponent } from './organisation-ionos-s3-config/organisation-ionos-s3-config.component';
+import { CardComponent } from '@merlot-education/m-basic-ui';
 
 @NgModule({
     declarations: [OrganisationWizardExtensionComponent, OfferingWizardExtensionComponent, BaseWizardExtensionComponent, OrganisationIonosS3ConfigComponent],
@@ -29,7 +30,8 @@ import { OrganisationIonosS3ConfigComponent } from './organisation-ionos-s3-conf
         GridModule,
         ModalModule,
         MaterialModule,
-        IconModule 
+        IconModule,
+        CardComponent
     ]
 })
 export class WizardExtensionModule { }

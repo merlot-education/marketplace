@@ -41,7 +41,15 @@ export class OrganizationsApiService {
   }
 
   public async getMerlotParticipantShape(): Promise<any> {
-    return await lastValueFrom(this.http.get(environment.organizations_api_url + "shapes/merlotParticipant"));
+    return await lastValueFrom(this.http.get(environment.organizations_api_url + "shapes/merlot/participant"));
+  }
+
+  public async getGxParticipantShape(): Promise<any> {
+    return await lastValueFrom(this.http.get(environment.organizations_api_url + "shapes/gx/participant"));
+  }
+
+  public async getGxRegistrationNumberShape(): Promise<any> {
+    return await lastValueFrom(this.http.get(environment.organizations_api_url + "shapes/gx/registrationnumber"));
   }
 
   public async saveOrganization(sdJson: IOrganizationData): Promise<IOrganizationData> {
