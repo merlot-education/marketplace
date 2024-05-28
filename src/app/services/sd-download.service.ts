@@ -24,7 +24,7 @@ export class SdDownloadService {
     // Create an anchor element with download attribute
     const a = document.createElement('a');
     a.href = url;
-    const id = selfDescription.verifiableCredential.credentialSubject.id;
+    const id = selfDescription.id;
     a.download = 'selfdescription_' + id + '.json';
 
     // Programmatically click the anchor element to trigger the download
