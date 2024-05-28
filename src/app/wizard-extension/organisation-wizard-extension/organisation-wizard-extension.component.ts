@@ -41,6 +41,7 @@ export class OrganisationWizardExtensionComponent {
 
   public async loadShape(id: string): Promise<void> {
     console.log("Loading MERLOT Organisation shape");
+    // TODO find other method of loading id
     await this.gxParticipantWizard.loadShape(this.organizationsApiService.getGxParticipantShape(), id);
     await this.gxRegistrationNumberWizard.loadShape(this.organizationsApiService.getGxRegistrationNumberShape(), id);
     await this.merlotParticipantWizard.loadShape(this.organizationsApiService.getMerlotParticipantShape(), id);

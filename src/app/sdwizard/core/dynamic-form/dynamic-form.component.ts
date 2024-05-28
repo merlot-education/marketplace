@@ -56,8 +56,8 @@ export class DynamicFormComponent implements OnInit, OnDestroy, AfterViewChecked
 
   protected hiddenFormFields = [];
 
-  protected hiddenFormFieldsOffering = ["id", "policy", "dataAccountExport", "aggregationOf", "dependsOn", "dataProtectionRegime", "keyword", "provisionType", "endpoint", "ServiceOfferingLocations"];
-  protected hiddenFormFieldsOrganization = ["id", "description", "legalForm", "leiCode", "parentOrganization", "subOrganization", "headquarterAddress", "gps"];
+  protected hiddenFormFieldsOffering = [];//["id", "policy", "dataAccountExport", "aggregationOf", "dependsOn", "dataProtectionRegime", "keyword", "provisionType", "endpoint", "ServiceOfferingLocations"];
+  protected hiddenFormFieldsOrganization = [];//["id", "description", "legalForm", "leiCode", "parentOrganization", "subOrganization", "headquarterAddress", "gps"];
   
   constructor(
     private formfieldService: FormfieldControlService,
