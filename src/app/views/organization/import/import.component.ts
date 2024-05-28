@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { StatusMessageComponent } from '../../common-views/status-message/status-message.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { getOrganizationName } from 'src/app/utils/credential-tools';
 
 @Component({
   selector: 'app-import',
@@ -49,7 +50,7 @@ export class ImportComponent {
     formData.append("file", this.currentFile);
 
     this.organizationsApiService.addOrganization(formData).then(result => {
-      let orgaName = 'TODO';//result.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'];
+      let orgaName = getOrganizationName(result.selfDescription);
       let id = result.selfDescription.id;
       this.addStatusMessage.showSuccessMessage("Name: " + orgaName + ", Merlot ID: " + id);
     }).catch((e: HttpErrorResponse) => {

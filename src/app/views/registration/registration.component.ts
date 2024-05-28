@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { IOrganizationData } from '../organization/organization-data';
+import { getOrganizationName } from 'src/app/utils/credential-tools';
 
 @Component({
   selector: 'app-registration',
@@ -40,10 +41,9 @@ export class RegistrationComponent {
   private getFederatorMap(federators: IOrganizationData[]) {
     let federatorMap: Map<string, string> = new Map<string, string>();
     for (let federator of federators) {
-      // TODO
-      /*let federatorName: string = federator.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'];
+      let federatorName: string = getOrganizationName(federator.selfDescription);
       let federatorMail: string = federator.metadata.mailAddress;
-      federatorMap.set(federatorName, federatorMail);*/
+      federatorMap.set(federatorName, federatorMail);
     }
     return federatorMap;
   }
