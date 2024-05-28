@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { ConnectorData, ICredentialSubject, ILegalParticipantCs, ILegalRegistrationNumberCs, IMerlotLegalParticipantCs, IOrganizationData, IPageOrganizations, IVerifiablePresentation } from "../organization-data";
+import { ConnectorData, IOrganizationData, IPageOrganizations } from "../organization-data";
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
+import { isLegalParticipantCs, isLegalRegistrationNumberCs, isMerlotLegalParticipantCs, 
+  asLegalParticipantCs, asLegalRegistrationNumberCs, asMerlotLegalParticipantCs,
+  getOrganizationName } from "../../../utils/credential-tools";
 
 
 @Component({
@@ -41,6 +44,14 @@ export class ExploreComponent implements OnInit {
   });
 
   public connectorInfo: ConnectorData[] = [];
+
+  protected isLegalParticipantCs = isLegalParticipantCs;
+  protected isLegalRegistrationNumberCs = isLegalRegistrationNumberCs;
+  protected isMerlotLegalParticipantCs = isMerlotLegalParticipantCs;
+  protected asLegalParticipantCs = asLegalParticipantCs;
+  protected asLegalRegistrationNumberCs = asLegalRegistrationNumberCs;
+  protected asMerlotLegalParticipantCs = asMerlotLegalParticipantCs;
+  protected getOrganizationName = getOrganizationName;
 
   constructor(
     private organizationsApiService: OrganizationsApiService,
@@ -116,38 +127,5 @@ export class ExploreComponent implements OnInit {
 
   protected getConnectorBucketsString(cd: ConnectorData) {
     return cd.ionosS3ExtensionConfig.buckets.map(b => b.name).join(", ");
-  }
-
-  protected getOrganizationName(vp: IVerifiablePresentation): string {
-    for (let vc of vp.verifiableCredential) {
-      if (this.isLegalParticipantCs(vc.credentialSubject)) {
-        return this.asLegalParticipantCs(vc.credentialSubject)['gx:name'];
-      }
-    }
-    return "Unknown";
-  }
-
-  protected isLegalParticipantCs(cs: ICredentialSubject): boolean {
-    return cs.type === "gx:LegalParticipant";
-  }
-
-  protected asLegalParticipantCs(cs: ICredentialSubject): ILegalParticipantCs {
-    return cs as ILegalParticipantCs;
-  }
-
-  protected isLegalRegistrationNumberCs(cs: ICredentialSubject): boolean {
-    return cs.type === "gx:legalRegistrationNumber";
-  }
-
-  protected asLegalRegistrationNumberCs(cs: ICredentialSubject): ILegalRegistrationNumberCs {
-    return cs as ILegalRegistrationNumberCs;
-  }
-
-  protected isMerlotLegalParticipantCs(cs: ICredentialSubject): boolean {
-    return cs.type === "merlot:MerlotLegalParticipant";
-  }
-
-  protected asMerlotLegalParticipantCs(cs: ICredentialSubject): IMerlotLegalParticipantCs {
-    return cs as IMerlotLegalParticipantCs;
   }
 }

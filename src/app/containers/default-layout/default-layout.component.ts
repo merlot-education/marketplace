@@ -8,6 +8,7 @@ import {
 } from '@merlot-education/m-dashboard-ui';
 import { navItems } from './_nav';
 import packageJson from '../../../../package.json';
+import { getOrganizationName } from 'src/app/utils/credential-tools';
 
 @Component({
   selector: 'app-dashboard',
@@ -57,8 +58,7 @@ export class DefaultLayoutComponent {
         roleName: this.activeOrgRoleService.organizationRoles[role].roleName,
         roleFriendlyName:
           this.activeOrgRoleService.organizationRoles[role].roleFriendlyName,
-        orgaName:
-          'TODO' //this.activeOrgRoleService.organizationRoles[role].orgaData?.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'],
+        orgaName: getOrganizationName(this.activeOrgRoleService.organizationRoles[role].orgaData?.selfDescription)
       });
     }
   }

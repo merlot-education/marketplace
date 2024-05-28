@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { OrganizationRole } from './auth.service'
+import { getOrganizationLegalName, getOrganizationName } from '../utils/credential-tools';
 
 @Injectable({
   providedIn: 'root',
@@ -31,11 +32,11 @@ export class ActiveOrganizationRoleService {
   }
 
   public getActiveOrgaName(): string {
-    return 'TODO'; //this.activeOrganizationRole.value.orgaData?.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'];
+    return getOrganizationName(this.activeOrganizationRole.value.orgaData?.selfDescription);
   }
 
   public getActiveOrgaLegalName(): string {
-    return 'TODO';//this.activeOrganizationRole.value.orgaData?.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value'];
+    return getOrganizationLegalName(this.activeOrganizationRole.value.orgaData?.selfDescription);
   }
 
   public changeActiveOrgaRole(orgaRoleString: string) {
