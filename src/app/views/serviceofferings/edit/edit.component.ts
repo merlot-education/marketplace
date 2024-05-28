@@ -69,9 +69,15 @@ export class EditComponent implements OnInit, AfterViewInit {
   }
 
   prefillWizard(changeShape: boolean) {
-    let merlotTnC = this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-    let providerTnC: ITermsAndConditions = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-    
+    let merlotTnC: ITermsAndConditions = {
+      'gax-trust-framework:content': {'@value': 'TODO'},
+      'gax-trust-framework:hash': {'@value': 'TODO'}
+    }; //this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
+    let providerTnC: ITermsAndConditions = {
+      'gax-trust-framework:content': {'@value': 'TODO'},
+      'gax-trust-framework:hash': {'@value': 'TODO'}
+    }; //this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
+
     let prefillSd = {
       "gax-core:offeredBy": {
         "@id": this.activeOrgRoleService.getActiveOrgaLegalName(),

@@ -40,9 +40,10 @@ export class RegistrationComponent {
   private getFederatorMap(federators: IOrganizationData[]) {
     let federatorMap: Map<string, string> = new Map<string, string>();
     for (let federator of federators) {
-      let federatorName: string = federator.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'];
+      // TODO
+      /*let federatorName: string = federator.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'];
       let federatorMail: string = federator.metadata.mailAddress;
-      federatorMap.set(federatorName, federatorMail);
+      federatorMap.set(federatorName, federatorMail);*/
     }
     return federatorMap;
   }

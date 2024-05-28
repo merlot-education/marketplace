@@ -6,14 +6,16 @@ export interface IOrganizationData {
   metadata: IOrganizationMetadata;
   selfDescription: {
     id: string;
-    verifiableCredential: {
-      credentialSubject: ICredentialSubject[];
-    };
+    verifiableCredential: IVerifiableCredential[];
   };
   activeRepresentant: boolean;
   passiveRepresentant: boolean;
   activeFedAdmin: boolean;
   passiveFedAdmin: boolean;
+}
+
+export interface IVerifiableCredential {
+  credentialSubject: ICredentialSubject;
 }
 
 export interface ICredentialSubject {

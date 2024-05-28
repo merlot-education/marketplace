@@ -52,14 +52,15 @@ export class EditComponent implements OnInit, AfterViewInit {
   private refreshSelectedOrganization(orgaId: string) {
     this.organizationsApiService.getOrgaById(orgaId).then(result => {
       console.log(result);
-      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
+      // TODO
+      /*result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
       result.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
       let registrationNumberFields = result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber'];
       this.patchRegistrationNumberField('gax-trust-framework:local', registrationNumberFields);
       this.patchRegistrationNumberField('gax-trust-framework:EUID', registrationNumberFields);
       this.patchRegistrationNumberField('gax-trust-framework:EORI', registrationNumberFields);
       this.patchRegistrationNumberField('gax-trust-framework:vatID', registrationNumberFields);
-      this.patchRegistrationNumberField('gax-trust-framework:leiCode', registrationNumberFields);
+      this.patchRegistrationNumberField('gax-trust-framework:leiCode', registrationNumberFields);*/
 
       this.selectedOrganization = result;
     });
@@ -70,14 +71,15 @@ export class EditComponent implements OnInit, AfterViewInit {
     console.log("get orga by id", orgaId);
     this.organizationsApiService.getOrgaById(orgaId).then(result => {
       console.log(result);
-      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
+      // TODO
+      /*result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
       result.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
       let registrationNumberFields = result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber'];
       this.patchRegistrationNumberField('gax-trust-framework:local', registrationNumberFields);
       this.patchRegistrationNumberField('gax-trust-framework:EUID', registrationNumberFields);
       this.patchRegistrationNumberField('gax-trust-framework:EORI', registrationNumberFields);
       this.patchRegistrationNumberField('gax-trust-framework:vatID', registrationNumberFields);
-      this.patchRegistrationNumberField('gax-trust-framework:leiCode', registrationNumberFields);
+      this.patchRegistrationNumberField('gax-trust-framework:leiCode', registrationNumberFields);*/
 
       this.selectedOrganization = result;
       this.wizardExtensionComponent.loadShape(

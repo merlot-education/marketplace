@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ConnectorData, IOrganizationData, IPageOrganizations } from "../organization-data";
+import { ConnectorData, ICredentialSubject, ILegalParticipantCs, ILegalRegistrationNumberCs, IMerlotLegalParticipantCs, IOrganizationData, IPageOrganizations } from "../organization-data";
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -116,5 +116,29 @@ export class ExploreComponent implements OnInit {
 
   protected getConnectorBucketsString(cd: ConnectorData) {
     return cd.ionosS3ExtensionConfig.buckets.map(b => b.name).join(", ");
+  }
+
+  protected isLegalParticipantCs(cs: ICredentialSubject): boolean {
+    return cs.type === "gx:LegalParticipant";
+  }
+
+  protected asLegalParticipantCs(cs: ICredentialSubject): ILegalParticipantCs {
+    return cs as ILegalParticipantCs;
+  }
+
+  protected isLegalRegistrationNumberCs(cs: ICredentialSubject): boolean {
+    return cs.type === "gx:LegalRegistrationNumber";
+  }
+
+  protected asLegalRegistrationNumberCs(cs: ICredentialSubject): ILegalRegistrationNumberCs {
+    return cs as ILegalRegistrationNumberCs;
+  }
+
+  protected isMerlotLegalParticipantCs(cs: ICredentialSubject): boolean {
+    return cs.type === "merlot:MerlotLegalParticipant";
+  }
+
+  protected asMerlotLegalParticipantCs(cs: ICredentialSubject): IMerlotLegalParticipantCs {
+    return cs as IMerlotLegalParticipantCs;
   }
 }

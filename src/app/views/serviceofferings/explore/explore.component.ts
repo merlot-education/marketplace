@@ -239,8 +239,14 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   updateServiceOfferingEdit(offering: IBasicOffering) {
     this.requestDetails(offering.id).then(() => {
-      let merlotTnC = this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-      let providerTnC: ITermsAndConditions = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
+      let merlotTnC: ITermsAndConditions = {
+        'gax-trust-framework:content': {'@value': 'TODO'},
+        'gax-trust-framework:hash': {'@value': 'TODO'}
+      }; //this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
+      let providerTnC: ITermsAndConditions = {
+        'gax-trust-framework:content': {'@value': 'TODO'},
+        'gax-trust-framework:hash': {'@value': 'TODO'}
+      }; //this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
 
       for (let tnc of this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:termsAndConditions']) {
         if (tnc['gax-trust-framework:content']['@value'] === merlotTnC['gax-trust-framework:content']['@value'] 

@@ -58,10 +58,7 @@ export class DefaultLayoutComponent {
         roleFriendlyName:
           this.activeOrgRoleService.organizationRoles[role].roleFriendlyName,
         orgaName:
-          this.activeOrgRoleService.organizationRoles[role].orgaData?.selfDescription
-            .verifiableCredential.credentialSubject['merlot:orgaName'][
-            '@value'
-          ],
+          'TODO' //this.activeOrgRoleService.organizationRoles[role].orgaData?.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'],
       });
     }
   }

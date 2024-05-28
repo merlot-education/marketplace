@@ -31,15 +31,11 @@ export class ActiveOrganizationRoleService {
   }
 
   public getActiveOrgaName(): string {
-    return this.activeOrganizationRole.value.orgaData?.selfDescription
-      .verifiableCredential.credentialSubject['merlot:orgaName']['@value'];
+    return 'TODO'; //this.activeOrganizationRole.value.orgaData?.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'];
   }
 
   public getActiveOrgaLegalName(): string {
-    return this.activeOrganizationRole.value.orgaData?.selfDescription
-      .verifiableCredential.credentialSubject['gax-trust-framework:legalName'][
-      '@value'
-    ];
+    return 'TODO';//this.activeOrganizationRole.value.orgaData?.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['@value'];
   }
 
   public changeActiveOrgaRole(orgaRoleString: string) {
