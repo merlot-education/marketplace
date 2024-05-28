@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { IOrganizationData, IRegistrationNumber } from "../organization-data";
+import { ILegalRegistrationNumberCs, IOrganizationData } from "../organization-data";
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
@@ -30,15 +30,15 @@ export class EditComponent implements OnInit, AfterViewInit {
       this.selectOrganization(selectedOrgaId);
     } else {
       this.activeOrgRoleService.activeOrganizationRole.subscribe(orga => {
-        if (orga.orgaData.selfDescription.verifiableCredential.credentialSubject.id 
-          != this.selectedOrganization?.selfDescription.verifiableCredential.credentialSubject.id) {
-            this.selectOrganization(orga.orgaData.selfDescription.verifiableCredential.credentialSubject.id);
+        if (orga.orgaData.selfDescription.id 
+          != this.selectedOrganization?.selfDescription.id) {
+            this.selectOrganization(orga.orgaData.selfDescription.id);
         }
       });
     }
     this.wizardExtensionComponent.submitCompleteEvent.subscribe(_ => {
       this.authService.refreshActiveRoleOrgaData();
-      this.refreshSelectedOrganization(this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject.id)
+      this.refreshSelectedOrganization(this.selectedOrganization.selfDescription.id)
     });
   }
 
@@ -81,13 +81,13 @@ export class EditComponent implements OnInit, AfterViewInit {
 
       this.selectedOrganization = result;
       this.wizardExtensionComponent.loadShape(
-        this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject.id).then(_ => {
+        this.selectedOrganization.selfDescription.id).then(_ => {
           this.wizardExtensionComponent.prefillOrganisation(result);
         });
     });
   }
 
-  private patchRegistrationNumberField(registrationNumberType: string, registrationNumberField: IRegistrationNumber) {
+  private patchRegistrationNumberField(registrationNumberType: string, registrationNumberField: ILegalRegistrationNumberCs ) {
     if (!registrationNumberField[registrationNumberType]) { // if it does not exist, add dummy values
       registrationNumberField[registrationNumberType] = {'@value': "", '.type': "" }
     } 

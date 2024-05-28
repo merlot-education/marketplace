@@ -70,6 +70,7 @@ export class OrganisationWizardExtensionComponent {
       id: jsonSd["id"],
       metadata: this.orgaMetadata,
       selfDescription: {
+        id: jsonSd["id"],
         verifiableCredential: {
           credentialSubject: jsonSd,
         },

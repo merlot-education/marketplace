@@ -26,7 +26,7 @@ export class ExploreComponent implements OnInit {
     this.users = [];
     this.aaamApiService
       .getUsersFromOrganization(
-        activeOrganizationRole.orgaData.selfDescription.verifiableCredential.credentialSubject.id
+        activeOrganizationRole.orgaData.selfDescription.id
       )
       .then((result) => {
         this.users = result;

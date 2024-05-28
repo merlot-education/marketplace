@@ -50,8 +50,7 @@ export class AuthService {
   public refreshActiveRoleOrgaData() {
     this.organizationApiService
       .getOrgaById(
-        this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription
-          .verifiableCredential.credentialSubject.id
+        this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription.id
       )
       .then((result) => {
         this.activeOrgRoleService.organizationRoles[

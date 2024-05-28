@@ -1,20 +1,13 @@
 import { ISpringPage } from '@merlot-education/m-basic-ui';
-import { ITermsAndConditions } from '../serviceofferings/serviceofferings-data';
+import { INodeKindIRITypeId } from '../serviceofferings/serviceofferings-data';
 
 export interface IOrganizationData {
   id: string;
   metadata: IOrganizationMetadata;
   selfDescription: {
+    id: string;
     verifiableCredential: {
-      credentialSubject: {
-        id: string;
-        'gax-trust-framework:legalName': IStringTypeValue;
-        'gax-trust-framework:registrationNumber': IRegistrationNumber;
-        'gax-trust-framework:legalAddress': IVCardAddress;
-        'gax-trust-framework:headquarterAddress': IVCardAddress;
-        'merlot:orgaName': IStringTypeValue;
-        'merlot:termsAndConditions': ITermsAndConditions;
-      };
+      credentialSubject: ICredentialSubject[];
     };
   };
   activeRepresentant: boolean;
@@ -23,27 +16,51 @@ export interface IOrganizationData {
   passiveFedAdmin: boolean;
 }
 
+export interface ICredentialSubject {
+  id: string;
+  type: string;
+  '@context': Map<string, string>
+}
+
+export interface ILegalParticipantCs extends ICredentialSubject {
+  'gx:legalRegistrationNumber': INodeKindIRITypeId[];
+  'gx:parentOrganization': INodeKindIRITypeId[];
+  'gx:subOrganization': INodeKindIRITypeId[];
+  'gx:legalAddress': IGxVcard;
+  'gx:headquarterAddress': IGxVcard;
+  'gx:name': string;
+  'gx:description': string;
+}
+
+export interface IGxVcard {
+  'gx:countryCode': string;
+  'gx:countrySubdivisionCode': string;
+  'vcard:street-address': string;
+  'vcard:locality': string;
+  'vcard:postal-code': string;
+}
+
+export interface ILegalRegistrationNumberCs extends ICredentialSubject {
+  'gx:taxID': string;
+  'gx:EUID': string;
+  'gx:EORI': string;
+  'gx:vatID': string;
+  'gx:leiCode': string;
+}
+
+export interface IMerlotLegalParticipantCs extends ICredentialSubject {
+  'merlot:legalName': string;
+  'merlot:legalForm': string;
+  'merlot:termsAndConditions': IParticipantTermsAndConditions;
+}
+
+export interface IParticipantTermsAndConditions {
+  'merlot:URL': string;
+  'merlot:hash': string;
+}
+
 export interface IPageOrganizations extends ISpringPage {
   content: IOrganizationData[];
-}
-
-interface IStringTypeValue {
-  '@value': string;
-}
-
-export interface IRegistrationNumber {
-  'gax-trust-framework:local': IStringTypeValue;
-  'gax-trust-framework:EUID': IStringTypeValue;
-  'gax-trust-framework:EORI': IStringTypeValue;
-  'gax-trust-framework:vatID': IStringTypeValue;
-  'gax-trust-framework:leiCode': IStringTypeValue;
-}
-
-interface IVCardAddress {
-  'vcard:country-name': IStringTypeValue;
-  'vcard:street-address': IStringTypeValue;
-  'vcard:locality': IStringTypeValue;
-  'vcard:postal-code': IStringTypeValue;
 }
 
 export interface ConnectorData {

@@ -50,7 +50,7 @@ export class ImportComponent {
 
     this.organizationsApiService.addOrganization(formData).then(result => {
       let orgaName = result.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['@value'];
-      let id = result.selfDescription.verifiableCredential.credentialSubject.id;
+      let id = result.selfDescription.id;
       this.addStatusMessage.showSuccessMessage("Name: " + orgaName + ", Merlot ID: " + id);
     }).catch((e: HttpErrorResponse) => {
       this.addStatusMessage.showErrorMessage(e.error.message);
