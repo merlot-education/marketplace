@@ -15,20 +15,20 @@
 <m-grid>
   <m-card *ngFor="let organization of activeOrganizationsPage.value.content"
     [markAs]="organization.activeRepresentant || organization.activeFedAdmin ? 'primary' : (organization.passiveRepresentant || organization.passiveFedAdmin ? 'secondary' : '')"
-    [title]="'TODO'"
+    [title]="getOrganizationName(organization.selfDescription)"
     class="mb-4">
-    <!--div class="center" style="display: flex;
-        justify-content: center;">
-          <svg
-            class=""
-            cIcon
-            name="cil-building"
-            size="5xl"
-            style="filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.25))"
-          ></svg>
-        </div>
-        <hr class="hr hr-blurry" /--> <!-- TODO readd this once organization logos are implemented-->
+    <div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item" style="border: none">
+          <strong>ID:</strong><br />
+          {{
+          organization.selfDescription.id
+          }}
+        </li>
+      </ul>
+    </div>
     <div *ngFor="let vc of organization.selfDescription.verifiableCredential">
+
       <div *ngIf="isLegalParticipantCs(vc.credentialSubject)">
         <ul class="list-group list-group-flush">
           <li class="list-group-item" style="border: none">
@@ -53,58 +53,54 @@
             asLegalParticipantCs(vc.credentialSubject)['gx:legalAddress']['gx:countrySubdivisionCode']
             }}
           </li>
-          <li class="list-group-item" style="border: none">
-            <strong>ID:</strong><br />
-            {{
-            organization.selfDescription.id
-            }}
-          </li>
-          <li class="list-group-item" style="border: none">
-            <table cTable [responsive]="true" *ngIf="organization.activeRepresentant">
-              <thead>
-                <tr>
-                  <th scope="col">EDC</th>
-                  <th scope="col">S3 Buckets</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let ci of connectorInfo">
-                  <td>{{ ci.connectorId }}</td>
-                  <td *ngIf="ci.ionosS3ExtensionConfig">{{ getConnectorBucketsString(ci) }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </li>
-          <li class="list-group-item" style="border: none">
-            <strong>Selbstbeschreibung unterschrieben von:</strong><br />
-            {{
-            organization.metadata.signedBy ? organization.metadata.signedBy : "Unbekannt"
-            }}
-          </li>
         </ul>
       </div>
+
+      <div *ngIf="isLegalRegistrationNumberCs(vc.credentialSubject)">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" style="border: none">
+          <strong>Registrierungsnummer:</strong><br />
+          <div *ngIf="asLegalRegistrationNumberCs(vc.credentialSubject)['gx:taxID']">
+            Tax ID: {{ asLegalRegistrationNumberCs(vc.credentialSubject)['gx:taxID'] }}
+          </div>
+          <div *ngIf="asLegalRegistrationNumberCs(vc.credentialSubject)['gx:EUID']">
+            EUID: {{ asLegalRegistrationNumberCs(vc.credentialSubject)['gx:EUID'] }}
+          </div>
+          <div *ngIf="asLegalRegistrationNumberCs(vc.credentialSubject)['gx:EORI']">
+            EORI: {{ asLegalRegistrationNumberCs(vc.credentialSubject)['gx:EORI'] }}
+          </div>
+          <div *ngIf="asLegalRegistrationNumberCs(vc.credentialSubject)['gx:vatID']">
+            VAT ID: {{ asLegalRegistrationNumberCs(vc.credentialSubject)['gx:vatID'] }}
+          </div>
+          <div *ngIf="asLegalRegistrationNumberCs(vc.credentialSubject)['gx:leiCode']">
+            LEI Code: {{ asLegalRegistrationNumberCs(vc.credentialSubject)['gx:leiCode'] }}
+          </div>
+        </li>
+        </ul>
+      </div>
+
+      <div *ngIf="isMerlotLegalParticipantCs(vc.credentialSubject)">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" style="border: none">
+            <strong>Rechtlicher Name der Organisation:</strong><br />
+            {{
+            asMerlotLegalParticipantCs(vc.credentialSubject)['merlot:legalName']
+            }}
+          </li>
+          <li class="list-group-item" style="border: none">
+            <strong>Rechtsform der Organisation:</strong><br />
+            {{
+            asMerlotLegalParticipantCs(vc.credentialSubject)['merlot:legalForm']
+            }}
+          </li>
+          <!-- TODO TnC?-->
+        </ul>
+      </div>
+
     </div>
+      
     <div>
       <ul class="list-group list-group-flush">
-        <!--li class="list-group-item" style="border: none">
-          <strong>Registrierungsnummer:</strong><br />
-          <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']">
-            Lokal: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']['@value'] }}
-          </div>
-          <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EUID']">
-            EUID: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EUID']['@value'] }}
-          </div>
-          <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EORI']">
-            EORI: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EORI']['@value'] }}
-          </div>
-          <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:vatID']">
-            VAT ID: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:vatID']['@value'] }}
-          </div>
-          <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:leiCode']">
-            LEI Code: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:leiCode']['@value'] }}
-          </div>
-        </li-->
-        
         <li class="list-group-item" style="border: none">
           <table cTable [responsive]="true" *ngIf="organization.activeRepresentant">
             <thead>
@@ -127,6 +123,28 @@
           organization.metadata.signedBy ? organization.metadata.signedBy : "Unbekannt"
           }}
         </li>
+      </ul>
+    </div>
+    <div>
+      <ul class="list-group list-group-flush">
+        <!--li class="list-group-item" style="border: none">
+          <strong>Registrierungsnummer:</strong><br />
+          <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']">
+            Lokal: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:local']['@value'] }}
+          </div>
+          <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EUID']">
+            EUID: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EUID']['@value'] }}
+          </div>
+          <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EORI']">
+            EORI: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:EORI']['@value'] }}
+          </div>
+          <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:vatID']">
+            VAT ID: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:vatID']['@value'] }}
+          </div>
+          <div *ngIf="organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:leiCode']">
+            LEI Code: {{ organization.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber']['gax-trust-framework:leiCode']['@value'] }}
+          </div>
+        </li-->
       </ul>
       <div class="d-flex flex-row docs-highlight mb-2 justify-content-end">
         <div class="p-2 docs-highlight">

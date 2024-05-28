@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ConnectorData, ICredentialSubject, ILegalParticipantCs, ILegalRegistrationNumberCs, IMerlotLegalParticipantCs, IOrganizationData, IPageOrganizations } from "../organization-data";
+import { ConnectorData, ICredentialSubject, ILegalParticipantCs, ILegalRegistrationNumberCs, IMerlotLegalParticipantCs, IOrganizationData, IPageOrganizations, IVerifiablePresentation } from "../organization-data";
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -118,6 +118,15 @@ export class ExploreComponent implements OnInit {
     return cd.ionosS3ExtensionConfig.buckets.map(b => b.name).join(", ");
   }
 
+  protected getOrganizationName(vp: IVerifiablePresentation): string {
+    for (let vc of vp.verifiableCredential) {
+      if (this.isLegalParticipantCs(vc.credentialSubject)) {
+        return this.asLegalParticipantCs(vc.credentialSubject)['gx:name'];
+      }
+    }
+    return "Unknown";
+  }
+
   protected isLegalParticipantCs(cs: ICredentialSubject): boolean {
     return cs.type === "gx:LegalParticipant";
   }
@@ -127,7 +136,7 @@ export class ExploreComponent implements OnInit {
   }
 
   protected isLegalRegistrationNumberCs(cs: ICredentialSubject): boolean {
-    return cs.type === "gx:LegalRegistrationNumber";
+    return cs.type === "gx:legalRegistrationNumber";
   }
 
   protected asLegalRegistrationNumberCs(cs: ICredentialSubject): ILegalRegistrationNumberCs {

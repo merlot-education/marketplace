@@ -4,15 +4,17 @@ import { INodeKindIRITypeId } from '../serviceofferings/serviceofferings-data';
 export interface IOrganizationData {
   id: string;
   metadata: IOrganizationMetadata;
-  selfDescription: {
-    id: string;
-    verifiableCredential: IVerifiableCredential[];
-  };
+  selfDescription: IVerifiablePresentation;
   activeRepresentant: boolean;
   passiveRepresentant: boolean;
   activeFedAdmin: boolean;
   passiveFedAdmin: boolean;
 }
+
+export interface IVerifiablePresentation {
+  id: string;
+  verifiableCredential: IVerifiableCredential[];
+};
 
 export interface IVerifiableCredential {
   credentialSubject: ICredentialSubject;
