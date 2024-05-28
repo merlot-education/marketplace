@@ -52,7 +52,7 @@ export class OfferingWizardExtensionComponent {
       control.patchValue(this.activeOrgRoleService.getActiveOrgaId());
     }
 
-    let jsonSd = this.baseWizardExtension.generateJsonSd();
+    let jsonSd = this.baseWizardExtension.generateJsonCs();
 
     // revert the actual id to the orga for user readibility
     for (let control of this.baseWizardExtension.orgaIdFields) {

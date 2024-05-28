@@ -287,23 +287,25 @@ export class BaseWizardExtensionComponent {
       return field["@value"]
     } else if ("@id" in field) {
       return field["@id"]
+    } else if ("id" in field) {
+      return field["id"]
     }
   }
 
-  public generateJsonSd(): any {
+  public generateJsonCs(): any {
     this.wizard.shape.userPrefix = this.wizard.form.get('user_prefix').value;
     this.wizard.shape.downloadFormat = this.wizard.form.get('download_format').value;
     this.wizard.shape.fields = this.wizard.updateFormFieldsValues(this.wizard.formFields, this.wizard.form);
     this.wizard.shape.fields = this.wizard.emptyChildrenFields(this.wizard.shape.fields);
-    let jsonSd = this.exportService.saveFile(this.wizard.file);
+    let jsonCs = this.exportService.saveFile(this.wizard.file);
 
-    jsonSd["id"] = jsonSd["@id"]
-    delete jsonSd["@id"]
-    jsonSd["type"] = jsonSd["@type"]
-    delete jsonSd["@type"]
-    delete jsonSd[""]
+    jsonCs["id"] = jsonCs["@id"]
+    delete jsonCs["@id"]
+    jsonCs["type"] = jsonCs["@type"]
+    delete jsonCs["@type"]
+    delete jsonCs[""]
 
-    return jsonSd;
+    return jsonCs;
   }
 
   public ngOnDestroy() {

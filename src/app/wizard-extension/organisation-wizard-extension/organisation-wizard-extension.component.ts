@@ -1,13 +1,14 @@
 import { Component, EventEmitter, ViewChild } from '@angular/core';
 import { OrganizationsApiService } from '../../services/organizations-api.service';
 import { StatusMessageComponent } from '../../views/common-views/status-message/status-message.component';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
-import { ConnectorData, IOrganizationData, IOrganizationMetadata } from 'src/app/views/organization/organization-data';
+import { ConnectorData, IOrganizationData, IOrganizationMetadata, IVerifiableCredential } from 'src/app/views/organization/organization-data';
 import { ModalComponent } from '@coreui/angular';
 import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wizard-extension.component';
 import { OrganisationIonosS3ConfigComponent } from '../organisation-ionos-s3-config/organisation-ionos-s3-config.component';
 import { environment } from 'src/environments/environment';
+import { isLegalParticipantCs, isLegalRegistrationNumberCs, isMerlotLegalParticipantCs } from 'src/app/utils/credential-tools';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
@@ -61,19 +62,26 @@ export class OrganisationWizardExtensionComponent {
     this.orgaMetadata = orga.metadata;
 
     this.orgaActiveSelection = this.activeBooleanToString(orga.metadata.active);
-    //this.baseWizardExtension.prefillFields(orga.selfDescription.verifiableCredential.credentialSubject);
+    for (let vc of orga.selfDescription.verifiableCredential) {
+      let cs = vc.credentialSubject;
+      if (isMerlotLegalParticipantCs(cs)) {
+        this.merlotParticipantWizard.prefillFields(cs);
+      } else if(isLegalParticipantCs(cs)) {
+        this.gxParticipantWizard.prefillFields(cs);
+      } else if (isLegalRegistrationNumberCs(cs)) {
+        this.gxRegistrationNumberWizard.prefillFields(cs);
+      }
+    }
   }
 
-  private async saveSelfDescription(jsonSd: any) {
+  private async saveSelfDescription(id: string, credentials: IVerifiableCredential[]) {
     this.orgaMetadata.active = this.activeStringToBoolean(this.orgaActiveSelection);
     const editedOrganisationData : IOrganizationData = {
-      id: jsonSd["id"],
+      id: id,
       metadata: this.orgaMetadata,
       selfDescription: {
-        id: jsonSd["id"],
-        verifiableCredential: [{
-          credentialSubject: jsonSd,
-        }],
+        id: id,
+        verifiableCredential: credentials,
       },
       activeRepresentant: false,
       passiveRepresentant: false,
@@ -96,6 +104,29 @@ export class OrganisationWizardExtensionComponent {
     console.log("onSubmit");
     this.submitButtonsDisabled = true;
     this.saveStatusMessage.hideAllMessages();
+
+    let legalParticipantVc: IVerifiableCredential =  { credentialSubject: this.gxParticipantWizard.generateJsonCs() };
+    let legalRegistrationNumberVc: IVerifiableCredential = { credentialSubject: this.gxRegistrationNumberWizard.generateJsonCs() };
+    let merlotParticipantVc: IVerifiableCredential = { credentialSubject: this.merlotParticipantWizard.generateJsonCs() };
+
+    console.log("legalParticipantVc", legalParticipantVc);
+    console.log("legalRegistrationNumberVc", legalRegistrationNumberVc);
+    console.log("merlotParticipantVc", merlotParticipantVc);
+
+    this.saveSelfDescription(legalParticipantVc.credentialSubject.id, 
+      [legalParticipantVc, legalRegistrationNumberVc, merlotParticipantVc]).then(result => {
+      console.log(result);
+      this.saveStatusMessage.showSuccessMessage("ID: " + result["id"]);
+      this.submitCompleteEvent.emit(null);
+      this.prefillOrganisation(result);
+    }).catch((e: HttpErrorResponse) => {
+      this.saveStatusMessage.showErrorMessage(e.error.message);
+    })
+    .catch(_ => {
+      this.saveStatusMessage.showErrorMessage("Unbekannter Fehler");
+    }).finally(() => {
+      this.submitButtonsDisabled = false;
+    });
 
     /*let jsonSd = this.baseWizardExtension.generateJsonSd();
 
