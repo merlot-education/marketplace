@@ -29,6 +29,8 @@ export class BaseWizardExtensionComponent {
   private shapeInitialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private wizardMutex: Mutex = new Mutex();
 
+  private disabledFields: string[] = [];
+
   constructor(protected formFieldService: FormfieldControlService,
     protected exportService: ExportService,
     protected changeDetectorRef: ChangeDetectorRef) {}
@@ -143,11 +145,12 @@ export class BaseWizardExtensionComponent {
       });
   }
 
-  public prefillFields(selfDescriptionFields: any) {
+  public prefillFields(selfDescriptionFields: any, disabledFields: string[]) {
     if (this.createDateTimer) {
       clearInterval(this.createDateTimer);
     }
     // prefill self-description
+    this.disabledFields = disabledFields;
     this.prefillWaitForShape(selfDescriptionFields);
   }
 
@@ -157,18 +160,27 @@ export class BaseWizardExtensionComponent {
     }
 
     let parentKey = formArray.input.prefix + ":" + formArray.input.key;
-    if (!Object.keys(prefillFields).includes(parentKey)) {
+    console.log("formArray", parentKey);
+    /*if (!Object.keys(prefillFields).includes(parentKey)) {
       return;
-    }
+    }*/
     // create more inputs for each prefill field after the first one
-    for (let i = formArray.input.minCount; i < prefillFields[parentKey].length; i++) {
-      formArray.addInput();
+    if (Object.keys(prefillFields).includes(parentKey)) {
+      for (let i = formArray.input.minCount; i < prefillFields[parentKey].length; i++) {
+        formArray.addInput();
+      }
+    }
+
+    if (this.disabledFields.includes(parentKey)) {
+      formArray.displayAddButton = false;
     }
 
     let i = 0;
     for (let control of formArray.inputs.controls) {
-      control.patchValue(this.unpackValueFromField(prefillFields[parentKey][i]));
-      if (prefillFields[parentKey][i] instanceof Object && Object.keys(prefillFields[parentKey][i]).includes("disabled") && prefillFields[parentKey][i]["disabled"]) {
+      if (Object.keys(prefillFields).includes(parentKey)) {
+        control.patchValue(this.unpackValueFromField(prefillFields[parentKey][i]));
+      }
+      if (this.disabledFields.includes(parentKey)) {
         control.disable();
       }
       i += 1;
@@ -185,6 +197,7 @@ export class BaseWizardExtensionComponent {
     }
 
     let fullKey = formInput.input.prefix + ":" + formInput.input.key;
+    console.log("formInput", fullKey);
 
     if (["gax-core:offeredBy", "gax-trust-framework:providedBy"].includes(fullKey)) {
       this.orgaIdFields.push(formInput.form.controls[formInput.input.id]); // save for later reference
@@ -198,12 +211,14 @@ export class BaseWizardExtensionComponent {
       formInput.form.controls[formInput.input.id].disable();
     }
 
-    if (!Object.keys(prefillFields).includes(fullKey)) {
+    /*if (!Object.keys(prefillFields).includes(fullKey)) {
       return;
-    }
+    }*/
 
-    formInput.form.controls[formInput.input.id].patchValue(this.unpackValueFromField(prefillFields[fullKey]));
-    if (prefillFields[fullKey] instanceof Object && Object.keys(prefillFields[fullKey]).includes("disabled") && prefillFields[fullKey]["disabled"]) {
+    if (Object.keys(prefillFields).includes(fullKey)) {
+      formInput.form.controls[formInput.input.id].patchValue(this.unpackValueFromField(prefillFields[fullKey]));
+    }
+    if (this.disabledFields.includes(fullKey)) {
       formInput.form.controls[formInput.input.id].disable();
     }
   }
@@ -214,18 +229,21 @@ export class BaseWizardExtensionComponent {
     }
 
     let parentKey = expandedField.input.prefix + ":" + expandedField.input.key;
-    if (!Object.keys(prefillFields).includes(parentKey)) {
+    console.log("expanded", parentKey);
+    /*if (!Object.keys(prefillFields).includes(parentKey)) {
       return;
-    }
+    }*/
     // create more inputs for each prefill field after the first one
     let updatedInput = false;
-    for (let i = expandedField.inputs.length; i < prefillFields[parentKey].length; i++) {
-      expandedField.addInput();
-      updatedInput = true;
-    }
-    for (let i = expandedField.inputs.length; i > prefillFields[parentKey].length; i--) {
-      expandedField.deleteInput(-1);
-      updatedInput = true;
+    if (Object.keys(prefillFields).includes(parentKey)) {
+      for (let i = expandedField.inputs.length; i < prefillFields[parentKey].length; i++) {
+        expandedField.addInput();
+        updatedInput = true;
+      }
+      for (let i = expandedField.inputs.length; i > prefillFields[parentKey].length; i--) {
+        expandedField.deleteInput(-1);
+        updatedInput = true;
+      }
     }
 
     // if we created new inputs, wait for changes
@@ -251,15 +269,15 @@ export class BaseWizardExtensionComponent {
     let parentKey = expandedField.input.prefix + ":" + expandedField.input.key;
 
     // since we are always working with a list of inputs, we need to adapt to that in the prefill as well (even if it is just one element)
-    if (!(prefillFields[parentKey] instanceof Array)) {
+    if (Object.keys(prefillFields).includes(parentKey) && !(prefillFields[parentKey] instanceof Array)) {
       prefillFields[parentKey] = [prefillFields[parentKey]];
     }
 
     let i = 0;
     for (let input of expandedField.inputs) {
-      if (prefillFields[parentKey][i] instanceof Object && Object.keys(prefillFields[parentKey][i]).includes("overrideName")) {
+      /*if (prefillFields[parentKey][i] instanceof Object && Object.keys(prefillFields[parentKey][i]).includes("overrideName")) {
         input.name = prefillFields[parentKey][i]["overrideName"];
-      }
+      }*/
       for (let cf of input.childrenFields) {
         this.processFormInput(expandedField.formInputViewChildren.find(f => f.input.id === cf.id), prefillFields[parentKey][i]);
         this.processExpandedField(expandedField.expandedFieldsViewChildren.find(f => f.input.id === cf.id), prefillFields[parentKey][i]);

@@ -35,7 +35,7 @@ export class OfferingWizardExtensionComponent {
   }
 
   public prefillFields(selfDescriptionFields: any) {
-    this.baseWizardExtension.prefillFields(selfDescriptionFields);
+    this.baseWizardExtension.prefillFields(selfDescriptionFields, ["TODO"]);
   }
 
   private async saveSelfDescription(jsonSd: any) {

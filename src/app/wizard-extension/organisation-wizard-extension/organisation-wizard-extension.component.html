@@ -290,20 +290,19 @@
                     </mat-expansion-panel>
                 </mat-accordion>
             </div>
-            <br>
-            <br>
-            <div class="mb-3">
-                <label class="form-label">Selbstbeschreibung unterschrieben von:</label>
-                {{
-                    orgaMetadata.signedBy ? orgaMetadata.signedBy : "Unbekannt"
-                }}
-                <div cFormText style="color: #7f7f7f;">
-                    <small>Urheber der letzten Signatur dieser Selbstbeschreibung</small>
-                </div>
-            </div>
         </div>
     </c-container>
 </m-card>
+
+<div class="mb-3">
+    <label class="form-label">Selbstbeschreibung unterschrieben von:</label>
+    {{
+        orgaMetadata?.signedBy ? orgaMetadata.signedBy : "Unbekannt"
+    }}
+    <div cFormText style="color: #7f7f7f;">
+        <small>Urheber der letzten Signatur dieser Selbstbeschreibung</small>
+    </div>
+</div>
 
 <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
     <div class="p-2 docs-highlight">

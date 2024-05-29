@@ -60,16 +60,25 @@ export class OrganisationWizardExtensionComponent {
 
   public prefillOrganisation(orga: IOrganizationData) {
     this.orgaMetadata = orga.metadata;
-
     this.orgaActiveSelection = this.activeBooleanToString(orga.metadata.active);
+
     for (let vc of orga.selfDescription.verifiableCredential) {
       let cs = vc.credentialSubject;
       if (isMerlotLegalParticipantCs(cs)) {
-        this.merlotParticipantWizard.prefillFields(cs);
+        this.merlotParticipantWizard.prefillFields(cs, 
+          this.activeOrgRoleService.isActiveAsFedAdmin() 
+          ? [] 
+          : ["merlot:legalName", "merlot:legalForm"]);
       } else if(isLegalParticipantCs(cs)) {
-        this.gxParticipantWizard.prefillFields(cs);
+        this.gxParticipantWizard.prefillFields(cs, 
+          this.activeOrgRoleService.isActiveAsFedAdmin() 
+          ? ["gx:legalRegistrationNumber", "gx:subOrganization", "gx:parentOrganization"] 
+          : ["gx:legalRegistrationNumber", "gx:name", "gx:subOrganization", "gx:parentOrganization"]);
       } else if (isLegalRegistrationNumberCs(cs)) {
-        this.gxRegistrationNumberWizard.prefillFields(cs);
+        this.gxRegistrationNumberWizard.prefillFields(cs, 
+          this.activeOrgRoleService.isActiveAsFedAdmin() 
+          ? [] 
+          : ["gx:leiCode", "gx:vatID", "gx:EORI", "gx:EUID", "gx:taxID"]);
       }
     }
   }

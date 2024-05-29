@@ -100,7 +100,11 @@ export class DynamicFormComponent implements OnInit, OnDestroy, AfterViewChecked
     }
     this.formFields = this.shape?.fields;
     this.form = this.formfieldService.toFormGroup(this.formFields);
-    this.form.addControl('user_prefix', new FormControl());
+    if (this.form.contains('user_prefix')) {
+      this.form.controls['user_prefix'].disable()
+    } else {
+      this.form.addControl('user_prefix', new FormControl({value: '', disabled: true}));
+    }
     this.form.addControl('download_format', new FormControl(DownloadFormat.jsonld));
 
     this.groupFormFields();
