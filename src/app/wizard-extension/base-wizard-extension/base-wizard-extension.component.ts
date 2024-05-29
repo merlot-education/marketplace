@@ -160,10 +160,7 @@ export class BaseWizardExtensionComponent {
     }
 
     let parentKey = formArray.input.prefix + ":" + formArray.input.key;
-    console.log("formArray", parentKey);
-    /*if (!Object.keys(prefillFields).includes(parentKey)) {
-      return;
-    }*/
+
     // create more inputs for each prefill field after the first one
     if (Object.keys(prefillFields).includes(parentKey)) {
       for (let i = formArray.input.minCount; i < prefillFields[parentKey].length; i++) {
@@ -197,9 +194,8 @@ export class BaseWizardExtensionComponent {
     }
 
     let fullKey = formInput.input.prefix + ":" + formInput.input.key;
-    console.log("formInput", fullKey);
 
-    if (["gax-core:offeredBy", "gax-trust-framework:providedBy"].includes(fullKey)) {
+    if (fullKey === "gx:providedBy") {
       this.orgaIdFields.push(formInput.form.controls[formInput.input.id]); // save for later reference
     } 
 
@@ -210,11 +206,7 @@ export class BaseWizardExtensionComponent {
       }
       formInput.form.controls[formInput.input.id].disable();
     }
-
-    /*if (!Object.keys(prefillFields).includes(fullKey)) {
-      return;
-    }*/
-
+    
     if (Object.keys(prefillFields).includes(fullKey)) {
       formInput.form.controls[formInput.input.id].patchValue(this.unpackValueFromField(prefillFields[fullKey]));
     }
@@ -229,10 +221,6 @@ export class BaseWizardExtensionComponent {
     }
 
     let parentKey = expandedField.input.prefix + ":" + expandedField.input.key;
-    console.log("expanded", parentKey);
-    /*if (!Object.keys(prefillFields).includes(parentKey)) {
-      return;
-    }*/
     // create more inputs for each prefill field after the first one
     let updatedInput = false;
     if (Object.keys(prefillFields).includes(parentKey)) {
