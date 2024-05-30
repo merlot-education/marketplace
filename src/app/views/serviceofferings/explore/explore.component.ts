@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { IBasicOffering, IOfferings, IPageBasicOfferings, ITermsAndConditions } from '../serviceofferings-data'
+import { IBasicOffering, IServiceOffering, IPageBasicOfferings } from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
@@ -10,6 +10,7 @@ import { IContract } from '../../contracts/contracts-data';
 import { ConnectorData } from '../../organization/organization-data';
 import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
+import { getServiceOfferingIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 
 
 @Component({
@@ -89,7 +90,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   selectedStatusFilter: string = Object.keys(this.friendlyStatusNames)[0];
   applyStatusFilter: boolean = false;
 
-  selectedOfferingDetails: IOfferings = null;
+  selectedOfferingDetails: IServiceOffering = null;
   selectedOfferingPublic: boolean = false;
   protected jsonViewHidden: boolean = true;
 
@@ -145,7 +146,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   private refreshOfferings() {
     if (this.showingModal) {
-      this.requestDetails(this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id);
+      this.requestDetails(getServiceOfferingIdFromServiceOfferingSd(this.selectedOfferingDetails.selfDescription));
     }
     this.refreshPublicOfferings(0, this.ITEMS_PER_PAGE);
     this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
@@ -223,7 +224,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
   regenerateOffering(id: string) {
     this.serviceOfferingApiService.regenerateServiceOffering(id).then(result => {
       // prepare new id for refreshing
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id = result["id"];
+      // TODO
+      //this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id = result["id"];
       this.refreshOfferings();
     });
   }
@@ -239,7 +241,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   updateServiceOfferingEdit(offering: IBasicOffering) {
     this.requestDetails(offering.id).then(() => {
-      let merlotTnC: ITermsAndConditions = {
+      // TODO 
+      /*let merlotTnC: ITermsAndConditions = {
         'gax-trust-framework:content': {'@value': 'TODO'},
         'gax-trust-framework:hash': {'@value': 'TODO'}
       }; //this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
@@ -269,8 +272,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
       
       this.wizardExtension.loadShape(this.findFilenameByShapeType(offering.type), 
       this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id).then(_ => {
-        this.wizardExtension.prefillFields(this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject);
-      });
+        //this.wizardExtension.prefillFields(this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject);
+      });*/
     });
   }
 
@@ -284,34 +287,35 @@ export class ExploreComponent implements OnInit, OnDestroy {
       });
   }
 
-  protected shouldShowInDraftButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+  protected shouldShowInDraftButton(isPublicOffering: boolean, offering: IServiceOffering): boolean {
     return !isPublicOffering && offering.metadata.state === 'REVOKED';
   }
 
-  protected shouldShowReleaseButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+  protected shouldShowReleaseButton(isPublicOffering: boolean, offering: IServiceOffering): boolean {
     return !isPublicOffering && (offering.metadata.state === 'IN_DRAFT') || (offering.metadata.state === 'REVOKED');
   }
 
-  protected shouldShowRevokeButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+  protected shouldShowRevokeButton(isPublicOffering: boolean, offering: IServiceOffering): boolean {
     return !isPublicOffering && offering.metadata.state === 'RELEASED';
   }
 
-  protected shouldShowDeleteButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+  protected shouldShowDeleteButton(isPublicOffering: boolean, offering: IServiceOffering): boolean {
     return !isPublicOffering && (offering.metadata.state === 'IN_DRAFT') || (offering.metadata.state === 'REVOKED');
   }
 
-  protected shouldShowPurgeButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+  protected shouldShowPurgeButton(isPublicOffering: boolean, offering: IServiceOffering): boolean {
     return !isPublicOffering && offering.metadata.state === 'DELETED';
   }
 
-  protected shouldShowRegenerateButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+  protected shouldShowRegenerateButton(isPublicOffering: boolean, offering: IServiceOffering): boolean {
     return !isPublicOffering && ((offering.metadata.state === 'RELEASED') 
                                   || (offering.metadata.state === 'ARCHIVED') 
                                   || (offering.metadata.state === 'DELETED'));
   }
 
-  protected shouldShowBookButton(offering: IOfferings): boolean {
-    return this.activeOrgRoleService.isLoggedIn.value && (offering.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] !== this.activeOrgRoleService.getActiveOrgaId())
+  protected shouldShowBookButton(offering: IServiceOffering): boolean {
+    // TODO
+    return false; //this.activeOrgRoleService.isLoggedIn.value && (offering.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] !== this.activeOrgRoleService.getActiveOrgaId())
   }
 
   toogleJsonView() {

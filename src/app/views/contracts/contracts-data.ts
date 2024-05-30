@@ -1,10 +1,10 @@
 import { ISpringPage } from '@merlot-education/m-basic-ui';
-import { IOfferings } from '../serviceofferings/serviceofferings-data';
+import { IServiceOffering } from '../serviceofferings/serviceofferings-data';
 
 export interface IContractBasic {
   id: string;
   creationDate: string;
-  offering: IOfferings;
+  offering: IServiceOffering;
   providerLegalName: string;
   providerId: string;
   providerActive: boolean;
@@ -19,7 +19,7 @@ export interface IContract {
   details: IContractDetails;
   negotiation: IContractNegotiation;
   provisioning: IContractProvisioning;
-  offering: IOfferings;
+  offering: IServiceOffering;
 }
 
 export interface IDataDeliveryContract extends IContract {

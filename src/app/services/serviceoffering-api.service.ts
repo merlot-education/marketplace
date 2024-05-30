@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { lastValueFrom } from 'rxjs';
-import { IOfferings, IPageBasicOfferings } from '../views/serviceofferings/serviceofferings-data';
+import { IServiceOffering, IPageBasicOfferings } from '../views/serviceofferings/serviceofferings-data';
 import { ActiveOrganizationRoleService } from './active-organization-role.service';
 
 @Injectable({
@@ -56,9 +56,9 @@ export class ServiceofferingApiService {
   }
 
   // get details to a specific service offering (authenticated)
-  public async fetchServiceOfferingDetails(id: string): Promise<IOfferings> {
+  public async fetchServiceOfferingDetails(id: string): Promise<IServiceOffering> {
     if (this.activeOrgRoleService.isLoggedIn.value) {
-      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "serviceoffering/" + id)) as IOfferings;
+      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "serviceoffering/" + id)) as IServiceOffering;
     }
       
     return undefined;
@@ -102,13 +102,16 @@ export class ServiceofferingApiService {
     return await lastValueFrom(this.http.post(environment.serviceoffering_api_url + "serviceoffering/regenerate/" + id, null));
   }
 
-  public async fetchAvailableShapes(system: string): Promise<any> {
-    return await lastValueFrom(this.http.get(`${environment.wizard_api_url}/getAvailableShapesCategorized?ecoSystem=`+system));
+  public async getGxServiceOfferingShape(): Promise<any> {
+    return await lastValueFrom(this.http.get(`${environment.serviceoffering_api_url}shapes/gx/serviceoffering`));
   }
 
-  public async fetchShape(filename: string): Promise<any> {
-    const params = new HttpParams().set('name', filename);
-    return await lastValueFrom(this.http.get(`${environment.wizard_api_url}/getJSON`, {params}));
+  public async getMerlotServiceOfferingShape(): Promise<any> {
+    return await lastValueFrom(this.http.get(`${environment.serviceoffering_api_url}shapes/merlot/serviceoffering`));
+  }
+
+  public async getSpecificOfferingTypeShape(type: string): Promise<any> {
+    return await lastValueFrom(this.http.get(`${environment.serviceoffering_api_url}shapes/merlot/serviceoffering/${type}`));
   }
 
   public resolveFriendlyStatusName(merlotStatus: string): string {

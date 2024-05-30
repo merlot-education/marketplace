@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IOfferings } from '../../serviceofferings/serviceofferings-data';
+import { IServiceOffering } from '../../serviceofferings/serviceofferings-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.
 })
 export class OfferingdetailviewComponent {
 
-  @Input() protected serviceOfferingData: IOfferings;
+  @Input() protected serviceOfferingData: IServiceOffering;
   @Input() protected showVariableFields: boolean = true;
 
   constructor(

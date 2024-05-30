@@ -1,4 +1,5 @@
 import { ICredentialSubject, ILegalParticipantCs, ILegalRegistrationNumberCs, IMerlotLegalParticipantCs, IVerifiablePresentation } from "../views/organization/organization-data";
+import { IGxServiceOfferingCs, IMerlotCoopContractServiceOfferingCs, IMerlotDataDeliveryServiceOfferingCs, IMerlotSaasServiceOfferingCs, IMerlotServiceOfferingCs } from "../views/serviceofferings/serviceofferings-data";
 
 
 export function isLegalParticipantCs(cs: ICredentialSubject): boolean {
@@ -25,6 +26,46 @@ export function asMerlotLegalParticipantCs(cs: ICredentialSubject): IMerlotLegal
     return cs as IMerlotLegalParticipantCs;
 }
 
+export function isGxServiceOfferingCs(cs: ICredentialSubject): boolean {
+    return cs && cs.type && cs.type === "gx:ServiceOffering";
+}
+
+export function asGxServiceOfferingCs(cs: ICredentialSubject): IGxServiceOfferingCs {
+    return cs as IGxServiceOfferingCs;
+}
+
+export function isMerlotServiceOfferingCs(cs: ICredentialSubject): boolean {
+    return cs && cs.type && cs.type === "merlot:MerlotServiceOffering";
+}
+
+export function asMerlotServiceOfferingCs(cs: ICredentialSubject): IMerlotServiceOfferingCs {
+    return cs as IMerlotServiceOfferingCs;
+}
+
+export function isMerlotSaasServiceOfferingCs(cs: ICredentialSubject): boolean {
+    return cs && cs.type && cs.type === "merlot:MerlotSaasServiceOffering";
+}
+
+export function asMerlotSaasServiceOfferingCs(cs: ICredentialSubject): IMerlotSaasServiceOfferingCs {
+    return cs as IMerlotSaasServiceOfferingCs;
+}
+
+export function isMerlotDataDeliveryServiceOfferingCs(cs: ICredentialSubject): boolean {
+    return cs && cs.type && cs.type === "merlot:MerlotDataDeliveryServiceOffering";
+}
+
+export function asMerlotDataDeliveryServiceOfferingCs(cs: ICredentialSubject): IMerlotDataDeliveryServiceOfferingCs {
+    return cs as IMerlotDataDeliveryServiceOfferingCs;
+}
+
+export function isMerlotCoopContractServiceOfferingCs(cs: ICredentialSubject): boolean {
+    return cs && cs.type && cs.type === "merlot:MerlotCoopContractServiceOffering";
+}
+
+export function asMerlotCoopContractServiceOfferingCs(cs: ICredentialSubject): IMerlotCoopContractServiceOfferingCs {
+    return cs as IMerlotCoopContractServiceOfferingCs;
+}
+
 export function getOrganizationName(vp: IVerifiablePresentation): string {
     if (!vp) {
         return "";
@@ -47,4 +88,20 @@ export function getOrganizationLegalName(vp: IVerifiablePresentation): string {
         }
     }
     return "Unbekannt";
+}
+
+export function getParticipantIdFromParticipantSd(vp: IVerifiablePresentation) {
+    for (let vc of vp.verifiableCredential) {
+        if (isLegalParticipantCs(vc.credentialSubject)) {
+            return asLegalParticipantCs(vc.credentialSubject).id;
+        }
+    }
+}
+
+export function getServiceOfferingIdFromServiceOfferingSd(vp: IVerifiablePresentation) {
+    for (let vc of vp.verifiableCredential) {
+        if (isGxServiceOfferingCs(vc.credentialSubject)) {
+            return asGxServiceOfferingCs(vc.credentialSubject).id;
+        }
+    }
 }

@@ -111,7 +111,7 @@ export class ExploreComponent implements OnInit {
   }
 
   protected getContractTypeName(contract: IContractBasic): string {
-    return this.serviceOfferingApiService.resolveFriendlyTypeName(
-      contract.offering.selfDescription.verifiableCredential.credentialSubject.type);
+    return "TODO";/*this.serviceOfferingApiService.resolveFriendlyTypeName(
+      contract.offering.selfDescription.verifiableCredential.credentialSubject.type);*/
   }
 }

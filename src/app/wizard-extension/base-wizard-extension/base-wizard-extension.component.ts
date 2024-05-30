@@ -146,6 +146,7 @@ export class BaseWizardExtensionComponent {
   }
 
   public prefillFields(selfDescriptionFields: any, disabledFields: string[]) {
+    console.log("prefillFields", selfDescriptionFields)
     if (this.createDateTimer) {
       clearInterval(this.createDateTimer);
     }

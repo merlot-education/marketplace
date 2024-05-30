@@ -52,7 +52,8 @@ export class ConsumerContractConfigComponent {
   }
 
   protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return contractDetails.offering.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingDataDelivery';
+    return false; // TODO
+    //contractDetails.offering.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingDataDelivery';
   }
 
   protected isIonosConsumerTransferProvisioning(contractDetails: IContract): boolean {

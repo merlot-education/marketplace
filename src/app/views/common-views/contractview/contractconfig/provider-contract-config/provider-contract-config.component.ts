@@ -51,7 +51,8 @@ export class ProviderContractConfigComponent implements OnInit {
   }
 
   protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return contractDetails.offering.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingDataDelivery';
+    return false; // TODO
+    //contractDetails.offering.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingDataDelivery';
   }
 
   protected isIonosProviderTransferProvisioning(contractDetails: IContract): boolean {

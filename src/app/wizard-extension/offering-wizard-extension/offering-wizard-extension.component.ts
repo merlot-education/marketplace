@@ -4,6 +4,8 @@ import { StatusMessageComponent } from '../../views/common-views/status-message/
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wizard-extension.component';
+import { IServiceOffering } from 'src/app/views/serviceofferings/serviceofferings-data';
+import { isGxServiceOfferingCs, isMerlotCoopContractServiceOfferingCs, isMerlotDataDeliveryServiceOfferingCs, isMerlotSaasServiceOfferingCs, isMerlotServiceOfferingCs } from 'src/app/utils/credential-tools';
 
 
 @Component({
@@ -12,7 +14,10 @@ import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wiza
   styleUrls: ['./offering-wizard-extension.component.scss']
 })
 export class OfferingWizardExtensionComponent {
-  @ViewChild("baseWizardExtension") private baseWizardExtension: BaseWizardExtensionComponent;
+  @ViewChild("gxServiceOfferingWizard") private gxServiceOfferingWizard: BaseWizardExtensionComponent;
+  @ViewChild("merlotServiceOfferingWizard") private merlotServiceOfferingWizard: BaseWizardExtensionComponent;
+  @ViewChild("merlotSpecificServiceOfferingWizard") private merlotSpecificServiceOfferingWizard: BaseWizardExtensionComponent;
+
   @ViewChild("saveStatusMessage") private saveStatusMessage: StatusMessageComponent;
 
   public submitCompleteEvent: EventEmitter<any> = new EventEmitter();
@@ -27,15 +32,30 @@ export class OfferingWizardExtensionComponent {
 
   public async loadShape(shapeName: string, id: string): Promise<void> {
     console.log("Loading shape", shapeName);
-    await this.baseWizardExtension.loadShape(this.serviceofferingApiService.fetchShape(shapeName), id);
+    await this.gxServiceOfferingWizard.loadShape(this.serviceofferingApiService.getGxServiceOfferingShape(), id);
+    await this.merlotServiceOfferingWizard.loadShape(this.serviceofferingApiService.getMerlotServiceOfferingShape(), id);
+    await this.merlotSpecificServiceOfferingWizard.loadShape(this.serviceofferingApiService.getSpecificOfferingTypeShape(shapeName), id); // TODO
+    //await this.baseWizardExtension.loadShape(this.serviceofferingApiService.fetchShape(shapeName), id);
   }
 
   public isShapeLoaded(): boolean {
-    return this.baseWizardExtension?.isShapeLoaded();
+    return this.gxServiceOfferingWizard?.isShapeLoaded() 
+      && this.merlotServiceOfferingWizard?.isShapeLoaded() 
+      && this.merlotSpecificServiceOfferingWizard?.isShapeLoaded();
   }
 
-  public prefillFields(selfDescriptionFields: any) {
-    this.baseWizardExtension.prefillFields(selfDescriptionFields, ["TODO"]);
+  public prefillFields(offering: any) {
+    for (let vc of offering.selfDescription.verifiableCredential) {
+      let cs = vc.credentialSubject;
+      if (isGxServiceOfferingCs(cs)) {
+        this.gxServiceOfferingWizard.prefillFields(cs, []);
+      } else if (isMerlotServiceOfferingCs(cs)) {
+        this.merlotServiceOfferingWizard.prefillFields(cs, []);
+      } else if (isMerlotSaasServiceOfferingCs(cs) || isMerlotDataDeliveryServiceOfferingCs(cs) || isMerlotCoopContractServiceOfferingCs(cs)) {
+        this.merlotSpecificServiceOfferingWizard.prefillFields(cs, []);
+      }
+    }
+    //this.baseWizardExtension.prefillFields(selfDescriptionFields, ["TODO"]);
   }
 
   private async saveSelfDescription(jsonSd: any) {
@@ -44,7 +64,7 @@ export class OfferingWizardExtensionComponent {
 
   protected onSubmit(publishAfterSave: boolean): void {
     console.log("onSubmit");
-    this.submitButtonsDisabled = true;
+    /*this.submitButtonsDisabled = true;
     this.saveStatusMessage.hideAllMessages();
 
     // for fields that contain the id of the creator organization, set them to the actual id
@@ -91,16 +111,20 @@ export class OfferingWizardExtensionComponent {
       if (!publishAfterSave) {
         this.submitButtonsDisabled = false;
       }
-    });
+    });*/
   }
 
   public ngOnDestroy() {
-    this.baseWizardExtension.ngOnDestroy();
+    this.gxServiceOfferingWizard.ngOnDestroy();
+    this.merlotServiceOfferingWizard.ngOnDestroy();
+    this.merlotSpecificServiceOfferingWizard.ngOnDestroy();
     this.saveStatusMessage.hideAllMessages();
     this.submitButtonsDisabled = false;
   }
 
   protected isWizardFormInvalid(): boolean {
-    return this.baseWizardExtension?.isWizardFormInvalid();
+    return this.gxServiceOfferingWizard?.isWizardFormInvalid() 
+      && this.merlotServiceOfferingWizard?.isWizardFormInvalid() 
+      && this.merlotSpecificServiceOfferingWizard?.isWizardFormInvalid();
   }
 }

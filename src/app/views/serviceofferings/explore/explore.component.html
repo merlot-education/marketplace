@@ -117,10 +117,10 @@
   <ng-container *ngIf="selectedOfferingDetails !== null">
     <c-modal-header>
       <h5 cModalTitle>Details zum Service Angebot "{{
-        selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id }}"</h5>
+        'TODO' }}"</h5>
     </c-modal-header>
     <c-modal-body>
-
+    <!--
       <div [hidden]="!jsonViewHidden"><button id="json-view-button" cButton color="primary" style="margin-bottom: 10px;"
         (click)="toogleJsonView()">
         Selbstbeschreibung des Service Angebots einsehen
@@ -141,51 +141,51 @@
         <ngx-json-viewer [json]="selectedOfferingDetails.selfDescription"></ngx-json-viewer>
       </m-card>
     </div>
-      
+      -->
     </c-modal-body>
     <c-modal-footer>
       <button cButton color="secondary" [cModalToggle]="modalViewDetails.id">Schließen</button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowInDraftButton(selectedOfferingPublic, selectedOfferingDetails)"
-      (click)="inDraftOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)"
+      (click)="inDraftOffering('TODO')"
       >
         Entwurf 
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowReleaseButton(selectedOfferingPublic, selectedOfferingDetails)"
-      (click)="releaseOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)"
+      (click)="releaseOffering('TODO')"
       >
         Veröffentlichen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowRevokeButton(selectedOfferingPublic, selectedOfferingDetails)"
-      (click)="revokeOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)"
+      (click)="revokeOffering('TODO')"
       >
         Widerrufen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowDeleteButton(selectedOfferingPublic, selectedOfferingDetails)"
-      (click)="deleteOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)"
+      (click)="deleteOffering('TODO')"
       >
         Löschen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       [cModalToggle]="modalViewDetails.id"
       *ngIf="shouldShowPurgeButton(selectedOfferingPublic, selectedOfferingDetails)"
-      (click)="purgeOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)"
+      (click)="purgeOffering('TODO')"
       >
         Endgültig löschen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowRegenerateButton(selectedOfferingPublic, selectedOfferingDetails)"
-      (click)="regenerateOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)"
+      (click)="regenerateOffering('TODO')"
       >
         Angebot neu erstellen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowBookButton(selectedOfferingDetails)" 
       [cModalToggle]="'modalViewContract'" 
-      (click)="bookServiceOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)">
+      (click)="bookServiceOffering('TODO')">
         Buchen
       </button>
     </c-modal-footer>
@@ -196,7 +196,7 @@
   (visibleChange)="handleEventEditModal($event)">
   <c-modal-header>
     <h5 cModalTitle>Service Angebot "{{
-      selectedOfferingDetails?.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:name']['@value']
+      "TODO"
       }}" bearbeiten</h5>
   </c-modal-header>
   <c-modal-body>

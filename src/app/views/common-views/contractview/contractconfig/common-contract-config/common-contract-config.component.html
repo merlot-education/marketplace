@@ -34,7 +34,7 @@
             #attachmentStatusMessage>
         </app-status-message>
     </li>
-    <li class="list-group-item" style="border: none">
+    <!--li class="list-group-item" style="border: none">
     <strong>Laufzeit*:</strong><br />
     <select class="form-select" [(ngModel)]="contractDetails.negotiation.runtimeSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
         <option [value]="" *ngIf="contractDetails.negotiation.runtimeSelection === ''"></option>
@@ -48,9 +48,9 @@
         </option>
     </select>
 
-    </li>
+    </li-->
     <div *ngIf="isSaasContract(contractDetails)">
-    <li class="list-group-item" style="border: none" *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:userCountOption'] !== null">
+    <!--li class="list-group-item" style="border: none" *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:userCountOption'] !== null">
         <strong>Anzahl erlaubter Benutzer*:</strong><br />
         <select class="form-select" [(ngModel)]="asSaasContract(contractDetails).negotiation.userCountSelection" [disabled]="!isContractInDraft(contractDetails)">
         <option [value]="" *ngIf="asSaasContract(contractDetails).negotiation.userCountSelection === ''"></option>
@@ -63,10 +63,10 @@
             </ng-template>
         </option>
         </select>
-    </li>
+    </li-->
     </div>
     <div *ngIf="isDataDeliveryContract(contractDetails)">
-    <li class="list-group-item" style="border: none" *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:exchangeCountOption'] !== null">
+    <!--li class="list-group-item" style="border: none" *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:exchangeCountOption'] !== null">
         <strong>Anzahl erlaubter Datenaustausche*:</strong><br />
         <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).negotiation.exchangeCountSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
         <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).negotiation.exchangeCountSelection === ''"></option>
@@ -79,7 +79,7 @@
             </ng-template>
         </option>
         </select>
-    </li>
+    </li-->
 
     <li class="list-group-item" style="border: none">
     <div class="mb-3">

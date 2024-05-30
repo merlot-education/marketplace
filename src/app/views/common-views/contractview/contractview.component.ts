@@ -95,8 +95,10 @@ export class ContractviewComponent {
   }
 
   protected isDataTransferDisabled(contractDetails: IContract) {
-    return (contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:dataTransferType']['@value'] === 'Push' && this.userIsActiveConsumer()) 
-           || (contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:dataTransferType']['@value'] === 'Pull' && this.userIsActiveProvider());
+    return true;
+    // TODO
+    /*(contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:dataTransferType']['@value'] === 'Push' && this.userIsActiveConsumer()) 
+           || (contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:dataTransferType']['@value'] === 'Pull' && this.userIsActiveProvider());*/
   }  
   protected isDataTransferButtonVisible(contractDetails: IContract) {
     return contractDetails.type === 'DataDeliveryContractTemplate' 
@@ -199,7 +201,8 @@ export class ContractviewComponent {
   }
 
   protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return contractDetails.offering.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingDataDelivery';
+    return false; // TODO
+    //contractDetails.offering.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingDataDelivery';
   }
 
   protected shouldShowSaveButton(contractDetails: IContract): boolean {
