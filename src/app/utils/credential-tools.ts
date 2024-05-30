@@ -2,7 +2,7 @@ import { ICredentialSubject, ILegalParticipantCs, ILegalRegistrationNumberCs, IM
 
 
 export function isLegalParticipantCs(cs: ICredentialSubject): boolean {
-    return cs && cs.type === "gx:LegalParticipant";
+    return cs && cs.type && cs.type === "gx:LegalParticipant";
 }
 
 export function asLegalParticipantCs(cs: ICredentialSubject): ILegalParticipantCs {
@@ -10,7 +10,7 @@ export function asLegalParticipantCs(cs: ICredentialSubject): ILegalParticipantC
 }
 
 export function isLegalRegistrationNumberCs(cs: ICredentialSubject): boolean {
-    return cs && cs.type === "gx:legalRegistrationNumber";
+    return cs && cs.type && cs.type === "gx:legalRegistrationNumber";
 }
 
 export function asLegalRegistrationNumberCs(cs: ICredentialSubject): ILegalRegistrationNumberCs {
@@ -18,7 +18,7 @@ export function asLegalRegistrationNumberCs(cs: ICredentialSubject): ILegalRegis
 }
 
 export function isMerlotLegalParticipantCs(cs: ICredentialSubject): boolean {
-    return cs && cs.type === "merlot:MerlotLegalParticipant";
+    return cs && cs.type && cs.type === "merlot:MerlotLegalParticipant";
 }
 
 export function asMerlotLegalParticipantCs(cs: ICredentialSubject): IMerlotLegalParticipantCs {
