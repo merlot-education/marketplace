@@ -4,7 +4,7 @@ import { StatusMessageComponent } from '../../views/common-views/status-message/
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wizard-extension.component';
-import { IServiceOffering } from 'src/app/views/serviceofferings/serviceofferings-data';
+import { IGxServiceOfferingCs, IMerlotServiceOfferingCs, IServiceOffering } from 'src/app/views/serviceofferings/serviceofferings-data';
 import { isGxServiceOfferingCs, isMerlotCoopContractServiceOfferingCs, isMerlotDataDeliveryServiceOfferingCs, isMerlotSaasServiceOfferingCs, isMerlotServiceOfferingCs } from 'src/app/utils/credential-tools';
 
 
@@ -59,15 +59,15 @@ export class OfferingWizardExtensionComponent {
   }
 
   private async saveSelfDescription(jsonSd: any) {
-    return await this.serviceofferingApiService.createServiceOffering(JSON.stringify(jsonSd, null, 2), jsonSd.type);
+    return await this.serviceofferingApiService.createServiceOffering(jsonSd);
   }
 
   protected onSubmit(publishAfterSave: boolean): void {
     console.log("onSubmit");
-    /*this.submitButtonsDisabled = true;
+    this.submitButtonsDisabled = true;
     this.saveStatusMessage.hideAllMessages();
 
-    // for fields that contain the id of the creator organization, set them to the actual id
+    /*// for fields that contain the id of the creator organization, set them to the actual id
     for (let control of this.baseWizardExtension.orgaIdFields) {
       control.patchValue(this.activeOrgRoleService.getActiveOrgaId());
     }
@@ -77,14 +77,39 @@ export class OfferingWizardExtensionComponent {
     // revert the actual id to the orga for user readibility
     for (let control of this.baseWizardExtension.orgaIdFields) {
       control.patchValue(this.activeOrgRoleService.getActiveOrgaLegalName());
+    }*/
+
+    let gxOfferingJsonSd: IGxServiceOfferingCs = this.gxServiceOfferingWizard.generateJsonCs();
+    let merlotOfferingJsonSd: IMerlotServiceOfferingCs = this.merlotServiceOfferingWizard.generateJsonCs();
+    let merlotSpecificOfferingJsonSd = this.merlotSpecificServiceOfferingWizard.generateJsonCs();
+
+    let offeringDto: IServiceOffering = {
+      metadata: {
+        state: '',
+        creationDate: '',
+        modifiedDate: '',
+        signedBy: ''
+      },
+      providerDetails: {
+        providerId: '',
+        providerLegalName: ''
+      },
+      selfDescription: {
+        verifiableCredential: [
+          { credentialSubject: gxOfferingJsonSd },
+          { credentialSubject: merlotOfferingJsonSd },
+          { credentialSubject: merlotSpecificOfferingJsonSd }
+        ],
+        id: ''
+      }
     }
 
-    this.saveSelfDescription(jsonSd).then(result => {
+    this.saveSelfDescription(offeringDto).then(result => {
       console.log("result", result);
-      this.baseWizardExtension.setCredentialId(result["id"]);
+      /*this.baseWizardExtension.setCredentialId(result["id"]);*/
       this.saveStatusMessage.showSuccessMessage("ID: " + result["id"]);
 
-      if (publishAfterSave) {
+      /*if (publishAfterSave) {
         this.serviceofferingApiService.releaseServiceOffering(result["id"])
         .then(_ => {
           this.submitCompleteEvent.emit(null);
@@ -99,7 +124,8 @@ export class OfferingWizardExtensionComponent {
         });
       } else {
         this.submitCompleteEvent.emit(null);
-      }
+      }*/
+      this.submitCompleteEvent.emit(null);
     }).catch((e: HttpErrorResponse) => {
       this.saveStatusMessage.showErrorMessage(e.error.message);
       this.submitButtonsDisabled = false;
@@ -111,7 +137,7 @@ export class OfferingWizardExtensionComponent {
       if (!publishAfterSave) {
         this.submitButtonsDisabled = false;
       }
-    });*/
+    });
   }
 
   public ngOnDestroy() {
