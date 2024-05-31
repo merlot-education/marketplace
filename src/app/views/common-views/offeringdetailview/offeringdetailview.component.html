@@ -1,118 +1,164 @@
 <ng-container *ngIf="serviceOfferingData">
-  <!--ul class="list-group list-group-flush">
+
+  <ul class="list-group list-group-flush">
+
     <li class="list-group-item" style="border: none">
       <strong>Angebotstyp:</strong> <br />
-      {{ serviceOfferingApiService.resolveFriendlyTypeName(serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['type']) }}
+      {{ serviceOfferingApiService.resolveFriendlyTypeName(getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(serviceOfferingData.selfDescription)) }}
     </li>
-    <li class="list-group-item" style="border: none">
-      <strong>Service ID:</strong> <br />
-      {{ serviceOfferingData.selfDescription.verifiableCredential.credentialSubject.id }}
-    </li>
-    <li class="list-group-item" style="border: none">
-      <strong>Name:</strong> <br />
-      {{ serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:name']['@value'] }}
-    </li>
-    <li class="list-group-item" style="border: none">
-      <strong>Erstelldatum:</strong><br />
-      {{ serviceOfferingData.metadata.creationDate | date:"medium" }}
-    </li>
+
     <ng-container *ngIf="serviceOfferingData.providerDetails">
       <li class="list-group-item" style="border: none">
         <strong>Anbieter:</strong><br />
         {{ serviceOfferingData.providerDetails.providerLegalName }}
       </li>
     </ng-container>
+
     <li class="list-group-item" style="border: none">
       <strong>Status:</strong><br />
       {{ serviceOfferingApiService.resolveFriendlyStatusName(serviceOfferingData.metadata.state) }}
     </li>
-    <li class="list-group-item" style="border: none" *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['dct:description']">
-      <strong>Beschreibung:</strong><br />
-      {{ serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['dct:description']['@value'] }}
+
+    <li class="list-group-item" style="border: none">
+      <strong>Erstelldatum:</strong><br />
+      {{ serviceOfferingData.metadata.creationDate | date:"medium" }}
     </li>
+
     <li class="list-group-item" style="border: none">
       <strong>Letzte Änderung:</strong><br />
       {{ serviceOfferingData.metadata.modifiedDate | date:"medium"  }}
     </li>
-    <li class="list-group-item" style="border: none" *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:exampleCosts']">
-      <strong>Beispielkosten:</strong><br />
-      {{ serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:exampleCosts']['@value'] }}
-    </li>
-    <li class="list-group-item" style="border: none"  *ngIf="showVariableFields">
-      <strong>Serviceangebotspezifische Geschäftsbedingungen:</strong><br />
-      <ul *ngFor="let tnc of serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:termsAndConditions']">
-        <li>
-          <a [href]="tnc['gax-trust-framework:content']['@value']">{{ tnc['gax-trust-framework:content']['@value'] }}</a> (Hash: {{ tnc['gax-trust-framework:hash']['@value'] }})
+
+  </ul>
+
+  <div *ngFor="let vc of serviceOfferingData.selfDescription.verifiableCredential">
+
+    <div *ngIf="isGxServiceOfferingCs(vc.credentialSubject)">
+      <ul class="list-group list-group-flush">
+
+        <li class="list-group-item" style="border: none">
+          <strong>Service ID:</strong> <br />
+          {{ asGxServiceOfferingCs(vc.credentialSubject).id }}
         </li>
+
+        <li class="list-group-item" style="border: none">
+          <strong>Name:</strong> <br />
+          {{ asGxServiceOfferingCs(vc.credentialSubject)['gx:name'] }}
+        </li>
+
+        <li class="list-group-item" style="border: none" *ngIf="asGxServiceOfferingCs(vc.credentialSubject)['gx:description']">
+          <strong>Beschreibung:</strong><br />
+          {{ asGxServiceOfferingCs(vc.credentialSubject)['gx:description'] }}
+        </li>
+
+        <li class="list-group-item" style="border: none"  *ngIf="showVariableFields">
+          <strong>Serviceangebotspezifische Geschäftsbedingungen:</strong><br />
+          <ul *ngFor="let tnc of asGxServiceOfferingCs(vc.credentialSubject)['gx:termsAndConditions']">
+            <li>
+              <a [href]="tnc['gx:URL']">{{ tnc['gx:URL'] }}</a> (Hash: {{ tnc['gx:hash'] }})
+            </li>
+          </ul>
+        </li>
+
       </ul>
-    </li>
-    <div *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingSaaS'">
-      <li class="list-group-item" style="border: none" *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:hardwareRequirements']">
+    </div>
+
+    <div *ngIf="isMerlotServiceOfferingCs(vc.credentialSubject)">
+      <ul class="list-group list-group-flush">
+
+        <li class="list-group-item" style="border: none" *ngIf="asMerlotServiceOfferingCs(vc.credentialSubject)['merlot:exampleCosts']">
+          <strong>Beispielkosten:</strong><br />
+          {{ asMerlotServiceOfferingCs(vc.credentialSubject)['merlot:exampleCosts'] }}
+        </li>
+
+        <li class="list-group-item" style="border: none" *ngIf="showVariableFields">
+          <strong>Laufzeitoptionen:</strong><br />
+          <ul>
+            <ng-container *ngFor="let rt of asMerlotServiceOfferingCs(vc.credentialSubject)['merlot:runtimeOption']">
+              <li>
+                <ng-container *ngIf="rt['merlot:runtimeCount'] === 0 || rt['merlot:runtimeMeasurement'] === 'unlimited'; else notUnlimitedRuntime">
+                  Unbegrenzt
+                </ng-container>
+                <ng-template #notUnlimitedRuntime>
+                  {{ rt['merlot:runtimeCount'] }} {{ rt['merlot:runtimeMeasurement'] }}
+                </ng-template>
+              </li>
+            </ng-container>
+          </ul>
+        </li>
+
+      </ul>
+    </div>
+
+    <div *ngIf="isMerlotSaasServiceOfferingCs(vc.credentialSubject)">
+
+      <li class="list-group-item" style="border: none" *ngIf="asMerlotSaasServiceOfferingCs(vc.credentialSubject)['merlot:hardwareRequirements']">
         <strong>Hardware-Anforderungen:</strong><br />
-        {{ serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:hardwareRequirements']['@value'] }}
+        {{ asMerlotSaasServiceOfferingCs(vc.credentialSubject)['merlot:hardwareRequirements'] }}
       </li>
+
       <li class="list-group-item" style="border: none" *ngIf="showVariableFields">
         <strong>Optionen für Anzahl erlaubter Benutzer:</strong><br />
         <ul>
-          <ng-container *ngFor="let auc of serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:userCountOption']">
+          <ng-container *ngFor="let auc of asMerlotSaasServiceOfferingCs(vc.credentialSubject)['merlot:userCountOption']">
             <li>
-              <ng-container *ngIf="auc['merlot:userCountUpTo']['@value'] === 0; else notUnlimitedUserCount">
+              <ng-container *ngIf="auc['merlot:userCountUpTo'] === 0; else notUnlimitedUserCount">
                 Unbegrenzt
               </ng-container>
               <ng-template #notUnlimitedUserCount>
-                Bis zu {{ auc['merlot:userCountUpTo']['@value'] }} Benutzer
+                Bis zu {{ auc['merlot:userCountUpTo'] }} Benutzer
               </ng-template>
             </li>
           </ng-container>
         </ul>
       </li>
+
     </div>
-    <div *ngIf="serviceOfferingData.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingDataDelivery'">
+
+    <div *ngIf="isMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)">
+
       <li class="list-group-item" style="border: none">
         <strong>Datenzugriffsart:</strong><br />
-        {{ serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:dataAccessType']['@value'] }}
+        {{ asMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)['merlot:dataAccessType'] }}
       </li>
+
       <li class="list-group-item" style="border: none">
         <strong>Datentransferart:</strong><br />
-        {{ serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:dataTransferType']['@value'] }}
+        {{ asMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)['merlot:dataTransferType'] }}
       </li>
+
       <li class="list-group-item" style="border: none" *ngIf="showVariableFields">
         <strong>Optionen für Anzahl erlaubter Datenaustausche:</strong><br />
         <ul>
-          <ng-container *ngFor="let dec of serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:exchangeCountOption']">
+          <ng-container *ngFor="let dec of asMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)['merlot:exchangeCountOption']">
             <li>
-              <ng-container *ngIf="dec['merlot:exchangeCountUpTo']['@value'] === 0; else notUnlimitedExchangeCount">
+              <ng-container *ngIf="dec['merlot:exchangeCountUpTo']=== 0; else notUnlimitedExchangeCount">
                 Unbegrenzt
               </ng-container>
               <ng-template #notUnlimitedExchangeCount>
-                Bis zu {{ dec['merlot:exchangeCountUpTo']['@value'] }} Datenaustausche
+                Bis zu {{ dec['merlot:exchangeCountUpTo'] }} Datenaustausche
               </ng-template>
             </li>
           </ng-container>
         </ul>
       </li>
+
     </div>
 
-    <li class="list-group-item" style="border: none" *ngIf="showVariableFields">
-        <strong>Laufzeitoptionen:</strong><br />
-        <ul>
-          <ng-container *ngFor="let rt of serviceOfferingData.selfDescription.verifiableCredential.credentialSubject['merlot:runtimeOption']">
-            <li>
-              <ng-container *ngIf="rt['merlot:runtimeCount']['@value'] === 0 || rt['merlot:runtimeMeasurement']['@value'] === 'unlimited'; else notUnlimitedRuntime">
-                Unbegrenzt
-              </ng-container>
-              <ng-template #notUnlimitedRuntime>
-                {{ rt['merlot:runtimeCount']['@value'] }} {{ rt['merlot:runtimeMeasurement']['@value'] }}
-              </ng-template>
-            </li>
-          </ng-container>
-        </ul>
-      </li>
+    <div *ngIf="isMerlotCoopContractServiceOfferingCs(vc.credentialSubject)">
+      <!-- no special fields currently -->
+    </div>
+
+  </div>
+
+  <ul class="list-group list-group-flush">
+
       <li class="list-group-item" style="border: none">
         <strong>Selbstbeschreibung unterschrieben von:</strong><br />
         {{
           serviceOfferingData.metadata.signedBy ? serviceOfferingData.metadata.signedBy : "Unbekannt"
         }}
       </li>
-  </ul-->
+
+  </ul>
 </ng-container>

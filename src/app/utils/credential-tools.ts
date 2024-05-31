@@ -105,3 +105,23 @@ export function getServiceOfferingIdFromServiceOfferingSd(vp: IVerifiablePresent
         }
     }
 }
+
+export function getServiceOfferingNameFromServiceOfferingSd(vp: IVerifiablePresentation) {
+    for (let vc of vp.verifiableCredential) {
+        if (isGxServiceOfferingCs(vc.credentialSubject)) {
+            return asGxServiceOfferingCs(vc.credentialSubject)["gx:name"];
+        }
+    }
+}
+
+export function getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(vp: IVerifiablePresentation) {
+    for (let vc of vp.verifiableCredential) {
+        if (isMerlotSaasServiceOfferingCs(vc.credentialSubject)) {
+            return asMerlotSaasServiceOfferingCs(vc.credentialSubject).type;
+        } else if (isMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)) {
+            return asMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject).type;
+        } else if (isMerlotCoopContractServiceOfferingCs(vc.credentialSubject)) {
+            return asMerlotCoopContractServiceOfferingCs(vc.credentialSubject).type;
+        }
+    }
+}

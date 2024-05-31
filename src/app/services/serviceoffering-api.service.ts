@@ -19,9 +19,9 @@ export class ServiceofferingApiService {
   }
 
   private friendlyTypeNames = {
-    "merlot:MerlotServiceOfferingSaaS": "Webanwendung",
-    "merlot:MerlotServiceOfferingDataDelivery": "Datenlieferung",
-    "merlot:MerlotServiceOfferingCooperation": "Kooperationsvertrag"
+    "merlot:MerlotSaasServiceOffering": "Webanwendung",
+    "merlot:MerlotDataDeliveryServiceOffering": "Datenlieferung",
+    "merlot:MerlotCoopContractServiceOffering": "Kooperationsvertrag"
   }
 
   constructor(private http: HttpClient, private activeOrgRoleService: ActiveOrganizationRoleService) { 

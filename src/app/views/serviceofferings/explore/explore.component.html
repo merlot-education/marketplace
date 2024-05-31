@@ -17,7 +17,7 @@
 
   <m-grid>
     <m-card class="mb-4" *ngFor="let offering of this.activeOrgaOfferingPage.value.content" title="<b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{
-          offering.name
+          offering.name ? offering.name : 'Unbekannt'
           }}">
       <c-row>
         <c-col>
@@ -69,7 +69,9 @@
 
   <m-grid>
     <m-card *ngFor="let offering of this.activePublicOfferingPage.value.content"
-      title="<b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{ offering.name }}">
+      title="<b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{
+        offering.name ? offering.name : 'Unbekannt'
+        }}">
       <c-row>
         <c-col>
           <ul class="list-group list-group-flush">
@@ -116,32 +118,29 @@
   (visibleChange)="handleEventDetailsModal($event)">
   <ng-container *ngIf="selectedOfferingDetails !== null">
     <c-modal-header>
-      <h5 cModalTitle>Details zum Service Angebot "{{
-        'TODO' }}"</h5>
+      <h5 cModalTitle>Details zum Service Angebot "{{ getServiceOfferingNameFromServiceOfferingSd(selectedOfferingDetails.selfDescription) }}"</h5>
     </c-modal-header>
     <c-modal-body>
-    <!--
       <div [hidden]="!jsonViewHidden"><button id="json-view-button" cButton color="primary" style="margin-bottom: 10px;"
-        (click)="toogleJsonView()">
-        Selbstbeschreibung des Service Angebots einsehen
-      </button>
-      <app-offeringdetailview [serviceOfferingData]="selectedOfferingDetails"
-        [showVariableFields]="true"></app-offeringdetailview>
-    </div>
+          (click)="toogleJsonView()">
+          Selbstbeschreibung des Service Angebots einsehen
+        </button>
+        <app-offeringdetailview [serviceOfferingData]="selectedOfferingDetails"
+          [showVariableFields]="true"></app-offeringdetailview>
+      </div>
 
-    <div [hidden]="jsonViewHidden"><button id="json-download-button" cButton color="primary"
-        style="margin-bottom: 10px;" (click)="sdDownloadService.downloadServiceOfferingSd(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)">
-        Selbstbeschreibung herunterladen
-      </button>
-      <button id="offering-edit-button" cButton color="primary" style="margin-bottom: 10px; margin-left: 10px;"
-        (click)="toogleJsonView()">
-        Service Angebot ansehen
-      </button>
-      <m-card title="Selbstbeschreibung des Service Angebots">
-        <ngx-json-viewer [json]="selectedOfferingDetails.selfDescription"></ngx-json-viewer>
-      </m-card>
-    </div>
-      -->
+      <div [hidden]="jsonViewHidden"><button id="json-download-button" cButton color="primary"
+          style="margin-bottom: 10px;" (click)="sdDownloadService.downloadServiceOfferingSd(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))">
+          Selbstbeschreibung herunterladen
+        </button>
+        <button id="offering-edit-button" cButton color="primary" style="margin-bottom: 10px; margin-left: 10px;"
+          (click)="toogleJsonView()">
+          Service Angebot ansehen
+        </button>
+        <m-card title="Selbstbeschreibung des Service Angebots">
+          <ngx-json-viewer [json]="selectedOfferingDetails.selfDescription"></ngx-json-viewer>
+        </m-card>
+      </div>
     </c-modal-body>
     <c-modal-footer>
       <button cButton color="secondary" [cModalToggle]="modalViewDetails.id">Schließen</button>

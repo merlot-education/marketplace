@@ -10,7 +10,7 @@ import { IContract } from '../../contracts/contracts-data';
 import { ConnectorData } from '../../organization/organization-data';
 import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
-import { getServiceOfferingIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
+import { getServiceOfferingIdFromServiceOfferingSd, getServiceOfferingNameFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 
 
 @Component({
@@ -27,6 +27,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
   private activeOrgaSubscription: Subscription;
 
   private editModalPreviouslyVisible = false;
+
+  protected getServiceOfferingIdFromServiceOfferingSd = getServiceOfferingIdFromServiceOfferingSd;
+  protected getServiceOfferingNameFromServiceOfferingSd = getServiceOfferingNameFromServiceOfferingSd;
 
   protected activePublicOfferingPage: BehaviorSubject<IPageBasicOfferings> = new BehaviorSubject({
     content: [],
