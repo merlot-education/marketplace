@@ -94,12 +94,7 @@ export class BaseWizardExtensionComponent {
     await this.wizardMutex.runExclusive(async () => {
       this.reinitWizard();
       let shape = await shapeSource;
-      try {
-        this.selectShape(this.formFieldService.readShaclFile(shape), id);
-      } catch (e) {
-        console.log("failed to select shape: ", e.message);
-      }
-      
+      this.selectShape(this.formFieldService.readShaclFile(shape), id);
       this.shapeInitialized.next(true);
     });
   }

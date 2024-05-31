@@ -38,7 +38,7 @@ export class FormfieldControlService {
       });
       // Get the constraints for each shape
       const constraints = shapesGroup.constraints;
-      if (constraints !== undefined && constraints.length > 0) {
+      if (constraints !== undefined) {
         // Each form field group has an array of form fields
         const formFields: FormField[] = [];
         constraints.forEach(field => {
