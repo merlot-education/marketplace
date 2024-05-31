@@ -65,9 +65,13 @@ export class ServiceofferingApiService {
   }
 
   // publish a new service offering with the specified self description and set it to "in draft"
-  public async createServiceOffering(sdJson: string) {
+  public async createServiceOffering(sdJson: IServiceOffering) {
     console.log(sdJson); 
     return await lastValueFrom(this.http.post(environment.serviceoffering_api_url + "serviceoffering", sdJson));
+  }
+
+  public async updateServiceOffering(sdJson: IServiceOffering, id: string) {
+    return await lastValueFrom(this.http.put(environment.serviceoffering_api_url + "serviceoffering/" + id, sdJson));
   }
 
   private getStatusShiftUrl(id: string, targetstatus: string) {

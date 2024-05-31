@@ -4,7 +4,7 @@ import { StatusMessageComponent } from '../../views/common-views/status-message/
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wizard-extension.component';
-import { IGxServiceOfferingCs, IMerlotServiceOfferingCs, IServiceOffering } from 'src/app/views/serviceofferings/serviceofferings-data';
+import { IGxServiceOfferingCs, IMerlotServiceOfferingCs, IServiceOffering, TBR_OFFERING_ID } from 'src/app/views/serviceofferings/serviceofferings-data';
 import { isGxServiceOfferingCs, isMerlotCoopContractServiceOfferingCs, isMerlotDataDeliveryServiceOfferingCs, isMerlotSaasServiceOfferingCs, isMerlotServiceOfferingCs } from 'src/app/utils/credential-tools';
 
 
@@ -59,6 +59,7 @@ export class OfferingWizardExtensionComponent {
   }
 
   private async saveSelfDescription(jsonSd: any) {
+
     return await this.serviceofferingApiService.createServiceOffering(jsonSd);
   }
 
@@ -103,8 +104,15 @@ export class OfferingWizardExtensionComponent {
         id: ''
       }
     }
+    
+    let saveCallback: Promise<any>;
+    if (gxOfferingJsonSd.id === TBR_OFFERING_ID) {
+      saveCallback = this.serviceofferingApiService.createServiceOffering(offeringDto);
+    } else {
+      saveCallback = this.serviceofferingApiService.updateServiceOffering(offeringDto, gxOfferingJsonSd.id);
+    }
 
-    this.saveSelfDescription(offeringDto).then(result => {
+    saveCallback.then(result => {
       console.log("result", result);
       /*this.baseWizardExtension.setCredentialId(result["id"]);*/
       this.saveStatusMessage.showSuccessMessage("ID: " + result["id"]);

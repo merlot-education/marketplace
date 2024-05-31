@@ -1,6 +1,8 @@
 import { ISpringPage } from '@merlot-education/m-basic-ui';
 import { ICredentialSubject, IVerifiablePresentation } from '../organization/organization-data';
 
+export const TBR_OFFERING_ID: string = "urn:uuid:WILL-BE-GENERATED-BY-MERLOT";
+
 export interface IPageOfferings extends ISpringPage {
   content: IServiceOffering[];
 }

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
-import { IGxServiceOfferingCs, IServiceOffering, serviceFileNameDict } from '../serviceofferings-data';
+import { IGxServiceOfferingCs, IServiceOffering, TBR_OFFERING_ID, serviceFileNameDict } from '../serviceofferings-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
@@ -124,7 +124,7 @@ export class EditComponent implements OnInit, AfterViewInit {
       }
     }
 
-    this.wizardExtension.loadShape(this.selectedServiceFile, "urn:uuid:WILL-BE-GENERATED-BY-MERLOT").then(_ => {
+    this.wizardExtension.loadShape(this.selectedServiceFile, TBR_OFFERING_ID).then(_ => {
       this.wizardExtension.prefillFields(prefillSd);
     });
     
