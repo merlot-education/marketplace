@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { OrganizationsApiService } from './organizations-api.service';
 import { ServiceofferingApiService } from './serviceoffering-api.service';
+import { getParticipantIdFromParticipantSd, getServiceOfferingIdFromServiceOfferingSd } from '../utils/credential-tools';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class SdDownloadService {
     private serviceofferingApiService: ServiceofferingApiService) { }
 
   
-  private downloadSelfDescriptionJson(selfDescription: any) {
+  private downloadSelfDescriptionJson(selfDescription: any, id: string) {
     // Convert the object to a JSON string
     const jsonData = JSON.stringify(selfDescription, null, 2);
 
@@ -24,7 +25,6 @@ export class SdDownloadService {
     // Create an anchor element with download attribute
     const a = document.createElement('a');
     a.href = url;
-    const id = selfDescription.id;
     a.download = 'selfdescription_' + id + '.json';
 
     // Programmatically click the anchor element to trigger the download
@@ -38,13 +38,17 @@ export class SdDownloadService {
 
   public downloadParticipantSd(participantId: string) {
     this.organizationsApiService.getOrgaById(participantId).then(result => {
-      this.downloadSelfDescriptionJson(result.selfDescription);
+      this.downloadSelfDescriptionJson(result.selfDescription,
+        getParticipantIdFromParticipantSd(result.selfDescription)
+      );
     });
   }
 
   public downloadServiceOfferingSd(serviceOfferingId: string) {
     this.serviceofferingApiService.fetchServiceOfferingDetails(serviceOfferingId).then(result => {
-      this.downloadSelfDescriptionJson(result.selfDescription);
+      this.downloadSelfDescriptionJson(result.selfDescription,
+        getServiceOfferingIdFromServiceOfferingSd(result.selfDescription)
+      );
     });
   }
 }

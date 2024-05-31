@@ -3,6 +3,7 @@ import { IUserData } from '../user-data';
 import { AaamApiService } from 'src/app/services/aaam-api.service';
 import { OrganizationRole } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
+import { getParticipantIdFromParticipantSd } from 'src/app/utils/credential-tools';
 
 @Component({
   templateUrl: './explore.component.html',
@@ -26,7 +27,7 @@ export class ExploreComponent implements OnInit {
     this.users = [];
     this.aaamApiService
       .getUsersFromOrganization(
-        activeOrganizationRole.orgaData.selfDescription.id
+        getParticipantIdFromParticipantSd(activeOrganizationRole.orgaData.selfDescription)
       )
       .then((result) => {
         this.users = result;

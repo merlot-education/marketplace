@@ -6,6 +6,7 @@ import { OrganizationsApiService } from 'src/app/services/organizations-api.serv
 import { ActivatedRoute } from '@angular/router';
 import { OrganisationWizardExtensionComponent } from 'src/app/wizard-extension/organisation-wizard-extension/organisation-wizard-extension.component';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
+import { getParticipantIdFromParticipantSd } from 'src/app/utils/credential-tools';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -30,12 +31,12 @@ export class EditComponent implements OnInit, AfterViewInit {
       this.selectOrganization(selectedOrgaId);
     } else {
       this.activeOrgRoleService.activeOrganizationRole.subscribe(orga => {
-            this.selectOrganization(orga.orgaData.selfDescription.id);
+            this.selectOrganization(getParticipantIdFromParticipantSd(orga.orgaData.selfDescription));
       });
     }
     this.wizardExtensionComponent.submitCompleteEvent.subscribe(_ => {
       this.authService.refreshActiveRoleOrgaData();
-      this.refreshSelectedOrganization(this.selectedOrganization.selfDescription.id)
+      this.refreshSelectedOrganization(getParticipantIdFromParticipantSd(this.selectedOrganization.selfDescription))
     });
   }
 
@@ -57,7 +58,7 @@ export class EditComponent implements OnInit, AfterViewInit {
     this.organizationsApiService.getOrgaById(orgaId).then(result => {
       this.selectedOrganization = result;
       this.wizardExtensionComponent.loadShape(
-        this.selectedOrganization.selfDescription.id).then(_ => {
+        getParticipantIdFromParticipantSd(this.selectedOrganization.selfDescription)).then(_ => {
           this.wizardExtensionComponent.prefillOrganisation(result);
         });
     });

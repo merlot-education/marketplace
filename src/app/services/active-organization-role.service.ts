@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { OrganizationRole } from './auth.service'
-import { getOrganizationLegalName, getOrganizationName } from '../utils/credential-tools';
+import { getOrganizationLegalName, getOrganizationName, getParticipantIdFromParticipantSd } from '../utils/credential-tools';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +28,7 @@ export class ActiveOrganizationRoleService {
     });
 
   public getActiveOrgaId(): string {
-    return this.activeOrganizationRole.value.orgaData?.selfDescription.id;
+    return getParticipantIdFromParticipantSd(this.activeOrganizationRole.value.orgaData?.selfDescription);
   }
 
   public getActiveOrgaName(): string {

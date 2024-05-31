@@ -5,6 +5,7 @@ import { IOrganizationData } from '../views/organization/organization-data';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BehaviorSubject } from 'rxjs';
 import { jwtDecode }from 'jwt-decode';
+import { getParticipantIdFromParticipantSd } from '../utils/credential-tools';
 
 export interface OrganizationRole {
   orgaRoleString: string;
@@ -50,7 +51,7 @@ export class AuthService {
   public refreshActiveRoleOrgaData() {
     this.organizationApiService
       .getOrgaById(
-        this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription.id
+        getParticipantIdFromParticipantSd(this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription)
       )
       .then((result) => {
         this.activeOrgRoleService.organizationRoles[

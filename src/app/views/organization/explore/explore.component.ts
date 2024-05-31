@@ -8,7 +8,8 @@ import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { isLegalParticipantCs, isLegalRegistrationNumberCs, isMerlotLegalParticipantCs, 
   asLegalParticipantCs, asLegalRegistrationNumberCs, asMerlotLegalParticipantCs,
-  getOrganizationName } from "../../../utils/credential-tools";
+  getOrganizationName, 
+  getParticipantIdFromParticipantSd} from "../../../utils/credential-tools";
 
 
 @Component({
@@ -52,6 +53,7 @@ export class ExploreComponent implements OnInit {
   protected asLegalRegistrationNumberCs = asLegalRegistrationNumberCs;
   protected asMerlotLegalParticipantCs = asMerlotLegalParticipantCs;
   protected getOrganizationName = getOrganizationName;
+  protected getParticipantIdFromParticipantSd = getParticipantIdFromParticipantSd;
 
   constructor(
     private organizationsApiService: OrganizationsApiService,
@@ -63,18 +65,22 @@ export class ExploreComponent implements OnInit {
 
   private updateOrgaRepresentation() {
     if (this.activeOrgRoleService.isLoggedIn.value) {
-      let representedOrgaIds = Object.values(this.activeOrgRoleService.organizationRoles).filter(orga => orga.roleName === "OrgLegRep").map(orga => orga.orgaData.selfDescription.id);
-      let administratedOrgaIds = Object.values(this.activeOrgRoleService.organizationRoles).filter(orga => orga.roleName === "FedAdmin").map(orga => orga.orgaData.selfDescription.id);
+      let representedOrgaIds = Object.values(this.activeOrgRoleService.organizationRoles)
+        .filter(orga => orga.roleName === "OrgLegRep")
+        .map(orga => getParticipantIdFromParticipantSd(orga.orgaData.selfDescription));
+      let administratedOrgaIds = Object.values(this.activeOrgRoleService.organizationRoles)
+        .filter(orga => orga.roleName === "FedAdmin")
+        .map(orga => getParticipantIdFromParticipantSd(orga.orgaData.selfDescription));
       
       for (let orga of this.activeOrganizationsPage.value.content) {
         if (this.activeOrgRoleService.isActiveAsRepresentative()) {
           orga.activeFedAdmin = false;
           orga.passiveFedAdmin = false;
 
-          if (orga.selfDescription.id === this.activeOrgRoleService.getActiveOrgaId()) {
+          if (getParticipantIdFromParticipantSd(orga.selfDescription) === this.activeOrgRoleService.getActiveOrgaId()) {
             orga.activeRepresentant = true;
             orga.passiveRepresentant = true;
-          } else if (representedOrgaIds.includes(orga.selfDescription.id)) {
+          } else if (representedOrgaIds.includes(getParticipantIdFromParticipantSd(orga.selfDescription))) {
             orga.activeRepresentant = false;
             orga.passiveRepresentant = true;
           }
@@ -86,10 +92,10 @@ export class ExploreComponent implements OnInit {
           orga.activeRepresentant = false;
           orga.passiveRepresentant = false;
 
-          if (orga.selfDescription.id === this.activeOrgRoleService.getActiveOrgaId()) {
+          if (getParticipantIdFromParticipantSd(orga.selfDescription) === this.activeOrgRoleService.getActiveOrgaId()) {
             orga.activeFedAdmin = true;
             orga.passiveFedAdmin = true;
-          } else if (administratedOrgaIds.includes(orga.selfDescription.id)) {
+          } else if (administratedOrgaIds.includes(getParticipantIdFromParticipantSd(orga.selfDescription))) {
             orga.activeFedAdmin = false;
             orga.passiveFedAdmin = true;
           }
@@ -122,7 +128,7 @@ export class ExploreComponent implements OnInit {
   }
 
   protected editOrganization(orga: IOrganizationData) {
-    this.router.navigate(["organization/edit/", orga.selfDescription.id]);
+    this.router.navigate(["organization/edit/", getParticipantIdFromParticipantSd(orga.selfDescription)]);
   }
 
   protected getConnectorBucketsString(cd: ConnectorData) {
