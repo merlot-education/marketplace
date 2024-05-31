@@ -258,8 +258,17 @@ export class BaseWizardExtensionComponent {
     let parentKey = expandedField.input.prefix + ":" + expandedField.input.key;
 
     // since we are always working with a list of inputs, we need to adapt to that in the prefill as well (even if it is just one element)
-    if (Object.keys(prefillFields).includes(parentKey) && !(prefillFields[parentKey] instanceof Array)) {
-      prefillFields[parentKey] = [prefillFields[parentKey]];
+    if (Object.keys(prefillFields).includes(parentKey)) { // key is in prefill fields
+      if (!(prefillFields[parentKey] instanceof Array)) { // field is not array
+        prefillFields[parentKey] = [prefillFields[parentKey]]; // set field to array
+      }
+    } else { // key is not in prefill fields
+      prefillFields[parentKey] = []; // init with empty array
+    }
+
+    // fill up array up to the expected count of inputs
+    for (let i = 0; i < (expandedField.inputs.length-prefillFields[parentKey].length); i++) {
+      prefillFields[parentKey].push({});
     }
 
     let i = 0;

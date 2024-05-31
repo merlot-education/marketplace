@@ -68,13 +68,13 @@ export class EditComponent implements OnInit, AfterViewInit {
     let providerTnc = this.getOfferingTncFromParticipantSd(providerSd);
 
     let gxServiceOfferingCs = {
-      /*"gx:providedBy": {
+      "gx:providedBy": {
         "@id": getParticipantIdFromParticipantSd(providerSd)
       },
       "gx:termsAndConditions": [
         merlotTnc,
         providerTnc
-      ],*/
+      ],
       type: "gx:ServiceOffering"
     }
 
