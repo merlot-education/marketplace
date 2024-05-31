@@ -6,8 +6,9 @@ import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
 import { skip } from 'rxjs';
-import { asMerlotLegalParticipantCs, getParticipantIdFromParticipantSd, isMerlotLegalParticipantCs } from 'src/app/utils/credential-tools';
+import { asMerlotLegalParticipantCs, getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, getParticipantIdFromParticipantSd, getServiceOfferingIdFromServiceOfferingSd, isMerlotLegalParticipantCs } from 'src/app/utils/credential-tools';
 import { IVerifiablePresentation } from '../../organization/organization-data';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -20,19 +21,26 @@ export class EditComponent implements OnInit, AfterViewInit {
   serviceFiles: string[];
   private selectedServiceFile: string = "";
 
+  protected selectedOfferingId: string;
+
+  private selectedOffering: IServiceOffering;
+
   @ViewChild("wizardExtension") private wizardExtension: OfferingWizardExtensionComponent;
 
   constructor(private serviceofferingsApiService: ServiceofferingApiService, 
     protected authService : AuthService, 
     protected activeOrgRoleService: ActiveOrganizationRoleService,
-    private organizationsApiService: OrganizationsApiService) {
+    private organizationsApiService: OrganizationsApiService,
+    private route: ActivatedRoute) {
   }
   
   ngAfterViewInit(): void {
+    this.selectedOfferingId = this.route.snapshot.paramMap.get('offeringId');
     this.requestShapes();
     this.activeOrgRoleService.activeOrganizationRole.pipe(skip(1)).subscribe(_ => {
-      this.prefillWizard(false);
+      this.prefillWizard();
     });
+    console.log(this.selectedOfferingId);
   }
 
 
@@ -44,7 +52,24 @@ export class EditComponent implements OnInit, AfterViewInit {
     //pass the system string down here
     this.serviceFiles = ["saas", "datadelivery", "coopcontract" ];
     this.serviceFiles.sort((a, b) => (serviceFileNameDict[a].name < serviceFileNameDict[b].name ? -1 : 1));
-    this.select(this.serviceFiles[0]);
+    if (this.selectedOfferingId) {
+      this.serviceofferingsApiService.fetchServiceOfferingDetails(this.selectedOfferingId).then(result => {
+        this.selectedOffering = result;
+        let type = getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(result.selfDescription);
+        let typeFile;
+        Object.keys(serviceFileNameDict)
+        for (const k of Object.keys(serviceFileNameDict)) {
+          const v = serviceFileNameDict[k];
+          if (v["type"] === type) {
+            typeFile = k;
+            break;
+          }
+        }
+        this.select(typeFile);
+      });
+    } else {
+      this.select(this.serviceFiles[0]);
+    }
   }
 
 
@@ -56,11 +81,18 @@ export class EditComponent implements OnInit, AfterViewInit {
       this.selectedServiceFile = (input as HTMLSelectElement).value;
     }
     
-    this.prefillWizard(true);
+    this.prefillWizard();
   }
 
-  prefillWizard(changeShape: boolean) {
+  prefillWizard() {
+    if (this.selectedOfferingId) {
+      this.prefillWizardExistingOffering();
+    } else {
+      this.prefillWizardNewOffering();
+    }
+  }
 
+  prefillWizardNewOffering() {
     let merlotFederationSd = this.organizationsApiService.getMerlotFederationOrga().selfDescription;
     let providerSd = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription;
 
@@ -95,82 +127,14 @@ export class EditComponent implements OnInit, AfterViewInit {
     this.wizardExtension.loadShape(this.selectedServiceFile, "urn:uuid:WILL-BE-GENERATED-BY-MERLOT").then(_ => {
       this.wizardExtension.prefillFields(prefillSd);
     });
+    
+  }
 
-    /*let merlotTnC: ITermsAndConditions = {
-      'gax-trust-framework:content': {'@value': 'TODO'},
-      'gax-trust-framework:hash': {'@value': 'TODO'}
-    }; //this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-    let providerTnC: ITermsAndConditions = {
-      'gax-trust-framework:content': {'@value': 'TODO'},
-      'gax-trust-framework:hash': {'@value': 'TODO'}
-    }; //this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-
-    let prefillSd = {
-      "gax-core:offeredBy": {
-        "@id": this.activeOrgRoleService.getActiveOrgaLegalName(),
-        "disabled": true
-      },
-      "gax-trust-framework:providedBy": {
-        "@id": this.activeOrgRoleService.getActiveOrgaLegalName(),
-        "disabled": true
-      },
-      "gax-trust-framework:termsAndConditions": [
-        {
-          "@type": "gax-trust-framework:TermsAndConditions",
-          "overrideName": "Merlot AGB",
-          "gax-trust-framework:content": {
-            "@value": merlotTnC['gax-trust-framework:content']['@value'],
-            "@type": "xsd:anyURI",
-            "disabled": true
-          },
-          "gax-trust-framework:hash": {
-            "@value": merlotTnC['gax-trust-framework:hash']['@value'],
-            "@type": "xsd:string",
-            "disabled": true
-          }
-        },
-        {
-          "@type": "gax-trust-framework:TermsAndConditions",
-          "overrideName": "Anbieter AGB",
-          "gax-trust-framework:content": {
-            "@value": providerTnC['gax-trust-framework:content']['@value'],
-            "@type": "xsd:anyURI",
-            "disabled": true
-          },
-          "gax-trust-framework:hash": {
-            "@value": providerTnC['gax-trust-framework:hash']['@value'],
-            "@type": "xsd:string",
-            "disabled": true
-          }
-        }
-      ],
-      "gax-trust-framework:policy": [{
-        "@value": "dummyValue",
-        "@type": "xsd:string",
-      }],
-      "gax-trust-framework:dataAccountExport": {
-        "gax-trust-framework:requestType": {
-          "@value": "dummyValue",
-          "@type": "xsd:string",
-        },
-        "gax-trust-framework:accessType": {
-          "@value": "dummyValue",
-          "@type": "xsd:string",
-        },
-        "gax-trust-framework:formatType": {
-          "@value": "dummyValue",
-          "@type": "xsd:string",
-        }
-      }
-    };
-  
-    if (changeShape) {
-      this.wizardExtension.loadShape(this.selectedServiceFile, "ServiceOffering:TBR").then(_ => {
-        this.wizardExtension.prefillFields(prefillSd);
-      });
-    } else {
-      this.wizardExtension.prefillFields(prefillSd);
-    }*/
+  prefillWizardExistingOffering() {
+    this.wizardExtension.loadShape(this.selectedServiceFile, 
+      getServiceOfferingIdFromServiceOfferingSd(this.selectedOffering.selfDescription)).then(_ => {
+      this.wizardExtension.prefillFields(this.selectedOffering);
+    });
     
   }
 

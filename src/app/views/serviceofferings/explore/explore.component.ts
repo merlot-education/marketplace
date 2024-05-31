@@ -11,6 +11,7 @@ import { ConnectorData } from '../../organization/organization-data';
 import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
 import { getServiceOfferingIdFromServiceOfferingSd, getServiceOfferingNameFromServiceOfferingSd } from 'src/app/utils/credential-tools';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -111,7 +112,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
     protected organizationsApiService: OrganizationsApiService,
     private contractApiService: ContractApiService,
     protected sdDownloadService: SdDownloadService,
-    protected activeOrgRoleService: ActiveOrganizationRoleService) {
+    protected activeOrgRoleService: ActiveOrganizationRoleService,
+    private router: Router) {
   }
 
   ngOnInit(): void {
@@ -323,5 +325,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   toogleJsonView() {
     this.jsonViewHidden = !this.jsonViewHidden;
+  }
+
+  protected editOffering(offering: IBasicOffering) {
+    this.router.navigate(["service-offerings/edit/", offering.id]);
   }
 }

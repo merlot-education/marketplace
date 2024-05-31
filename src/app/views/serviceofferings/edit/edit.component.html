@@ -6,10 +6,14 @@
 
         <div class="mb-3" fxFlex="70%" fxFlex.sm="100%" fxFlex.xs="100%">
 
-          <label class="form-label"><b>Art des Service Angebots</b></label>
-          <select class="form-select" (change)="select($event.target)">
-            <option *ngFor="let option of serviceFiles" [value]="option">{{serviceFileNameDict[option].name}}</option>
-          </select>
+          <div [hidden]="selectedOfferingId">
+            <label class="form-label"><b>Art des Service Angebots</b></label>
+            <select class="form-select" (change)="select($event.target)" >
+              <option *ngFor="let option of serviceFiles" [value]="option">{{serviceFileNameDict[option].name}}</option>
+            </select>
+            <hr class="hr hr-blurry" />
+          </div>
+          
 
           <div *ngIf="isOfferingDataDeliveryOffering() && !isAnyConnectorAvailable()" class="warning-box">
             <svg class="warning-symbol" cIcon name='cil-warning' size='xl' width='24'></svg>
@@ -28,7 +32,6 @@
         </div>
       </div>
 
-      <hr class="hr hr-blurry" />
       <app-offering-wizard-extension #wizardExtension></app-offering-wizard-extension>
     </m-card>
   </c-col>
