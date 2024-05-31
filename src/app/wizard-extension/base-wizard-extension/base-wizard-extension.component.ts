@@ -94,7 +94,12 @@ export class BaseWizardExtensionComponent {
     await this.wizardMutex.runExclusive(async () => {
       this.reinitWizard();
       let shape = await shapeSource;
-      this.selectShape(this.formFieldService.readShaclFile(shape), id);
+      try {
+        this.selectShape(this.formFieldService.readShaclFile(shape), id);
+      } catch (e) {
+        console.log("failed to select shape: ", e.message);
+      }
+      
       this.shapeInitialized.next(true);
     });
   }
@@ -195,6 +200,7 @@ export class BaseWizardExtensionComponent {
     }
 
     let fullKey = formInput.input.prefix + ":" + formInput.input.key;
+    console.log(fullKey);
 
     if (fullKey === "gx:providedBy") {
       this.orgaIdFields.push(formInput.form.controls[formInput.input.id]); // save for later reference
@@ -210,6 +216,10 @@ export class BaseWizardExtensionComponent {
     
     if (Object.keys(prefillFields).includes(fullKey)) {
       formInput.form.controls[formInput.input.id].patchValue(this.unpackValueFromField(prefillFields[fullKey]));
+      // TODO this will not work for existing offerings that have more tnc
+      if (fullKey === "gx:URL" || fullKey === "gx:hash") { // for service offerings we also disable the TnC fields if they are prefilled
+        formInput.form.controls[formInput.input.id].disable();
+      }
     }
     if (this.disabledFields.includes(fullKey)) {
       formInput.form.controls[formInput.input.id].disable();
