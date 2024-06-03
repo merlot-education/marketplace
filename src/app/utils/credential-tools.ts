@@ -98,6 +98,18 @@ export function getParticipantIdFromParticipantSd(vp: IVerifiablePresentation) {
     }
 }
 
+export function getOfferingTncFromParticipantSd(participantSd: IVerifiablePresentation) {
+    for (let vc of participantSd.verifiableCredential) {
+      if (isMerlotLegalParticipantCs(vc.credentialSubject)) {
+        let tnc = asMerlotLegalParticipantCs(vc.credentialSubject)['merlot:termsAndConditions']
+        return {
+          "gx:URL": tnc['merlot:URL'],
+          "gx:hash": tnc["merlot:hash"]
+        }
+      }
+    }
+  }
+
 export function getServiceOfferingIdFromServiceOfferingSd(vp: IVerifiablePresentation) {
     for (let vc of vp.verifiableCredential) {
         if (isGxServiceOfferingCs(vc.credentialSubject)) {

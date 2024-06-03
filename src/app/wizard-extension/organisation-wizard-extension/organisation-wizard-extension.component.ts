@@ -22,7 +22,7 @@ export class OrganisationWizardExtensionComponent {
   @ViewChild("gxRegistrationNumberWizard") private gxRegistrationNumberWizard: BaseWizardExtensionComponent;
   @ViewChild("merlotParticipantWizard") private merlotParticipantWizard: BaseWizardExtensionComponent;
 
-  @ViewChild("saveStatusMessage") private saveStatusMessage: StatusMessageComponent;
+  @ViewChild("saveStatusMessage") public saveStatusMessage: StatusMessageComponent;
   @ViewChild("modalConfirmation") private modalConfirmation: ModalComponent;
   @ViewChild("ionosS3Config") private ionosS3Config: OrganisationIonosS3ConfigComponent;
   

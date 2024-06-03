@@ -10,6 +10,10 @@ import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynami
 import { BehaviorSubject, takeWhile } from 'rxjs';
 import { ExportService } from '@services/export.service';
 import { Mutex } from 'async-mutex';
+import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
+import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
+import { getOfferingTncFromParticipantSd } from 'src/app/utils/credential-tools';
+import { IServiceOfferingTermsAndConditions } from 'src/app/views/serviceofferings/serviceofferings-data';
 
 
 @Component({
@@ -32,9 +36,20 @@ export class BaseWizardExtensionComponent {
 
   private disabledFields: string[] = [];
 
+  private merlotTnc: IServiceOfferingTermsAndConditions;
+  private providerTnc: IServiceOfferingTermsAndConditions;
+
   constructor(protected formFieldService: FormfieldControlService,
     protected exportService: ExportService,
-    protected changeDetectorRef: ChangeDetectorRef) {}
+    protected changeDetectorRef: ChangeDetectorRef,
+    private organizationsApiService: OrganizationsApiService,
+    private activeOrgRoleService: ActiveOrganizationRoleService) {
+      let merlotFederationSd = this.organizationsApiService.getMerlotFederationOrga().selfDescription;
+      let providerSd = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription;
+
+      this.merlotTnc = getOfferingTncFromParticipantSd(merlotFederationSd);
+      this.providerTnc = getOfferingTncFromParticipantSd(providerSd);
+    }
 
   private selectShape(shaclFile: ShaclFile, credentialSubjectId: string): void {
     this.shaclFile = shaclFile;
@@ -213,9 +228,12 @@ export class BaseWizardExtensionComponent {
     }
     
     if (Object.keys(prefillFields).includes(fullKey)) {
-      formInput.form.controls[formInput.input.id].patchValue(this.unpackValueFromField(prefillFields[fullKey]));
-      // TODO this will not work for existing offerings that have more tnc
-      if (fullKey === "gx:URL" || fullKey === "gx:hash") { // for service offerings we also disable the TnC fields if they are prefilled
+      let fieldValue = this.unpackValueFromField(prefillFields[fullKey]);
+      formInput.form.controls[formInput.input.id].patchValue(fieldValue);
+
+      // check if it is the merlot/provider tnc, and if so disable the fields
+      if (fullKey === "gx:URL" && (fieldValue === this.merlotTnc['gx:URL'] ||  fieldValue === this.providerTnc['gx:URL']) 
+        || fullKey === "gx:hash" && (fieldValue === this.merlotTnc['gx:hash'] || fieldValue === this.providerTnc['gx:hash'])) { // for service offerings we also disable the TnC fields if they are prefilled
         formInput.form.controls[formInput.input.id].disable();
       }
     }

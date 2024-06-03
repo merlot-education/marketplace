@@ -6,7 +6,7 @@ import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
 import { map, skip, takeWhile } from 'rxjs';
-import { asMerlotLegalParticipantCs, getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, getParticipantIdFromParticipantSd, getServiceOfferingIdFromServiceOfferingSd, isMerlotLegalParticipantCs } from 'src/app/utils/credential-tools';
+import { asMerlotLegalParticipantCs, getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, getOfferingTncFromParticipantSd, getParticipantIdFromParticipantSd, getServiceOfferingIdFromServiceOfferingSd, isMerlotLegalParticipantCs } from 'src/app/utils/credential-tools';
 import { IVerifiablePresentation } from '../../organization/organization-data';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -119,8 +119,8 @@ export class EditComponent implements OnInit, AfterViewInit {
     let merlotFederationSd = this.organizationsApiService.getMerlotFederationOrga().selfDescription;
     let providerSd = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription;
 
-    let merlotTnc = this.getOfferingTncFromParticipantSd(merlotFederationSd);
-    let providerTnc = this.getOfferingTncFromParticipantSd(providerSd);
+    let merlotTnc = getOfferingTncFromParticipantSd(merlotFederationSd);
+    let providerTnc = getOfferingTncFromParticipantSd(providerSd);
 
     let gxServiceOfferingCs = {
       "gx:providedBy": {
@@ -200,17 +200,5 @@ export class EditComponent implements OnInit, AfterViewInit {
     }
 
     return true;
-  }
-
-  private getOfferingTncFromParticipantSd(participantSd: IVerifiablePresentation) {
-    for (let vc of participantSd.verifiableCredential) {
-      if (isMerlotLegalParticipantCs(vc.credentialSubject)) {
-        let tnc = asMerlotLegalParticipantCs(vc.credentialSubject)['merlot:termsAndConditions']
-        return {
-          "gx:URL": tnc['merlot:URL'],
-          "gx:hash": tnc["merlot:hash"]
-        }
-      }
-    }
   }
 }

@@ -66,7 +66,9 @@ export class EditComponent implements OnInit, AfterViewInit {
             )
           .subscribe(done => {
             console.log("wizard done: ", done);
-            window.scrollTo(0,document.body.scrollHeight);
+            if (this.wizardExtensionComponent.saveStatusMessage.isMessageVisible.value) {
+              window.scrollTo(0,document.body.scrollHeight);
+            }
           });
           this.wizardExtensionComponent.prefillOrganisation(result);
         });
