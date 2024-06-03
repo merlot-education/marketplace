@@ -18,14 +18,14 @@
       <c-row>
         <c-col>
           <svg class="warning-symbol" cIcon name='cil-warning' size='xl' width='24' *ngIf='!contract.providerActive || !contract.consumerActive'></svg> 
-          <!--ul class="list-group list-group-flush">
+          <ul class="list-group list-group-flush">
             <li class="list-group-item" style="border: none">
               <strong>Erstelldatum:</strong><br />
               {{ contract.creationDate | date:"medium" }}
             </li>
             <li class="list-group-item" style="border: none">
               <strong>Angebots-ID:</strong> <br />
-              {{ contract.offering.selfDescription.verifiableCredential.credentialSubject.id }}
+              {{ getServiceOfferingIdFromServiceOfferingSd(contract.offering.selfDescription) }}
             </li>
             <li class="list-group-item" style="border: none" *ngIf="!isActiveProvider(contract)">
               <strong>Serviceanbieter:</strong><br />
@@ -38,14 +38,14 @@
             <li class="list-group-item" style="border: none">
               <strong>Servicename:</strong><br />
               {{
-              contract.offering.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:name']['@value']
+                getServiceOfferingNameFromServiceOfferingSd(contract.offering.selfDescription)
               }}
             </li>
             <li class="list-group-item" style="border: none">
               <strong>Status:</strong><br />
               {{ contractApiService.resolveFriendlyStatusName(contract.state) }}
             </li>
-          </ul-->
+          </ul>
           <div style="padding: 10px">
             <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="'modalViewContract'"
               (click)="prepareEditContract(contract)">
