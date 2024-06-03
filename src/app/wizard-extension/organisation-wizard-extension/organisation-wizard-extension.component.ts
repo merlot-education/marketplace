@@ -257,6 +257,8 @@ export class OrganisationWizardExtensionComponent {
   }
 
   protected isWizardFormInvalid(): boolean {
-    return this.gxParticipantWizard?.isWizardFormInvalid() || this.gxRegistrationNumberWizard?.isWizardFormInvalid() || this.merlotParticipantWizard?.isWizardFormInvalid();
+    return this.gxParticipantWizard?.isWizardFormInvalid() 
+      || this.gxRegistrationNumberWizard?.isWizardFormInvalid() 
+      || this.merlotParticipantWizard?.isWizardFormInvalid();
   }
 }

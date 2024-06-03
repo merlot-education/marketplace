@@ -192,7 +192,7 @@ export class OfferingWizardExtensionComponent {
 
   protected isWizardFormInvalid(): boolean {
     return this.gxServiceOfferingWizard?.isWizardFormInvalid() 
-      && this.merlotServiceOfferingWizard?.isWizardFormInvalid() 
-      && this.merlotSpecificServiceOfferingWizard?.isWizardFormInvalid();
+      || this.merlotServiceOfferingWizard?.isWizardFormInvalid() 
+      || this.merlotSpecificServiceOfferingWizard?.isWizardFormInvalid();
   }
 }
