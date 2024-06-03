@@ -129,7 +129,7 @@ export function getServiceOfferingNameFromServiceOfferingSd(vp: IVerifiablePrese
 export function getServiceOfferingProviderIdFromServiceOfferingSd(vp: IVerifiablePresentation): string {
     for (let vc of vp.verifiableCredential) {
         if (isGxServiceOfferingCs(vc.credentialSubject)) {
-            return asGxServiceOfferingCs(vc.credentialSubject)["gx:providedBy"]["@id"];
+            return asGxServiceOfferingCs(vc.credentialSubject)["gx:providedBy"]["id"];
         }
     }
 }

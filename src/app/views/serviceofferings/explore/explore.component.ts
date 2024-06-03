@@ -19,15 +19,12 @@ import { Router } from '@angular/router';
   styleUrls: ['./explore.component.scss']
 })
 export class ExploreComponent implements OnInit, OnDestroy {
-  @ViewChild("wizardExtension") private wizardExtension: OfferingWizardExtensionComponent;
 
   readonly ITEMS_PER_PAGE = 9;
 
   objectKeys = Object.keys;
 
   private activeOrgaSubscription: Subscription;
-
-  private editModalPreviouslyVisible = false;
 
   protected getServiceOfferingIdFromServiceOfferingSd = getServiceOfferingIdFromServiceOfferingSd;
   protected getServiceOfferingNameFromServiceOfferingSd = getServiceOfferingNameFromServiceOfferingSd;
@@ -132,15 +129,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected handleEventEditModal(modalVisible: boolean) {
-    this.showingModal = modalVisible;
-    if (this.editModalPreviouslyVisible && !modalVisible) {
-      this.wizardExtension.ngOnDestroy();
-      this.refreshOfferings();
-    }
-    this.editModalPreviouslyVisible = modalVisible;
-  }
-
   protected handleEventDetailsModal(modalVisible: boolean) {
     this.showingModal = modalVisible;
   }
@@ -242,44 +230,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
       }
     }
     return undefined;
-  }
-
-  updateServiceOfferingEdit(offering: IBasicOffering) {
-    this.requestDetails(offering.id).then(() => {
-      // TODO 
-      /*let merlotTnC: ITermsAndConditions = {
-        'gax-trust-framework:content': {'@value': 'TODO'},
-        'gax-trust-framework:hash': {'@value': 'TODO'}
-      }; //this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-      let providerTnC: ITermsAndConditions = {
-        'gax-trust-framework:content': {'@value': 'TODO'},
-        'gax-trust-framework:hash': {'@value': 'TODO'}
-      }; //this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-
-      for (let tnc of this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:termsAndConditions']) {
-        if (tnc['gax-trust-framework:content']['@value'] === merlotTnC['gax-trust-framework:content']['@value'] 
-              && tnc['gax-trust-framework:hash']['@value'] === merlotTnC['gax-trust-framework:hash']['@value']) {
-          tnc["overrideName"] = "Merlot AGB";
-          tnc['gax-trust-framework:content']['disabled'] = true;
-          tnc['gax-trust-framework:hash']['disabled'] = true;
-        }
-        else if (tnc['gax-trust-framework:content']['@value'] === providerTnC['gax-trust-framework:content']['@value'] 
-                && tnc['gax-trust-framework:hash']['@value'] === providerTnC['gax-trust-framework:hash']['@value']) {
-          tnc["overrideName"] = "Anbieter AGB";
-          tnc['gax-trust-framework:content']['disabled'] = true;
-          tnc['gax-trust-framework:hash']['disabled'] = true;
-        }
-      }
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] = this.activeOrgRoleService.getActiveOrgaLegalName();
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['disabled'] = true;
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:providedBy']['@id'] = this.activeOrgRoleService.getActiveOrgaLegalName();
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:providedBy']['disabled'] = true;
-      
-      this.wizardExtension.loadShape(this.findFilenameByShapeType(offering.type), 
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id).then(_ => {
-        //this.wizardExtension.prefillFields(this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject);
-      });*/
-    });
   }
 
   bookServiceOffering(offeringId: string): void {

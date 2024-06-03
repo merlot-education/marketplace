@@ -44,8 +44,7 @@
               (click)="selectedOfferingPublic = false; requestDetails(offering.id)">
               Details
             </button>
-            <button type="button" class="btn btn-primary flex-item-grow" (click)="editOffering(offering)"
-              (click)="updateServiceOfferingEdit(offering)" *ngIf="offering.state === 'IN_DRAFT'">
+            <button type="button" class="btn btn-primary flex-item-grow" (click)="editOffering(offering)" *ngIf="offering.state === 'IN_DRAFT'">
               Bearbeiten
             </button>
             <button id="json-download-button" type="button" class="btn btn-secondary flex-item-grow me-1" 
