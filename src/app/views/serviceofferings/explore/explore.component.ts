@@ -228,9 +228,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   regenerateOffering(id: string) {
     this.serviceOfferingApiService.regenerateServiceOffering(id).then(result => {
-      // prepare new id for refreshing
-      // TODO
-      //this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id = result["id"];
+      this.serviceOfferingApiService.fetchServiceOfferingDetails(result["id"]).then(result => {
+        this.selectedOfferingDetails = result;
+      });
       this.refreshOfferings();
     });
   }
