@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { OrganisationWizardExtensionComponent } from 'src/app/wizard-extension/organisation-wizard-extension/organisation-wizard-extension.component';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
 import { getParticipantIdFromParticipantSd } from 'src/app/utils/credential-tools';
+import { takeUntil, takeWhile } from 'rxjs';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -59,6 +60,14 @@ export class EditComponent implements OnInit, AfterViewInit {
       this.selectedOrganization = result;
       this.wizardExtensionComponent.loadShape(
         getParticipantIdFromParticipantSd(this.selectedOrganization.selfDescription)).then(_ => {
+          this.wizardExtensionComponent.prefillDone
+          .pipe(
+            takeWhile(done => !done, true)
+            )
+          .subscribe(done => {
+            console.log("wizard done: ", done);
+            window.scrollTo(0,document.body.scrollHeight);
+          });
           this.wizardExtensionComponent.prefillOrganisation(result);
         });
     });

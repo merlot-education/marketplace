@@ -27,6 +27,7 @@ export class BaseWizardExtensionComponent {
   protected wizardVisible: boolean = false;
 
   private shapeInitialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  prefillDone: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private wizardMutex: Mutex = new Mutex();
 
   private disabledFields: string[] = [];
@@ -86,6 +87,7 @@ export class BaseWizardExtensionComponent {
     this.changeDetectorRef.detectChanges();
     this.shaclFile = undefined;
     this.shapeInitialized.next(false);
+    this.prefillDone.next(false);
     this.wizardVisible = true;
     this.changeDetectorRef.detectChanges();
 }
@@ -127,6 +129,7 @@ export class BaseWizardExtensionComponent {
           for (let formArray of this.wizard.formArrayViewChildren) {
             this.processFormArray(formArray, selfDescriptionFields);
           }
+          this.prefillDone.next(true);
         });
       });
   }

@@ -9,6 +9,7 @@ import { OrganisationIonosS3ConfigComponent } from '../organisation-ionos-s3-con
 import { environment } from 'src/environments/environment';
 import { isLegalParticipantCs, isLegalRegistrationNumberCs, isMerlotLegalParticipantCs } from 'src/app/utils/credential-tools';
 import { HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, takeWhile } from 'rxjs';
 
 
 @Component({
@@ -34,12 +35,15 @@ export class OrganisationWizardExtensionComponent {
 
   protected environment = environment;
 
+  public prefillDone: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
   constructor(
       protected organizationsApiService: OrganizationsApiService,
       protected activeOrgRoleService: ActiveOrganizationRoleService
     ) {}
 
   public async loadShape(id: string): Promise<void> {
+    this.prefillDone.next(false);
     console.log("Loading MERLOT Organisation shape");
     await this.gxParticipantWizard.loadShape(this.organizationsApiService.getGxParticipantShape(), id);
     await this.gxRegistrationNumberWizard.loadShape(this.organizationsApiService.getGxRegistrationNumberShape(), id + "#registrationNumber");
@@ -81,6 +85,30 @@ export class OrganisationWizardExtensionComponent {
           : ["gx:leiCode", "gx:vatID", "gx:EORI", "gx:EUID", "gx:taxID"]);
       }
     }
+
+    this.gxParticipantWizard.prefillDone
+      .pipe(
+        takeWhile(done => !done, true)
+        )
+      .subscribe(done => {
+      if (done) {
+        this.gxRegistrationNumberWizard.prefillDone.pipe(
+          takeWhile(done => !done, true)
+          )
+        .subscribe(done => {
+          if (done) {
+            this.merlotParticipantWizard.prefillDone.pipe(
+              takeWhile(done => !done, true)
+              )
+            .subscribe(done => {
+              if (done) {
+                this.prefillDone.next(true);
+              }
+            });
+          }
+        });
+      }
+    })
   }
 
   private async saveSelfDescription(id: string, credentials: IVerifiableCredential[]) {

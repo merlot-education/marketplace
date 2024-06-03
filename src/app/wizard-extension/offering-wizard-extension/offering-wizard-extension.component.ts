@@ -6,6 +6,7 @@ import { ActiveOrganizationRoleService } from 'src/app/services/active-organizat
 import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wizard-extension.component';
 import { IGxServiceOfferingCs, IMerlotServiceOfferingCs, IServiceOffering, TBR_OFFERING_ID } from 'src/app/views/serviceofferings/serviceofferings-data';
 import { isGxServiceOfferingCs, isMerlotCoopContractServiceOfferingCs, isMerlotDataDeliveryServiceOfferingCs, isMerlotSaasServiceOfferingCs, isMerlotServiceOfferingCs } from 'src/app/utils/credential-tools';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -26,7 +27,8 @@ export class OfferingWizardExtensionComponent {
 
   constructor(
       private serviceofferingApiService: ServiceofferingApiService,
-      protected activeOrgRoleService: ActiveOrganizationRoleService
+      protected activeOrgRoleService: ActiveOrganizationRoleService,
+      private router: Router
     ) {}
 
 
@@ -116,6 +118,10 @@ export class OfferingWizardExtensionComponent {
       console.log("result", result);
       /*this.baseWizardExtension.setCredentialId(result["id"]);*/
       this.saveStatusMessage.showSuccessMessage("ID: " + result["id"]);
+
+      if (gxOfferingJsonSd.id === TBR_OFFERING_ID) {
+        this.router.navigate(["service-offerings/edit/", result["id"]]); // TODO pass success message
+      }
 
       /*if (publishAfterSave) {
         this.serviceofferingApiService.releaseServiceOffering(result["id"])

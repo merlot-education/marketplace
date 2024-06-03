@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-status-message',
@@ -20,6 +21,8 @@ export class StatusMessageComponent {
   protected successDetails: string = "";
   protected errorDetails: string = "";
   protected infoDetails: string = "";
+
+  public isMessageVisible: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   private startHideMessageTimeout(timeout: number) {
     if (timeout === undefined || timeout === 0) {
@@ -46,12 +49,14 @@ export class StatusMessageComponent {
     this.successDetails = "";
     this.errorDetails = "";
     this.infoDetails = "";
+    this.isMessageVisible.next(false);
   }
 
   public showSuccessMessage(details: string = "", timeout: number = 0) {
     this.hideAllMessages();
     this.successDetails = details;
     this.successMessageVisible = true;
+    this.isMessageVisible.next(true);
     this.startHideMessageTimeout(timeout);
   }
 
@@ -59,6 +64,7 @@ export class StatusMessageComponent {
     this.hideAllMessages();
     this.errorDetails = details;
     this.errorMessageVisible = true;
+    this.isMessageVisible.next(true);
     this.startHideMessageTimeout(timeout);
   }
 
@@ -66,6 +72,7 @@ export class StatusMessageComponent {
     this.hideAllMessages();
     this.infoDetails = details;
     this.infoMessageVisible = true;
+    this.isMessageVisible.next(true);
     this.startHideMessageTimeout(timeout);
   }
 
