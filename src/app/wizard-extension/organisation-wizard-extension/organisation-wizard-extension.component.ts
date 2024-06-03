@@ -108,7 +108,7 @@ export class OrganisationWizardExtensionComponent {
           }
         });
       }
-    })
+    });
   }
 
   private async saveSelfDescription(id: string, credentials: IVerifiableCredential[]) {

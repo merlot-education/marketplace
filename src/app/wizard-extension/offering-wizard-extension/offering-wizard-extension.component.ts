@@ -7,6 +7,7 @@ import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wiza
 import { IGxServiceOfferingCs, IMerlotServiceOfferingCs, IServiceOffering, TBR_OFFERING_ID } from 'src/app/views/serviceofferings/serviceofferings-data';
 import { isGxServiceOfferingCs, isMerlotCoopContractServiceOfferingCs, isMerlotDataDeliveryServiceOfferingCs, isMerlotSaasServiceOfferingCs, isMerlotServiceOfferingCs } from 'src/app/utils/credential-tools';
 import { Router } from '@angular/router';
+import { BehaviorSubject, takeWhile } from 'rxjs';
 
 
 @Component({
@@ -19,9 +20,11 @@ export class OfferingWizardExtensionComponent {
   @ViewChild("merlotServiceOfferingWizard") private merlotServiceOfferingWizard: BaseWizardExtensionComponent;
   @ViewChild("merlotSpecificServiceOfferingWizard") private merlotSpecificServiceOfferingWizard: BaseWizardExtensionComponent;
 
-  @ViewChild("saveStatusMessage") private saveStatusMessage: StatusMessageComponent;
+  @ViewChild("saveStatusMessage") public saveStatusMessage: StatusMessageComponent;
 
   public submitCompleteEvent: EventEmitter<any> = new EventEmitter();
+
+  public prefillDone: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   protected submitButtonsDisabled: boolean = false;
 
@@ -33,6 +36,7 @@ export class OfferingWizardExtensionComponent {
 
 
   public async loadShape(shapeName: string, id: string): Promise<void> {
+    this.prefillDone.next(false);
     console.log("Loading shape", shapeName);
     await this.gxServiceOfferingWizard.loadShape(this.serviceofferingApiService.getGxServiceOfferingShape(), id);
     await this.merlotServiceOfferingWizard.loadShape(this.serviceofferingApiService.getMerlotServiceOfferingShape(), id);
@@ -57,6 +61,30 @@ export class OfferingWizardExtensionComponent {
         this.merlotSpecificServiceOfferingWizard.prefillFields(cs, []);
       }
     }
+
+    this.gxServiceOfferingWizard.prefillDone
+      .pipe(
+        takeWhile(done => !done, true)
+        )
+      .subscribe(done => {
+      if (done) {
+        this.merlotServiceOfferingWizard.prefillDone.pipe(
+          takeWhile(done => !done, true)
+          )
+        .subscribe(done => {
+          if (done) {
+            this.merlotSpecificServiceOfferingWizard.prefillDone.pipe(
+              takeWhile(done => !done, true)
+              )
+            .subscribe(done => {
+              if (done) {
+                this.prefillDone.next(true);
+              }
+            });
+          }
+        });
+      }
+    });
     //this.baseWizardExtension.prefillFields(selfDescriptionFields, ["TODO"]);
   }
 
@@ -120,7 +148,7 @@ export class OfferingWizardExtensionComponent {
       this.saveStatusMessage.showSuccessMessage("ID: " + result["id"]);
 
       if (gxOfferingJsonSd.id === TBR_OFFERING_ID) {
-        this.router.navigate(["service-offerings/edit/", result["id"]]); // TODO pass success message
+        this.router.navigate(["service-offerings/edit/", result["id"]], {state: {message: "ID: " + result["id"]}});
       }
 
       /*if (publishAfterSave) {

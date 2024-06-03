@@ -5,10 +5,10 @@ import { IGxServiceOfferingCs, IServiceOffering, TBR_OFFERING_ID, serviceFileNam
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
-import { skip } from 'rxjs';
+import { map, skip, takeWhile } from 'rxjs';
 import { asMerlotLegalParticipantCs, getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, getParticipantIdFromParticipantSd, getServiceOfferingIdFromServiceOfferingSd, isMerlotLegalParticipantCs } from 'src/app/utils/credential-tools';
 import { IVerifiablePresentation } from '../../organization/organization-data';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -23,6 +23,8 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   protected selectedOfferingId: string;
 
+  private initialMessage: string;
+
   private selectedOffering: IServiceOffering;
 
   @ViewChild("wizardExtension") private wizardExtension: OfferingWizardExtensionComponent;
@@ -31,12 +33,17 @@ export class EditComponent implements OnInit, AfterViewInit {
     protected authService : AuthService, 
     protected activeOrgRoleService: ActiveOrganizationRoleService,
     private organizationsApiService: OrganizationsApiService,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private router: Router) {
+      this.initialMessage = this.router.getCurrentNavigation().extras?.state?.message;
   }
   
   ngAfterViewInit(): void {
     this.selectedOfferingId = this.route.snapshot.paramMap.get('offeringId');
     this.requestShapes();
+    if (this.initialMessage) {
+      this.wizardExtension.saveStatusMessage.showSuccessMessage(this.initialMessage);
+    }
     this.activeOrgRoleService.activeOrganizationRole.pipe(skip(1)).subscribe(_ => {
       this.prefillWizard();
     });
@@ -87,6 +94,17 @@ export class EditComponent implements OnInit, AfterViewInit {
   prefillWizard() {
     if (this.selectedOfferingId) {
       this.prefillWizardExistingOffering();
+      this.wizardExtension.prefillDone
+        .pipe(
+          takeWhile(done => !done, true)
+          )
+        .subscribe(done => {
+          console.log("wizard done: ", done);
+          console.log(this.wizardExtension.saveStatusMessage.isMessageVisible.value);
+          if (this.wizardExtension.saveStatusMessage.isMessageVisible.value) {
+            window.scrollTo(0,document.body.scrollHeight);
+          }
+        });
     } else {
       this.prefillWizardNewOffering();
     }
