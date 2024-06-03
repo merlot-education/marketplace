@@ -40,8 +40,7 @@ export class OfferingWizardExtensionComponent {
     console.log("Loading shape", shapeName);
     await this.gxServiceOfferingWizard.loadShape(this.serviceofferingApiService.getGxServiceOfferingShape(), id);
     await this.merlotServiceOfferingWizard.loadShape(this.serviceofferingApiService.getMerlotServiceOfferingShape(), id);
-    await this.merlotSpecificServiceOfferingWizard.loadShape(this.serviceofferingApiService.getSpecificOfferingTypeShape(shapeName), id); // TODO
-    //await this.baseWizardExtension.loadShape(this.serviceofferingApiService.fetchShape(shapeName), id);
+    await this.merlotSpecificServiceOfferingWizard.loadShape(this.serviceofferingApiService.getSpecificOfferingTypeShape(shapeName), id);
   }
 
   public isShapeLoaded(): boolean {
@@ -85,7 +84,6 @@ export class OfferingWizardExtensionComponent {
         });
       }
     });
-    //this.baseWizardExtension.prefillFields(selfDescriptionFields, ["TODO"]);
   }
 
   private async saveSelfDescription(jsonSd: any) {

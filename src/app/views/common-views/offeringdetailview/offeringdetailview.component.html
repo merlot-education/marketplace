@@ -91,62 +91,66 @@
     </div>
 
     <div *ngIf="isMerlotSaasServiceOfferingCs(vc.credentialSubject)">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item" style="border: none" *ngIf="asMerlotSaasServiceOfferingCs(vc.credentialSubject)['merlot:hardwareRequirements']">
+          <strong>Hardware-Anforderungen:</strong><br />
+          {{ asMerlotSaasServiceOfferingCs(vc.credentialSubject)['merlot:hardwareRequirements'] }}
+        </li>
 
-      <li class="list-group-item" style="border: none" *ngIf="asMerlotSaasServiceOfferingCs(vc.credentialSubject)['merlot:hardwareRequirements']">
-        <strong>Hardware-Anforderungen:</strong><br />
-        {{ asMerlotSaasServiceOfferingCs(vc.credentialSubject)['merlot:hardwareRequirements'] }}
-      </li>
-
-      <li class="list-group-item" style="border: none" *ngIf="showVariableFields">
-        <strong>Optionen für Anzahl erlaubter Benutzer:</strong><br />
-        <ul>
-          <ng-container *ngFor="let auc of asMerlotSaasServiceOfferingCs(vc.credentialSubject)['merlot:userCountOption']">
-            <li>
-              <ng-container *ngIf="auc['merlot:userCountUpTo'] === 0; else notUnlimitedUserCount">
-                Unbegrenzt
-              </ng-container>
-              <ng-template #notUnlimitedUserCount>
-                Bis zu {{ auc['merlot:userCountUpTo'] }} Benutzer
-              </ng-template>
-            </li>
-          </ng-container>
-        </ul>
-      </li>
+        <li class="list-group-item" style="border: none" *ngIf="showVariableFields">
+          <strong>Optionen für Anzahl erlaubter Benutzer:</strong><br />
+          <ul>
+            <ng-container *ngFor="let auc of asMerlotSaasServiceOfferingCs(vc.credentialSubject)['merlot:userCountOption']">
+              <li>
+                <ng-container *ngIf="auc['merlot:userCountUpTo'] === 0; else notUnlimitedUserCount">
+                  Unbegrenzt
+                </ng-container>
+                <ng-template #notUnlimitedUserCount>
+                  Bis zu {{ auc['merlot:userCountUpTo'] }} Benutzer
+                </ng-template>
+              </li>
+            </ng-container>
+          </ul>
+        </li>
+      </ul>
 
     </div>
 
     <div *ngIf="isMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item" style="border: none">
+          <strong>Datenzugriffsart:</strong><br />
+          {{ asMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)['merlot:dataAccessType'] }}
+        </li>
 
-      <li class="list-group-item" style="border: none">
-        <strong>Datenzugriffsart:</strong><br />
-        {{ asMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)['merlot:dataAccessType'] }}
-      </li>
+        <li class="list-group-item" style="border: none">
+          <strong>Datentransferart:</strong><br />
+          {{ asMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)['merlot:dataTransferType'] }}
+        </li>
 
-      <li class="list-group-item" style="border: none">
-        <strong>Datentransferart:</strong><br />
-        {{ asMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)['merlot:dataTransferType'] }}
-      </li>
-
-      <li class="list-group-item" style="border: none" *ngIf="showVariableFields">
-        <strong>Optionen für Anzahl erlaubter Datenaustausche:</strong><br />
-        <ul>
-          <ng-container *ngFor="let dec of asMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)['merlot:exchangeCountOption']">
-            <li>
-              <ng-container *ngIf="dec['merlot:exchangeCountUpTo']=== 0; else notUnlimitedExchangeCount">
-                Unbegrenzt
-              </ng-container>
-              <ng-template #notUnlimitedExchangeCount>
-                Bis zu {{ dec['merlot:exchangeCountUpTo'] }} Datenaustausche
-              </ng-template>
-            </li>
-          </ng-container>
-        </ul>
-      </li>
+        <li class="list-group-item" style="border: none" *ngIf="showVariableFields">
+          <strong>Optionen für Anzahl erlaubter Datenaustausche:</strong><br />
+          <ul>
+            <ng-container *ngFor="let dec of asMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)['merlot:exchangeCountOption']">
+              <li>
+                <ng-container *ngIf="dec['merlot:exchangeCountUpTo']=== 0; else notUnlimitedExchangeCount">
+                  Unbegrenzt
+                </ng-container>
+                <ng-template #notUnlimitedExchangeCount>
+                  Bis zu {{ dec['merlot:exchangeCountUpTo'] }} Datenaustausche
+                </ng-template>
+              </li>
+            </ng-container>
+          </ul>
+        </li>
+      </ul>
 
     </div>
 
     <div *ngIf="isMerlotCoopContractServiceOfferingCs(vc.credentialSubject)">
-      <!-- no special fields currently -->
+      <ul class="list-group list-group-flush">
+        <!-- no special fields currently -->
+      </ul>
     </div>
 
   </div>

@@ -1,5 +1,5 @@
 import { ICredentialSubject, ILegalParticipantCs, ILegalRegistrationNumberCs, IMerlotLegalParticipantCs, IVerifiablePresentation } from "../views/organization/organization-data";
-import { IGxServiceOfferingCs, IMerlotCoopContractServiceOfferingCs, IMerlotDataDeliveryServiceOfferingCs, IMerlotSaasServiceOfferingCs, IMerlotServiceOfferingCs } from "../views/serviceofferings/serviceofferings-data";
+import { IGxServiceOfferingCs, IMerlotCoopContractServiceOfferingCs, IMerlotDataDeliveryServiceOfferingCs, IMerlotSaasServiceOfferingCs, IMerlotServiceOfferingCs, IServiceOfferingTermsAndConditions } from "../views/serviceofferings/serviceofferings-data";
 
 
 export function isLegalParticipantCs(cs: ICredentialSubject): boolean {
@@ -90,7 +90,7 @@ export function getOrganizationLegalName(vp: IVerifiablePresentation): string {
     return "Unbekannt";
 }
 
-export function getParticipantIdFromParticipantSd(vp: IVerifiablePresentation) {
+export function getParticipantIdFromParticipantSd(vp: IVerifiablePresentation): string {
     for (let vc of vp.verifiableCredential) {
         if (isLegalParticipantCs(vc.credentialSubject)) {
             return asLegalParticipantCs(vc.credentialSubject).id;
@@ -98,7 +98,7 @@ export function getParticipantIdFromParticipantSd(vp: IVerifiablePresentation) {
     }
 }
 
-export function getOfferingTncFromParticipantSd(participantSd: IVerifiablePresentation) {
+export function getOfferingTncFromParticipantSd(participantSd: IVerifiablePresentation): IServiceOfferingTermsAndConditions {
     for (let vc of participantSd.verifiableCredential) {
       if (isMerlotLegalParticipantCs(vc.credentialSubject)) {
         let tnc = asMerlotLegalParticipantCs(vc.credentialSubject)['merlot:termsAndConditions']
@@ -110,7 +110,7 @@ export function getOfferingTncFromParticipantSd(participantSd: IVerifiablePresen
     }
   }
 
-export function getServiceOfferingIdFromServiceOfferingSd(vp: IVerifiablePresentation) {
+export function getServiceOfferingIdFromServiceOfferingSd(vp: IVerifiablePresentation): string {
     for (let vc of vp.verifiableCredential) {
         if (isGxServiceOfferingCs(vc.credentialSubject)) {
             return asGxServiceOfferingCs(vc.credentialSubject).id;
@@ -118,7 +118,7 @@ export function getServiceOfferingIdFromServiceOfferingSd(vp: IVerifiablePresent
     }
 }
 
-export function getServiceOfferingNameFromServiceOfferingSd(vp: IVerifiablePresentation) {
+export function getServiceOfferingNameFromServiceOfferingSd(vp: IVerifiablePresentation): string {
     for (let vc of vp.verifiableCredential) {
         if (isGxServiceOfferingCs(vc.credentialSubject)) {
             return asGxServiceOfferingCs(vc.credentialSubject)["gx:name"];
@@ -126,7 +126,15 @@ export function getServiceOfferingNameFromServiceOfferingSd(vp: IVerifiablePrese
     }
 }
 
-export function getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(vp: IVerifiablePresentation) {
+export function getServiceOfferingProviderIdFromServiceOfferingSd(vp: IVerifiablePresentation): string {
+    for (let vc of vp.verifiableCredential) {
+        if (isGxServiceOfferingCs(vc.credentialSubject)) {
+            return asGxServiceOfferingCs(vc.credentialSubject)["gx:providedBy"]["@id"];
+        }
+    }
+}
+
+export function getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(vp: IVerifiablePresentation): string {
     for (let vc of vp.verifiableCredential) {
         if (isMerlotSaasServiceOfferingCs(vc.credentialSubject)) {
             return asMerlotSaasServiceOfferingCs(vc.credentialSubject).type;
@@ -134,6 +142,14 @@ export function getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(vp: IV
             return asMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject).type;
         } else if (isMerlotCoopContractServiceOfferingCs(vc.credentialSubject)) {
             return asMerlotCoopContractServiceOfferingCs(vc.credentialSubject).type;
+        }
+    }
+}
+
+export function getMerlotDataDeliveryServiceOfferingCsFromServiceOfferingSd(vp: IVerifiablePresentation): IMerlotDataDeliveryServiceOfferingCs {
+    for (let vc of vp.verifiableCredential) {
+        if (isMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)) {
+            return asMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject);
         }
     }
 }

@@ -7,6 +7,7 @@ import { ContractApiService } from 'src/app/services/contract-api.service';
 import { BehaviorSubject } from 'rxjs';
 import { ConnectorData } from '../../organization/organization-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
+import { getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 
 @Component({
   templateUrl: './explore.component.html',
@@ -111,7 +112,7 @@ export class ExploreComponent implements OnInit {
   }
 
   protected getContractTypeName(contract: IContractBasic): string {
-    return "TODO";/*this.serviceOfferingApiService.resolveFriendlyTypeName(
-      contract.offering.selfDescription.verifiableCredential.credentialSubject.type);*/
+    return this.serviceOfferingApiService.resolveFriendlyTypeName(
+      getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contract.offering.selfDescription));
   }
 }

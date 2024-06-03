@@ -8,6 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
 import { saveAs } from 'file-saver';
 import { StatusMessageComponent } from '../status-message/status-message.component';
+import { asMerlotDataDeliveryServiceOfferingCs, getMerlotDataDeliveryServiceOfferingCsFromServiceOfferingSd, getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, getServiceOfferingIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -28,6 +29,8 @@ export class ContractviewComponent {
   @ViewChild('contractPdfDownloadMessage') private contractPdfDownloadMessage: StatusMessageComponent;
 
   protected saveButtonDisabled: boolean = false;
+
+  protected getServiceOfferingIdFromServiceOfferingSd = getServiceOfferingIdFromServiceOfferingSd;
 
   constructor(
     protected contractApiService: ContractApiService,
@@ -95,10 +98,9 @@ export class ContractviewComponent {
   }
 
   protected isDataTransferDisabled(contractDetails: IContract) {
-    return true;
-    // TODO
-    /*(contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:dataTransferType']['@value'] === 'Push' && this.userIsActiveConsumer()) 
-           || (contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:dataTransferType']['@value'] === 'Pull' && this.userIsActiveProvider());*/
+    let dataDeliveryCs = getMerlotDataDeliveryServiceOfferingCsFromServiceOfferingSd(contractDetails.offering.selfDescription);
+    return (dataDeliveryCs['merlot:dataTransferType'] === 'Push' && this.userIsActiveConsumer()) 
+           || (dataDeliveryCs['merlot:dataTransferType'] === 'Pull' && this.userIsActiveProvider());
   }  
   protected isDataTransferButtonVisible(contractDetails: IContract) {
     return contractDetails.type === 'DataDeliveryContractTemplate' 
@@ -201,8 +203,7 @@ export class ContractviewComponent {
   }
 
   protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return false; // TODO
-    //contractDetails.offering.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingDataDelivery';
+    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails.offering.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
   }
 
   protected shouldShowSaveButton(contractDetails: IContract): boolean {

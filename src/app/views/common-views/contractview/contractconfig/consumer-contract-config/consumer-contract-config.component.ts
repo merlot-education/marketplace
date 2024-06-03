@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { IContract, IDataDeliveryContract, IIonosS3ConsumerTransferProvisioning } from '../../../../contracts/contracts-data';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
+import { getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 
 @Component({
   selector: 'app-consumer-contract-config',
@@ -52,8 +53,7 @@ export class ConsumerContractConfigComponent {
   }
 
   protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return false; // TODO
-    //contractDetails.offering.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingDataDelivery';
+    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails.offering.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
   }
 
   protected isIonosConsumerTransferProvisioning(contractDetails: IContract): boolean {

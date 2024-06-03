@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IContract, IDataDeliveryContract, IIonosS3ProviderTransferProvisioning } from '../../../../contracts/contracts-data';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
+import { getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 
 @Component({
   selector: 'app-provider-contract-config',
@@ -51,8 +52,7 @@ export class ProviderContractConfigComponent implements OnInit {
   }
 
   protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return false; // TODO
-    //contractDetails.offering.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingDataDelivery';
+    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails.offering.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
   }
 
   protected isIonosProviderTransferProvisioning(contractDetails: IContract): boolean {

@@ -10,7 +10,7 @@ import { IContract } from '../../contracts/contracts-data';
 import { ConnectorData } from '../../organization/organization-data';
 import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
-import { getServiceOfferingIdFromServiceOfferingSd, getServiceOfferingNameFromServiceOfferingSd } from 'src/app/utils/credential-tools';
+import { getServiceOfferingIdFromServiceOfferingSd, getServiceOfferingNameFromServiceOfferingSd, getServiceOfferingProviderIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 import { Router } from '@angular/router';
 
 
@@ -319,8 +319,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   protected shouldShowBookButton(offering: IServiceOffering): boolean {
-    // TODO
-    return false; //this.activeOrgRoleService.isLoggedIn.value && (offering.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] !== this.activeOrgRoleService.getActiveOrgaId())
+    return this.activeOrgRoleService.isLoggedIn.value && (getServiceOfferingProviderIdFromServiceOfferingSd(offering.selfDescription) !== this.activeOrgRoleService.getActiveOrgaId())
   }
 
   toogleJsonView() {
