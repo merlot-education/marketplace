@@ -24,6 +24,7 @@ export class EditComponent implements OnInit, AfterViewInit {
   protected selectedOfferingId: string;
 
   private initialMessage: string;
+  private inDraft: boolean;
 
   private selectedOffering: IServiceOffering;
 
@@ -35,7 +36,10 @@ export class EditComponent implements OnInit, AfterViewInit {
     private organizationsApiService: OrganizationsApiService,
     private route: ActivatedRoute,
     private router: Router) {
+      console.log(this.router.getCurrentNavigation().extras?.state);
       this.initialMessage = this.router.getCurrentNavigation().extras?.state?.message;
+      this.inDraft = this.router.getCurrentNavigation().extras?.state?.inDraft;
+      this.inDraft = this.inDraft !== undefined ? this.inDraft : true;
   }
   
   ngAfterViewInit(): void {
@@ -44,6 +48,7 @@ export class EditComponent implements OnInit, AfterViewInit {
     if (this.initialMessage) {
       this.wizardExtension.saveStatusMessage.showSuccessMessage(this.initialMessage);
     }
+    this.wizardExtension.submitButtonsDisabled = !this.inDraft;
     this.activeOrgRoleService.activeOrganizationRole.pipe(skip(1)).subscribe(_ => {
       this.prefillWizard();
     });

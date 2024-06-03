@@ -26,7 +26,7 @@ export class OfferingWizardExtensionComponent {
 
   public prefillDone: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  protected submitButtonsDisabled: boolean = false;
+  public submitButtonsDisabled: boolean = false;
 
   constructor(
       private serviceofferingApiService: ServiceofferingApiService,
@@ -143,18 +143,14 @@ export class OfferingWizardExtensionComponent {
     }
 
     saveCallback.then(result => {
-      console.log("result", result);
-      /*this.baseWizardExtension.setCredentialId(result["id"]);*/
-      this.saveStatusMessage.showSuccessMessage("ID: " + result["id"]);
-
-      if (gxOfferingJsonSd.id === TBR_OFFERING_ID) {
-        this.router.navigate(["service-offerings/edit/", result["id"]], {state: {message: "ID: " + result["id"]}});
-      }
-
-      /*if (publishAfterSave) {
+      if (publishAfterSave) {
         this.serviceofferingApiService.releaseServiceOffering(result["id"])
         .then(_ => {
+          this.saveStatusMessage.showSuccessMessage("ID: " + result["id"]);
           this.submitCompleteEvent.emit(null);
+          if (gxOfferingJsonSd.id === TBR_OFFERING_ID) {
+            this.router.navigate(["service-offerings/edit/", result["id"]], {state: {message: "ID: " + result["id"], inDraft: false}});
+          }
         })
         .catch((e: HttpErrorResponse) => {
           this.saveStatusMessage.showErrorMessage(e.error.message);
@@ -165,8 +161,12 @@ export class OfferingWizardExtensionComponent {
           this.submitButtonsDisabled = false;
         });
       } else {
+        this.saveStatusMessage.showSuccessMessage("ID: " + result["id"]);
         this.submitCompleteEvent.emit(null);
-      }*/
+        if (gxOfferingJsonSd.id === TBR_OFFERING_ID) {
+          this.router.navigate(["service-offerings/edit/", result["id"]], {state: {message: "ID: " + result["id"], inDraft: true}});
+        }
+      }
       this.submitCompleteEvent.emit(null);
     }).catch((e: HttpErrorResponse) => {
       this.saveStatusMessage.showErrorMessage(e.error.message);
