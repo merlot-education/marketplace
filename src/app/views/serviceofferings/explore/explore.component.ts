@@ -218,8 +218,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
     this.serviceOfferingApiService.regenerateServiceOffering(id).then(result => {
       this.serviceOfferingApiService.fetchServiceOfferingDetails(result["id"]).then(result => {
         this.selectedOfferingDetails = result;
+        this.refreshOfferings();
       });
-      this.refreshOfferings();
     });
   }
 
