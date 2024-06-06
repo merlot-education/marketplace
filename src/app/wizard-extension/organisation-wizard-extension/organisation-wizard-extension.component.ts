@@ -90,13 +90,16 @@ export class OrganisationWizardExtensionComponent {
 
     for (let vc of orga.selfDescription.verifiableCredential) {
       let cs = vc.credentialSubject;
+
       if (isMerlotLegalParticipantCs(cs)) {
         this.merlotParticipantWizard.prefillFields(cs, 
           this.getMerlotLegalParticipantDisabledFields());
-      } else if(isLegalParticipantCs(cs)) {
+      }
+      if(isLegalParticipantCs(cs)) {
         this.gxParticipantWizard.prefillFields(cs, 
           this.getGxLegalParticipantDisabledFields());
-      } else if (isLegalRegistrationNumberCs(cs)) {
+      }
+      if (isLegalRegistrationNumberCs(cs)) {
         this.gxRegistrationNumberWizard.prefillFields(cs, 
           this.getGxRegistrationNumberDisabledFields());
       }

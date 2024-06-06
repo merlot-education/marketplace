@@ -54,9 +54,11 @@ export class OfferingWizardExtensionComponent {
       let cs = vc.credentialSubject;
       if (isGxServiceOfferingCs(cs)) {
         this.gxServiceOfferingWizard.prefillFields(cs, ["gx:providedBy"]);
-      } else if (isMerlotServiceOfferingCs(cs)) {
+      }
+      if (isMerlotServiceOfferingCs(cs)) {
         this.merlotServiceOfferingWizard.prefillFields(cs, []);
-      } else if (isMerlotSpecificServiceOfferingCs(cs)) {
+      }
+      if (isMerlotSpecificServiceOfferingCs(cs)) {
         this.merlotSpecificServiceOfferingWizard.prefillFields(cs, []);
       }
     }
