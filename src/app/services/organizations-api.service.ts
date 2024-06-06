@@ -52,6 +52,10 @@ export class OrganizationsApiService {
     return await lastValueFrom(this.http.get(environment.organizations_api_url + "shapes/gx/registrationnumber"));
   }
 
+  public async getGxTermsAndConditions(): Promise<any> {
+    return await lastValueFrom(this.http.get(environment.organizations_api_url + "shapes/gx/tnc"));
+  }
+
   public async saveOrganization(sdJson: IOrganizationData): Promise<IOrganizationData> {
     console.log(sdJson);
     const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');

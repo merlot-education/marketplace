@@ -32,6 +32,10 @@ export class OrganisationWizardExtensionComponent {
   protected submitButtonsDisabled: boolean = false;  
   protected orgaActiveSelection: string = "false";
   protected orgaMetadata: IOrganizationMetadata = null;
+  protected gxTermsAndConditions = {
+    version: "",
+    text: ""
+  }
 
   protected environment = environment;
 
@@ -84,6 +88,10 @@ export class OrganisationWizardExtensionComponent {
           ? [] 
           : ["gx:leiCode", "gx:vatID", "gx:EORI", "gx:EUID", "gx:taxID"]);
       }
+
+      this.organizationsApiService.getGxTermsAndConditions().then(result => {
+        this.gxTermsAndConditions = result;
+      });
     }
 
     this.gxParticipantWizard.prefillDone
