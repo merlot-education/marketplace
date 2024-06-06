@@ -3,7 +3,7 @@ import { IGxServiceOfferingCs, IMerlotCoopContractServiceOfferingCs, IMerlotData
 
 
 export function isLegalParticipantCs(cs: ICredentialSubject): boolean {
-    return cs && cs.type && cs.type === "gx:LegalParticipant";
+    return cs?.type === "gx:LegalParticipant";
 }
 
 export function asLegalParticipantCs(cs: ICredentialSubject): ILegalParticipantCs {
@@ -11,7 +11,7 @@ export function asLegalParticipantCs(cs: ICredentialSubject): ILegalParticipantC
 }
 
 export function isLegalRegistrationNumberCs(cs: ICredentialSubject): boolean {
-    return cs && cs.type && cs.type === "gx:legalRegistrationNumber";
+    return cs?.type === "gx:legalRegistrationNumber";
 }
 
 export function asLegalRegistrationNumberCs(cs: ICredentialSubject): ILegalRegistrationNumberCs {
@@ -19,7 +19,7 @@ export function asLegalRegistrationNumberCs(cs: ICredentialSubject): ILegalRegis
 }
 
 export function isMerlotLegalParticipantCs(cs: ICredentialSubject): boolean {
-    return cs && cs.type && cs.type === "merlot:MerlotLegalParticipant";
+    return cs?.type === "merlot:MerlotLegalParticipant";
 }
 
 export function asMerlotLegalParticipantCs(cs: ICredentialSubject): IMerlotLegalParticipantCs {
@@ -27,7 +27,7 @@ export function asMerlotLegalParticipantCs(cs: ICredentialSubject): IMerlotLegal
 }
 
 export function isGxServiceOfferingCs(cs: ICredentialSubject): boolean {
-    return cs && cs.type && cs.type === "gx:ServiceOffering";
+    return cs?.type === "gx:ServiceOffering";
 }
 
 export function asGxServiceOfferingCs(cs: ICredentialSubject): IGxServiceOfferingCs {
@@ -35,7 +35,7 @@ export function asGxServiceOfferingCs(cs: ICredentialSubject): IGxServiceOfferin
 }
 
 export function isMerlotServiceOfferingCs(cs: ICredentialSubject): boolean {
-    return cs && cs.type && cs.type === "merlot:MerlotServiceOffering";
+    return cs?.type === "merlot:MerlotServiceOffering";
 }
 
 export function asMerlotServiceOfferingCs(cs: ICredentialSubject): IMerlotServiceOfferingCs {
@@ -43,7 +43,7 @@ export function asMerlotServiceOfferingCs(cs: ICredentialSubject): IMerlotServic
 }
 
 export function isMerlotSaasServiceOfferingCs(cs: ICredentialSubject): boolean {
-    return cs && cs.type && cs.type === "merlot:MerlotSaasServiceOffering";
+    return cs?.type === "merlot:MerlotSaasServiceOffering";
 }
 
 export function asMerlotSaasServiceOfferingCs(cs: ICredentialSubject): IMerlotSaasServiceOfferingCs {
@@ -51,7 +51,7 @@ export function asMerlotSaasServiceOfferingCs(cs: ICredentialSubject): IMerlotSa
 }
 
 export function isMerlotDataDeliveryServiceOfferingCs(cs: ICredentialSubject): boolean {
-    return cs && cs.type && cs.type === "merlot:MerlotDataDeliveryServiceOffering";
+    return cs?.type === "merlot:MerlotDataDeliveryServiceOffering";
 }
 
 export function asMerlotDataDeliveryServiceOfferingCs(cs: ICredentialSubject): IMerlotDataDeliveryServiceOfferingCs {
@@ -59,11 +59,15 @@ export function asMerlotDataDeliveryServiceOfferingCs(cs: ICredentialSubject): I
 }
 
 export function isMerlotCoopContractServiceOfferingCs(cs: ICredentialSubject): boolean {
-    return cs && cs.type && cs.type === "merlot:MerlotCoopContractServiceOffering";
+    return cs?.type === "merlot:MerlotCoopContractServiceOffering";
 }
 
 export function asMerlotCoopContractServiceOfferingCs(cs: ICredentialSubject): IMerlotCoopContractServiceOfferingCs {
     return cs as IMerlotCoopContractServiceOfferingCs;
+}
+
+export function isMerlotSpecificServiceOfferingCs(cs: ICredentialSubject): boolean {
+    return isMerlotSaasServiceOfferingCs(cs) || isMerlotDataDeliveryServiceOfferingCs(cs) || isMerlotCoopContractServiceOfferingCs(cs);
 }
 
 export function getOrganizationName(vp: IVerifiablePresentation): string {

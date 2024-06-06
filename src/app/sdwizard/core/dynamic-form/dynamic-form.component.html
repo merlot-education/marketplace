@@ -18,7 +18,7 @@
           fxFlex.sm="100%"
           fxFlex.xs="100%"
         >
-          <div class="mb-3" [hidden]="hiddenFormFields.includes('id')">
+          <div class="mb-3" >
             <label class="form-label">Subject-ID*</label>
             <input
               type="text"
@@ -39,7 +39,6 @@
               [form]="form"
               [input]="formField"
               [shapes]="file.shapes"
-              [hidden]="hiddenFormFields.includes(formField.key)"
               #formInput
             ></app-dynamic-form-input>
             <app-dynamic-form-array
@@ -47,7 +46,6 @@
               [form]="form"
               [input]="formField"
               [shapes]="file.shapes"
-              [hidden]="hiddenFormFields.includes(formField.key)"
               #formArray
             ></app-dynamic-form-array>
             <app-dynamic-form-or
@@ -55,7 +53,6 @@
               [form]="form"
               [input]="formField"
               [shapes]="file.shapes"
-              [hidden]="hiddenFormFields.includes(formField.key)"
               #formOr
             ></app-dynamic-form-or>
             <app-dynamic-form-or-array
@@ -63,7 +60,6 @@
               [form]="form"
               [input]="formField"
               [shapes]="file.shapes"
-              [hidden]="hiddenFormFields.includes(formField.key)"
               #formOrArray
             ></app-dynamic-form-or-array>
             <app-expanded-fields
@@ -71,8 +67,6 @@
               [form]="form"
               [input]="formField"
               [shapes]="file.shapes"
-              [hidden]="hiddenFormFields.includes(formField.key)"
-              [hiddenFormFields]="hiddenFormFields"
               #expandedFields
             ></app-expanded-fields>
             <app-dynamic-self-loops
@@ -80,7 +74,6 @@
               [form]="form"
               [input]="formField"
               [shapes]="file.shapes"
-              [hidden]="hiddenFormFields.includes(formField.key)"
               #selfLoops
             ></app-dynamic-self-loops>
           </div>

@@ -66,6 +66,24 @@ export class OrganisationWizardExtensionComponent {
     return active ? "true": "false";
   }
 
+  private getMerlotLegalParticipantDisabledFields() {
+    return this.activeOrgRoleService.isActiveAsFedAdmin() 
+      ? [] 
+      : ["merlot:legalName", "merlot:legalForm"];
+  }
+
+  private getGxLegalParticipantDisabledFields() {
+    return this.activeOrgRoleService.isActiveAsFedAdmin() 
+      ? ["gx:legalRegistrationNumber", "gx:subOrganization", "gx:parentOrganization"] 
+      : ["gx:legalRegistrationNumber", "gx:name", "gx:subOrganization", "gx:parentOrganization"];
+  }
+
+  private getGxRegistrationNumberDisabledFields() {
+    return this.activeOrgRoleService.isActiveAsFedAdmin() 
+      ? [] 
+      : ["gx:leiCode", "gx:vatID", "gx:EORI", "gx:EUID", "gx:taxID"];
+  }
+
   public prefillOrganisation(orga: IOrganizationData) {
     this.orgaMetadata = orga.metadata;
     this.orgaActiveSelection = this.activeBooleanToString(orga.metadata.active);
@@ -74,19 +92,13 @@ export class OrganisationWizardExtensionComponent {
       let cs = vc.credentialSubject;
       if (isMerlotLegalParticipantCs(cs)) {
         this.merlotParticipantWizard.prefillFields(cs, 
-          this.activeOrgRoleService.isActiveAsFedAdmin() 
-          ? [] 
-          : ["merlot:legalName", "merlot:legalForm"]);
+          this.getMerlotLegalParticipantDisabledFields());
       } else if(isLegalParticipantCs(cs)) {
         this.gxParticipantWizard.prefillFields(cs, 
-          this.activeOrgRoleService.isActiveAsFedAdmin() 
-          ? ["gx:legalRegistrationNumber", "gx:subOrganization", "gx:parentOrganization"] 
-          : ["gx:legalRegistrationNumber", "gx:name", "gx:subOrganization", "gx:parentOrganization"]);
+          this.getGxLegalParticipantDisabledFields());
       } else if (isLegalRegistrationNumberCs(cs)) {
         this.gxRegistrationNumberWizard.prefillFields(cs, 
-          this.activeOrgRoleService.isActiveAsFedAdmin() 
-          ? [] 
-          : ["gx:leiCode", "gx:vatID", "gx:EORI", "gx:EUID", "gx:taxID"]);
+          this.getGxRegistrationNumberDisabledFields());
       }
 
       this.organizationsApiService.getGxTermsAndConditions().then(result => {
@@ -172,23 +184,6 @@ export class OrganisationWizardExtensionComponent {
     }).finally(() => {
       this.submitButtonsDisabled = false;
     });
-
-    /*let jsonSd = this.baseWizardExtension.generateJsonSd();
-
-    this.saveSelfDescription(jsonSd).then(result => {
-      console.log(result);
-      this.baseWizardExtension.setCredentialId(result["id"]);
-      this.saveStatusMessage.showSuccessMessage("ID: " + result["id"]);
-      this.submitCompleteEvent.emit(null);
-      this.prefillOrganisation(result);
-    }).catch((e: HttpErrorResponse) => {
-      this.saveStatusMessage.showErrorMessage(e.error.message);
-    })
-    .catch(_ => {
-      this.saveStatusMessage.showErrorMessage("Unbekannter Fehler");
-    }).finally(() => {
-      this.submitButtonsDisabled = false;
-    });*/
   }
 
   public ngOnDestroy() {

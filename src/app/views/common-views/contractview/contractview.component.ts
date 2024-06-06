@@ -8,7 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
 import { saveAs } from 'file-saver';
 import { StatusMessageComponent } from '../status-message/status-message.component';
-import { asMerlotDataDeliveryServiceOfferingCs, getMerlotDataDeliveryServiceOfferingCsFromServiceOfferingSd, getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, getServiceOfferingIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
+import { getMerlotDataDeliveryServiceOfferingCsFromServiceOfferingSd, getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, getServiceOfferingIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));

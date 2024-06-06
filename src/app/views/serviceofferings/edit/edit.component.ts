@@ -1,13 +1,12 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
-import { IGxServiceOfferingCs, IServiceOffering, TBR_OFFERING_ID, serviceFileNameDict } from '../serviceofferings-data';
+import { IServiceOffering, TBR_OFFERING_ID, serviceFileNameDict } from '../serviceofferings-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
-import { map, skip, takeWhile } from 'rxjs';
-import { asMerlotLegalParticipantCs, getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, getOfferingTncFromParticipantSd, getParticipantIdFromParticipantSd, getServiceOfferingIdFromServiceOfferingSd, isMerlotLegalParticipantCs } from 'src/app/utils/credential-tools';
-import { IVerifiablePresentation } from '../../organization/organization-data';
+import { skip, takeWhile } from 'rxjs';
+import { getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, getOfferingTncFromParticipantSd, getParticipantIdFromParticipantSd, getServiceOfferingIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -38,8 +37,7 @@ export class EditComponent implements OnInit, AfterViewInit {
     private router: Router) {
       console.log(this.router.getCurrentNavigation().extras?.state);
       this.initialMessage = this.router.getCurrentNavigation().extras?.state?.message;
-      this.inDraft = this.router.getCurrentNavigation().extras?.state?.inDraft;
-      this.inDraft = this.inDraft !== undefined ? this.inDraft : true;
+      this.inDraft = this.router.getCurrentNavigation().extras?.state?.inDraft ?? true;
   }
   
   ngAfterViewInit(): void {

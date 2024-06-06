@@ -299,9 +299,6 @@ export class BaseWizardExtensionComponent {
 
     let i = 0;
     for (let input of expandedField.inputs) {
-      /*if (prefillFields[parentKey][i] instanceof Object && Object.keys(prefillFields[parentKey][i]).includes("overrideName")) {
-        input.name = prefillFields[parentKey][i]["overrideName"];
-      }*/
       for (let cf of input.childrenFields) {
         this.processFormInput(expandedField.formInputViewChildren.find(f => f.input.id === cf.id), prefillFields[parentKey][i]);
         this.processExpandedField(expandedField.expandedFieldsViewChildren.find(f => f.input.id === cf.id), prefillFields[parentKey][i]);

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { ILegalRegistrationNumberCs, IOrganizationData } from "../organization-data";
+import { IOrganizationData } from "../organization-data";
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { OrganisationWizardExtensionComponent } from 'src/app/wizard-extension/organisation-wizard-extension/organisation-wizard-extension.component';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
 import { getParticipantIdFromParticipantSd } from 'src/app/utils/credential-tools';
-import { takeUntil, takeWhile } from 'rxjs';
+import { takeWhile } from 'rxjs';
 
 @Component({
   templateUrl: './edit.component.html',

@@ -74,35 +74,43 @@ export class ExploreComponent implements OnInit {
       
       for (let orga of this.activeOrganizationsPage.value.content) {
         if (this.activeOrgRoleService.isActiveAsRepresentative()) {
-          orga.activeFedAdmin = false;
-          orga.passiveFedAdmin = false;
-
-          if (getParticipantIdFromParticipantSd(orga.selfDescription) === this.activeOrgRoleService.getActiveOrgaId()) {
-            orga.activeRepresentant = true;
-            orga.passiveRepresentant = true;
-          } else if (representedOrgaIds.includes(getParticipantIdFromParticipantSd(orga.selfDescription))) {
-            orga.activeRepresentant = false;
-            orga.passiveRepresentant = true;
-          }
-
-          if (orga.activeRepresentant) {
-              this.connectorInfo = orga.metadata.connectors;
-          }
+          this.updateOrgaAsRepresentative(orga, representedOrgaIds);
         } else if (this.activeOrgRoleService.isActiveAsFedAdmin()) {
-          orga.activeRepresentant = false;
-          orga.passiveRepresentant = false;
-
-          if (getParticipantIdFromParticipantSd(orga.selfDescription) === this.activeOrgRoleService.getActiveOrgaId()) {
-            orga.activeFedAdmin = true;
-            orga.passiveFedAdmin = true;
-          } else if (administratedOrgaIds.includes(getParticipantIdFromParticipantSd(orga.selfDescription))) {
-            orga.activeFedAdmin = false;
-            orga.passiveFedAdmin = true;
-          }
+          this.updateOrgaAsFederator(orga, administratedOrgaIds);
         }
       }
     }
     
+  }
+
+  private updateOrgaAsRepresentative(orga: IOrganizationData, representedOrgaIds: string[]) {
+    orga.activeFedAdmin = false;
+    orga.passiveFedAdmin = false;
+
+    if (getParticipantIdFromParticipantSd(orga.selfDescription) === this.activeOrgRoleService.getActiveOrgaId()) {
+      orga.activeRepresentant = true;
+      orga.passiveRepresentant = true;
+    } else if (representedOrgaIds.includes(getParticipantIdFromParticipantSd(orga.selfDescription))) {
+      orga.activeRepresentant = false;
+      orga.passiveRepresentant = true;
+    }
+
+    if (orga.activeRepresentant) {
+        this.connectorInfo = orga.metadata.connectors;
+    }
+  }
+
+  private updateOrgaAsFederator(orga: IOrganizationData, administratedOrgaIds: string[]) {
+    orga.activeRepresentant = false;
+    orga.passiveRepresentant = false;
+
+    if (getParticipantIdFromParticipantSd(orga.selfDescription) === this.activeOrgRoleService.getActiveOrgaId()) {
+      orga.activeFedAdmin = true;
+      orga.passiveFedAdmin = true;
+    } else if (administratedOrgaIds.includes(getParticipantIdFromParticipantSd(orga.selfDescription))) {
+      orga.activeFedAdmin = false;
+      orga.passiveFedAdmin = true;
+    }
   }
 
   ngOnInit(): void {

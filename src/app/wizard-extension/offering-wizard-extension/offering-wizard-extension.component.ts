@@ -5,7 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wizard-extension.component';
 import { IGxServiceOfferingCs, IMerlotServiceOfferingCs, IServiceOffering, TBR_OFFERING_ID } from 'src/app/views/serviceofferings/serviceofferings-data';
-import { isGxServiceOfferingCs, isMerlotCoopContractServiceOfferingCs, isMerlotDataDeliveryServiceOfferingCs, isMerlotSaasServiceOfferingCs, isMerlotServiceOfferingCs } from 'src/app/utils/credential-tools';
+import { isGxServiceOfferingCs, isMerlotServiceOfferingCs, isMerlotSpecificServiceOfferingCs } from 'src/app/utils/credential-tools';
 import { Router } from '@angular/router';
 import { BehaviorSubject, takeWhile } from 'rxjs';
 
@@ -56,7 +56,7 @@ export class OfferingWizardExtensionComponent {
         this.gxServiceOfferingWizard.prefillFields(cs, ["gx:providedBy"]);
       } else if (isMerlotServiceOfferingCs(cs)) {
         this.merlotServiceOfferingWizard.prefillFields(cs, []);
-      } else if (isMerlotSaasServiceOfferingCs(cs) || isMerlotDataDeliveryServiceOfferingCs(cs) || isMerlotCoopContractServiceOfferingCs(cs)) {
+      } else if (isMerlotSpecificServiceOfferingCs(cs)) {
         this.merlotSpecificServiceOfferingWizard.prefillFields(cs, []);
       }
     }
@@ -95,18 +95,6 @@ export class OfferingWizardExtensionComponent {
     console.log("onSubmit");
     this.submitButtonsDisabled = true;
     this.saveStatusMessage.hideAllMessages();
-
-    /*// for fields that contain the id of the creator organization, set them to the actual id
-    for (let control of this.baseWizardExtension.orgaIdFields) {
-      control.patchValue(this.activeOrgRoleService.getActiveOrgaId());
-    }
-
-    let jsonSd = this.baseWizardExtension.generateJsonCs();
-
-    // revert the actual id to the orga for user readibility
-    for (let control of this.baseWizardExtension.orgaIdFields) {
-      control.patchValue(this.activeOrgRoleService.getActiveOrgaLegalName());
-    }*/
 
     let gxOfferingJsonSd: IGxServiceOfferingCs = this.gxServiceOfferingWizard.generateJsonCs();
     let merlotOfferingJsonSd: IMerlotServiceOfferingCs = this.merlotServiceOfferingWizard.generateJsonCs();
