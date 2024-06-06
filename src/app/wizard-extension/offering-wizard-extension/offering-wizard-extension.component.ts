@@ -8,6 +8,7 @@ import { IGxServiceOfferingCs, IMerlotServiceOfferingCs, IServiceOffering, TBR_O
 import { isGxServiceOfferingCs, isMerlotServiceOfferingCs, isMerlotSpecificServiceOfferingCs } from 'src/app/utils/credential-tools';
 import { Router } from '@angular/router';
 import { BehaviorSubject, takeWhile } from 'rxjs';
+import { ICredentialSubject } from 'src/app/views/organization/organization-data';
 
 
 @Component({
@@ -49,18 +50,19 @@ export class OfferingWizardExtensionComponent {
       && this.merlotSpecificServiceOfferingWizard?.isShapeLoaded();
   }
 
+  private prefillHandleCs(cs: ICredentialSubject) {
+    if (isGxServiceOfferingCs(cs)) {
+      this.gxServiceOfferingWizard.prefillFields(cs, ["gx:providedBy"]);
+    } else if (isMerlotServiceOfferingCs(cs)) {
+      this.merlotServiceOfferingWizard.prefillFields(cs, []);
+    } else if (isMerlotSpecificServiceOfferingCs(cs)) {
+      this.merlotSpecificServiceOfferingWizard.prefillFields(cs, []);
+    }
+  }
+
   public prefillFields(offering: any) {
     for (let vc of offering.selfDescription.verifiableCredential) {
-      let cs = vc.credentialSubject;
-      if (isGxServiceOfferingCs(cs)) {
-        this.gxServiceOfferingWizard.prefillFields(cs, ["gx:providedBy"]);
-      }
-      if (isMerlotServiceOfferingCs(cs)) {
-        this.merlotServiceOfferingWizard.prefillFields(cs, []);
-      }
-      if (isMerlotSpecificServiceOfferingCs(cs)) {
-        this.merlotSpecificServiceOfferingWizard.prefillFields(cs, []);
-      }
+      this.prefillHandleCs(vc.credentialSubject)
     }
 
     this.gxServiceOfferingWizard.prefillDone

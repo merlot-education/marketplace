@@ -2,7 +2,7 @@ import { Component, EventEmitter, ViewChild } from '@angular/core';
 import { OrganizationsApiService } from '../../services/organizations-api.service';
 import { StatusMessageComponent } from '../../views/common-views/status-message/status-message.component';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
-import { ConnectorData, IOrganizationData, IOrganizationMetadata, IVerifiableCredential } from 'src/app/views/organization/organization-data';
+import { ConnectorData, ICredentialSubject, IOrganizationData, IOrganizationMetadata, IVerifiableCredential } from 'src/app/views/organization/organization-data';
 import { ModalComponent } from '@coreui/angular';
 import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wizard-extension.component';
 import { OrganisationIonosS3ConfigComponent } from '../organisation-ionos-s3-config/organisation-ionos-s3-config.component';
@@ -84,30 +84,32 @@ export class OrganisationWizardExtensionComponent {
       : ["gx:leiCode", "gx:vatID", "gx:EORI", "gx:EUID", "gx:taxID"];
   }
 
+  private prefillHandleCs(cs: ICredentialSubject) {
+    if (isMerlotLegalParticipantCs(cs)) {
+      this.merlotParticipantWizard.prefillFields(cs, 
+        this.getMerlotLegalParticipantDisabledFields());
+    }
+    if(isLegalParticipantCs(cs)) {
+      this.gxParticipantWizard.prefillFields(cs, 
+        this.getGxLegalParticipantDisabledFields());
+    }
+    if (isLegalRegistrationNumberCs(cs)) {
+      this.gxRegistrationNumberWizard.prefillFields(cs, 
+        this.getGxRegistrationNumberDisabledFields());
+    }
+  }
+
   public prefillOrganisation(orga: IOrganizationData) {
     this.orgaMetadata = orga.metadata;
     this.orgaActiveSelection = this.activeBooleanToString(orga.metadata.active);
 
     for (let vc of orga.selfDescription.verifiableCredential) {
-      let cs = vc.credentialSubject;
-
-      if (isMerlotLegalParticipantCs(cs)) {
-        this.merlotParticipantWizard.prefillFields(cs, 
-          this.getMerlotLegalParticipantDisabledFields());
-      }
-      if(isLegalParticipantCs(cs)) {
-        this.gxParticipantWizard.prefillFields(cs, 
-          this.getGxLegalParticipantDisabledFields());
-      }
-      if (isLegalRegistrationNumberCs(cs)) {
-        this.gxRegistrationNumberWizard.prefillFields(cs, 
-          this.getGxRegistrationNumberDisabledFields());
-      }
-
-      this.organizationsApiService.getGxTermsAndConditions().then(result => {
-        this.gxTermsAndConditions = result;
-      });
+      this.prefillHandleCs(vc.credentialSubject);
     }
+    
+    this.organizationsApiService.getGxTermsAndConditions().then(result => {
+      this.gxTermsAndConditions = result;
+    });
 
     this.gxParticipantWizard.prefillDone
       .pipe(
