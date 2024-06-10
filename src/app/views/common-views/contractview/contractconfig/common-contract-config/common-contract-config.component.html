@@ -34,60 +34,68 @@
             #attachmentStatusMessage>
         </app-status-message>
     </li>
-    <li class="list-group-item" style="border: none">
-    <strong>Laufzeit*:</strong><br />
-    <select class="form-select" [(ngModel)]="contractDetails.negotiation.runtimeSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
-        <option [value]="" *ngIf="contractDetails.negotiation.runtimeSelection === ''"></option>
-        <option [ngValue]="rt['merlot:runtimeCount']['@value'] + ' ' + rt['merlot:runtimeMeasurement']['@value']" *ngFor="let rt of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:runtimeOption']">
-        <ng-container *ngIf="isRuntimeUnlimited(rt); else notUnlimitedRuntime">
-            Unbegrenzt
-        </ng-container>
-        <ng-template #notUnlimitedRuntime>
-            {{ rt['merlot:runtimeCount']['@value'] }} {{ rt['merlot:runtimeMeasurement']['@value'] }}
-        </ng-template>
-        </option>
-    </select>
+    
+    <div *ngFor="let vc of contractDetails.offering.selfDescription.verifiableCredential">
 
-    </li>
-    <div *ngIf="isSaasContract(contractDetails)">
-    <li class="list-group-item" style="border: none" *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:userCountOption'] !== null">
-        <strong>Anzahl erlaubter Benutzer*:</strong><br />
-        <select class="form-select" [(ngModel)]="asSaasContract(contractDetails).negotiation.userCountSelection" [disabled]="!isContractInDraft(contractDetails)">
-        <option [value]="" *ngIf="asSaasContract(contractDetails).negotiation.userCountSelection === ''"></option>
-        <option [ngValue]="'' + auc['merlot:userCountUpTo']['@value']" *ngFor="let auc of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:userCountOption']">
-            <ng-container *ngIf="auc['merlot:userCountUpTo']['@value'] === 0; else notUnlimitedUserCount">
-            Unbegrenzt
-            </ng-container>
-            <ng-template #notUnlimitedUserCount>
-            Bis zu {{ auc['merlot:userCountUpTo']['@value'] }}
-            </ng-template>
-        </option>
-        </select>
-    </li>
-    </div>
-    <div *ngIf="isDataDeliveryContract(contractDetails)">
-    <li class="list-group-item" style="border: none" *ngIf="contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:exchangeCountOption'] !== null">
-        <strong>Anzahl erlaubter Datenaustausche*:</strong><br />
-        <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).negotiation.exchangeCountSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
-        <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).negotiation.exchangeCountSelection === ''"></option>
-        <option [ngValue]="'' + dec['merlot:exchangeCountUpTo']['@value']" *ngFor="let dec of contractDetails.offering.selfDescription.verifiableCredential.credentialSubject['merlot:exchangeCountOption']">
-            <ng-container *ngIf="dec['merlot:exchangeCountUpTo']['@value'] === 0; else notUnlimitedExchangeCount">
-            Unbegrenzt
-            </ng-container>
-            <ng-template #notUnlimitedExchangeCount>
-            Bis zu {{ dec['merlot:exchangeCountUpTo']['@value'] }}
-            </ng-template>
-        </option>
-        </select>
-    </li>
+        <div *ngIf="isMerlotServiceOfferingCs(vc.credentialSubject)">
+            <li class="list-group-item" style="border: none">
+                <strong>Laufzeit*:</strong><br />
+                <select class="form-select" [(ngModel)]="contractDetails.negotiation.runtimeSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
+                    <option [value]="" *ngIf="contractDetails.negotiation.runtimeSelection === ''"></option>
+                    <option [ngValue]="rt['merlot:runtimeCount'] + ' ' + rt['merlot:runtimeMeasurement']" *ngFor="let rt of asMerlotServiceOfferingCs(vc.credentialSubject)['merlot:runtimeOption']">
+                    <ng-container *ngIf="isRuntimeUnlimited(rt); else notUnlimitedRuntime">
+                        Unbegrenzt
+                    </ng-container>
+                    <ng-template #notUnlimitedRuntime>
+                        {{ rt['merlot:runtimeCount'] }} {{ rt['merlot:runtimeMeasurement'] }}
+                    </ng-template>
+                    </option>
+                </select>
+            </li>
+        </div>
 
+        <div *ngIf="isSaasContract(contractDetails) && isMerlotSaasServiceOfferingCs(vc.credentialSubject)">
+            <li class="list-group-item" style="border: none" *ngIf="asMerlotSaasServiceOfferingCs(vc.credentialSubject)['merlot:userCountOption'] !== null">
+                <strong>Anzahl erlaubter Benutzer*:</strong><br />
+                <select class="form-select" [(ngModel)]="asSaasContract(contractDetails).negotiation.userCountSelection" [disabled]="!isContractInDraft(contractDetails)">
+                <option [value]="" *ngIf="asSaasContract(contractDetails).negotiation.userCountSelection === ''"></option>
+                <option [ngValue]="'' + auc['merlot:userCountUpTo']" *ngFor="let auc of asMerlotSaasServiceOfferingCs(vc.credentialSubject)['merlot:userCountOption']">
+                    <ng-container *ngIf="auc['merlot:userCountUpTo'] === 0; else notUnlimitedUserCount">
+                    Unbegrenzt
+                    </ng-container>
+                    <ng-template #notUnlimitedUserCount>
+                    Bis zu {{ auc['merlot:userCountUpTo'] }}
+                    </ng-template>
+                </option>
+                </select>
+            </li>
+        </div>
+
+        <div *ngIf="isDataDeliveryContract(contractDetails) && isMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)">
+            <li class="list-group-item" style="border: none" *ngIf="asMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)['merlot:exchangeCountOption'] !== null">
+                <strong>Anzahl erlaubter Datenaustausche*:</strong><br />
+                <select class="form-select" [(ngModel)]="asDataDeliveryContract(contractDetails).negotiation.exchangeCountSelection" [disabled]="contractDetails.details.state !== 'IN_DRAFT'">
+                <option [value]="" *ngIf="asDataDeliveryContract(contractDetails).negotiation.exchangeCountSelection === ''"></option>
+                <option [ngValue]="'' + dec['merlot:exchangeCountUpTo']" *ngFor="let dec of asMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)['merlot:exchangeCountOption']">
+                    <ng-container *ngIf="dec['merlot:exchangeCountUpTo'] === 0; else notUnlimitedExchangeCount">
+                    Unbegrenzt
+                    </ng-container>
+                    <ng-template #notUnlimitedExchangeCount>
+                    Bis zu {{ dec['merlot:exchangeCountUpTo'] }}
+                    </ng-template>
+                </option>
+                </select>
+            </li>
+        </div>
+
+    </div>
+    
     <li class="list-group-item" style="border: none">
-    <div class="mb-3">
-        <label class="form-label"><strong>Zusatzvereinbarungen</strong></label>
-        <input class="form-control" placeholder="Keine Zusatzvereinbarungen" 
-        [disabled]="userIsActiveConsumer() || contractDetails.details.state !== 'IN_DRAFT'" 
-        [(ngModel)]="contractDetails.negotiation.additionalAgreements">
-    </div>
+        <div class="mb-3">
+            <label class="form-label"><strong>Zusatzvereinbarungen</strong></label>
+            <input class="form-control" placeholder="Keine Zusatzvereinbarungen" 
+            [disabled]="userIsActiveConsumer() || contractDetails.details.state !== 'IN_DRAFT'" 
+            [(ngModel)]="contractDetails.negotiation.additionalAgreements">
+        </div>
     </li>
-    </div>
 </ul>

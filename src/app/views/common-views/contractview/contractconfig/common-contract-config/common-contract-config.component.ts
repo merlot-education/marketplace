@@ -4,9 +4,10 @@ import { ContractApiService } from 'src/app/services/contract-api.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
-import { IRuntime } from '../../../../serviceofferings/serviceofferings-data';
+import { IOfferingRuntime } from '../../../../serviceofferings/serviceofferings-data';
 import { saveAs } from 'file-saver';
 import { StatusMessageComponent } from '../../../status-message/status-message.component';
+import { asMerlotCoopContractServiceOfferingCs, asMerlotDataDeliveryServiceOfferingCs, asMerlotSaasServiceOfferingCs, asMerlotServiceOfferingCs, getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, isMerlotCoopContractServiceOfferingCs, isMerlotDataDeliveryServiceOfferingCs, isMerlotSaasServiceOfferingCs, isMerlotServiceOfferingCs } from 'src/app/utils/credential-tools';
 
 @Component({
   selector: 'app-common-contract-config',
@@ -16,6 +17,14 @@ import { StatusMessageComponent } from '../../../status-message/status-message.c
 export class CommonContractConfigComponent {
   protected asDataDeliveryContract(val): IDataDeliveryContract { return val };
   protected asSaasContract(val): ISaasContract { return val };
+  protected isMerlotServiceOfferingCs = isMerlotServiceOfferingCs;
+  protected asMerlotServiceOfferingCs = asMerlotServiceOfferingCs;
+  protected isMerlotSaasServiceOfferingCs = isMerlotSaasServiceOfferingCs;
+  protected asMerlotSaasServiceOfferingCs = asMerlotSaasServiceOfferingCs;
+  protected isMerlotDataDeliveryServiceOfferingCs = isMerlotDataDeliveryServiceOfferingCs;
+  protected asMerlotDataDeliveryServiceOfferingCs = asMerlotDataDeliveryServiceOfferingCs;
+  protected isMerlotCoopContractServiceOfferingCs = isMerlotCoopContractServiceOfferingCs;
+  protected asMerlotCoopContractServiceOfferingCs = asMerlotCoopContractServiceOfferingCs;
 
   @Input() contractDetails: IContract = undefined;
   @Input() availableConnectors : ConnectorData[] = [];
@@ -78,16 +87,16 @@ export class CommonContractConfigComponent {
     return this.userIsActiveProvider() && this.isContractInDraft(contractDetails);
   }
 
-  protected isRuntimeUnlimited(runtime: IRuntime): boolean {
+  protected isRuntimeUnlimited(runtime: IOfferingRuntime): boolean {
     return runtime['merlot:runtimeCount']['@value'] === 0 || runtime['merlot:runtimeMeasurement']['@value'] === 'unlimited'
   }
 
   protected isSaasContract(contractDetails: IContract): boolean {
-    return contractDetails.offering.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingSaaS';
+    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails.offering.selfDescription) === 'merlot:MerlotSaasServiceOffering';
   }
 
   protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return contractDetails.offering.selfDescription.verifiableCredential.credentialSubject.type === 'merlot:MerlotServiceOfferingDataDelivery';
+    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails.offering.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
   }
 
   protected hasContractAttachments(contractDetails: IContract): boolean {

@@ -27,6 +27,14 @@ const routes: Routes = [
         },
         canActivate: [isAuthenticated, repAuthGuard]
       },
+      {
+        path: 'edit/:offeringId',
+        component: EditComponent,
+        data: {
+          title: 'Service Angebot bearbeiten',
+        },
+        canActivate: [isAuthenticated, repAuthGuard]
+      },
     ],
   },
 ];

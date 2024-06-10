@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { IBasicOffering, IOfferings, IPageBasicOfferings, ITermsAndConditions } from '../serviceofferings-data'
+import { IBasicOffering, IServiceOffering, IPageBasicOfferings } from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
@@ -10,6 +10,8 @@ import { IContract } from '../../contracts/contracts-data';
 import { ConnectorData } from '../../organization/organization-data';
 import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
+import { getServiceOfferingIdFromServiceOfferingSd, getServiceOfferingNameFromServiceOfferingSd, getServiceOfferingProviderIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,7 +19,6 @@ import { SdDownloadService } from 'src/app/services/sd-download.service';
   styleUrls: ['./explore.component.scss']
 })
 export class ExploreComponent implements OnInit, OnDestroy {
-  @ViewChild("wizardExtension") private wizardExtension: OfferingWizardExtensionComponent;
 
   readonly ITEMS_PER_PAGE = 9;
 
@@ -25,7 +26,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   private activeOrgaSubscription: Subscription;
 
-  private editModalPreviouslyVisible = false;
+  protected getServiceOfferingIdFromServiceOfferingSd = getServiceOfferingIdFromServiceOfferingSd;
+  protected getServiceOfferingNameFromServiceOfferingSd = getServiceOfferingNameFromServiceOfferingSd;
 
   protected activePublicOfferingPage: BehaviorSubject<IPageBasicOfferings> = new BehaviorSubject({
     content: [],
@@ -89,7 +91,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
   selectedStatusFilter: string = Object.keys(this.friendlyStatusNames)[0];
   applyStatusFilter: boolean = false;
 
-  selectedOfferingDetails: IOfferings = null;
+  selectedOfferingDetails: IServiceOffering = null;
   selectedOfferingPublic: boolean = false;
   protected jsonViewHidden: boolean = true;
 
@@ -107,7 +109,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
     protected organizationsApiService: OrganizationsApiService,
     private contractApiService: ContractApiService,
     protected sdDownloadService: SdDownloadService,
-    protected activeOrgRoleService: ActiveOrganizationRoleService) {
+    protected activeOrgRoleService: ActiveOrganizationRoleService,
+    private router: Router) {
   }
 
   ngOnInit(): void {
@@ -126,15 +129,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected handleEventEditModal(modalVisible: boolean) {
-    this.showingModal = modalVisible;
-    if (this.editModalPreviouslyVisible && !modalVisible) {
-      this.wizardExtension.ngOnDestroy();
-      this.refreshOfferings();
-    }
-    this.editModalPreviouslyVisible = modalVisible;
-  }
-
   protected handleEventDetailsModal(modalVisible: boolean) {
     this.showingModal = modalVisible;
   }
@@ -145,7 +139,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   private refreshOfferings() {
     if (this.showingModal) {
-      this.requestDetails(this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id);
+      this.requestDetails(getServiceOfferingIdFromServiceOfferingSd(this.selectedOfferingDetails.selfDescription));
     }
     this.refreshPublicOfferings(0, this.ITEMS_PER_PAGE);
     this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
@@ -222,9 +216,10 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   regenerateOffering(id: string) {
     this.serviceOfferingApiService.regenerateServiceOffering(id).then(result => {
-      // prepare new id for refreshing
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id = result["id"];
-      this.refreshOfferings();
+      this.serviceOfferingApiService.fetchServiceOfferingDetails(result["id"]).then(result => {
+        this.selectedOfferingDetails = result;
+        this.refreshOfferings();
+      });
     });
   }
 
@@ -237,37 +232,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
     return undefined;
   }
 
-  updateServiceOfferingEdit(offering: IBasicOffering) {
-    this.requestDetails(offering.id).then(() => {
-      let merlotTnC = this.organizationsApiService.getMerlotFederationOrga().selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-      let providerTnC: ITermsAndConditions = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription.verifiableCredential.credentialSubject['merlot:termsAndConditions'];
-
-      for (let tnc of this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:termsAndConditions']) {
-        if (tnc['gax-trust-framework:content']['@value'] === merlotTnC['gax-trust-framework:content']['@value'] 
-              && tnc['gax-trust-framework:hash']['@value'] === merlotTnC['gax-trust-framework:hash']['@value']) {
-          tnc["overrideName"] = "Merlot AGB";
-          tnc['gax-trust-framework:content']['disabled'] = true;
-          tnc['gax-trust-framework:hash']['disabled'] = true;
-        }
-        else if (tnc['gax-trust-framework:content']['@value'] === providerTnC['gax-trust-framework:content']['@value'] 
-                && tnc['gax-trust-framework:hash']['@value'] === providerTnC['gax-trust-framework:hash']['@value']) {
-          tnc["overrideName"] = "Anbieter AGB";
-          tnc['gax-trust-framework:content']['disabled'] = true;
-          tnc['gax-trust-framework:hash']['disabled'] = true;
-        }
-      }
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] = this.activeOrgRoleService.getActiveOrgaLegalName();
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['disabled'] = true;
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:providedBy']['@id'] = this.activeOrgRoleService.getActiveOrgaLegalName();
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:providedBy']['disabled'] = true;
-      
-      this.wizardExtension.loadShape(this.findFilenameByShapeType(offering.type), 
-      this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id).then(_ => {
-        this.wizardExtension.prefillFields(this.selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject);
-      });
-    });
-  }
-
   bookServiceOffering(offeringId: string): void {
     this.contractApiService.createNewContract(
       offeringId, 
@@ -278,37 +242,41 @@ export class ExploreComponent implements OnInit, OnDestroy {
       });
   }
 
-  protected shouldShowInDraftButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+  protected shouldShowInDraftButton(isPublicOffering: boolean, offering: IServiceOffering): boolean {
     return !isPublicOffering && offering.metadata.state === 'REVOKED';
   }
 
-  protected shouldShowReleaseButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+  protected shouldShowReleaseButton(isPublicOffering: boolean, offering: IServiceOffering): boolean {
     return !isPublicOffering && (offering.metadata.state === 'IN_DRAFT') || (offering.metadata.state === 'REVOKED');
   }
 
-  protected shouldShowRevokeButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+  protected shouldShowRevokeButton(isPublicOffering: boolean, offering: IServiceOffering): boolean {
     return !isPublicOffering && offering.metadata.state === 'RELEASED';
   }
 
-  protected shouldShowDeleteButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+  protected shouldShowDeleteButton(isPublicOffering: boolean, offering: IServiceOffering): boolean {
     return !isPublicOffering && (offering.metadata.state === 'IN_DRAFT') || (offering.metadata.state === 'REVOKED');
   }
 
-  protected shouldShowPurgeButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+  protected shouldShowPurgeButton(isPublicOffering: boolean, offering: IServiceOffering): boolean {
     return !isPublicOffering && offering.metadata.state === 'DELETED';
   }
 
-  protected shouldShowRegenerateButton(isPublicOffering: boolean, offering: IOfferings): boolean {
+  protected shouldShowRegenerateButton(isPublicOffering: boolean, offering: IServiceOffering): boolean {
     return !isPublicOffering && ((offering.metadata.state === 'RELEASED') 
                                   || (offering.metadata.state === 'ARCHIVED') 
                                   || (offering.metadata.state === 'DELETED'));
   }
 
-  protected shouldShowBookButton(offering: IOfferings): boolean {
-    return this.activeOrgRoleService.isLoggedIn.value && (offering.selfDescription.verifiableCredential.credentialSubject['gax-core:offeredBy']['@id'] !== this.activeOrgRoleService.getActiveOrgaId())
+  protected shouldShowBookButton(offering: IServiceOffering): boolean {
+    return this.activeOrgRoleService.isLoggedIn.value && (getServiceOfferingProviderIdFromServiceOfferingSd(offering.selfDescription) !== this.activeOrgRoleService.getActiveOrgaId())
   }
 
   toogleJsonView() {
     this.jsonViewHidden = !this.jsonViewHidden;
+  }
+
+  protected editOffering(offering: IBasicOffering) {
+    this.router.navigate(["service-offerings/edit/", offering.id]);
   }
 }

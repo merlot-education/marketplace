@@ -54,11 +54,6 @@ export class DynamicFormComponent implements OnInit, OnDestroy, AfterViewChecked
   @ViewChildren('selfLoops') selfLoopsViewChildren: QueryList<DynamicSelfLoopsComponent>; 
   finishedLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  protected hiddenFormFields = [];
-
-  protected hiddenFormFieldsOffering = ["id", "policy", "dataAccountExport", "aggregationOf", "dependsOn", "dataProtectionRegime", "keyword", "provisionType", "endpoint", "ServiceOfferingLocations"];
-  protected hiddenFormFieldsOrganization = ["id", "description", "legalForm", "leiCode", "parentOrganization", "subOrganization", "headquarterAddress", "gps"];
-  
   constructor(
     private formfieldService: FormfieldControlService,
     private router: Router,
@@ -93,14 +88,13 @@ export class DynamicFormComponent implements OnInit, OnDestroy, AfterViewChecked
 
   getFormFields(): void {
     this.shape = this.file?.shapes.find(shape => shape.selected);
-    if (this.shape?.name === "MerlotOrganization") {
-      this.hiddenFormFields = this.hiddenFormFieldsOrganization;
-    } else {
-      this.hiddenFormFields = this.hiddenFormFieldsOffering;
-    }
     this.formFields = this.shape?.fields;
     this.form = this.formfieldService.toFormGroup(this.formFields);
-    this.form.addControl('user_prefix', new FormControl());
+    if (this.form.contains('user_prefix')) {
+      this.form.controls['user_prefix'].disable()
+    } else {
+      this.form.addControl('user_prefix', new FormControl({value: '', disabled: true}));
+    }
     this.form.addControl('download_format', new FormControl(DownloadFormat.jsonld));
 
     this.groupFormFields();

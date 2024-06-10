@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { lastValueFrom } from 'rxjs';
-import { IOfferings, IPageBasicOfferings } from '../views/serviceofferings/serviceofferings-data';
+import { IServiceOffering, IPageBasicOfferings } from '../views/serviceofferings/serviceofferings-data';
 import { ActiveOrganizationRoleService } from './active-organization-role.service';
 
 @Injectable({
@@ -19,9 +19,9 @@ export class ServiceofferingApiService {
   }
 
   private friendlyTypeNames = {
-    "merlot:MerlotServiceOfferingSaaS": "Webanwendung",
-    "merlot:MerlotServiceOfferingDataDelivery": "Datenlieferung",
-    "merlot:MerlotServiceOfferingCooperation": "Kooperationsvertrag"
+    "merlot:MerlotSaasServiceOffering": "Webanwendung",
+    "merlot:MerlotDataDeliveryServiceOffering": "Datenlieferung",
+    "merlot:MerlotCoopContractServiceOffering": "Kooperationsvertrag"
   }
 
   constructor(private http: HttpClient, private activeOrgRoleService: ActiveOrganizationRoleService) { 
@@ -56,20 +56,22 @@ export class ServiceofferingApiService {
   }
 
   // get details to a specific service offering (authenticated)
-  public async fetchServiceOfferingDetails(id: string): Promise<IOfferings> {
+  public async fetchServiceOfferingDetails(id: string): Promise<IServiceOffering> {
     if (this.activeOrgRoleService.isLoggedIn.value) {
-      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "serviceoffering/" + id)) as IOfferings;
+      return await lastValueFrom(this.http.get(environment.serviceoffering_api_url + "serviceoffering/" + id)) as IServiceOffering;
     }
       
     return undefined;
   }
 
   // publish a new service offering with the specified self description and set it to "in draft"
-  public async createServiceOffering(sdJson: string, type: string) {
+  public async createServiceOffering(sdJson: IServiceOffering) {
     console.log(sdJson); 
-    console.log(type);
-    const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
-    return await lastValueFrom(this.http.post(environment.serviceoffering_api_url + "serviceoffering/" + type, sdJson, {headers: headers}));
+    return await lastValueFrom(this.http.post(environment.serviceoffering_api_url + "serviceoffering", sdJson));
+  }
+
+  public async updateServiceOffering(sdJson: IServiceOffering, id: string) {
+    return await lastValueFrom(this.http.put(environment.serviceoffering_api_url + "serviceoffering/" + id, sdJson));
   }
 
   private getStatusShiftUrl(id: string, targetstatus: string) {
@@ -102,13 +104,16 @@ export class ServiceofferingApiService {
     return await lastValueFrom(this.http.post(environment.serviceoffering_api_url + "serviceoffering/regenerate/" + id, null));
   }
 
-  public async fetchAvailableShapes(system: string): Promise<any> {
-    return await lastValueFrom(this.http.get(`${environment.wizard_api_url}/getAvailableShapesCategorized?ecoSystem=`+system));
+  public async getGxServiceOfferingShape(): Promise<any> {
+    return await lastValueFrom(this.http.get(`${environment.serviceoffering_api_url}shapes/gx/serviceoffering`));
   }
 
-  public async fetchShape(filename: string): Promise<any> {
-    const params = new HttpParams().set('name', filename);
-    return await lastValueFrom(this.http.get(`${environment.wizard_api_url}/getJSON`, {params}));
+  public async getMerlotServiceOfferingShape(): Promise<any> {
+    return await lastValueFrom(this.http.get(`${environment.serviceoffering_api_url}shapes/merlot/serviceoffering`));
+  }
+
+  public async getSpecificOfferingTypeShape(type: string): Promise<any> {
+    return await lastValueFrom(this.http.get(`${environment.serviceoffering_api_url}shapes/merlot/serviceoffering/${type}`));
   }
 
   public resolveFriendlyStatusName(merlotStatus: string): string {

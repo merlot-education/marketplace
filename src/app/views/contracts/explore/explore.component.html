@@ -25,7 +25,7 @@
             </li>
             <li class="list-group-item" style="border: none">
               <strong>Angebots-ID:</strong> <br />
-              {{ contract.offering.selfDescription.verifiableCredential.credentialSubject.id }}
+              {{ getServiceOfferingIdFromServiceOfferingSd(contract.offering.selfDescription) }}
             </li>
             <li class="list-group-item" style="border: none" *ngIf="!isActiveProvider(contract)">
               <strong>Serviceanbieter:</strong><br />
@@ -38,7 +38,7 @@
             <li class="list-group-item" style="border: none">
               <strong>Servicename:</strong><br />
               {{
-              contract.offering.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:name']['@value']
+                getServiceOfferingNameFromServiceOfferingSd(contract.offering.selfDescription)
               }}
             </li>
             <li class="list-group-item" style="border: none">

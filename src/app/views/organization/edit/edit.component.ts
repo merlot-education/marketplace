@@ -1,11 +1,13 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { IOrganizationData, IRegistrationNumber } from "../organization-data";
+import { IOrganizationData } from "../organization-data";
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ActivatedRoute } from '@angular/router';
 import { OrganisationWizardExtensionComponent } from 'src/app/wizard-extension/organisation-wizard-extension/organisation-wizard-extension.component';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
+import { getParticipantIdFromParticipantSd } from 'src/app/utils/credential-tools';
+import { takeWhile } from 'rxjs';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -30,15 +32,12 @@ export class EditComponent implements OnInit, AfterViewInit {
       this.selectOrganization(selectedOrgaId);
     } else {
       this.activeOrgRoleService.activeOrganizationRole.subscribe(orga => {
-        if (orga.orgaData.selfDescription.verifiableCredential.credentialSubject.id 
-          != this.selectedOrganization?.selfDescription.verifiableCredential.credentialSubject.id) {
-            this.selectOrganization(orga.orgaData.selfDescription.verifiableCredential.credentialSubject.id);
-        }
+            this.selectOrganization(getParticipantIdFromParticipantSd(orga.orgaData.selfDescription));
       });
     }
     this.wizardExtensionComponent.submitCompleteEvent.subscribe(_ => {
       this.authService.refreshActiveRoleOrgaData();
-      this.refreshSelectedOrganization(this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject.id)
+      this.refreshSelectedOrganization(getParticipantIdFromParticipantSd(this.selectedOrganization.selfDescription))
     });
   }
 
@@ -51,46 +50,28 @@ export class EditComponent implements OnInit, AfterViewInit {
 
   private refreshSelectedOrganization(orgaId: string) {
     this.organizationsApiService.getOrgaById(orgaId).then(result => {
-      console.log(result);
-      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
-      result.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
-      let registrationNumberFields = result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber'];
-      this.patchRegistrationNumberField('gax-trust-framework:local', registrationNumberFields);
-      this.patchRegistrationNumberField('gax-trust-framework:EUID', registrationNumberFields);
-      this.patchRegistrationNumberField('gax-trust-framework:EORI', registrationNumberFields);
-      this.patchRegistrationNumberField('gax-trust-framework:vatID', registrationNumberFields);
-      this.patchRegistrationNumberField('gax-trust-framework:leiCode', registrationNumberFields);
-
       this.selectedOrganization = result;
     });
   }
 
   private selectOrganization(orgaId: string) {
     this.selectedOrganization = undefined;
-    console.log("get orga by id", orgaId);
     this.organizationsApiService.getOrgaById(orgaId).then(result => {
-      console.log(result);
-      result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:legalName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
-      result.selfDescription.verifiableCredential.credentialSubject['merlot:orgaName']['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
-      let registrationNumberFields = result.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:registrationNumber'];
-      this.patchRegistrationNumberField('gax-trust-framework:local', registrationNumberFields);
-      this.patchRegistrationNumberField('gax-trust-framework:EUID', registrationNumberFields);
-      this.patchRegistrationNumberField('gax-trust-framework:EORI', registrationNumberFields);
-      this.patchRegistrationNumberField('gax-trust-framework:vatID', registrationNumberFields);
-      this.patchRegistrationNumberField('gax-trust-framework:leiCode', registrationNumberFields);
-
       this.selectedOrganization = result;
       this.wizardExtensionComponent.loadShape(
-        this.selectedOrganization.selfDescription.verifiableCredential.credentialSubject.id).then(_ => {
+        getParticipantIdFromParticipantSd(this.selectedOrganization.selfDescription)).then(_ => {
+          this.wizardExtensionComponent.prefillDone
+          .pipe(
+            takeWhile(done => !done, true)
+            )
+          .subscribe(done => {
+            console.log("wizard done: ", done);
+            if (this.wizardExtensionComponent.saveStatusMessage.isMessageVisible.value) {
+              window.scrollTo(0,document.body.scrollHeight);
+            }
+          });
           this.wizardExtensionComponent.prefillOrganisation(result);
         });
     });
-  }
-
-  private patchRegistrationNumberField(registrationNumberType: string, registrationNumberField: IRegistrationNumber) {
-    if (!registrationNumberField[registrationNumberType]) { // if it does not exist, add dummy values
-      registrationNumberField[registrationNumberType] = {'@value': "", '.type': "" }
-    } 
-    registrationNumberField[registrationNumberType]['disabled'] = !this.activeOrgRoleService.isActiveAsFedAdmin();
   }
 }

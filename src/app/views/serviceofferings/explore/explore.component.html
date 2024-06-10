@@ -17,7 +17,7 @@
 
   <m-grid>
     <m-card class="mb-4" *ngFor="let offering of this.activeOrgaOfferingPage.value.content" title="<b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{
-          offering.name
+          offering.name ? offering.name : 'Unbekannt'
           }}">
       <c-row>
         <c-col>
@@ -44,8 +44,7 @@
               (click)="selectedOfferingPublic = false; requestDetails(offering.id)">
               Details
             </button>
-            <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalEditServiceOffering.id"
-              (click)="updateServiceOfferingEdit(offering)" *ngIf="offering.state === 'IN_DRAFT'">
+            <button type="button" class="btn btn-primary flex-item-grow" (click)="editOffering(offering)" *ngIf="offering.state === 'IN_DRAFT'">
               Bearbeiten
             </button>
             <button id="json-download-button" type="button" class="btn btn-secondary flex-item-grow me-1" 
@@ -69,7 +68,9 @@
 
   <m-grid>
     <m-card *ngFor="let offering of this.activePublicOfferingPage.value.content"
-      title="<b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{ offering.name }}">
+      title="<b>{{ serviceOfferingApiService.resolveFriendlyTypeName(offering.type) }}</b>: {{
+        offering.name ? offering.name : 'Unbekannt'
+        }}">
       <c-row>
         <c-col>
           <ul class="list-group list-group-flush">
@@ -116,95 +117,77 @@
   (visibleChange)="handleEventDetailsModal($event)">
   <ng-container *ngIf="selectedOfferingDetails !== null">
     <c-modal-header>
-      <h5 cModalTitle>Details zum Service Angebot "{{
-        selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id }}"</h5>
+      <h5 cModalTitle>Details zum Service Angebot "{{ getServiceOfferingNameFromServiceOfferingSd(selectedOfferingDetails.selfDescription) }}"</h5>
     </c-modal-header>
     <c-modal-body>
-
       <div [hidden]="!jsonViewHidden"><button id="json-view-button" cButton color="primary" style="margin-bottom: 10px;"
-        (click)="toogleJsonView()">
-        Selbstbeschreibung des Service Angebots einsehen
-      </button>
-      <app-offeringdetailview [serviceOfferingData]="selectedOfferingDetails"
-        [showVariableFields]="true"></app-offeringdetailview>
-    </div>
+          (click)="toogleJsonView()">
+          Selbstbeschreibung des Service Angebots einsehen
+        </button>
+        <app-offeringdetailview [serviceOfferingData]="selectedOfferingDetails"
+          [showVariableFields]="true"></app-offeringdetailview>
+      </div>
 
-    <div [hidden]="jsonViewHidden"><button id="json-download-button" cButton color="primary"
-        style="margin-bottom: 10px;" (click)="sdDownloadService.downloadServiceOfferingSd(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)">
-        Selbstbeschreibung herunterladen
-      </button>
-      <button id="offering-edit-button" cButton color="primary" style="margin-bottom: 10px; margin-left: 10px;"
-        (click)="toogleJsonView()">
-        Service Angebot ansehen
-      </button>
-      <m-card title="Selbstbeschreibung des Service Angebots">
-        <ngx-json-viewer [json]="selectedOfferingDetails.selfDescription"></ngx-json-viewer>
-      </m-card>
-    </div>
-      
+      <div [hidden]="jsonViewHidden"><button id="json-download-button" cButton color="primary"
+          style="margin-bottom: 10px;" (click)="sdDownloadService.downloadServiceOfferingSd(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))">
+          Selbstbeschreibung herunterladen
+        </button>
+        <button id="offering-edit-button" cButton color="primary" style="margin-bottom: 10px; margin-left: 10px;"
+          (click)="toogleJsonView()">
+          Service Angebot ansehen
+        </button>
+        <m-card title="Selbstbeschreibung des Service Angebots">
+          <ngx-json-viewer [json]="selectedOfferingDetails.selfDescription"></ngx-json-viewer>
+        </m-card>
+      </div>
     </c-modal-body>
     <c-modal-footer>
       <button cButton color="secondary" [cModalToggle]="modalViewDetails.id">Schließen</button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowInDraftButton(selectedOfferingPublic, selectedOfferingDetails)"
-      (click)="inDraftOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)"
+      (click)="inDraftOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
       >
         Entwurf 
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowReleaseButton(selectedOfferingPublic, selectedOfferingDetails)"
-      (click)="releaseOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)"
+      (click)="releaseOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
       >
         Veröffentlichen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowRevokeButton(selectedOfferingPublic, selectedOfferingDetails)"
-      (click)="revokeOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)"
+      (click)="revokeOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
       >
         Widerrufen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowDeleteButton(selectedOfferingPublic, selectedOfferingDetails)"
-      (click)="deleteOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)"
+      (click)="deleteOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
       >
         Löschen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       [cModalToggle]="modalViewDetails.id"
       *ngIf="shouldShowPurgeButton(selectedOfferingPublic, selectedOfferingDetails)"
-      (click)="purgeOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)"
+      (click)="purgeOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
       >
         Endgültig löschen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowRegenerateButton(selectedOfferingPublic, selectedOfferingDetails)"
-      (click)="regenerateOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)"
+      (click)="regenerateOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
       >
         Angebot neu erstellen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowBookButton(selectedOfferingDetails)" 
       [cModalToggle]="'modalViewContract'" 
-      (click)="bookServiceOffering(selectedOfferingDetails.selfDescription.verifiableCredential.credentialSubject.id)">
+      (click)="bookServiceOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))">
         Buchen
       </button>
     </c-modal-footer>
   </ng-container>
-</c-modal>
-
-<c-modal #modalEditServiceOffering id="modalEditServiceOffering" size="xl" alignment="center"
-  (visibleChange)="handleEventEditModal($event)">
-  <c-modal-header>
-    <h5 cModalTitle>Service Angebot "{{
-      selectedOfferingDetails?.selfDescription.verifiableCredential.credentialSubject['gax-trust-framework:name']['@value']
-      }}" bearbeiten</h5>
-  </c-modal-header>
-  <c-modal-body>
-    <app-offering-wizard-extension #wizardExtension></app-offering-wizard-extension>
-  </c-modal-body>
-  <c-modal-footer>
-    <button cButton color="secondary" [cModalToggle]="modalEditServiceOffering.id">Schließen</button>
-  </c-modal-footer>
 </c-modal>
 
 <app-contractview [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors"></app-contractview>

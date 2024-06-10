@@ -1,13 +1,15 @@
 import { Component, EventEmitter, ViewChild } from '@angular/core';
 import { OrganizationsApiService } from '../../services/organizations-api.service';
 import { StatusMessageComponent } from '../../views/common-views/status-message/status-message.component';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
-import { ConnectorData, IOrganizationData, IOrganizationMetadata } from 'src/app/views/organization/organization-data';
+import { ConnectorData, ICredentialSubject, IOrganizationData, IOrganizationMetadata, IVerifiableCredential } from 'src/app/views/organization/organization-data';
 import { ModalComponent } from '@coreui/angular';
 import { BaseWizardExtensionComponent } from '../base-wizard-extension/base-wizard-extension.component';
 import { OrganisationIonosS3ConfigComponent } from '../organisation-ionos-s3-config/organisation-ionos-s3-config.component';
 import { environment } from 'src/environments/environment';
+import { isLegalParticipantCs, isLegalRegistrationNumberCs, isMerlotLegalParticipantCs } from 'src/app/utils/credential-tools';
+import { HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, takeWhile } from 'rxjs';
 
 
 @Component({
@@ -16,8 +18,11 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./organisation-wizard-extension.component.scss']
 })
 export class OrganisationWizardExtensionComponent {
-  @ViewChild("baseWizardExtension") private baseWizardExtension: BaseWizardExtensionComponent;
-  @ViewChild("saveStatusMessage") private saveStatusMessage: StatusMessageComponent;
+  @ViewChild("gxParticipantWizard") private gxParticipantWizard: BaseWizardExtensionComponent;
+  @ViewChild("gxRegistrationNumberWizard") private gxRegistrationNumberWizard: BaseWizardExtensionComponent;
+  @ViewChild("merlotParticipantWizard") private merlotParticipantWizard: BaseWizardExtensionComponent;
+
+  @ViewChild("saveStatusMessage") public saveStatusMessage: StatusMessageComponent;
   @ViewChild("modalConfirmation") private modalConfirmation: ModalComponent;
   @ViewChild("ionosS3Config") private ionosS3Config: OrganisationIonosS3ConfigComponent;
   
@@ -27,8 +32,14 @@ export class OrganisationWizardExtensionComponent {
   protected submitButtonsDisabled: boolean = false;  
   protected orgaActiveSelection: string = "false";
   protected orgaMetadata: IOrganizationMetadata = null;
+  protected gxTermsAndConditions = {
+    version: "",
+    text: ""
+  }
 
   protected environment = environment;
+
+  public prefillDone: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
       protected organizationsApiService: OrganizationsApiService,
@@ -36,12 +47,15 @@ export class OrganisationWizardExtensionComponent {
     ) {}
 
   public async loadShape(id: string): Promise<void> {
+    this.prefillDone.next(false);
     console.log("Loading MERLOT Organisation shape");
-    await this.baseWizardExtension.loadShape(this.organizationsApiService.getMerlotParticipantShape(), id);
+    await this.gxParticipantWizard.loadShape(this.organizationsApiService.getGxParticipantShape(), id);
+    await this.gxRegistrationNumberWizard.loadShape(this.organizationsApiService.getGxRegistrationNumberShape(), id + "#registrationNumber");
+    await this.merlotParticipantWizard.loadShape(this.organizationsApiService.getMerlotParticipantShape(), id);
   }
 
   public isShapeLoaded(): boolean {
-    return this.baseWizardExtension?.isShapeLoaded();
+    return this.gxParticipantWizard?.isShapeLoaded() && this.gxRegistrationNumberWizard?.isShapeLoaded() && this.merlotParticipantWizard?.isShapeLoaded();
   }
 
   private activeStringToBoolean(active: string) { 
@@ -52,22 +66,84 @@ export class OrganisationWizardExtensionComponent {
     return active ? "true": "false";
   }
 
-  public prefillOrganisation(orga: IOrganizationData) {
-    this.orgaMetadata = orga.metadata;
-
-    this.orgaActiveSelection = this.activeBooleanToString(orga.metadata.active);
-    this.baseWizardExtension.prefillFields(orga.selfDescription.verifiableCredential.credentialSubject);
+  private getMerlotLegalParticipantDisabledFields() {
+    return this.activeOrgRoleService.isActiveAsFedAdmin() 
+      ? [] 
+      : ["merlot:legalName", "merlot:legalForm"];
   }
 
-  private async saveSelfDescription(jsonSd: any) {
+  private getGxLegalParticipantDisabledFields() {
+    return this.activeOrgRoleService.isActiveAsFedAdmin() 
+      ? ["gx:legalRegistrationNumber", "gx:subOrganization", "gx:parentOrganization"] 
+      : ["gx:legalRegistrationNumber", "gx:name", "gx:subOrganization", "gx:parentOrganization"];
+  }
+
+  private getGxRegistrationNumberDisabledFields() {
+    return this.activeOrgRoleService.isActiveAsFedAdmin() 
+      ? [] 
+      : ["gx:leiCode", "gx:vatID", "gx:EORI", "gx:EUID", "gx:taxID"];
+  }
+
+  private prefillHandleCs(cs: ICredentialSubject) {
+    if (isMerlotLegalParticipantCs(cs)) {
+      this.merlotParticipantWizard.prefillFields(cs, 
+        this.getMerlotLegalParticipantDisabledFields());
+    }
+    if(isLegalParticipantCs(cs)) {
+      this.gxParticipantWizard.prefillFields(cs, 
+        this.getGxLegalParticipantDisabledFields());
+    }
+    if (isLegalRegistrationNumberCs(cs)) {
+      this.gxRegistrationNumberWizard.prefillFields(cs, 
+        this.getGxRegistrationNumberDisabledFields());
+    }
+  }
+
+  public prefillOrganisation(orga: IOrganizationData) {
+    this.orgaMetadata = orga.metadata;
+    this.orgaActiveSelection = this.activeBooleanToString(orga.metadata.active);
+
+    for (let vc of orga.selfDescription.verifiableCredential) {
+      this.prefillHandleCs(vc.credentialSubject);
+    }
+    
+    this.organizationsApiService.getGxTermsAndConditions().then(result => {
+      this.gxTermsAndConditions = result;
+    });
+
+    this.gxParticipantWizard.prefillDone
+      .pipe(
+        takeWhile(done => !done, true)
+        )
+      .subscribe(done => {
+      if (done) {
+        this.gxRegistrationNumberWizard.prefillDone.pipe(
+          takeWhile(done => !done, true)
+          )
+        .subscribe(done => {
+          if (done) {
+            this.merlotParticipantWizard.prefillDone.pipe(
+              takeWhile(done => !done, true)
+              )
+            .subscribe(done => {
+              if (done) {
+                this.prefillDone.next(true);
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
+  private async saveSelfDescription(id: string, credentials: IVerifiableCredential[]) {
     this.orgaMetadata.active = this.activeStringToBoolean(this.orgaActiveSelection);
     const editedOrganisationData : IOrganizationData = {
-      id: jsonSd["id"],
+      id: id,
       metadata: this.orgaMetadata,
       selfDescription: {
-        verifiableCredential: {
-          credentialSubject: jsonSd,
-        },
+        id: id,
+        verifiableCredential: credentials,
       },
       activeRepresentant: false,
       passiveRepresentant: false,
@@ -91,11 +167,17 @@ export class OrganisationWizardExtensionComponent {
     this.submitButtonsDisabled = true;
     this.saveStatusMessage.hideAllMessages();
 
-    let jsonSd = this.baseWizardExtension.generateJsonSd();
+    let legalParticipantVc: IVerifiableCredential =  { credentialSubject: this.gxParticipantWizard.generateJsonCs() };
+    let legalRegistrationNumberVc: IVerifiableCredential = { credentialSubject: this.gxRegistrationNumberWizard.generateJsonCs() };
+    let merlotParticipantVc: IVerifiableCredential = { credentialSubject: this.merlotParticipantWizard.generateJsonCs() };
 
-    this.saveSelfDescription(jsonSd).then(result => {
+    console.log("legalParticipantVc", legalParticipantVc);
+    console.log("legalRegistrationNumberVc", legalRegistrationNumberVc);
+    console.log("merlotParticipantVc", merlotParticipantVc);
+
+    this.saveSelfDescription(legalParticipantVc.credentialSubject.id, 
+      [legalParticipantVc, legalRegistrationNumberVc, merlotParticipantVc]).then(result => {
       console.log(result);
-      this.baseWizardExtension.setCredentialId(result["id"]);
       this.saveStatusMessage.showSuccessMessage("ID: " + result["id"]);
       this.submitCompleteEvent.emit(null);
       this.prefillOrganisation(result);
@@ -110,7 +192,9 @@ export class OrganisationWizardExtensionComponent {
   }
 
   public ngOnDestroy() {
-    this.baseWizardExtension.ngOnDestroy();
+    this.gxParticipantWizard.ngOnDestroy();
+    this.gxRegistrationNumberWizard.ngOnDestroy();
+    this.merlotParticipantWizard.ngOnDestroy();
     this.saveStatusMessage.hideAllMessages();
     this.submitButtonsDisabled = false;
   }
@@ -181,6 +265,8 @@ export class OrganisationWizardExtensionComponent {
   }
 
   protected isWizardFormInvalid(): boolean {
-    return this.baseWizardExtension?.isWizardFormInvalid();
+    return this.gxParticipantWizard?.isWizardFormInvalid() 
+      || this.gxRegistrationNumberWizard?.isWizardFormInvalid() 
+      || this.merlotParticipantWizard?.isWizardFormInvalid();
   }
 }

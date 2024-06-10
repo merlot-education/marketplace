@@ -10,6 +10,10 @@ import { DynamicFormArrayComponent } from '@components/dynamic-form-array/dynami
 import { BehaviorSubject, takeWhile } from 'rxjs';
 import { ExportService } from '@services/export.service';
 import { Mutex } from 'async-mutex';
+import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
+import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
+import { getOfferingTncFromParticipantSd } from 'src/app/utils/credential-tools';
+import { IServiceOfferingTermsAndConditions } from 'src/app/views/serviceofferings/serviceofferings-data';
 
 
 @Component({
@@ -27,11 +31,25 @@ export class BaseWizardExtensionComponent {
   protected wizardVisible: boolean = false;
 
   private shapeInitialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  prefillDone: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private wizardMutex: Mutex = new Mutex();
+
+  private disabledFields: string[] = [];
+
+  private merlotTnc: IServiceOfferingTermsAndConditions;
+  private providerTnc: IServiceOfferingTermsAndConditions;
 
   constructor(protected formFieldService: FormfieldControlService,
     protected exportService: ExportService,
-    protected changeDetectorRef: ChangeDetectorRef) {}
+    protected changeDetectorRef: ChangeDetectorRef,
+    private organizationsApiService: OrganizationsApiService,
+    private activeOrgRoleService: ActiveOrganizationRoleService) {
+      let merlotFederationSd = this.organizationsApiService.getMerlotFederationOrga().selfDescription;
+      let providerSd = this.activeOrgRoleService.activeOrganizationRole.value.orgaData.selfDescription;
+
+      this.merlotTnc = getOfferingTncFromParticipantSd(merlotFederationSd);
+      this.providerTnc = getOfferingTncFromParticipantSd(providerSd);
+    }
 
   private selectShape(shaclFile: ShaclFile, credentialSubjectId: string): void {
     this.shaclFile = shaclFile;
@@ -84,6 +102,7 @@ export class BaseWizardExtensionComponent {
     this.changeDetectorRef.detectChanges();
     this.shaclFile = undefined;
     this.shapeInitialized.next(false);
+    this.prefillDone.next(false);
     this.wizardVisible = true;
     this.changeDetectorRef.detectChanges();
 }
@@ -125,6 +144,7 @@ export class BaseWizardExtensionComponent {
           for (let formArray of this.wizard.formArrayViewChildren) {
             this.processFormArray(formArray, selfDescriptionFields);
           }
+          this.prefillDone.next(true);
         });
       });
   }
@@ -143,11 +163,13 @@ export class BaseWizardExtensionComponent {
       });
   }
 
-  public prefillFields(selfDescriptionFields: any) {
+  public prefillFields(selfDescriptionFields: any, disabledFields: string[]) {
+    console.log("prefillFields", selfDescriptionFields)
     if (this.createDateTimer) {
       clearInterval(this.createDateTimer);
     }
     // prefill self-description
+    this.disabledFields = disabledFields;
     this.prefillWaitForShape(selfDescriptionFields);
   }
 
@@ -157,18 +179,24 @@ export class BaseWizardExtensionComponent {
     }
 
     let parentKey = formArray.input.prefix + ":" + formArray.input.key;
-    if (!Object.keys(prefillFields).includes(parentKey)) {
-      return;
-    }
+
     // create more inputs for each prefill field after the first one
-    for (let i = formArray.input.minCount; i < prefillFields[parentKey].length; i++) {
-      formArray.addInput();
+    if (Object.keys(prefillFields).includes(parentKey)) {
+      for (let i = formArray.input.minCount; i < prefillFields[parentKey].length; i++) {
+        formArray.addInput();
+      }
+    }
+
+    if (this.disabledFields.includes(parentKey)) {
+      formArray.displayAddButton = false;
     }
 
     let i = 0;
     for (let control of formArray.inputs.controls) {
-      control.patchValue(this.unpackValueFromField(prefillFields[parentKey][i]));
-      if (prefillFields[parentKey][i] instanceof Object && Object.keys(prefillFields[parentKey][i]).includes("disabled") && prefillFields[parentKey][i]["disabled"]) {
+      if (Object.keys(prefillFields).includes(parentKey)) {
+        control.patchValue(this.unpackValueFromField(prefillFields[parentKey][i]));
+      }
+      if (this.disabledFields.includes(parentKey)) {
         control.disable();
       }
       i += 1;
@@ -185,8 +213,9 @@ export class BaseWizardExtensionComponent {
     }
 
     let fullKey = formInput.input.prefix + ":" + formInput.input.key;
+    console.log(fullKey);
 
-    if (["gax-core:offeredBy", "gax-trust-framework:providedBy"].includes(fullKey)) {
+    if (fullKey === "gx:providedBy") {
       this.orgaIdFields.push(formInput.form.controls[formInput.input.id]); // save for later reference
     } 
 
@@ -197,13 +226,18 @@ export class BaseWizardExtensionComponent {
       }
       formInput.form.controls[formInput.input.id].disable();
     }
+    
+    if (Object.keys(prefillFields).includes(fullKey)) {
+      let fieldValue = this.unpackValueFromField(prefillFields[fullKey]);
+      formInput.form.controls[formInput.input.id].patchValue(fieldValue);
 
-    if (!Object.keys(prefillFields).includes(fullKey)) {
-      return;
+      // check if it is the merlot/provider tnc, and if so disable the fields
+      if (fullKey === "gx:URL" && (fieldValue === this.merlotTnc['gx:URL'] ||  fieldValue === this.providerTnc['gx:URL']) 
+        || fullKey === "gx:hash" && (fieldValue === this.merlotTnc['gx:hash'] || fieldValue === this.providerTnc['gx:hash'])) { // for service offerings we also disable the TnC fields if they are prefilled
+        formInput.form.controls[formInput.input.id].disable();
+      }
     }
-
-    formInput.form.controls[formInput.input.id].patchValue(this.unpackValueFromField(prefillFields[fullKey]));
-    if (prefillFields[fullKey] instanceof Object && Object.keys(prefillFields[fullKey]).includes("disabled") && prefillFields[fullKey]["disabled"]) {
+    if (this.disabledFields.includes(fullKey)) {
       formInput.form.controls[formInput.input.id].disable();
     }
   }
@@ -214,18 +248,17 @@ export class BaseWizardExtensionComponent {
     }
 
     let parentKey = expandedField.input.prefix + ":" + expandedField.input.key;
-    if (!Object.keys(prefillFields).includes(parentKey)) {
-      return;
-    }
     // create more inputs for each prefill field after the first one
     let updatedInput = false;
-    for (let i = expandedField.inputs.length; i < prefillFields[parentKey].length; i++) {
-      expandedField.addInput();
-      updatedInput = true;
-    }
-    for (let i = expandedField.inputs.length; i > prefillFields[parentKey].length; i--) {
-      expandedField.deleteInput(-1);
-      updatedInput = true;
+    if (Object.keys(prefillFields).includes(parentKey)) {
+      for (let i = expandedField.inputs.length; i < prefillFields[parentKey].length; i++) {
+        expandedField.addInput();
+        updatedInput = true;
+      }
+      for (let i = expandedField.inputs.length; i > prefillFields[parentKey].length; i--) {
+        expandedField.deleteInput(-1);
+        updatedInput = true;
+      }
     }
 
     // if we created new inputs, wait for changes
@@ -251,15 +284,21 @@ export class BaseWizardExtensionComponent {
     let parentKey = expandedField.input.prefix + ":" + expandedField.input.key;
 
     // since we are always working with a list of inputs, we need to adapt to that in the prefill as well (even if it is just one element)
-    if (!(prefillFields[parentKey] instanceof Array)) {
-      prefillFields[parentKey] = [prefillFields[parentKey]];
+    if (Object.keys(prefillFields).includes(parentKey)) { // key is in prefill fields
+      if (!(prefillFields[parentKey] instanceof Array)) { // field is not array
+        prefillFields[parentKey] = [prefillFields[parentKey]]; // set field to array
+      }
+    } else { // key is not in prefill fields
+      prefillFields[parentKey] = []; // init with empty array
+    }
+
+    // fill up array up to the expected count of inputs
+    for (let i = 0; i < (expandedField.inputs.length-prefillFields[parentKey].length); i++) {
+      prefillFields[parentKey].push({});
     }
 
     let i = 0;
     for (let input of expandedField.inputs) {
-      if (prefillFields[parentKey][i] instanceof Object && Object.keys(prefillFields[parentKey][i]).includes("overrideName")) {
-        input.name = prefillFields[parentKey][i]["overrideName"];
-      }
       for (let cf of input.childrenFields) {
         this.processFormInput(expandedField.formInputViewChildren.find(f => f.input.id === cf.id), prefillFields[parentKey][i]);
         this.processExpandedField(expandedField.expandedFieldsViewChildren.find(f => f.input.id === cf.id), prefillFields[parentKey][i]);
@@ -287,23 +326,25 @@ export class BaseWizardExtensionComponent {
       return field["@value"]
     } else if ("@id" in field) {
       return field["@id"]
+    } else if ("id" in field) {
+      return field["id"]
     }
   }
 
-  public generateJsonSd(): any {
+  public generateJsonCs(): any {
     this.wizard.shape.userPrefix = this.wizard.form.get('user_prefix').value;
     this.wizard.shape.downloadFormat = this.wizard.form.get('download_format').value;
     this.wizard.shape.fields = this.wizard.updateFormFieldsValues(this.wizard.formFields, this.wizard.form);
     this.wizard.shape.fields = this.wizard.emptyChildrenFields(this.wizard.shape.fields);
-    let jsonSd = this.exportService.saveFile(this.wizard.file);
+    let jsonCs = this.exportService.saveFile(this.wizard.file);
 
-    jsonSd["id"] = jsonSd["@id"]
-    delete jsonSd["@id"]
-    jsonSd["type"] = jsonSd["@type"]
-    delete jsonSd["@type"]
-    delete jsonSd[""]
+    jsonCs["id"] = jsonCs["@id"]
+    delete jsonCs["@id"]
+    jsonCs["type"] = jsonCs["@type"]
+    delete jsonCs["@type"]
+    delete jsonCs[""]
 
-    return jsonSd;
+    return jsonCs;
   }
 
   public ngOnDestroy() {

@@ -1,14 +1,17 @@
 import { ISpringPage } from '@merlot-education/m-basic-ui';
+import { ICredentialSubject, IVerifiablePresentation } from '../organization/organization-data';
+
+export const TBR_OFFERING_ID: string = "urn:uuid:WILL-BE-GENERATED-BY-MERLOT";
 
 export interface IPageOfferings extends ISpringPage {
-  content: IOfferings[];
+  content: IServiceOffering[];
 }
 
 export interface IPageBasicOfferings extends ISpringPage {
   content: IBasicOffering[];
 }
 
-export interface IOfferings {
+export interface IServiceOffering {
   metadata: {
     state: string;
     creationDate: string;
@@ -19,24 +22,49 @@ export interface IOfferings {
     providerId: string;
     providerLegalName: string;
   };
-  selfDescription: {
-    verifiableCredential: {
-      credentialSubject: {
-        'id': string;
-        'type': string;
-        'gax-core:offeredBy': INodeKindIRITypeId;
-        'gax-trust-framework:providedBy': INodeKindIRITypeId;
-        'gax-trust-framework:name': IStringTypeValue;
-        'gax-trust-framework:termsAndConditions': ITermsAndConditions[];
-        'dct:description'?: IStringTypeValue;
-        'merlot:creationDate': IStringTypeValue;
-        'merlot:attachments'?: IStringTypeValue[];
-        'merlot:exampleCosts'?: IStringTypeValue;
-        'merlot:runtimeOption': IRuntime[];
-        'merlot:merlotTermsAndConditionsAccepted': boolean;
-      };
-    };
-  };
+  selfDescription: IVerifiablePresentation
+}
+
+export interface IGxServiceOfferingCs extends ICredentialSubject {
+  "gx:providedBy": INodeKindIRITypeId;
+  "gx:termsAndConditions": IServiceOfferingTermsAndConditions[];
+  "gx:policy": string[];
+  "gx:dataProtectionRegime": string[];
+  "gx:dataAccountExport": IDataAccountExport[];
+  "gx:name": string;
+  "gx:description": string;
+}
+
+export interface IMerlotServiceOfferingCs extends ICredentialSubject {
+  "merlot:creationDate": string;
+  "merlot:exampleCosts": string;
+  "merlot:runtimeOption": IOfferingRuntime[];
+  "merlot:merlotTermsAndConditionsAccepted": boolean;
+}
+
+export interface IMerlotSaasServiceOfferingCs extends ICredentialSubject {
+  "merlot:hardwareRequirements": string;
+  "merlot:userCountOption": IAllowedUserCount[];
+}
+
+export interface IMerlotDataDeliveryServiceOfferingCs extends ICredentialSubject {
+  "merlot:dataAccessType": string;
+  "merlot:dataTransferType": string;
+  "merlot:exchangeCountOption": IDataExchangeCount[];
+}
+
+export interface IMerlotCoopContractServiceOfferingCs extends ICredentialSubject {
+}
+
+export interface IServiceOfferingTermsAndConditions {
+  'gx:URL': string;
+  'gx:hash': string;
+}
+
+export interface IDataAccountExport {
+  "gx:requestType": string;
+  "gx:accessType": string;
+  "gx:formatType": string;
 }
 
 export interface IBasicOffering {
@@ -48,26 +76,22 @@ export interface IBasicOffering {
   providerLegalName: string;
 }
 
-export interface IStringTypeValue {
-  '@value': string;
-}
-
-export interface INumberTypeValue {
-  '@value': number;
-}
 
 export interface INodeKindIRITypeId {
   '@id': string;
 }
 
-export interface ITermsAndConditions {
-  'gax-trust-framework:content': IStringTypeValue;
-  'gax-trust-framework:hash': IStringTypeValue;
+export interface IOfferingRuntime {
+  'merlot:runtimeCount': number;
+  'merlot:runtimeMeasurement': string;
 }
 
-export interface IRuntime {
-  'merlot:runtimeCount': INumberTypeValue;
-  'merlot:runtimeMeasurement': IStringTypeValue;
+export interface IAllowedUserCount {
+  "merlot:userCountUpTo": number;
+}
+
+export interface IDataExchangeCount {
+  "merlot:exchangeCountUpTo": number;
 }
 
 export let serviceFileNameDict: {
@@ -76,16 +100,16 @@ export let serviceFileNameDict: {
     type: string;
   };
 } = {
-  'Merlot Saas.json': {
+  'saas': {
     name: 'Webanwendung',
-    type: 'merlot:MerlotServiceOfferingSaaS',
+    type: 'merlot:MerlotSaasServiceOffering',
   },
-  'Merlot DataDelivery.json': {
+  'datadelivery': {
     name: 'Datenlieferung',
-    type: 'merlot:MerlotServiceOfferingDataDelivery',
+    type: 'merlot:MerlotDataDeliveryServiceOffering',
   },
-  'Merlot CoopContract.json': {
+  'coopcontract': {
     name: 'Kooperationsvertrag',
-    type: 'merlot:MerlotServiceOfferingCooperation',
+    type: 'merlot:MerlotCoopContractServiceOffering',
   },
 };
