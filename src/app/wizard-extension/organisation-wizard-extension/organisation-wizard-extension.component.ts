@@ -46,11 +46,11 @@ export class OrganisationWizardExtensionComponent {
       protected activeOrgRoleService: ActiveOrganizationRoleService
     ) {}
 
-  public async loadShape(id: string): Promise<void> {
+  public async loadShape(id: string, registrationNumberId: string): Promise<void> {
     this.prefillDone.next(false);
     console.log("Loading MERLOT Organisation shape");
     await this.gxParticipantWizard.loadShape(this.organizationsApiService.getGxParticipantShape(), id);
-    await this.gxRegistrationNumberWizard.loadShape(this.organizationsApiService.getGxRegistrationNumberShape(), id + "#registrationNumber");
+    await this.gxRegistrationNumberWizard.loadShape(this.organizationsApiService.getGxRegistrationNumberShape(), registrationNumberId);
     await this.merlotParticipantWizard.loadShape(this.organizationsApiService.getMerlotParticipantShape(), id);
   }
 

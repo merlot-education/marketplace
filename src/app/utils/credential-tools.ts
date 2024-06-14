@@ -102,6 +102,14 @@ export function getParticipantIdFromParticipantSd(vp: IVerifiablePresentation): 
     }
 }
 
+export function getRegistrationNumberIdFromParticipantSd(vp: IVerifiablePresentation): string {
+    for (let vc of vp.verifiableCredential) {
+        if (isLegalRegistrationNumberCs(vc.credentialSubject)) {
+            return asLegalRegistrationNumberCs(vc.credentialSubject).id;
+        }
+    }
+}
+
 export function getOfferingTncFromParticipantSd(participantSd: IVerifiablePresentation): IServiceOfferingTermsAndConditions {
     for (let vc of participantSd.verifiableCredential) {
       if (isMerlotLegalParticipantCs(vc.credentialSubject)) {

@@ -6,7 +6,7 @@ import { OrganizationsApiService } from 'src/app/services/organizations-api.serv
 import { ActivatedRoute } from '@angular/router';
 import { OrganisationWizardExtensionComponent } from 'src/app/wizard-extension/organisation-wizard-extension/organisation-wizard-extension.component';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
-import { getParticipantIdFromParticipantSd } from 'src/app/utils/credential-tools';
+import { getParticipantIdFromParticipantSd, getRegistrationNumberIdFromParticipantSd } from 'src/app/utils/credential-tools';
 import { takeWhile } from 'rxjs';
 
 @Component({
@@ -59,7 +59,8 @@ export class EditComponent implements OnInit, AfterViewInit {
     this.organizationsApiService.getOrgaById(orgaId).then(result => {
       this.selectedOrganization = result;
       this.wizardExtensionComponent.loadShape(
-        getParticipantIdFromParticipantSd(this.selectedOrganization.selfDescription)).then(_ => {
+        getParticipantIdFromParticipantSd(this.selectedOrganization.selfDescription),
+        getRegistrationNumberIdFromParticipantSd(this.selectedOrganization.selfDescription)).then(_ => {
           this.wizardExtensionComponent.prefillDone
           .pipe(
             takeWhile(done => !done, true)
