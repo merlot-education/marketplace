@@ -16,6 +16,36 @@
             fxFlex.sm="100%"
             fxFlex.xs="100%"
             *ngIf="isShapeLoaded()">
+            
+            <div class="mb-3">
+                <label class="form-label">OCM Agent DIDs*</label>
+                <button cButton color="primary" variant="ghost" (click)="addOcmAgentSetting()" size="sm" *ngIf="orgaMetadata.ocmAgentSettings.length < 2">
+                    <svg
+                    class=""
+                    cIcon
+                    name="cib-addthis"
+                    size="xl"
+                ></svg></button>
+                <div class="mb-3 container" *ngFor="let ocmAgentSetting of orgaMetadata.ocmAgentSettings; let i = index">
+                    <input class="form-control" [(ngModel)]="ocmAgentSetting.agentDid">
+                    <button cButton variant="ghost" (click)="removeOcmAgentSetting(i)" color="primary" size="sm" *ngIf="orgaMetadata.ocmAgentSettings.length > 1">
+                        <svg
+                        class=""
+                        cIcon
+                        name="cil-trash"
+                        size="xl"
+                    ></svg></button>
+                </div>
+                <div cFormText style="color: #7f7f7f;">
+                    <small>OCM Agent DIDs der Organisation</small>
+                </div>
+            </div>
+            <div *ngIf="!isOcmAgentSettingsFilled()" style="color: red">
+                <small>
+                    OCM Agent DIDs ist erforderlich.
+                </small>
+            </div>
+            <br>
 
             <div class="mb-3">
                 <label class="form-label">Mail-Adresse*</label>

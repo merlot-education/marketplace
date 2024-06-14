@@ -92,6 +92,11 @@ export interface IOrganizationMetadata {
   organisationSignerConfigDto: IOrganisationSignerConfig;
   signedBy?: string;
   dapsCertificates: IDapsCertificate[];
+  ocmAgentSettings: IParticipantAgentSettings[];
+}
+
+export interface IParticipantAgentSettings {
+  agentDid: string;
 }
 
 export interface IDapsCertificate {

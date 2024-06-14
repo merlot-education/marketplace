@@ -203,13 +203,22 @@ export class OrganisationWizardExtensionComponent {
     let isActiveRepresentative = this.activeOrgRoleService.isActiveAsRepresentative();
     let membershipClassOk = this.isMembershipClassFilled();
     let mailAddressOk = this.isMailAddressFilled();
+    let ocmAgentSettingsOk = this.isOcmAgentSettingsFilled();
     let connectorListOk = isActiveRepresentative ? this.isConnectorListValid() : true;
 
-    return membershipClassOk && mailAddressOk && connectorListOk;
+    return membershipClassOk && mailAddressOk && ocmAgentSettingsOk && connectorListOk;
   }
 
   public isMailAddressFilled(): boolean {
     return this.isFieldFilled(this.orgaMetadata.mailAddress);
+  }
+
+  public isOcmAgentSettingsFilled(): boolean {
+    let allFilled = this.orgaMetadata.ocmAgentSettings !== undefined;
+    for (let setting of this.orgaMetadata.ocmAgentSettings) {
+      allFilled &&= this.isFieldFilled(setting.agentDid);
+    }
+    return allFilled;
   }
 
   public isMembershipClassFilled(): boolean {
@@ -260,8 +269,19 @@ export class OrganisationWizardExtensionComponent {
     this.orgaMetadata.connectors.push(connector);
   }
 
+  public addOcmAgentSetting() {
+    if (!this.orgaMetadata.ocmAgentSettings) {
+      this.orgaMetadata.ocmAgentSettings = []
+    }
+    this.orgaMetadata.ocmAgentSettings.push({agentDid: ""});
+  }
+
   public removeConnector(index: number) {
     this.orgaMetadata.connectors.splice(index, 1);
+  }
+
+  public removeOcmAgentSetting(index: number) {
+    this.orgaMetadata.ocmAgentSettings.splice(index, 1);
   }
 
   protected isWizardFormInvalid(): boolean {
