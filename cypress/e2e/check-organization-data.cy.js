@@ -29,7 +29,7 @@ it('testuser can log in, check organization and assigned person data, edit organ
         cy.get('c-card-body').scrollIntoView().within(() => {
             cy.get('table > tbody > tr').then((rows) => {
                 for (let row of rows) {
-                    cy.wrap(row).contains(/^edc[1|2]$/).next().should('have.text', 'merlot-edc-gaiax');
+                    cy.wrap(row).contains(/^edc[1|2].+$/).next().should('have.text', 'merlot-edc-gaiax');
                 }
             });
 

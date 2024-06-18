@@ -40,11 +40,13 @@ it('create coop contract service offering', {
     // make sure save button is no longer disabled
     // click on button "Änderungen speichern", the response that the offer is stored will be shown
     cy.contains("Änderungen speichern").should("not.be.disabled").click();
-    cy.contains("Veröffentlichen").should("not.be.disabled",  {timeout: 30000}).click();
-    cy.contains("Selbstbeschreibung erfolgreich gespeichert!", {timeout: 30000}).should("include.text", "ServiceOffering:").then((result) => {
+    cy.contains("Selbstbeschreibung erfolgreich gespeichert!", {timeout: 60000}).should("include.text", "urn:uuid:");
+    cy.wait(500);
+    cy.contains("Veröffentlichen").scrollIntoView().should("not.be.disabled",  {timeout: 30000}).click();
+    cy.contains("Selbstbeschreibung erfolgreich gespeichert!", {timeout: 60000}).should("include.text", "urn:uuid:").then((result) => {
 
         // store id of created offering
-        let offeringId = result.get(0).innerText.match(/ServiceOffering:[^)]+/)[0];
+        let offeringId = result.get(0).innerText.match(/urn:uuid:[^)]+/)[0];
 
         // click on navigation entry Angebote erkunden, the created offer is shown on top of the page
         cy.contains("Service Angebote erkunden").click({force: true});

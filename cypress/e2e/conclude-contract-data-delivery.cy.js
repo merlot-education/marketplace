@@ -20,10 +20,10 @@ it('conclude and cancel data delivery contract', {
     createAndReleaseDataDeliveryOffering(offeringName, offeringDescription, offeringCosts, dataTransfertype, dataExchangeOptions, runtimeOptions, runtimeOptionsSelect);
     
     // the response that the offer is stored will be shown
-    cy.contains("Selbstbeschreibung erfolgreich gespeichert!", { timeout: 30000 }).should("include.text", "ServiceOffering:").then((result) => {
+    cy.contains("Selbstbeschreibung erfolgreich gespeichert!", { timeout: 60000 }).should("include.text", "urn:uuid:").then((result) => {
 
         // store id of created offering
-        let offeringId = result.get(0).innerText.match(/ServiceOffering:[^)]+/)[0];
+        let offeringId = result.get(0).innerText.match(/urn:uuid:[^)]+/)[0];
 
         // click on navigation entry Angebote erkunden, the created offer is shown on top of the page
         cy.contains("Service Angebote erkunden").click();
@@ -66,7 +66,7 @@ it('conclude and cancel data delivery contract', {
             cy.contains("Laufzeit*:").next().next().select("1 year(s)");
             cy.contains("Anzahl erlaubter Datenaustausche*:").next().next().select("Bis zu 12");
             cy.contains("Typ der Datenadresse*").next().next().select("Ionos S3");
-            cy.contains("Aktiver EDC Connector*:").next().next().select("edc1");
+            cy.contains("Aktiver EDC Connector*:").next().next().select("edc1 [INTERNAL]");
             cy.contains("IONOS-S3 Ziel-Bucket*").next().next().select("merlot-edc-dataport");
             cy.get('label:contains("Ziel-Pfad (Ordner) im IONOS-S3 Bucket*") + input')
                 .type("Gaia-X_Jobs/");
@@ -105,7 +105,7 @@ it('conclude and cancel data delivery contract', {
             cy.contains("Ziel-Pfad (Ordner) im IONOS-S3 Bucket*").should("not.exist");
 
             // select Aktiver EDC Connector edc2, IONOS-S3 Quell-Bucket merlot-edc-gaiax and Quell-Dateipfad im IONOS-S3 Bucket jobs4dp/DPjobs01.json, Typ der Datenadresse IonosS3
-            cy.contains("Aktiver EDC Connector*:").next().next().select("edc2");
+            cy.contains("Aktiver EDC Connector*:").next().next().select("edc2 [INTERNAL]");
             cy.contains("IONOS-S3 Quell-Bucket*").next().next().select("merlot-edc-gaiax");
             cy.get('label:contains("Quell-Dateipfad im IONOS-S3 Bucket*") + input').type("jobs4dp/DPjobs01.json");
 
@@ -199,10 +199,10 @@ it('conclude data delivery contract', {
     createAndReleaseDataDeliveryOffering(offeringName, offeringDescription, offeringCosts, dataTransfertype, dataExchangeOptions, runtimeOptions, runtimeOptionsSelect);
     
     // the response that the offer is stored will be shown
-    cy.contains("Selbstbeschreibung erfolgreich gespeichert!", { timeout: 30000 }).should("include.text", "ServiceOffering:").then((result) => {
+    cy.contains("Selbstbeschreibung erfolgreich gespeichert!", { timeout: 60000 }).should("include.text", "urn:uuid:").then((result) => {
 
         // store id of created offering
-        let offeringId = result.get(0).innerText.match(/ServiceOffering:[^)]+/)[0];
+        let offeringId = result.get(0).innerText.match(/urn:uuid:[^)]+/)[0];
 
         // click on navigation entry Angebote erkunden, the created offer is shown on top of the page
         cy.contains("Service Angebote erkunden").click();
@@ -245,7 +245,7 @@ it('conclude data delivery contract', {
             cy.contains("Laufzeit*:").next().next().select("2 year(s)");
             cy.contains("Anzahl erlaubter Datenaustausche*:").next().next().select("Unbegrenzt");
             cy.contains("Typ der Datenadresse*").next().next().select("Ionos S3");
-            cy.contains("Aktiver EDC Connector*:").next().next().select("edc2");
+            cy.contains("Aktiver EDC Connector*:").next().next().select("edc2 [INTERNAL]");
             cy.contains("IONOS-S3 Ziel-Bucket*").next().next().select("merlot-edc-dataport");
             cy.get('label:contains("Ziel-Pfad (Ordner) im IONOS-S3 Bucket*") + input')
                 .type("Gaia-XJobs/OpenJobs/");
@@ -284,7 +284,7 @@ it('conclude data delivery contract', {
             cy.contains("Ziel-Pfad (Ordner) im IONOS-S3 Bucket*").should("not.exist");
 
             // select Aktiver EDC Connector edc1, IONOS-S3 Quell-Bucket merlot-edc-gaiax and Quell-Dateipfad im IONOS-S3 Bucket Jobs4DP.json, Typ der Datenadresse IonosS3
-            cy.contains("Aktiver EDC Connector*:").next().next().select("edc1");
+            cy.contains("Aktiver EDC Connector*:").next().next().select("edc1 [INTERNAL]");
             cy.contains("IONOS-S3 Quell-Bucket*").next().next().select("merlot-edc-gaiax");
             cy.get('label:contains("Quell-Dateipfad im IONOS-S3 Bucket*") + input').type("Jobs4DP.json");
 

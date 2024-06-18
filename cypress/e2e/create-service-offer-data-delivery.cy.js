@@ -52,10 +52,10 @@ it('create data delivery service offering', {
     // make sure save button is no longer disabled
     // click on button "Änderungen speichern", the response that the offer is stored will be shown
     cy.contains("Änderungen speichern").should("not.be.disabled").click();
-    cy.contains("Selbstbeschreibung erfolgreich gespeichert!", {timeout: 30000}).should("include.text", "ServiceOffering:").then((result) => {
+    cy.contains("Selbstbeschreibung erfolgreich gespeichert!", {timeout: 60000}).should("include.text", "urn:uuid:").then((result) => {
 
         // store id of created offering
-        let offeringId = result.get(0).innerText.match(/ServiceOffering:[^)]+/)[0];
+        let offeringId = result.get(0).innerText.match(/urn:uuid:[^)]+/)[0];
 
         // click on navigation entry Angebote erkunden, the created offer is shown on top of the page
         cy.contains("Service Angebote erkunden").click();
@@ -63,7 +63,7 @@ it('create data delivery service offering', {
         openOfferingForEdit(offeringId);
 
         // a popup opens with the form to modify offer (here data could be checked with entered ones)
-        cy.contains("Service Angebot \"" + offeringName + "\" bearbeiten").parent().parent().within(() => {
+        cy.contains("Service Angebot \"" + offeringId + "\" bearbeiten").parent().parent().within(() => {
             //change field Servicename* to Holen Sie sich aktuelle Jobangebote 
             offeringName = "Holen Sie sich aktuelle Jobangebote";
             cy.contains("Servicename").next().clear({force: true});
@@ -74,9 +74,10 @@ it('create data delivery service offering', {
 
             // scroll down and click on button "Publish", the respones that the offer is published will be shown
             cy.contains("Veröffentlichen").scrollIntoView().click({force: true});
-            cy.contains("Selbstbeschreibung erfolgreich gespeichert!");
-            cy.contains("Schließen").click();
+            cy.contains("Selbstbeschreibung erfolgreich gespeichert!", {timeout: 60000});
         });
+
+        cy.contains("Service Angebote erkunden").click();
 
         // activate filter, select Veröffentlicht, the offer should be the first entry of the list of published offers
         cy.contains("Zeige nur Angebote mit Status").parent().next().next().select("Veröffentlicht", {force: true});

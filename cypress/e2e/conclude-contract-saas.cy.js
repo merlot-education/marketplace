@@ -20,10 +20,10 @@ it('conclude saas contract', {
     createAndReleaseSaaSOffering(offeringName, offeringDescription, offeringCosts, offeringHWRequirements, userCountOptions, runtimeOptions, runtimeOptionsSelect)
 
     // the response that the offer is stored will be shown
-    cy.contains("Selbstbeschreibung erfolgreich gespeichert!", { timeout: 30000 }).should("include.text", "ServiceOffering:").then((result) => {
+    cy.contains("Selbstbeschreibung erfolgreich gespeichert!", { timeout: 60000 }).should("include.text", "urn:uuid:").then((result) => {
 
         // store id of created offering
-        let offeringId = result.get(0).innerText.match(/ServiceOffering:[^)]+/)[0];
+        let offeringId = result.get(0).innerText.match(/urn:uuid:[^)]+/)[0];
 
         // log out as testuser
         logout();

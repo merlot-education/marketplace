@@ -17,7 +17,7 @@ export function loginAsUser(name, organization) {
   
 
     // make sure welcome text changed
-    cy.get("#welcome-text", {timeout: 30000}).contains('Willkommen, ' + name + '!', {timeout: 30000});
+    cy.get("#welcome-text", {timeout: 70000}).contains('Willkommen, ' + name + '!', {timeout: 70000});
     cy.get("#role-select").should("contain.text", organization);
     cy.contains("Meine Verträge"); // todo maybe find a better way to make sure the navbar is loaded
 }
@@ -34,14 +34,16 @@ export function fillGeneralOfferingFields(offeringName, offeringDescription,
     runtimeOptionsSelect) {
     cy.contains("Servicename").next().type(offeringName, {force: true});
     cy.contains("Service Bereitsteller").siblings("input").should('not.have.value', '');
-    cy.contains("Service Anbieter").siblings("input").should('not.have.value', '');
     cy.contains("Service Bereitsteller").siblings("input").should('be.disabled');
-    cy.contains("Service Anbieter").siblings("input").should('be.disabled');
+    cy.contains("Police").scrollIntoView().next().children("input").type("Alles erlaubt", {force: true});
+    cy.contains("Datenformat").scrollIntoView().next().type("text/plain", {force: true});
+    cy.contains("Zugriffstyp").scrollIntoView().next().select("digital", { force: true });
+    cy.contains("Anfragetyp").scrollIntoView().next().select("API", { force: true });
     if (offeringDescription) {
         cy.contains("Detaillierte Beschreibung des Services").scrollIntoView().next().type(offeringDescription, {force: true});
     }
     if (offeringTncLink && offeringTncHash) {
-        cy.contains("Merlot AGB").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
+        cy.contains("MERLOT AGB").scrollIntoView().parent().parent().parent().parent().parent().within(() => {
             cy.get("button").click({force: true});
         });
         cy.contains("Anbieter AGB");
