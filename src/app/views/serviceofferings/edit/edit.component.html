@@ -1,6 +1,6 @@
 <c-row>
   <c-col xs>
-    <m-card class="mb-4" title="Service Angebot erstellen">
+    <m-card class="mb-4" title="{{'Service Angebot ' + (selectedOfferingId === null ? 'erstellen' : ('\"' + selectedOfferingId + '\" bearbeiten'))}}">
       <div fxLayout="row wrap" fxLayoutGap="16px grid">
 
 
