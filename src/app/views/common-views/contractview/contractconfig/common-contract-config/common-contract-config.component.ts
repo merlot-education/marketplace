@@ -88,7 +88,7 @@ export class CommonContractConfigComponent {
   }
 
   protected isRuntimeUnlimited(runtime: IOfferingRuntime): boolean {
-    return runtime['merlot:runtimeCount']['@value'] === 0 || runtime['merlot:runtimeMeasurement']['@value'] === 'unlimited'
+    return runtime['merlot:runtimeCount'] === 0 || runtime['merlot:runtimeMeasurement'] === 'unlimited'
   }
 
   protected isSaasContract(contractDetails: IContract): boolean {
