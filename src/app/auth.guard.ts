@@ -1,13 +1,22 @@
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { ActiveOrganizationRoleService } from './services/active-organization-role.service';
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateChildFn, Router, RouterStateSnapshot } from '@angular/router';
 import { map, take } from 'rxjs';
 
 export const fedAuthGuard = () => {
     const activeOrgRoleService = inject(ActiveOrganizationRoleService);
     // If the user's current role is not federator admin, deny access.
     return activeOrgRoleService.isActiveAsFedAdmin();
+};
+
+export const fedOrgaEditAuthGuard: CanActivateChildFn = (
+  next: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
+  const activeOrgRoleService = inject(ActiveOrganizationRoleService);
+  // If the user's current role is not federator admin, deny access.
+  return activeOrgRoleService.isActiveAsFedAdmin() && (next.params.orgaId !== activeOrgRoleService.getActiveOrgaId());
 };
 
 export const repAuthGuard = () => {

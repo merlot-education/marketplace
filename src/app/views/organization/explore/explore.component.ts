@@ -135,6 +135,11 @@ export class ExploreComponent implements OnInit {
     });
   }
 
+  protected canEditOrganization(orga: IOrganizationData): boolean {
+    return this.activeOrgRoleService.isActiveAsFedAdmin() // must be fed admin
+    && (this.activeOrgRoleService.getActiveOrgaId() !== getParticipantIdFromParticipantSd(orga.selfDescription)); // must not be the orga of the fed admin
+  }
+
   protected editOrganization(orga: IOrganizationData) {
     this.router.navigate(["organization/edit/", getParticipantIdFromParticipantSd(orga.selfDescription)]);
   }
