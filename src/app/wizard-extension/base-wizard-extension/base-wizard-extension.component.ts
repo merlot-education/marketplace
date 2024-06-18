@@ -14,6 +14,7 @@ import { OrganizationsApiService } from 'src/app/services/organizations-api.serv
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { getOfferingTncFromParticipantSd } from 'src/app/utils/credential-tools';
 import { IServiceOfferingTermsAndConditions } from 'src/app/views/serviceofferings/serviceofferings-data';
+import { FormField } from '@models/form-field.model';
 
 
 @Component({
@@ -230,12 +231,6 @@ export class BaseWizardExtensionComponent {
     if (Object.keys(prefillFields).includes(fullKey)) {
       let fieldValue = this.unpackValueFromField(prefillFields[fullKey]);
       formInput.form.controls[formInput.input.id].patchValue(fieldValue);
-
-      // check if it is the merlot/provider tnc, and if so disable the fields
-      if (fullKey === "gx:URL" && (fieldValue === this.merlotTnc['gx:URL'] ||  fieldValue === this.providerTnc['gx:URL']) 
-        || fullKey === "gx:hash" && (fieldValue === this.merlotTnc['gx:hash'] || fieldValue === this.providerTnc['gx:hash'])) { // for service offerings we also disable the TnC fields if they are prefilled
-        formInput.form.controls[formInput.input.id].disable();
-      }
     }
     if (this.disabledFields.includes(fullKey)) {
       formInput.form.controls[formInput.input.id].disable();
@@ -304,7 +299,27 @@ export class BaseWizardExtensionComponent {
         this.processExpandedField(expandedField.expandedFieldsViewChildren.find(f => f.input.id === cf.id), prefillFields[parentKey][i]);
         this.processFormArray(expandedField.formArrayViewChildren.find(f => f.input.id === cf.id), prefillFields[parentKey][i]);
       }
+
+      let fullKey = input.prefix + ":" + input.key;
+      let prefillEntry = prefillFields[parentKey][i];
+      if (fullKey === "gx:termsAndConditions") {
+        this.compareAndDisableTnc(input, expandedField, prefillEntry, this.merlotTnc, "MERLOT AGB");
+        this.compareAndDisableTnc(input, expandedField, prefillEntry, this.providerTnc, "Anbieter AGB");
+      }
+
       i += 1;
+    }
+  }
+
+  private compareAndDisableTnc(input: FormField, expandedField: ExpandedFieldsComponent, prefillEntry: any, otherTnc: any, tncName: string) {
+    console.log("comparing tnc:", prefillEntry, "to", otherTnc);
+    if (prefillEntry['gx:URL'] === otherTnc['gx:URL'] 
+      && prefillEntry['gx:hash'] === otherTnc['gx:hash']) {
+        input.name = tncName;
+        for (let cf of input.childrenFields) {
+          let inputField = expandedField.formInputViewChildren.find(f => f.input.id === cf.id);
+          inputField.form.controls[inputField.input.id].disable();
+        }
     }
   }
 
