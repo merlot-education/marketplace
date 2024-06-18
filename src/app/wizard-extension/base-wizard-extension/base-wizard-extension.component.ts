@@ -214,7 +214,6 @@ export class BaseWizardExtensionComponent {
     }
 
     let fullKey = formInput.input.prefix + ":" + formInput.input.key;
-    console.log(fullKey);
 
     if (fullKey === "gx:providedBy") {
       this.orgaIdFields.push(formInput.form.controls[formInput.input.id]); // save for later reference
@@ -312,7 +311,6 @@ export class BaseWizardExtensionComponent {
   }
 
   private compareAndDisableTnc(input: FormField, expandedField: ExpandedFieldsComponent, prefillEntry: any, otherTnc: any, tncName: string) {
-    console.log("comparing tnc:", prefillEntry, "to", otherTnc);
     if (prefillEntry['gx:URL'] === otherTnc['gx:URL'] 
       && prefillEntry['gx:hash'] === otherTnc['gx:hash']) {
         input.name = tncName;
