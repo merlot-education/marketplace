@@ -19,7 +19,7 @@
             
             <div class="mb-3">
                 <label class="form-label">OCM Agent DIDs*</label>
-                <button cButton color="primary" variant="ghost" (click)="addOcmAgentSetting()" size="sm" *ngIf="orgaMetadata.ocmAgentSettings.length < 2">
+                <button cButton color="primary" variant="ghost" (click)="addOcmAgentSetting()" size="sm" *ngIf="orgaMetadata.ocmAgentSettings?.length < 2">
                     <svg
                     class=""
                     cIcon
@@ -28,7 +28,7 @@
                 ></svg></button>
                 <div class="mb-3 container" *ngFor="let ocmAgentSetting of orgaMetadata.ocmAgentSettings; let i = index">
                     <input class="form-control" [(ngModel)]="ocmAgentSetting.agentDid">
-                    <button cButton variant="ghost" (click)="removeOcmAgentSetting(i)" color="primary" size="sm" *ngIf="orgaMetadata.ocmAgentSettings.length > 1">
+                    <button cButton variant="ghost" (click)="removeOcmAgentSetting(i)" color="primary" size="sm" *ngIf="orgaMetadata.ocmAgentSettings?.length > 1">
                         <svg
                         class=""
                         cIcon
@@ -310,7 +310,7 @@
         </div>
     </c-container>
 </m-card>
-<m-card title="Gaia-X Nutzungsbedingungen">
+<m-card *ngIf="gxTermsAndConditions" title="Gaia-X Nutzungsbedingungen">
     <div class="mb-3">
         <label class="form-label"><b>Version: </b></label>
         <br/>

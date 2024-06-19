@@ -129,7 +129,7 @@
         <div class="p-2 docs-highlight">
           <button type="button" class="btn btn-primary flex-item-grow" 
           style="margin-right: 10px;"
-          *ngIf="activeOrgRoleService.isActiveAsFedAdmin()"
+          *ngIf="canEditOrganization(organization)"
           (click)="editOrganization(organization)"
           >
             Bearbeiten 
