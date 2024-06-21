@@ -1,9 +1,11 @@
+<app-ktc-link title="How to create Service Offers | Merlot (merlot-education.eu)" 
+  link="https://ktc.merlot-education.eu/for_companies/how-to-create-service-offers/">
+</app-ktc-link>
+
 <c-row>
   <c-col xs>
-    <m-card class="mb-4" title="{{'Service Angebot ' + (selectedOfferingId === null ? 'erstellen' : ('\"' + selectedOfferingId + '\" bearbeiten'))}}">
+    <m-card class="mb-4" title="{{ 'Service Angebot ' + (selectedOfferingId === null ? 'erstellen' : ('\"' + selectedOfferingId + '\" bearbeiten')) }}">
       <div fxLayout="row wrap" fxLayoutGap="16px grid">
-
-
         <div class="mb-3" fxFlex="70%" fxFlex.sm="100%" fxFlex.xs="100%">
 
           <div [hidden]="selectedOfferingId">

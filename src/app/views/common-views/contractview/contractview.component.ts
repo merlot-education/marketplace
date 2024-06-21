@@ -203,7 +203,7 @@ export class ContractviewComponent {
   }
 
   protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails.offering.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
+    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails?.offering?.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
   }
 
   protected shouldShowSaveButton(contractDetails: IContract): boolean {

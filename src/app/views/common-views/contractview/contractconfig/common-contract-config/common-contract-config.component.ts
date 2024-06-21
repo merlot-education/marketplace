@@ -92,11 +92,11 @@ export class CommonContractConfigComponent {
   }
 
   protected isSaasContract(contractDetails: IContract): boolean {
-    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails.offering.selfDescription) === 'merlot:MerlotSaasServiceOffering';
+    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails?.offering?.selfDescription) === 'merlot:MerlotSaasServiceOffering';
   }
 
   protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails.offering.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
+    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails?.offering?.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
   }
 
   protected hasContractAttachments(contractDetails: IContract): boolean {
