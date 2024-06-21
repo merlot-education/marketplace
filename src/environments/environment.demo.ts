@@ -9,6 +9,7 @@ export const environment = {
     login_client_id: "MPO",
     daps_server_url: 'https://daps.demo.merlot-education.eu/auth',
     daps_audience: 'idsc:IDS_CONNECTORS_ALL',
+    ktc_link_home: 'https://ktc.merlot-education.eu/',
     ktc_link_offering_creation: 'https://ktc.merlot-education.eu/for_companies/how-to-create-service-offers/',
     ktc_link_contract_booking: 'https://ktc.merlot-education.eu/for_companies/how-to-book-a-contract/',
     ktc_link_registration: 'https://ktc.merlot-education.eu/for_companies/registration-process/',
