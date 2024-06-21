@@ -12,7 +12,12 @@ export const environment = {
   login_authority_url: "http://key-server:8080/realms/POC1",
   login_client_id: "MARKETPLACE",
   daps_server_url: 'http://localhost:4567',
-  daps_audience: 'idsc:IDS_CONNECTORS_ALL'
+  daps_audience: 'idsc:IDS_CONNECTORS_ALL',
+  ktc_link_home: 'https://ktc.merlot-education.eu/',
+  ktc_link_offering_creation: 'https://ktc.merlot-education.eu/for_companies/how-to-create-service-offers/',
+  ktc_link_contract_booking: 'https://ktc.merlot-education.eu/for_companies/how-to-book-a-contract/',
+  ktc_link_registration: 'https://ktc.merlot-education.eu/for_companies/registration-process/',
+  ktc_link_data_transfer: 'https://ktc.merlot-education.eu/for_companies/data-transfer/'
 };
 
 /*

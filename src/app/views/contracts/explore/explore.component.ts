@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ConnectorData } from '../../organization/organization-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, getServiceOfferingIdFromServiceOfferingSd, getServiceOfferingNameFromServiceOfferingSd } from 'src/app/utils/credential-tools';
+import { environment } from 'src/environments/environment';
 
 @Component({
   templateUrl: './explore.component.html',
@@ -55,6 +56,8 @@ export class ExploreComponent implements OnInit {
   protected applyStatusFilter: boolean = false;
 
   private isCurrentlyFiltered: boolean = false;
+
+  protected environment = environment;
 
   constructor(
     private serviceOfferingApiService: ServiceofferingApiService,

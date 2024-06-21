@@ -11,6 +11,6 @@
   <router-outlet></router-outlet>
   <div layout-footer>
     <span class=version-tag>MERLOT MPO v{{ version }} - </span> 
-    <span class=info-text>Learn more about the <a href="https://ktc.merlot-education.eu/" target="_blank">MERLOT Project</a></span>
+    <span class=info-text>Learn more about the <a [href]="environment.ktc_link_home" target="_blank">MERLOT Project</a></span>
   </div>
 </m-layout>

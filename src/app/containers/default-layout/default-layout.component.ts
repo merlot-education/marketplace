@@ -9,6 +9,7 @@ import {
 import { navItems } from './_nav';
 import packageJson from '../../../../package.json';
 import { getOrganizationName } from 'src/app/utils/credential-tools';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +21,8 @@ export class DefaultLayoutComponent {
 
   public selectedRoleOption: string = '';
   protected version: string = packageJson.version;
+
+  protected environment = environment;
 
   wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

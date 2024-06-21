@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { IOrganizationData } from '../organization/organization-data';
 import { getOrganizationName } from 'src/app/utils/credential-tools';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-registration',
@@ -14,6 +15,7 @@ export class RegistrationComponent {
   private federatorMailMap: Map<string, string> = new Map<string, string>();
 
   public selectedFederator: string = null;
+  protected environment = environment;
 
   constructor(
     private organizationsApiService: OrganizationsApiService

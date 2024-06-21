@@ -5,7 +5,7 @@
     <c-modal-body>
 
       <app-ktc-link title="Data Transfer | Merlot (merlot-education.eu)" 
-        link="https://ktc.merlot-education.eu/for_companies/data-transfer/"
+        [link]="environment.ktc_link_data_transfer"
         *ngIf="isDataDeliveryContract(contractDetails)">
       </app-ktc-link>
 
