@@ -9,6 +9,7 @@ import { ConnectorData } from 'src/app/views/organization/organization-data';
 import { saveAs } from 'file-saver';
 import { StatusMessageComponent } from '../status-message/status-message.component';
 import { getMerlotDataDeliveryServiceOfferingCsFromServiceOfferingSd, getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, getServiceOfferingIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
+import { environment } from 'src/environments/environment';
 
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -31,6 +32,8 @@ export class ContractviewComponent {
   protected saveButtonDisabled: boolean = false;
 
   protected getServiceOfferingIdFromServiceOfferingSd = getServiceOfferingIdFromServiceOfferingSd;
+
+  protected environment = environment;
 
   constructor(
     protected contractApiService: ContractApiService,
@@ -203,7 +206,7 @@ export class ContractviewComponent {
   }
 
   protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails.offering.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
+    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails?.offering?.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
   }
 
   protected shouldShowSaveButton(contractDetails: IContract): boolean {

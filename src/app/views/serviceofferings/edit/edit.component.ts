@@ -8,6 +8,7 @@ import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offer
 import { skip, takeWhile } from 'rxjs';
 import { getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, getOfferingTncFromParticipantSd, getParticipantIdFromParticipantSd, getServiceOfferingIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 import { ActivatedRoute, Router } from '@angular/router';
+import {environment} from 'src/environments/environment';
 
 @Component({
   templateUrl: './edit.component.html',
@@ -28,6 +29,8 @@ export class EditComponent implements OnInit, AfterViewInit {
   private selectedOffering: IServiceOffering;
 
   @ViewChild("wizardExtension") private wizardExtension: OfferingWizardExtensionComponent;
+
+  protected environment = environment;
 
   constructor(private serviceofferingsApiService: ServiceofferingApiService, 
     protected authService : AuthService, 

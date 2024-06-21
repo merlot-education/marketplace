@@ -52,7 +52,7 @@ export class ProviderContractConfigComponent implements OnInit {
   }
 
   protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails.offering.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
+    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails?.offering?.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
   }
 
   protected isIonosProviderTransferProvisioning(contractDetails: IContract): boolean {

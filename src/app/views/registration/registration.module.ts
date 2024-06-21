@@ -11,19 +11,20 @@ import {
 } from '@coreui/angular';
 import { FormsModule } from '@angular/forms';
 import { CardComponent } from '@merlot-education/m-basic-ui';
+import { CommonViewsModule } from "../common-views/common-views.module";
 
 @NgModule({
-  imports: [
-    CardModule,
-    RegistrationRoutingModule,
-    CommonModule,
-    GridModule,
-    FormModule,
-    FormsModule,
-    ButtonModule,
-
-    CardComponent,
-  ],
-  declarations: [RegistrationComponent],
+    declarations: [RegistrationComponent],
+    imports: [
+        CardModule,
+        RegistrationRoutingModule,
+        CommonModule,
+        GridModule,
+        FormModule,
+        FormsModule,
+        ButtonModule,
+        CardComponent,
+        CommonViewsModule
+    ]
 })
 export class RegistrationModule {}

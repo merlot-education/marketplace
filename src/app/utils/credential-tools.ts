@@ -95,6 +95,10 @@ export function getOrganizationLegalName(vp: IVerifiablePresentation): string {
 }
 
 export function getParticipantIdFromParticipantSd(vp: IVerifiablePresentation): string {
+    if (!vp) {
+        return "";
+    }
+
     for (let vc of vp.verifiableCredential) {
         if (isLegalParticipantCs(vc.credentialSubject)) {
             return asLegalParticipantCs(vc.credentialSubject).id;
@@ -103,6 +107,10 @@ export function getParticipantIdFromParticipantSd(vp: IVerifiablePresentation): 
 }
 
 export function getRegistrationNumberIdFromParticipantSd(vp: IVerifiablePresentation): string {
+    if (!vp) {
+        return "";
+    }
+
     for (let vc of vp.verifiableCredential) {
         if (isLegalRegistrationNumberCs(vc.credentialSubject)) {
             return asLegalRegistrationNumberCs(vc.credentialSubject).id;
@@ -111,6 +119,10 @@ export function getRegistrationNumberIdFromParticipantSd(vp: IVerifiablePresenta
 }
 
 export function getOfferingTncFromParticipantSd(participantSd: IVerifiablePresentation): IServiceOfferingTermsAndConditions {
+    if (!participantSd) {
+        return undefined;
+    }
+
     for (let vc of participantSd.verifiableCredential) {
       if (isMerlotLegalParticipantCs(vc.credentialSubject)) {
         let tnc = asMerlotLegalParticipantCs(vc.credentialSubject)['merlot:termsAndConditions']
@@ -123,6 +135,10 @@ export function getOfferingTncFromParticipantSd(participantSd: IVerifiablePresen
   }
 
 export function getServiceOfferingIdFromServiceOfferingSd(vp: IVerifiablePresentation): string {
+    if (!vp) {
+        return "";
+    }
+
     for (let vc of vp.verifiableCredential) {
         if (isGxServiceOfferingCs(vc.credentialSubject)) {
             return asGxServiceOfferingCs(vc.credentialSubject).id;
@@ -131,6 +147,10 @@ export function getServiceOfferingIdFromServiceOfferingSd(vp: IVerifiablePresent
 }
 
 export function getServiceOfferingNameFromServiceOfferingSd(vp: IVerifiablePresentation): string {
+    if (!vp) {
+        return "";
+    }
+
     for (let vc of vp.verifiableCredential) {
         if (isGxServiceOfferingCs(vc.credentialSubject)) {
             return asGxServiceOfferingCs(vc.credentialSubject)["gx:name"];
@@ -139,6 +159,10 @@ export function getServiceOfferingNameFromServiceOfferingSd(vp: IVerifiablePrese
 }
 
 export function getServiceOfferingProviderIdFromServiceOfferingSd(vp: IVerifiablePresentation): string {
+    if (!vp) {
+        return "";
+    }
+
     for (let vc of vp.verifiableCredential) {
         if (isGxServiceOfferingCs(vc.credentialSubject)) {
             return asGxServiceOfferingCs(vc.credentialSubject)["gx:providedBy"]["id"];
@@ -147,6 +171,10 @@ export function getServiceOfferingProviderIdFromServiceOfferingSd(vp: IVerifiabl
 }
 
 export function getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(vp: IVerifiablePresentation): string {
+    if (!vp) {
+        return "";
+    }
+
     for (let vc of vp.verifiableCredential) {
         if (isMerlotSaasServiceOfferingCs(vc.credentialSubject)) {
             return asMerlotSaasServiceOfferingCs(vc.credentialSubject).type;
@@ -159,6 +187,10 @@ export function getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(vp: IV
 }
 
 export function getMerlotDataDeliveryServiceOfferingCsFromServiceOfferingSd(vp: IVerifiablePresentation): IMerlotDataDeliveryServiceOfferingCs {
+    if (!vp) {
+        return undefined;
+    }
+
     for (let vc of vp.verifiableCredential) {
         if (isMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject)) {
             return asMerlotDataDeliveryServiceOfferingCs(vc.credentialSubject);

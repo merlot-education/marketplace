@@ -3,6 +3,12 @@
       <h5 *ngIf="contractDetails" cModalTitle>Vertragskonfiguration zum Service Angebot "{{ getServiceOfferingIdFromServiceOfferingSd(contractDetails.offering.selfDescription) }}"</h5>
     </c-modal-header>
     <c-modal-body>
+
+      <app-ktc-link title="Data Transfer | Merlot (merlot-education.eu)" 
+        [link]="environment.ktc_link_data_transfer"
+        *ngIf="isDataDeliveryContract(contractDetails)">
+      </app-ktc-link>
+
       <ng-container *ngIf="contractDetails">
         <div *ngIf="!contractDetails.details.providerActive || !contractDetails.details.consumerActive" class="warning-box">
           <svg class="warning-symbol" cIcon name='cil-warning' size='xl' width='24'></svg> 
