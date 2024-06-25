@@ -45,8 +45,6 @@ export interface IGxVcard {
 }
 
 export interface ILegalRegistrationNumberCs extends ICredentialSubject {
-  'gx:taxID': string;
-  'gx:EUID': string;
   'gx:EORI': string;
   'gx:vatID': string;
   'gx:leiCode': string;

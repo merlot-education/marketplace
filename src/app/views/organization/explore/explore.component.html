@@ -60,12 +60,6 @@
         <ul class="list-group list-group-flush">
           <li class="list-group-item" style="border: none">
           <strong>Registrierungsnummer:</strong><br />
-          <div *ngIf="asLegalRegistrationNumberCs(vc.credentialSubject)['gx:taxID']">
-            Tax ID: {{ asLegalRegistrationNumberCs(vc.credentialSubject)['gx:taxID'] }}
-          </div>
-          <div *ngIf="asLegalRegistrationNumberCs(vc.credentialSubject)['gx:EUID']">
-            EUID: {{ asLegalRegistrationNumberCs(vc.credentialSubject)['gx:EUID'] }}
-          </div>
           <div *ngIf="asLegalRegistrationNumberCs(vc.credentialSubject)['gx:EORI']">
             EORI: {{ asLegalRegistrationNumberCs(vc.credentialSubject)['gx:EORI'] }}
           </div>

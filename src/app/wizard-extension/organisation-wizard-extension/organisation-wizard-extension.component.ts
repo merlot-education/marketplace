@@ -81,7 +81,7 @@ export class OrganisationWizardExtensionComponent {
   private getGxRegistrationNumberDisabledFields() {
     return this.activeOrgRoleService.isActiveAsFedAdmin() 
       ? [] 
-      : ["gx:leiCode", "gx:vatID", "gx:EORI", "gx:EUID", "gx:taxID"];
+      : ["gx:leiCode", "gx:vatID", "gx:EORI"];
   }
 
   private prefillHandleCs(cs: ICredentialSubject) {
