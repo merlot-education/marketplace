@@ -44,6 +44,12 @@ Afterward you can initialize the frontend with
 
 Once the frontend is running, you can access it at http://localhost:4200/#/start .
 
+## Run E2E Tests
+
+    npx cypress open
+
+Once run, a new window will open, presenting you with the option to select E2E tests and run them on your local machine. The tests will by default be performed against the dev-instance of the MERLOT marketplace at https://marketplace.dev.merlot-education.eu/ and will need human interaction during the login steps for presenting a credential.
+
 ## Deploy (Docker)
 
 The MERLOT marketplace frontend can be deployed as part of the full MERLOT docker stack at
