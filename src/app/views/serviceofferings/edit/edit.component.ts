@@ -70,7 +70,6 @@ export class EditComponent implements OnInit, AfterViewInit {
         this.selectedOffering = result;
         let type = getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(result.selfDescription);
         let typeFile;
-        Object.keys(serviceFileNameDict)
         for (const k of Object.keys(serviceFileNameDict)) {
           const v = serviceFileNameDict[k];
           if (v["type"] === type) {

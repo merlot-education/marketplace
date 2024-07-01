@@ -15,7 +15,7 @@ export const fedOrgaEditAuthGuard: CanActivateChildFn = (
   state: RouterStateSnapshot
 ) => {
   const activeOrgRoleService = inject(ActiveOrganizationRoleService);
-  // If the user's current role is not federator admin, deny access.
+  // Ensure that the current role is FedAdmin and the user is not trying to edit its own organization.
   return activeOrgRoleService.isActiveAsFedAdmin() && (next.params.orgaId !== activeOrgRoleService.getActiveOrgaId());
 };
 

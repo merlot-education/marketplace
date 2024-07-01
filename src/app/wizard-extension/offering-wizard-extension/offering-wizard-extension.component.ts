@@ -90,11 +90,6 @@ export class OfferingWizardExtensionComponent {
     });
   }
 
-  private async saveSelfDescription(jsonSd: any) {
-
-    return await this.serviceofferingApiService.createServiceOffering(jsonSd);
-  }
-
   protected onSubmit(publishAfterSave: boolean): void {
     console.log("onSubmit");
     this.submitButtonsDisabled = true;
