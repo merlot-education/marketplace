@@ -14,7 +14,7 @@
       <div [ngSwitch]="controlType">
         <div *ngSwitchCase="'textbox'">
           <mat-form-field *ngIf="radioButtonSelected == controlType" class="full-width-input">
-            <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span>
+            <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
             </mat-label>
             <input [formControlName]="input.id" [matTooltip]="input.name" [placeholder]="input.name" [type]="$any(input.datatype)" matInput>
           </mat-form-field>
@@ -25,7 +25,7 @@
         </div>
         <div *ngSwitchCase="'textbox_integer'">
           <mat-form-field *ngIf="radioButtonSelected == controlType" class="full-width-input">
-            <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span>
+            <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
             </mat-label>
             <input [formControlName]="input.id" [matTooltip]="input.name" [placeholder]="input.name" appNumeric matInput type="number">
           </mat-form-field>
@@ -36,7 +36,7 @@
         </div>
         <div *ngSwitchCase="'textbox_decimal'">
           <mat-form-field *ngIf="radioButtonSelected == controlType" class="full-width-input">
-            <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span>
+            <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
             </mat-label>
             <input [id]="input.id" [matTooltip]="input.name" [placeholder]="input.name" appNumeric matInput type="number">
           </mat-form-field>
@@ -47,7 +47,7 @@
         </div>
         <div *ngSwitchCase="'textbox_uri'">
           <mat-form-field *ngIf="radioButtonSelected == controlType" class="full-width-input">
-            <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span>
+            <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
             </mat-label>
             <input [formControlName]="input.id" [matTooltip]="input.name" [placeholder]="input.name" matInput>
           </mat-form-field>
@@ -58,7 +58,7 @@
         </div>
         <div *ngSwitchCase="'datepicker'">
           <mat-form-field *ngIf="radioButtonSelected == controlType" class="full-width-input">
-            <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span>
+            <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
             </mat-label>
             <input [formControlName]="input.id" [matDatepicker]="picker" matInput>
             <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
@@ -70,7 +70,7 @@
         </div>
         <div *ngSwitchCase="'datetimepicker'">
           <mat-form-field *ngIf="radioButtonSelected == controlType" class="full-width-input">
-            <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span>
+            <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
             </mat-label>
             <input [formControlName]="input.id" [ngxMatDatetimePicker]="picker" matInput>
             <mat-datepicker-toggle [for]="$any(picker)" matSuffix></mat-datepicker-toggle>
@@ -89,7 +89,7 @@
 <div *ngIf="orType == 'class'">
   <form [formGroup]="nestedFormGroup">
     <small>Select a shape for {{input.name}} <span *ngIf="input.required" aria-required="true"
-                                                   class="required"> * </span></small> <br>
+                                                   class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span></small> <br>
     <mat-radio-group [name]="groupName">
       <mat-radio-button (change)="onItemChangeObject(option, i)" *ngFor="let option of orObjects; let i = index;"
                         [checked]='i==0'

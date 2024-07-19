@@ -1,6 +1,6 @@
 <form [formGroup]="form">
   <mat-form-field *ngIf='!isArray' class="full-width-input">
-    <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span></mat-label>
+    <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span></mat-label>
     <mat-select (selectionChange)="onSelectionChanged($event.value)" [formControlName]="input.id" [multiple]="false">
       <mat-option *ngFor="let option of input.in" [value]="option.value">
         {{option.value}}
@@ -12,7 +12,7 @@
   </mat-error>
 
   <mat-form-field *ngIf='isArray' class="full-width-input">
-    <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span></mat-label>
+    <mat-label>{{input.name}} <span *ngIf="input.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span></mat-label>
     <mat-select (selectionChange)="onSelectionChanged($event.value)" [formControl]="control" [multiple]="false">
       <mat-option *ngFor="let option of input.in" [value]="option.value">
         {{option.value}}

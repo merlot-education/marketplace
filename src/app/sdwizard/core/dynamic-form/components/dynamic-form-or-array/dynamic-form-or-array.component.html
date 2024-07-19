@@ -2,7 +2,7 @@
   <form [formGroup]="form">
     <div *ngFor="let formField of inputs; let i = index">
       <div *ngIf="formField.controlTypes.length > 1">
-        <small>Select a datatype for {{input.name}} <span *ngIf="input.required" aria-required="true" class="required"> * </span></small>
+        <small>Select a datatype for {{input.name}} <span *ngIf="input.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span></small>
         <br>
         <mat-radio-group [name]="radioGroupIds[i]">
           <mat-radio-button (change)="onItemChange(option, i, j)"
@@ -18,8 +18,7 @@
             <div *ngIf="radioButtonsSelected[i] == controlType">
               <mat-form-field
                 [ngClass]="{'full-width-input': addFullWidthClass(i), 'width-input': addNonFullWidthClass(i)}">
-                <mat-label>{{formField.name}} <span *ngIf="formField.required" aria-required="true" class="required"> *
-                  </span>
+                <mat-label>{{formField.name}} <span *ngIf="formField.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
                 </mat-label>
                 <input [formControlName]="formField.id" [matTooltip]="formField.description[this.translate.currentLang]" placeholder="{{formField.description[this.translate.currentLang]}}" matInput>
               </mat-form-field>
@@ -41,8 +40,7 @@
             <div *ngIf="radioButtonsSelected[i] == controlType">
               <mat-form-field
                 [ngClass]="{'full-width-input': addFullWidthClass(i), 'width-input': addNonFullWidthClass(i)}">
-                <mat-label>{{formField.name}} <span *ngIf="formField.required" aria-required="true" class="required"> *
-                  </span>
+                <mat-label>{{formField.name}} <span *ngIf="formField.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
                 </mat-label>
                 <input [formControlName]="formField.id" [matTooltip]="formField.description[this.translate.currentLang]" placeholder="{{formField.description[this.translate.currentLang]}}" appNumeric matInput
                        type="number">
@@ -66,8 +64,7 @@
             <div *ngIf="radioButtonsSelected[i] == controlType">
               <mat-form-field
                 [ngClass]="{'full-width-input': addFullWidthClass(i), 'width-input': addNonFullWidthClass(i)}">
-                <mat-label>{{formField.name}} <span *ngIf="formField.required" aria-required="true" class="required"> *
-                  </span>
+                <mat-label>{{formField.name}} <span *ngIf="formField.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
                 </mat-label>
                 <input [formControlName]="formField.id" [matTooltip]="formField.description[this.translate.currentLang]" placeholder="{{formField.description[this.translate.currentLang]}}" appNumeric
                        matInput type="number">
@@ -91,8 +88,7 @@
             <div *ngIf="radioButtonsSelected[i] == controlType">
               <mat-form-field
                 [ngClass]="{'full-width-input': addFullWidthClass(i), 'width-input': addNonFullWidthClass(i)}">
-                <mat-label>{{formField.name}} <span *ngIf="formField.required" aria-required="true" class="required"> *
-                  </span>
+                <mat-label>{{formField.name}} <span *ngIf="formField.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
                 </mat-label>
                 <input [formControlName]="formField.id" [matTooltip]="formField.description[this.translate.currentLang]" placeholder="{{formField.description[this.translate.currentLang]}}" matInput>
               </mat-form-field>
@@ -114,8 +110,7 @@
             <div *ngIf="radioButtonsSelected[i] == controlType">
               <mat-form-field
                 [ngClass]="{'full-width-input': addFullWidthClass(i), 'width-input': addNonFullWidthClass(i)}">
-                <mat-label>{{formField.name}} <span *ngIf="formField.required" aria-required="true" class="required"> *
-                  </span>
+                <mat-label>{{formField.name}} <span *ngIf="formField.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
                 </mat-label>
                 <input [formControlName]="formField.id" [matDatepicker]="picker" matInput>
                 <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
@@ -140,8 +135,7 @@
             <div *ngIf="radioButtonsSelected[i] == controlType">
               <mat-form-field
                 [ngClass]="{'full-width-input': addFullWidthClass(i), 'width-input': addNonFullWidthClass(i)}">
-                <mat-label>{{formField.name}} <span *ngIf="formField.required" aria-required="true" class="required"> *
-                  </span>
+                <mat-label>{{formField.name}} <span *ngIf="formField.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
                 </mat-label>
                 <input [formControlName]="formField.id" [ngxMatDatetimePicker]="picker" matInput>
                 <mat-datepicker-toggle [for]="$any(picker)" matSuffix></mat-datepicker-toggle>
@@ -166,8 +160,7 @@
             <div *ngIf="radioButtonsSelected[i] == controlType">
 
               <mat-form-field class="full-width-input">
-                <mat-label>{{formField.name}} <span *ngIf="formField.required" aria-required="true" class="required"> *
-                  </span>
+                <mat-label>{{formField.name}} <span *ngIf="formField.required" aria-required="true" class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
                 </mat-label>
                 <mat-select [formControlName]="formField.id" multiple>
                   <mat-option *ngFor="let option of input.in" [value]="option.value">
@@ -202,7 +195,7 @@
   <form [formGroup]="form">
     <div *ngFor="let formGroup of formGroups; let i = index">
       <small>Select a shape for {{inputs[i].name}} <span *ngIf="inputs[i].required" aria-required="true"
-                                                         class="required"> * </span></small><br>
+                                                         class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span></small><br>
       <mat-radio-group [name]="radioGroupIds[i]">
         <mat-radio-button (change)="onItemChangeObject(option,i,j)" *ngFor="let option of orObjects; let j = index;"
                           [checked]='radioButtonsSelected[i] == option' [disabled]=!orObjectsFound[j]

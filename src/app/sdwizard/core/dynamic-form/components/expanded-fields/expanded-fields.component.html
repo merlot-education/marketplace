@@ -22,7 +22,7 @@
         <mat-expansion-panel-header>
           <mat-panel-title>
             {{inputs[i].name}}<span *ngIf="input.required && (i < input.minCount)" aria-required="true"
-                                                                    class="required"> * </span>
+                                                                    class="required">*</span><span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <div [formGroup]="nestedShapeForm">

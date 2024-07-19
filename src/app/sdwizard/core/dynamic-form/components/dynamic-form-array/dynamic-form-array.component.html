@@ -10,9 +10,8 @@
                 *ngIf="hasRequiredValidator($any(control))"
                 aria-required="true"
                 class="required"
-              >
-                *
-              </span>
+              >*</span>
+              <span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
             </label>
 
             <div class="flex-container">
@@ -66,9 +65,8 @@
               *ngIf="hasRequiredValidator($any(control))"
               aria-required="true"
               class="required"
-            >
-              *
-            </span>
+            >*</span>
+            <span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
           </label>
 
           <div class="flex-container">
@@ -123,9 +121,8 @@
               *ngIf="hasRequiredValidator($any(control))"
               aria-required="true"
               class="required"
-            >
-              *
-            </span>
+            >*</span>
+            <span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
           </label>
 
           <div class="flex-container">
@@ -179,9 +176,8 @@
               *ngIf="hasRequiredValidator($any(control))"
               aria-required="true"
               class="required"
-            >
-              *
-            </span>
+            >*</span>
+            <span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
           </label>
 
           <div class="flex-container">
@@ -236,9 +232,8 @@
         >
           <mat-label
             >{{ input.name }}
-            <span *ngIf="hasRequiredValidator($any(control))" aria-required="true">
-              *
-            </span>
+            <span *ngIf="hasRequiredValidator($any(control))" aria-required="true">*</span>
+            <span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
           </mat-label>
           <input
             [formControl]="$any(inputs.controls[i])"
@@ -290,9 +285,8 @@
               *ngIf="hasRequiredValidator($any(control))"
               aria-required="true"
               class="required"
-            >
-              *
-            </span>
+            >*</span>
+            <span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
           </mat-label>
           <input
             [formControl]="$any(inputs.controls[i])"
@@ -340,9 +334,8 @@
                 *ngIf="hasRequiredValidator($any(control))"
                 aria-required="true"
                 class="required"
-              >
-                *
-              </span>
+              >*</span>
+              <span class="field-key">&nbsp;&nbsp;{{ input.key }}</span>
             </label>
 
             <div class="flex-container">
