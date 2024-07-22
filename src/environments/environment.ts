@@ -33,7 +33,8 @@ export const environment = {
   ktc_link_offering_creation: 'https://ktc.merlot-education.eu/for_companies/how-to-create-service-offers/',
   ktc_link_contract_booking: 'https://ktc.merlot-education.eu/for_companies/how-to-book-a-contract/',
   ktc_link_registration: 'https://ktc.merlot-education.eu/for_companies/registration-process/',
-  ktc_link_data_transfer: 'https://ktc.merlot-education.eu/for_companies/data-transfer/'
+  ktc_link_data_transfer: 'https://ktc.merlot-education.eu/for_companies/data-transfer/', 
+  merlot_song_url: 'https://merlot-storage-test.s3-eu-central-1.ionoscloud.com/MERLOT-Bildung_neu_definiert.mp3'
 };
 
 /*
