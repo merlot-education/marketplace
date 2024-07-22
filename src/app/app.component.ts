@@ -78,7 +78,7 @@ export class AppComponent implements OnInit {
     this.clickCount = ++this.clickCount;
 
     // after set amount of clicks, execute the easter egg!
-    if (this.clickCount == 66) {
+    if (this.clickCount == 123) {
       this.displayEasterEgg = true;
       this.clickCount = 0;
     }
