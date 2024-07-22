@@ -14,22 +14,19 @@
  *  limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-merlot-progress',
   templateUrl: './merlot-progress.component.html',
   styleUrls: ['./merlot-progress.component.scss']
 })
-export class MerlotProgressComponent implements OnInit {
+export class MerlotProgressComponent {
   protected progressPercent = 0;
   protected barTextPercentPrefix = "";
   protected barText = "0%";
   protected barColor = "primary";
   protected darkText = false;
-
-  ngOnInit() {
-  }
 
   public setProgress(percent: number) {
     this.barColor = "primary"
