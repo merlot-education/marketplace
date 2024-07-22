@@ -70,6 +70,7 @@ import { DocsComponentsModule } from '@docs-components/docs-components.module';
 // Components Routing
 import { AboutRoutingModule } from './about-routing.module';
 import { CardComponent } from '@merlot-education/m-basic-ui';
+import { CommonViewsModule } from "../common-views/common-views.module";
 
 @NgModule({
   imports: [
@@ -101,9 +102,8 @@ import { CardComponent } from '@merlot-education/m-basic-ui';
     PopoverModule,
     TableModule,
     DocsComponentsModule,
-
-    CardComponent,
-  ],
+    CardComponent
+],
   declarations: [MerlotComponent],
 })
 export class AboutModule {}

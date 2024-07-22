@@ -101,6 +101,8 @@
             [infoMessage]="'EDC-Übertragung läuft.'"
             #edcStatusMessage>
         </app-status-message>
+        <app-merlot-progress *ngIf="transferBarVisible" #edcTransferBar>
+        </app-merlot-progress>
         <app-status-message 
             [successMessage]="''"
             [errorMessage]="'Vertrag konnte nicht heruntergeladen werden.'"

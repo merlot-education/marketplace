@@ -92,5 +92,5 @@
   <m-paginator [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE)"></m-paginator>
 </div>
 
-<app-contractview [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors"
+<app-contractview [contractDetails]="contractTemplate"
   (buttonClickCallback)="buttonInContractViewClicked()"></app-contractview>

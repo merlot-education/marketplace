@@ -105,11 +105,6 @@ export class AuthService {
       let orgaId: string = orgaRoleKey.split('_').slice(1).join('_'); // everything after the first part is the organization ID (which may include underscores again)
       this.organizationApiService.getOrgaById(orgaId).then((orga) => {
         this.activeOrgRoleService.organizationRoles[orgaRoleKey].orgaData = orga;
-
-        if (this.activeOrgRoleService.activeOrganizationRole.getValue().orgaRoleString === '') {
-          this.activeOrgRoleService.changeActiveOrgaRole(orgaRoleKey)
-        }
-
         numOfOrgsToLoad--;
         if (numOfOrgsToLoad == 0) {
           this.finishedLoadingRoles.next(true);

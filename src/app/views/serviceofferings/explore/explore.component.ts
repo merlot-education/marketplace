@@ -24,7 +24,6 @@ import { serviceFileNameDict } from '../serviceofferings-data';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { IContract } from '../../contracts/contracts-data';
 import { ConnectorData } from '../../organization/organization-data';
-import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
 import { getServiceOfferingIdFromServiceOfferingSd, getServiceOfferingNameFromServiceOfferingSd, getServiceOfferingProviderIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 import { Router } from '@angular/router';
@@ -113,7 +112,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
   protected jsonViewHidden: boolean = true;
 
   contractTemplate: IContract = undefined;
-  protected orgaConnectors: ConnectorData[] = [];
 
   protected initialLoading: boolean = true;
 
@@ -135,7 +133,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
       console.log("new active role:", role);
       console.log("new active orgadata:", role.orgaData);
       if (this.activeOrgRoleService.isActiveAsRepresentative()) {
-          this.orgaConnectors = role.orgaData.metadata?.connectors;
           this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);   
       }
     });

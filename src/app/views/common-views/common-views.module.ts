@@ -55,9 +55,10 @@ import { CommonContractConfigComponent } from './contractview/contractconfig/com
 import { KtcLinkComponent } from './ktc-link/ktc-link.component';
 import { CardComponent } from '@merlot-education/m-basic-ui';
 import { MerlotSpinnerComponent } from './merlot-spinner/merlot-spinner.component';
+import { MerlotProgressComponent } from './merlot-progress/merlot-progress.component';
 
 @NgModule({
-  declarations: [ContractviewComponent, OfferingdetailviewComponent, StatusMessageComponent, ProviderContractConfigComponent, ConsumerContractConfigComponent, CommonContractConfigComponent, KtcLinkComponent, MerlotSpinnerComponent],
+  declarations: [ContractviewComponent, OfferingdetailviewComponent, StatusMessageComponent, ProviderContractConfigComponent, ConsumerContractConfigComponent, CommonContractConfigComponent, KtcLinkComponent, MerlotSpinnerComponent, MerlotProgressComponent],
   imports: [
     CommonModule,
     AccordionModule,
@@ -89,6 +90,6 @@ import { MerlotSpinnerComponent } from './merlot-spinner/merlot-spinner.componen
     ModalModule,
     CardComponent,
   ],
-  exports: [ContractviewComponent, OfferingdetailviewComponent, StatusMessageComponent, KtcLinkComponent, MerlotSpinnerComponent],
+  exports: [ContractviewComponent, OfferingdetailviewComponent, StatusMessageComponent, KtcLinkComponent, MerlotSpinnerComponent, MerlotProgressComponent],
 })
 export class CommonViewsModule {}

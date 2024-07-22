@@ -63,6 +63,9 @@ export class ActiveOrganizationRoleService {
     for (let r of userRoles) {
       if (r.startsWith('OrgLegRep_') || r.startsWith('FedAdmin_')) {
         this.organizationRoles[r] = this.getOrganizationRole(r);
+        if (this.activeOrganizationRole.getValue().orgaRoleString === '') {
+          this.activeOrganizationRole.next(this.organizationRoles[r]);
+        }
       }
     }
     console.log(this.organizationRoles);
