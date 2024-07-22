@@ -46,6 +46,7 @@ export class ContractviewComponent {
   @ViewChild('contractPdfDownloadMessage') private contractPdfDownloadMessage: StatusMessageComponent;
 
   protected saveButtonDisabled: boolean = false;
+  protected waitingForResponse: boolean = false;
 
   protected getServiceOfferingIdFromServiceOfferingSd = getServiceOfferingIdFromServiceOfferingSd;
 
@@ -61,6 +62,7 @@ export class ContractviewComponent {
   protected handleButtonClick(targetFunction: (contractApiService: ContractApiService, contractDetails: IContract) => Promise<IContract>, contractDetails: IContract) {
     console.log("sent", contractDetails);
     this.saveButtonDisabled = true;
+    this.waitingForResponse = true;
     this.contractStatusMessage.hideAllMessages();
 
     targetFunction(this.contractApiService, contractDetails).then(result => {
@@ -79,6 +81,7 @@ export class ContractviewComponent {
       })
       .finally(() => {
         this.saveButtonDisabled = false;
+        this.waitingForResponse = false;
       });
   }
 

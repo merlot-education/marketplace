@@ -44,6 +44,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   protected getServiceOfferingIdFromServiceOfferingSd = getServiceOfferingIdFromServiceOfferingSd;
   protected getServiceOfferingNameFromServiceOfferingSd = getServiceOfferingNameFromServiceOfferingSd;
+  protected waitingForResponse: boolean = false;
 
   protected activePublicOfferingPage: BehaviorSubject<IPageBasicOfferings> = new BehaviorSubject({
     content: [],
@@ -201,41 +202,61 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   releaseOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.releaseServiceOffering(id).then(result => {
       this.refreshOfferings();
+      }).finally(() => {
+      this.waitingForResponse = false;
     });
   }
 
   revokeOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.revokeServiceOffering(id).then(result => {
       this.refreshOfferings();
+    }).finally(() => {
+      this.waitingForResponse = false;
     });
   }
 
   inDraftOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.inDraftServiceOffering(id).then(result => {
       this.refreshOfferings();
+    }).finally(() => {
+      this.waitingForResponse = false;
     });
   }
   
   deleteOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.deleteServiceOffering(id).then(result => {
       this.refreshOfferings();
+    }).finally(() => {
+      this.waitingForResponse = false;
     });
   }
 
   purgeOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.purgeServiceOffering(id).then(result => {
       this.refreshOfferings();
+    }).finally(() => {
+      this.waitingForResponse = false;
     });
   }
 
   regenerateOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.regenerateServiceOffering(id).then(result => {
       this.serviceOfferingApiService.fetchServiceOfferingDetails(result["id"]).then(result => {
         this.selectedOfferingDetails = result;
         this.refreshOfferings();
+      }).finally(() => {
+        this.waitingForResponse = false;
       });
+    }).catch(_ => {
+      this.waitingForResponse = false;
     });
   }
 

@@ -14,6 +14,9 @@
   limitations under the License.
 -->
 
+<app-merlot-spinner *ngIf="!prefillDone.value">
+</app-merlot-spinner>
+
 <m-card title="Gaia-X Legal Participant">
     <app-base-wizard-extension #gxParticipantWizard></app-base-wizard-extension>
 </m-card>
@@ -361,12 +364,14 @@
 <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
     <div class="p-2 docs-highlight">
         <button
-            [disabled]="isWizardFormInvalid() || submitButtonsDisabled || isShapeLoaded() && !isOrganizationMetadataFilled()"
+            [disabled]="isWizardFormInvalid() || waitingForResponse || isShapeLoaded() && !isOrganizationMetadataFilled()"
             cButton color="primary" (click)="checkConfirmationNeeded()">
             {{ 'Änderungen speichern' }}
         </button>
     </div>
 </div>
+<app-merlot-spinner *ngIf="waitingForResponse">
+</app-merlot-spinner>
 <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
     <div class="p-2 docs-highlight">
         <app-status-message 

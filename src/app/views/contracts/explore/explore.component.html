@@ -18,6 +18,13 @@
   [link]="environment.ktc_link_contract_booking">
 </app-ktc-link>
 
+<div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
+  <h1 *ngIf="initialLoading">Verträge werden geladen...</h1>
+  <h1 *ngIf="!initialLoading && this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.
+  </h1>
+</div>
+<app-merlot-spinner *ngIf="initialLoading"></app-merlot-spinner>
+
 <div *ngIf="this.activePage.value.content.length !== 0 || applyStatusFilter">
 
   <div style="padding:10px">
@@ -84,11 +91,6 @@
 
   <m-paginator [currentPage]="activePage" (pageChangeEvent)="refreshContracts($event, ITEMS_PER_PAGE)"></m-paginator>
 </div>
-
-<h1 *ngIf="initialLoading">Verträge werden geladen...</h1>
-<h1 *ngIf="!initialLoading && this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.
-</h1>
-
 
 <app-contractview [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors"
   (buttonClickCallback)="buttonInContractViewClicked()"></app-contractview>

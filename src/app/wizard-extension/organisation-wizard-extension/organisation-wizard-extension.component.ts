@@ -45,7 +45,7 @@ export class OrganisationWizardExtensionComponent {
 
   public submitCompleteEvent: EventEmitter<any> = new EventEmitter();
 
-  protected submitButtonsDisabled: boolean = false;  
+  protected waitingForResponse: boolean = false;
   protected orgaActiveSelection: string = "false";
   protected orgaMetadata: IOrganizationMetadata = null;
   protected gxTermsAndConditions = {
@@ -180,7 +180,7 @@ export class OrganisationWizardExtensionComponent {
 
   protected onSubmit(): void {
     console.log("onSubmit");
-    this.submitButtonsDisabled = true;
+    this.waitingForResponse = true;
     this.saveStatusMessage.hideAllMessages();
 
     let legalParticipantVc: IVerifiableCredential =  { credentialSubject: this.gxParticipantWizard.generateJsonCs() };
@@ -203,7 +203,7 @@ export class OrganisationWizardExtensionComponent {
     .catch(_ => {
       this.saveStatusMessage.showErrorMessage("Unbekannter Fehler");
     }).finally(() => {
-      this.submitButtonsDisabled = false;
+      this.waitingForResponse = false;
     });
   }
 
@@ -212,7 +212,7 @@ export class OrganisationWizardExtensionComponent {
     this.gxRegistrationNumberWizard.ngOnDestroy();
     this.merlotParticipantWizard.ngOnDestroy();
     this.saveStatusMessage.hideAllMessages();
-    this.submitButtonsDisabled = false;
+    this.waitingForResponse = false;
   }
 
   public isOrganizationMetadataFilled(): boolean {

@@ -70,6 +70,7 @@ export class ExploreComponent implements OnInit {
   protected asMerlotLegalParticipantCs = asMerlotLegalParticipantCs;
   protected getOrganizationName = getOrganizationName;
   protected getParticipantIdFromParticipantSd = getParticipantIdFromParticipantSd;
+  protected initialLoading: boolean = true;
 
   constructor(
     private organizationsApiService: OrganizationsApiService,
@@ -148,6 +149,8 @@ export class ExploreComponent implements OnInit {
     this.organizationsApiService.fetchOrganizations(page, size).then(result => {
       this.activeOrganizationsPage.next(result);
       this.updateOrgaRepresentation();
+    }).finally(() => {
+      this.initialLoading = false;
     });
   }
 

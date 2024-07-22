@@ -14,6 +14,17 @@
   limitations under the License.
 -->
 
+<div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
+  <h1 *ngIf="initialLoading">Service Angebote werden geladen...</h1>
+  <h1
+    *ngIf="!initialLoading && this.activeOrgaOfferingPage.value.content.length === 0 && this.activePublicOfferingPage.value.content.length === 0">
+    Es konnten keine Service Angebote gefunden werden.</h1>
+</div>
+
+<app-merlot-spinner *ngIf="initialLoading">
+</app-merlot-spinner>
+
+
 <div *ngIf="this.activeOrgaOfferingPage.value.content.length > 0 || applyStatusFilter">
 
   <h1>Service Angebote meiner Organisation</h1>
@@ -123,12 +134,6 @@
 
 </div>
 
-<h1 *ngIf="initialLoading">Service Angebote werden geladen...</h1>
-
-<h1
-  *ngIf="!initialLoading && this.activeOrgaOfferingPage.value.content.length === 0 && this.activePublicOfferingPage.value.content.length === 0">
-  Es konnten keine Service Angebote gefunden werden.</h1>
-
 <c-modal #modalViewDetails id="modalViewDetails" size="xl" alignment="center"
   (visibleChange)="handleEventDetailsModal($event)">
   <ng-container *ngIf="selectedOfferingDetails !== null">
@@ -202,6 +207,7 @@
       (click)="bookServiceOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))">
         Buchen
       </button>
+      <app-merlot-spinner *ngIf="waitingForResponse"></app-merlot-spinner>
     </c-modal-footer>
   </ng-container>
 </c-modal>

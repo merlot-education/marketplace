@@ -19,6 +19,9 @@
       <h5 *ngIf="contractDetails" cModalTitle>Vertragskonfiguration zum Service Angebot "{{ getServiceOfferingIdFromServiceOfferingSd(contractDetails.offering.selfDescription) }}"</h5>
     </c-modal-header>
     <c-modal-body>
+      
+      <app-merlot-spinner *ngIf="!contractDetails">
+      </app-merlot-spinner>
 
       <app-ktc-link title="Datentransfer | Merlot (merlot-education.eu)" 
         [link]="environment.ktc_link_data_transfer"
@@ -124,6 +127,7 @@
           *ngIf="isDataTransferButtonVisible(contractDetails)">
           Datentransfer starten
         </button>
+        <app-merlot-spinner *ngIf="waitingForResponse"></app-merlot-spinner>
       </ng-container>
     </c-modal-footer>
   </c-modal>
