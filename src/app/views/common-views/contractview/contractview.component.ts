@@ -60,7 +60,7 @@ export class ContractviewComponent {
 
   constructor(
     protected contractApiService: ContractApiService,
-    protected activeOrgRoleService: ActiveOrganizationRoleService,
+    private activeOrgRoleService: ActiveOrganizationRoleService,
     protected serviceOfferingApiService: ServiceofferingApiService,
     protected organizationsApiService: OrganizationsApiService) {
       this.availableConnectors = activeOrgRoleService.activeOrganizationRole.value.orgaData?.metadata?.connectors;
