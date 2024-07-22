@@ -106,6 +106,10 @@ export class AuthService {
       this.organizationApiService.getOrgaById(orgaId).then((orga) => {
         this.activeOrgRoleService.organizationRoles[orgaRoleKey].orgaData = orga;
 
+        if (this.activeOrgRoleService.activeOrganizationRole.getValue().orgaRoleString === '') {
+          this.activeOrgRoleService.changeActiveOrgaRole(orgaRoleKey)
+        }
+
         numOfOrgsToLoad--;
         if (numOfOrgsToLoad == 0) {
           this.finishedLoadingRoles.next(true);

@@ -63,10 +63,6 @@ export class ActiveOrganizationRoleService {
     for (let r of userRoles) {
       if (r.startsWith('OrgLegRep_') || r.startsWith('FedAdmin_')) {
         this.organizationRoles[r] = this.getOrganizationRole(r);
-        // if the active Role is not set, set its initial value to the first role we see
-        if (this.activeOrganizationRole.getValue().orgaRoleString === '') {
-          this.activeOrganizationRole.next(this.organizationRoles[r]);
-        }
       }
     }
     console.log(this.organizationRoles);
@@ -88,10 +84,10 @@ export class ActiveOrganizationRoleService {
   }
 
   public isActiveAsFedAdmin(): boolean {
-    return this.activeOrganizationRole.value.roleName == "FedAdmin";
+    return this.activeOrganizationRole.value.roleName === "FedAdmin";
   }
 
   public isActiveAsRepresentative(): boolean {
-    return this.activeOrganizationRole.value.roleName == "OrgLegRep";
+    return this.activeOrganizationRole.value.roleName === "OrgLegRep";
   }
 }
