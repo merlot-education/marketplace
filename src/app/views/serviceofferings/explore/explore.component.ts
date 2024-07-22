@@ -163,17 +163,21 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   protected refreshPublicOfferings(page: number, size: number) {
+    this.initialLoading = true;
     this.serviceOfferingApiService.fetchPublicServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
       this.activePublicOfferingPage.next(result);
+    }).finally(() => {
       this.initialLoading = false;
     });
   }
 
   protected refreshOrgaOfferings(page: number, size: number, statusFilter: string = undefined) {
+    this.initialLoading = true;
     this.activeOrgaOfferingPage.next(this.emptyPage);
     if (this.activeOrgRoleService.isLoggedIn.value && this.activeOrgRoleService.isActiveAsRepresentative()) {
       this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, statusFilter).then(result => {
       this.activeOrgaOfferingPage.next(result);
+    }).finally(() => {
       this.initialLoading = false;
     });
     }
@@ -190,6 +194,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
     } else if (this.isCurrentlyFiltered) {
       this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
       this.isCurrentlyFiltered = false;
+      this.selectedStatusFilter= Object.keys(this.friendlyStatusNames)[0];
     }
   }
 

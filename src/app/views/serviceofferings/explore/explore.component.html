@@ -27,7 +27,10 @@
 
 <div *ngIf="this.activeOrgaOfferingPage.value.content.length > 0 || applyStatusFilter">
 
-  <h1>Service Angebote meiner Organisation</h1>
+  <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
+    <h1>Service Angebote meiner Organisation</h1>
+  </div>
+  
 
   <div style="padding:10px">
     <c-form-check [inline]="true" switch sizing="xl">
@@ -40,6 +43,10 @@
         {{friendlyStatusNames[option]}}
       </option>
     </select>
+  </div>
+
+  <div class="d-flex flex-row docs-highlight mb-2 justify-content-center" *ngIf="this.activeOrgaOfferingPage.value.content.length === 0 && applyStatusFilter">
+    <h2 class="filter-message">Keine Angebote mit diesem Status gefunden.</h2>
   </div>
 
   <m-grid>
@@ -89,9 +96,13 @@
 
 </div>
 
+<mat-divider *ngIf="this.activeOrgaOfferingPage.value.content.length > 0 || applyStatusFilter"></mat-divider>
 
 <div *ngIf="this.activePublicOfferingPage.value.content.length > 0">
-  <h1>Öffentliche Service Angebote</h1>
+
+  <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
+    <h1>Öffentliche Service Angebote</h1>
+  </div>
 
   <m-grid>
     <m-card *ngFor="let offering of this.activePublicOfferingPage.value.content"
