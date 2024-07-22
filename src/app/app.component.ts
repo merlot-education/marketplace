@@ -27,11 +27,12 @@ import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  template: '<router-outlet></router-outlet>',
+  templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
   title = 'MERLOT Portal';
-  
+  displayEasterEgg = false;
+  clickCount = 0;
 
   constructor(
     private router: Router,
@@ -71,5 +72,15 @@ export class AppComponent implements OnInit {
         return;
       }
     });
+  }
+
+  onPress() {
+    this.clickCount = ++this.clickCount;
+
+    // after set amount of clicks, execute the easter egg!
+    if (this.clickCount == 123) {
+      this.displayEasterEgg = true;
+      this.clickCount = 0;
+    }
   }
 }
