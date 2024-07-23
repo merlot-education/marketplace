@@ -36,7 +36,6 @@ import { ChartjsModule } from '@coreui/angular-chartjs';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
 
-import { WidgetsModule } from '../widgets/widgets.module';
 import { CardComponent } from '@merlot-education/m-basic-ui';
 
 @NgModule({
@@ -57,8 +56,6 @@ import { CardComponent } from '@merlot-education/m-basic-ui';
     ChartjsModule,
     AvatarModule,
     TableModule,
-    WidgetsModule,
-
     CardComponent,
   ],
   declarations: [DashboardComponent],
