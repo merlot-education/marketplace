@@ -35,9 +35,9 @@
 </div>
 
 <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
-  <h1 *ngIf="initialLoading">Verträge werden geladen...</h1>
-  <h1 *ngIf="!initialLoading && this.activePage.value.content.length === 0 && !applyStatusFilter">Es konnten keine Verträge gefunden werden.
-  </h1>
+  <h2 class="progress-message" *ngIf="initialLoading">Verträge werden geladen...</h2>
+  <h2 class="progress-message" *ngIf="!initialLoading && this.activePage.value.content.length === 0 && !applyStatusFilter">Es konnten keine Verträge gefunden werden.
+  </h2>
 </div>
 <app-merlot-spinner *ngIf="initialLoading"></app-merlot-spinner>
 

@@ -35,8 +35,8 @@
   </div>
 
   <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
-    <h2 *ngIf="initialLoadingOrga">Service Angebote meiner Organisation werden geladen...</h2>
-    <h2
+    <h2 class="progress-message" *ngIf="initialLoadingOrga">Service Angebote meiner Organisation werden geladen...</h2>
+    <h2 class="progress-message"
       *ngIf="!initialLoadingOrga && this.activeOrgaOfferingPage.value.content.length === 0 && !applyStatusFilter">
       Es konnten keine Service Angebote für meine Organisation gefunden werden.</h2>
   </div>
@@ -104,8 +104,8 @@
   </div>
 
   <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
-    <h2 *ngIf="initialLoadingPublic">Öffentliche Service Angebote werden geladen...</h2>
-    <h2
+    <h2 class="progress-message" *ngIf="initialLoadingPublic">Öffentliche Service Angebote werden geladen...</h2>
+    <h2 class="progress-message"
       *ngIf="!initialLoadingPublic && this.activePublicOfferingPage.value.content.length === 0">
       Es konnten keine öffentlichen Service Angebote gefunden werden.</h2>
   </div>

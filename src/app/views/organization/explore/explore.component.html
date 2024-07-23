@@ -15,9 +15,9 @@
 -->
 
 <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
-  <h1 *ngIf="initialLoading">Organisationen werden geladen...</h1>
-  <h1 *ngIf="!initialLoading && this.activeOrganizationsPage.value.content.length === 0">Es konnten keine Organisationen gefunden werden.
-  </h1>
+  <h2 class="progress-message" *ngIf="initialLoading">Organisationen werden geladen...</h2>
+  <h2 class="progress-message" *ngIf="!initialLoading && this.activeOrganizationsPage.value.content.length === 0">Es konnten keine Organisationen gefunden werden.
+  </h2>
 </div>
 <app-merlot-spinner *ngIf="initialLoading"></app-merlot-spinner>
 
