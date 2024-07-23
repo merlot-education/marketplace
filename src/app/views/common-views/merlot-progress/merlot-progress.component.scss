@@ -13,26 +13,3 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
- @import "../../../../../node_modules/@merlot-education/m-basic-ui/src/scss/variables_light";
-
-
-.flex-container {
-    display: flex;
-    justify-content: left;
-    align-items: left;
-  }
-  
-  .flex-item-grow {
-    flex-grow: 1;
-    margin: 10px;
-  }
-
-.filter-message {
-  color: $gray-700;
-}
-
-mat-divider {
-  color: $secondary;
-  padding: 3%;
-}

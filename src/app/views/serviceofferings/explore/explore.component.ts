@@ -24,7 +24,6 @@ import { serviceFileNameDict } from '../serviceofferings-data';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { IContract } from '../../contracts/contracts-data';
 import { ConnectorData } from '../../organization/organization-data';
-import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
 import { getServiceOfferingIdFromServiceOfferingSd, getServiceOfferingNameFromServiceOfferingSd, getServiceOfferingProviderIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 import { Router } from '@angular/router';
@@ -44,6 +43,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   protected getServiceOfferingIdFromServiceOfferingSd = getServiceOfferingIdFromServiceOfferingSd;
   protected getServiceOfferingNameFromServiceOfferingSd = getServiceOfferingNameFromServiceOfferingSd;
+  protected waitingForResponse: boolean = false;
 
   protected activePublicOfferingPage: BehaviorSubject<IPageBasicOfferings> = new BehaviorSubject({
     content: [],
@@ -112,7 +112,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
   protected jsonViewHidden: boolean = true;
 
   contractTemplate: IContract = undefined;
-  protected orgaConnectors: ConnectorData[] = [];
 
   protected initialLoading: boolean = true;
 
@@ -130,12 +129,13 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.activeOrgRoleService.isActiveAsRepresentative()) {
-      this.activeOrgaSubscription = this.activeOrgRoleService.activeOrganizationRole.subscribe(value => {
-        this.orgaConnectors = value.orgaData.metadata.connectors;
-        this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);   
+    this.activeOrgRoleService.activeOrganizationRole.subscribe(role => {
+      console.log("new active role:", role);
+      console.log("new active orgadata:", role.orgaData);
+      if (this.activeOrgRoleService.isActiveAsRepresentative()) {
+          this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);   
+      }
     });
-    }
     this.refreshOfferings();
   }
 
@@ -162,17 +162,21 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   protected refreshPublicOfferings(page: number, size: number) {
+    this.initialLoading = true;
     this.serviceOfferingApiService.fetchPublicServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
       this.activePublicOfferingPage.next(result);
+    }).finally(() => {
       this.initialLoading = false;
     });
   }
 
   protected refreshOrgaOfferings(page: number, size: number, statusFilter: string = undefined) {
+    this.initialLoading = true;
     this.activeOrgaOfferingPage.next(this.emptyPage);
     if (this.activeOrgRoleService.isLoggedIn.value && this.activeOrgRoleService.isActiveAsRepresentative()) {
       this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, statusFilter).then(result => {
       this.activeOrgaOfferingPage.next(result);
+    }).finally(() => {
       this.initialLoading = false;
     });
     }
@@ -189,6 +193,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
     } else if (this.isCurrentlyFiltered) {
       this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
       this.isCurrentlyFiltered = false;
+      this.selectedStatusFilter= Object.keys(this.friendlyStatusNames)[0];
     }
   }
 
@@ -201,41 +206,61 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   releaseOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.releaseServiceOffering(id).then(result => {
       this.refreshOfferings();
+      }).finally(() => {
+      this.waitingForResponse = false;
     });
   }
 
   revokeOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.revokeServiceOffering(id).then(result => {
       this.refreshOfferings();
+    }).finally(() => {
+      this.waitingForResponse = false;
     });
   }
 
   inDraftOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.inDraftServiceOffering(id).then(result => {
       this.refreshOfferings();
+    }).finally(() => {
+      this.waitingForResponse = false;
     });
   }
   
   deleteOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.deleteServiceOffering(id).then(result => {
       this.refreshOfferings();
+    }).finally(() => {
+      this.waitingForResponse = false;
     });
   }
 
   purgeOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.purgeServiceOffering(id).then(result => {
       this.refreshOfferings();
+    }).finally(() => {
+      this.waitingForResponse = false;
     });
   }
 
   regenerateOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.regenerateServiceOffering(id).then(result => {
       this.serviceOfferingApiService.fetchServiceOfferingDetails(result["id"]).then(result => {
         this.selectedOfferingDetails = result;
         this.refreshOfferings();
+      }).finally(() => {
+        this.waitingForResponse = false;
       });
+    }).catch(_ => {
+      this.waitingForResponse = false;
     });
   }
 

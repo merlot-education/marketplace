@@ -153,12 +153,17 @@ export class EditComponent implements OnInit, AfterViewInit {
       type: "merlot:MerlotServiceOffering"
     };
 
+    let merlotdummySpecificServiceOfferingCs = {
+      type: "merlot:MerlotDataDeliveryServiceOffering"
+    };
+
     let prefillSd = {
       selfDescription: {
         id: '',
         verifiableCredential: [
           {credentialSubject: gxServiceOfferingCs},
-          {credentialSubject: merlotServiceOfferingCs}
+          {credentialSubject: merlotServiceOfferingCs},
+          {credentialSubject: merlotdummySpecificServiceOfferingCs}
         ]
       }
     }

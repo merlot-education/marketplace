@@ -88,10 +88,10 @@ export class ActiveOrganizationRoleService {
   }
 
   public isActiveAsFedAdmin(): boolean {
-    return this.activeOrganizationRole.value.roleName == "FedAdmin";
+    return this.activeOrganizationRole.value.roleName === "FedAdmin";
   }
 
   public isActiveAsRepresentative(): boolean {
-    return this.activeOrganizationRole.value.roleName == "OrgLegRep";
+    return this.activeOrganizationRole.value.roleName === "OrgLegRep";
   }
 }

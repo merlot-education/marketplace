@@ -63,8 +63,6 @@ export class ExploreComponent implements OnInit {
   
   protected contractTemplate: IContract = undefined;
 
-  protected orgaConnectors: ConnectorData[] = [];
-
   protected initialLoading: boolean = true;
 
   protected selectedStatusFilter: string = '';
@@ -86,7 +84,6 @@ export class ExploreComponent implements OnInit {
 
   ngOnInit(): void {
     this.activeOrgRoleService.activeOrganizationRole.subscribe(value => {
-      this.orgaConnectors = value.orgaData.metadata.connectors
       this.refreshContracts(0, this.ITEMS_PER_PAGE);
     }); 
   }

@@ -44,6 +44,7 @@ export class OfferingWizardExtensionComponent {
   public prefillDone: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   public submitButtonsDisabled: boolean = false;
+  protected waitingForResponse: boolean = false;
 
   constructor(
       private serviceofferingApiService: ServiceofferingApiService,
@@ -109,6 +110,7 @@ export class OfferingWizardExtensionComponent {
   protected onSubmit(publishAfterSave: boolean): void {
     console.log("onSubmit");
     this.submitButtonsDisabled = true;
+    this.waitingForResponse = true;
     this.saveStatusMessage.hideAllMessages();
 
     let gxOfferingJsonSd: IGxServiceOfferingCs = this.gxServiceOfferingWizard.generateJsonCs();
@@ -156,10 +158,12 @@ export class OfferingWizardExtensionComponent {
         .catch((e: HttpErrorResponse) => {
           this.saveStatusMessage.showErrorMessage(e.error.message);
           this.submitButtonsDisabled = false;
+          this.waitingForResponse = false;
         })
         .catch(_ => {
           this.saveStatusMessage.showErrorMessage("Unbekannter Fehler");
           this.submitButtonsDisabled = false;
+          this.waitingForResponse = false;
         });
       } else {
         this.saveStatusMessage.showSuccessMessage("ID: " + result["id"]);
@@ -180,6 +184,7 @@ export class OfferingWizardExtensionComponent {
       if (!publishAfterSave) {
         this.submitButtonsDisabled = false;
       }
+      this.waitingForResponse = false;
     });
   }
 
@@ -189,6 +194,7 @@ export class OfferingWizardExtensionComponent {
     this.merlotSpecificServiceOfferingWizard.ngOnDestroy();
     this.saveStatusMessage.hideAllMessages();
     this.submitButtonsDisabled = false;
+    this.waitingForResponse = false;
   }
 
   protected isWizardFormInvalid(): boolean {
