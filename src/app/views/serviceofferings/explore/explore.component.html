@@ -14,18 +14,7 @@
   limitations under the License.
 -->
 
-<div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
-  <h1 *ngIf="initialLoading">Service Angebote werden geladen...</h1>
-  <h1
-    *ngIf="!initialLoading && this.activeOrgaOfferingPage.value.content.length === 0 && this.activePublicOfferingPage.value.content.length === 0">
-    Es konnten keine Service Angebote gefunden werden.</h1>
-</div>
-
-<app-merlot-spinner *ngIf="initialLoading">
-</app-merlot-spinner>
-
-
-<div *ngIf="this.activeOrgaOfferingPage.value.content.length > 0 || applyStatusFilter">
+<div *ngIf="this.activeOrgRoleService.isActiveAsRepresentative()">
 
   <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
     <h1>Service Angebote meiner Organisation</h1>
@@ -45,7 +34,17 @@
     </select>
   </div>
 
-  <div class="d-flex flex-row docs-highlight mb-2 justify-content-center" *ngIf="this.activeOrgaOfferingPage.value.content.length === 0 && applyStatusFilter && !initialLoading">
+  <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
+    <h2 *ngIf="initialLoadingOrga">Service Angebote meiner Organisation werden geladen...</h2>
+    <h2
+      *ngIf="!initialLoadingOrga && this.activeOrgaOfferingPage.value.content.length === 0 && !applyStatusFilter">
+      Es konnten keine Service Angebote für meine Organisation gefunden werden.</h2>
+  </div>
+
+  <app-merlot-spinner *ngIf="initialLoadingOrga">
+  </app-merlot-spinner>
+
+  <div class="d-flex flex-row docs-highlight mb-2 justify-content-center" *ngIf="this.activeOrgaOfferingPage.value.content.length === 0 && applyStatusFilter && !initialLoadingOrga">
     <h2 class="filter-message">Keine Angebote mit diesem Status gefunden.</h2>
   </div>
 
@@ -98,11 +97,21 @@
 
 <mat-divider *ngIf="this.activeOrgaOfferingPage.value.content.length > 0 || applyStatusFilter"></mat-divider>
 
-<div *ngIf="this.activePublicOfferingPage.value.content.length > 0">
+<div>
 
   <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
     <h1>Öffentliche Service Angebote</h1>
   </div>
+
+  <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
+    <h2 *ngIf="initialLoadingPublic">Öffentliche Service Angebote werden geladen...</h2>
+    <h2
+      *ngIf="!initialLoadingPublic && this.activePublicOfferingPage.value.content.length === 0">
+      Es konnten keine öffentlichen Service Angebote gefunden werden.</h2>
+  </div>
+  
+  <app-merlot-spinner *ngIf="initialLoadingPublic">
+  </app-merlot-spinner>
 
   <m-grid>
     <m-card *ngFor="let offering of this.activePublicOfferingPage.value.content"

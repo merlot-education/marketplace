@@ -24,6 +24,7 @@ import { jwtDecode }from 'jwt-decode';
 import { getParticipantIdFromParticipantSd } from '../utils/credential-tools';
 
 export interface OrganizationRole {
+  orgaId: string;
   orgaRoleString: string;
   roleName: string;
   roleFriendlyName: string;

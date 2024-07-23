@@ -90,7 +90,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   contractTemplate: IContract = undefined;
 
-  protected initialLoading: boolean = true;
+  protected initialLoadingPublic: boolean = true;
+  protected initialLoadingOrga: boolean = true;
 
   private showingModal: boolean = false;
 
@@ -139,22 +140,22 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   protected refreshPublicOfferings(page: number, size: number) {
-    this.initialLoading = true;
+    this.initialLoadingPublic = true;
     this.serviceOfferingApiService.fetchPublicServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
       this.activePublicOfferingPage.next(result);
     }).finally(() => {
-      this.initialLoading = false;
+      this.initialLoadingPublic = false;
     });
   }
 
   protected refreshOrgaOfferings(page: number, size: number, statusFilter: string = undefined) {
-    this.initialLoading = true;
+    this.initialLoadingOrga = true;
     this.activeOrgaOfferingPage.next(this.emptyPage);
     if (this.activeOrgRoleService.isLoggedIn.value && this.activeOrgRoleService.isActiveAsRepresentative()) {
       this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, statusFilter).then(result => {
       this.activeOrgaOfferingPage.next(result);
     }).finally(() => {
-      this.initialLoading = false;
+      this.initialLoadingOrga = false;
     });
     }
   }

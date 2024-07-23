@@ -17,7 +17,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { OrganizationRole } from './auth.service'
-import { getOrganizationLegalName, getOrganizationName, getParticipantIdFromParticipantSd } from '../utils/credential-tools';
+import { getOrganizationLegalName, getOrganizationName } from '../utils/credential-tools';
 
 @Injectable({
   providedIn: 'root',
@@ -38,13 +38,14 @@ export class ActiveOrganizationRoleService {
 
   public activeOrganizationRole: BehaviorSubject<OrganizationRole> =
     new BehaviorSubject<OrganizationRole>({
+      orgaId: '',
       orgaRoleString: '',
       roleName: '',
       roleFriendlyName: '',
     });
 
   public getActiveOrgaId(): string {
-    return getParticipantIdFromParticipantSd(this.activeOrganizationRole.value.orgaData?.selfDescription);
+    return this.activeOrganizationRole.value.orgaId;
   }
 
   public getActiveOrgaName(): string {
@@ -81,6 +82,7 @@ export class ActiveOrganizationRoleService {
     let role_arr: string[] = orgaRoleString.split('_');
     let roleName: string = role_arr[0]; // first part is the role name
     return {
+      orgaId: orgaRoleString.replace(roleName + "_", ""),
       orgaRoleString: orgaRoleString,
       roleName: roleName,
       roleFriendlyName: this.roleFriendlyNameMapper[roleName],
