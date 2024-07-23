@@ -13,6 +13,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<div [class.easter-egg]="displayEasterEgg" (click)="onPress()">
+<div [class.easter-egg]="displayEasterEgg" (click)="onPress()" (mouseup)="handleTextSelection($event)">
     <router-outlet></router-outlet>
 </div>
