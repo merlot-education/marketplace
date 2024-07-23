@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 })
 export class WordSelectionEasterEggService {
   protected environment = environment;
-  private selectedWords: string[] = [];
+  private selectedPhrases: string[] = [];
   private secretPhrases: string[] = ['MERLOT marketplace',
                                      'MERLOT Marktplatz', 
                                      'MERLOT project',
@@ -19,21 +19,21 @@ export class WordSelectionEasterEggService {
     return this.easterEggTriggered;
   }
 
-  addSelectedWord(word: string) {
+  addSelectedPhrase(word: string) {
     // Add the selected word to the list
-    this.selectedWords.push(word.trim().toLocaleLowerCase());
+    this.selectedPhrases.push(word.trim().toLocaleLowerCase());
     // Keep only the last two selected words
-    this.selectedWords = this.selectedWords.slice(-2);
+    this.selectedPhrases = this.selectedPhrases.slice(-2);
     if (this.checkConditions()) {
       this.playSong();
     }
   }
 
   checkConditions(): boolean {
-    if (this.selectedWords.length >= 1 && this.secretPhrases.includes(this.selectedWords.at(-1))) {
+    if (this.selectedPhrases.length >= 1 && this.secretPhrases.includes(this.selectedPhrases.at(-1))) {
       return true;
     } else {
-      return this.selectedWords.length === 2 && this.secretPhrases.includes(this.selectedWords.join(' '));
+      return this.selectedPhrases.length === 2 && this.secretPhrases.includes(this.selectedPhrases.join(' '));
     }
   }
 

@@ -90,7 +90,7 @@ export class AppComponent implements OnInit {
     if (!this.wordSelectionEasterEggService.isEasterEggTriggered()) {
       const selectedText = window.getSelection()?.toString();
       if (selectedText) {
-        this.wordSelectionEasterEggService.addSelectedWord(selectedText);
+        this.wordSelectionEasterEggService.addSelectedPhrase(selectedText);
       }
     }
   }
