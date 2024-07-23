@@ -291,8 +291,12 @@ export class ExploreComponent implements OnInit, OnDestroy {
     return this.activeOrgRoleService.isLoggedIn.value && (getServiceOfferingProviderIdFromServiceOfferingSd(offering.selfDescription) !== this.activeOrgRoleService.getActiveOrgaId())
   }
 
-  toogleJsonView() {
+  toggleJsonView() {
     this.jsonViewHidden = !this.jsonViewHidden;
+  }
+
+  hideJsonView() {
+    this.jsonViewHidden = true;
   }
 
   protected editOffering(offering: IBasicOffering) {

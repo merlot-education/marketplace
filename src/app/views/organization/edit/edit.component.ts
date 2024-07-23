@@ -60,7 +60,7 @@ export class EditComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
   }
 
-  toogleJsonView() {
+  toggleJsonView() {
     this.jsonViewHidden = !this.jsonViewHidden;
   }
 

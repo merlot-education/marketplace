@@ -162,7 +162,7 @@
     </c-modal-header>
     <c-modal-body>
       <div [hidden]="!jsonViewHidden"><button id="json-view-button" cButton color="primary" style="margin-bottom: 10px;"
-          (click)="toogleJsonView()">
+          (click)="toggleJsonView()">
           Selbstbeschreibung des Service Angebots einsehen
         </button>
         <app-offeringdetailview [serviceOfferingData]="selectedOfferingDetails"
@@ -174,7 +174,7 @@
           Selbstbeschreibung herunterladen
         </button>
         <button id="offering-edit-button" cButton color="primary" style="margin-bottom: 10px; margin-left: 10px;"
-          (click)="toogleJsonView()">
+          (click)="toggleJsonView()">
           Service Angebot ansehen
         </button>
         <m-card title="Selbstbeschreibung des Service Angebots">
@@ -183,7 +183,7 @@
       </div>
     </c-modal-body>
     <c-modal-footer>
-      <button cButton color="secondary" [cModalToggle]="modalViewDetails.id">Schließen</button>
+      <button cButton color="secondary" [cModalToggle]="modalViewDetails.id" (click)="hideJsonView()">Schließen</button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowInDraftButton(selectedOfferingPublic, selectedOfferingDetails)"
       (click)="inDraftOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
