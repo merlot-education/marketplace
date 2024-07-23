@@ -342,7 +342,6 @@
               <select
                 class="form-select"
                 [formControl]="$any(inputs.controls[i])"
-                [multiple]="false"
               >
                 <option *ngFor="let option of input.in" [value]="option.value">
                   {{ option.value }}

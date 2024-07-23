@@ -199,7 +199,8 @@ export class BaseWizardExtensionComponent {
 
     // create more inputs for each prefill field after the first one
     if (Object.keys(prefillFields).includes(parentKey)) {
-      for (let i = formArray.input.minCount; i < prefillFields[parentKey].length; i++) {
+      // form arrays always start with one entry (even if not required), hence choose the max of 1 and the minCount
+      for (let i = Math.max(1, formArray.input.minCount); i < prefillFields[parentKey].length; i++) {
         formArray.addInput();
       }
     }
