@@ -17,7 +17,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { ConnectorData, IOrganizationData, IPageOrganizations } from '../views/organization/organization-data';
+import { IOrganizationData, IPageOrganizations } from '../views/organization/organization-data';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

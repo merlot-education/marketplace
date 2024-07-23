@@ -20,12 +20,6 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './merlot.component.html',
   styleUrls: ['./merlot.component.scss']
 })
-export class MerlotComponent implements OnInit {
-
-  constructor() {
-  }
-
-  ngOnInit(): void {
-  }
+export class MerlotComponent {
 
 }

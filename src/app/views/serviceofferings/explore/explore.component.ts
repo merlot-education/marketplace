@@ -15,12 +15,11 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IBasicOffering, IServiceOffering, IPageBasicOfferings } from '../serviceofferings-data'
+import { IBasicOffering, IServiceOffering, IPageBasicOfferings, serviceFileNameDict } from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
-import { serviceFileNameDict } from '../serviceofferings-data';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { IContract } from '../../contracts/contracts-data';
 import { SdDownloadService } from 'src/app/services/sd-download.service';

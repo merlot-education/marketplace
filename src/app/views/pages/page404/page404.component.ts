@@ -23,6 +23,4 @@ import { Component } from '@angular/core';
 })
 export class Page404Component {
 
-  constructor() { }
-
 }

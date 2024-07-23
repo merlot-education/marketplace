@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { IServiceOffering, TBR_OFFERING_ID, serviceFileNameDict } from '../serviceofferings-data';
@@ -30,7 +30,7 @@ import {environment} from 'src/environments/environment';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent implements OnInit, AfterViewInit {
+export class EditComponent implements AfterViewInit {
 
   serviceFileNameDict = serviceFileNameDict;
 
@@ -71,11 +71,6 @@ export class EditComponent implements OnInit, AfterViewInit {
     });
     console.log(this.selectedOfferingId);
   }
-
-
-  ngOnInit(): void {
-  }
-  
 
   requestShapes(){
     //pass the system string down here

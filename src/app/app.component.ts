@@ -52,7 +52,7 @@ export class AppComponent implements OnInit {
       .checkAuth()
       .subscribe((loginResponse: any) => {
         console.log(loginResponse);
-        const { isAuthenticated, userData, accessToken, idToken, configId } = loginResponse;
+        const { isAuthenticated, userData, accessToken,} = loginResponse;
         activeOrgRoleService.userData = userData;
         activeOrgRoleService.accessToken = accessToken;
 
