@@ -23,7 +23,7 @@ import { Title } from '@angular/platform-browser';
 
 import { EventTypes, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
 import { ActiveOrganizationRoleService } from './services/active-organization-role.service';
-import { WordSelectionEasterEggService } from './services/misc/word-selection-easter-egg.service'
+import { PhraseSelectionEasterEggService } from './services/misc/phrase-selection-easter-egg.service'
 import { filter } from 'rxjs';
 
 @Component({
@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
     private oidcSecurityService: OidcSecurityService,
     private activeOrgRoleService: ActiveOrganizationRoleService,
     private publicEventsService: PublicEventsService,
-    private wordSelectionEasterEggService: WordSelectionEasterEggService,
+    private phraseSelectionEasterEggService: PhraseSelectionEasterEggService,
   ) {
     titleService.setTitle(this.title);
     // iconSet singleton
@@ -87,10 +87,10 @@ export class AppComponent implements OnInit {
   }
 
   handleTextSelection(event: MouseEvent) {
-    if (!this.wordSelectionEasterEggService.isEasterEggTriggered()) {
+    if (!this.phraseSelectionEasterEggService.isEasterEggTriggered()) {
       const selectedText = window.getSelection()?.toString();
       if (selectedText) {
-        this.wordSelectionEasterEggService.addSelectedPhrase(selectedText);
+        this.phraseSelectionEasterEggService.addSelectedPhrase(selectedText);
       }
     }
   }

@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({
     providedIn: 'root',
 })
-export class WordSelectionEasterEggService {
+export class PhraseSelectionEasterEggService {
   protected environment = environment;
   private selectedPhrases: string[] = [];
   private secretPhrases: string[] = ['MERLOT marketplace',
@@ -19,10 +19,10 @@ export class WordSelectionEasterEggService {
     return this.easterEggTriggered;
   }
 
-  addSelectedPhrase(word: string) {
-    // Add the selected word to the list
-    this.selectedPhrases.push(word.trim().toLocaleLowerCase());
-    // Keep only the last two selected words
+  addSelectedPhrase(phrase: string) {
+    // Add the selected phrase to the list
+    this.selectedPhrases.push(phrase.trim().toLocaleLowerCase());
+    // Keep only the last two selected phrases
     this.selectedPhrases = this.selectedPhrases.slice(-2);
     if (this.checkConditions()) {
       this.playSong();
