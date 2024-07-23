@@ -15,7 +15,7 @@
  */
 
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { IContract, IDataDeliveryContract, IEdcIdResponse, IEdcNegotiationStatus, IEdcTransferStatus, ISaasContract } from '../../contracts/contracts-data';
+import { IContract, IEdcIdResponse, IEdcNegotiationStatus, IEdcTransferStatus } from '../../contracts/contracts-data';
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
@@ -24,9 +24,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
 import { saveAs } from 'file-saver';
 import { StatusMessageComponent } from '../status-message/status-message.component';
-import { getMerlotDataDeliveryServiceOfferingCsFromServiceOfferingSd, getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, getServiceOfferingIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
+import { getMerlotDataDeliveryServiceOfferingCsFromServiceOfferingSd, getServiceOfferingIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 import { environment } from 'src/environments/environment';
 import { MerlotProgressComponent } from '../merlot-progress/merlot-progress.component';
+import { isContractInDraft, isContractReleased, isContractSignedConsumer, isContractDeleted, isContractArchived, isDataDeliveryContract, isSaasContract } from "../../../utils/contract-utils";
 
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -53,6 +54,9 @@ export class ContractviewComponent {
   private EDC_NEGOTIATION_STATES: string[] = ["INITIAL", "REQUESTING", "REQUESTED", "AGREEING", "AGREED", "VERIFYING", "VERIFIED", "FINALIZING", "FINALIZED"]
   private EDC_TRANSFER_STATES: string[] = ["INITIAL", "PROVISIONING", "PROVISIONED", "REQUESTING", "REQUESTED", "STARTING", "STARTED", "COMPLETED"]
   protected getServiceOfferingIdFromServiceOfferingSd = getServiceOfferingIdFromServiceOfferingSd;
+  protected isDataDeliveryContract = isDataDeliveryContract;
+  protected isSaasContract = isSaasContract;
+  protected isContractReleased = isContractReleased;
 
   protected availableConnectors : ConnectorData[] = [];
 
@@ -224,63 +228,39 @@ export class ContractviewComponent {
   }
 
   protected userIsActiveConsumer(): boolean {
-    return this.activeOrgRoleService.getActiveOrgaId() == this.contractDetails.details.consumerId;
-  }
-
-  protected isContractInDraft(contractDetails: IContract): boolean {
-    return contractDetails.details.state === 'IN_DRAFT';
-  }
-
-  protected isContractReleased(contractDetails: IContract): boolean {
-    return contractDetails.details.state === 'RELEASED';
-  }
-
-  protected isContractSignedConsumer(contractDetails: IContract): boolean {
-    return contractDetails.details.state === 'SIGNED_CONSUMER';
-  }
-
-  protected isContractDeleted(contractDetails: IContract): boolean {
-    return contractDetails.details.state === 'DELETED';
-  }
-
-  protected isContractArchived(contractDetails: IContract): boolean {
-    return contractDetails.details.state === 'ARCHIVED';
-  }
-
-  protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails?.offering?.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
+      return this.activeOrgRoleService.getActiveOrgaId() == this.contractDetails.details.consumerId;
   }
 
   protected shouldShowSaveButton(contractDetails: IContract): boolean {
-    return this.isContractInDraft(contractDetails) || (this.userIsActiveProvider() && this.isContractSignedConsumer(contractDetails));
+    return isContractInDraft(contractDetails) || (this.userIsActiveProvider() && isContractSignedConsumer(contractDetails));
   }
 
   protected shouldShowDeleteButton(contractDetails: IContract): boolean {
-    return this.isContractInDraft(contractDetails);
+    return isContractInDraft(contractDetails);
   }
 
   protected shouldShowPurgeButton(contractDetails: IContract): boolean {
-    return this.isContractDeleted(contractDetails) && this.userIsActiveProvider();
+    return isContractDeleted(contractDetails) && this.userIsActiveProvider();
   }
 
   protected shouldShowOrderButton(contractDetails: IContract): boolean {
-    return this.isContractInDraft(contractDetails) && this.userIsActiveConsumer();
+    return isContractInDraft(contractDetails) && this.userIsActiveConsumer();
   }
 
   protected shouldShowAcceptButton(contractDetails: IContract): boolean {
-    return this.isContractSignedConsumer(contractDetails) && this.userIsActiveProvider()
+    return isContractSignedConsumer(contractDetails) && this.userIsActiveProvider()
   }
 
   protected shouldShowRevokeButton(contractDetails: IContract): boolean {
-    return this.isDataDeliveryContract(contractDetails) && (this.isContractSignedConsumer(contractDetails) || this.isContractReleased(contractDetails));
+    return isDataDeliveryContract(contractDetails) && (isContractSignedConsumer(contractDetails) || isContractReleased(contractDetails));
   }
 
   protected shouldShowArchiveButton(contractDetails: IContract): boolean {
-    return this.isContractReleased(contractDetails);
+    return isContractReleased(contractDetails);
   }
 
   protected shouldShowRegenerateButton(contractDetails: IContract): boolean {
-    return this.isContractArchived(contractDetails) || this.isContractDeleted(contractDetails);
+    return isContractArchived(contractDetails) || isContractDeleted(contractDetails);
   }
 
   protected hasContractPdfDownload(contract: IContract): boolean {
