@@ -51,9 +51,6 @@ import {
 
 import { IconModule } from '@coreui/icons-angular';
 
-// // utils
-import { DocsComponentsModule } from '@docs-components/docs-components.module';
-
 // // views
 // import { AccordionsComponent } from './accordion/accordions.component';
 // import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
@@ -114,10 +111,8 @@ import { MatDividerModule } from '@angular/material/divider';
     PaginationModule,
     PopoverModule,
     TableModule,
-    DocsComponentsModule,
     WizardAppModule,
     ModalModule,
-
     PaginatorComponent,
     CardComponent,
     GridComponent,

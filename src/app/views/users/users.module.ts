@@ -48,9 +48,6 @@ import {
 
 import { IconModule } from '@coreui/icons-angular';
 
-// // utils
-import { DocsComponentsModule } from '@docs-components/docs-components.module';
-
 // // views
 // import { AccordionsComponent } from './accordion/accordions.component';
 // import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
@@ -102,8 +99,6 @@ import { CardComponent, GridComponent } from '@merlot-education/m-basic-ui';
     PopoverModule,
     TableModule,
     AvatarModule,
-    DocsComponentsModule,
-
     GridComponent,
     CardComponent,
   ],
