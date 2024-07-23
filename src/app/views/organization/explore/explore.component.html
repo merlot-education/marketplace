@@ -145,7 +145,7 @@
       <div class="d-flex flex-row docs-highlight mb-2 justify-content-end">
         <div class="p-2 docs-highlight">
           <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalViewDetails.id" 
-              (click)="requestDetails(organization.id)">
+          style="margin-right: 10px;" (click)="requestDetails(organization.id)">
             Details
           </button>
           <button type="button" class="btn btn-primary flex-item-grow" 
@@ -189,7 +189,7 @@
   (visibleChange)="handleEventDetailsModal($event)">
   <ng-container *ngIf="selectedOrganisationDetails !== null">
     <c-modal-header>
-      <h5 cModalTitle>Details zur Organisation "{{ selectedOrganisationDetails.selfDescription }}"</h5>
+      <h5 cModalTitle>Details zur Organisation "{{ getOrganizationName(selectedOrganisationDetails.selfDescription) }}"</h5>
     </c-modal-header>
     <c-modal-body>
       <div [hidden]="!jsonViewHidden"><button id="json-view-button" cButton color="primary" style="margin-bottom: 10px;"

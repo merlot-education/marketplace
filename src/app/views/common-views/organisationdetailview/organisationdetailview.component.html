@@ -18,7 +18,7 @@
 </app-merlot-spinner>
 
 <ng-container *ngIf="organisationData">
-    <div *ngFor="let vc of organization.selfDescription.verifiableCredential"></div>
+    <div *ngFor="let vc of organisationData.selfDescription.verifiableCredential">
 
         <div *ngIf="isLegalParticipantCs(vc.credentialSubject)">
             <ul class="list-group list-group-flush">
@@ -116,15 +116,14 @@
                 </li>
             </ul>
         </div>
-
-        <ul class="list-group list-group-flush">
-
-            <li class="list-group-item" style="border: none">
-                <strong>Selbstbeschreibung unterschrieben von:</strong><br />
-                {{
-                organisationData.metadata.signedBy ? organisationData.metadata.signedBy : "Unbekannt"
-                }}
-            </li>
-        </ul>
     </div>
+    <ul class="list-group list-group-flush">
+
+        <li class="list-group-item" style="border: none">
+            <strong>Selbstbeschreibung unterschrieben von:</strong><br />
+            {{
+            organisationData.metadata.signedBy ? organisationData.metadata.signedBy : "Unbekannt"
+            }}
+        </li>
+    </ul>
 </ng-container>
