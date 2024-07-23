@@ -35,7 +35,7 @@ export function loginAsUser(name, organization) {
     // make sure welcome text changed
     cy.get("#welcome-text", {timeout: 70000}).contains('Willkommen, ' + name + '!', {timeout: 70000});
     cy.get("#role-select").should("contain.text", organization);
-    cy.contains("Meine Verträge"); // todo maybe find a better way to make sure the navbar is loaded
+    cy.contains("Meine Verträge");
 }
 
 export function logout() {
