@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IBasicOffering, IServiceOffering, IPageBasicOfferings } from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
@@ -23,8 +23,6 @@ import { ActiveOrganizationRoleService } from 'src/app/services/active-organizat
 import { serviceFileNameDict } from '../serviceofferings-data';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { IContract } from '../../contracts/contracts-data';
-import { ConnectorData } from '../../organization/organization-data';
-import { OfferingWizardExtensionComponent } from 'src/app/wizard-extension/offering-wizard-extension/offering-wizard-extension.component';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
 import { getServiceOfferingIdFromServiceOfferingSd, getServiceOfferingNameFromServiceOfferingSd, getServiceOfferingProviderIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 import { Router } from '@angular/router';
@@ -44,30 +42,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   protected getServiceOfferingIdFromServiceOfferingSd = getServiceOfferingIdFromServiceOfferingSd;
   protected getServiceOfferingNameFromServiceOfferingSd = getServiceOfferingNameFromServiceOfferingSd;
-
-  protected activePublicOfferingPage: BehaviorSubject<IPageBasicOfferings> = new BehaviorSubject({
-    content: [],
-    empty: false,
-    first: false,
-    last: false,
-    number: 0,
-    numberOfElements: 0,
-    pageable: {
-      offset: 0,
-      pageNumber: 0,
-      pageSize: 0,
-      paged: false,
-      sort: {
-        empty: false,
-        sorted: false,
-        unsorted: false
-      },
-      unpaged: false
-    },
-    size: 0,
-    totalElements: 0,
-    totalPages: 0
-  });
+  protected waitingForResponse: boolean = false;
 
   private emptyPage: IPageBasicOfferings = {
     content: [],
@@ -93,6 +68,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
     totalPages: 0
   };
 
+  protected activePublicOfferingPage: BehaviorSubject<IPageBasicOfferings> = new BehaviorSubject(this.emptyPage);
+
   protected activeOrgaOfferingPage: BehaviorSubject<IPageBasicOfferings> = new BehaviorSubject(this.emptyPage);
 
 
@@ -112,9 +89,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
   protected jsonViewHidden: boolean = true;
 
   contractTemplate: IContract = undefined;
-  protected orgaConnectors: ConnectorData[] = [];
 
-  protected initialLoading: boolean = true;
+  protected initialLoadingPublic: boolean = true;
+  protected initialLoadingOrga: boolean = true;
 
   private showingModal: boolean = false;
 
@@ -130,12 +107,13 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.activeOrgRoleService.isActiveAsRepresentative()) {
-      this.activeOrgaSubscription = this.activeOrgRoleService.activeOrganizationRole.subscribe(value => {
-        this.orgaConnectors = value.orgaData.metadata.connectors;
-        this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);   
+    this.activeOrgRoleService.activeOrganizationRole.subscribe(role => {
+      console.log("new active role:", role);
+      console.log("new active orgadata:", role.orgaData);
+      if (this.activeOrgRoleService.isActiveAsRepresentative()) {
+          this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);   
+      }
     });
-    }
     this.refreshOfferings();
   }
 
@@ -162,18 +140,22 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   protected refreshPublicOfferings(page: number, size: number) {
+    this.initialLoadingPublic = true;
     this.serviceOfferingApiService.fetchPublicServiceOfferings(page, size, this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
       this.activePublicOfferingPage.next(result);
-      this.initialLoading = false;
+    }).finally(() => {
+      this.initialLoadingPublic = false;
     });
   }
 
   protected refreshOrgaOfferings(page: number, size: number, statusFilter: string = undefined) {
+    this.initialLoadingOrga = true;
     this.activeOrgaOfferingPage.next(this.emptyPage);
     if (this.activeOrgRoleService.isLoggedIn.value && this.activeOrgRoleService.isActiveAsRepresentative()) {
       this.serviceOfferingApiService.fetchOrganizationServiceOfferings(page, size, statusFilter).then(result => {
       this.activeOrgaOfferingPage.next(result);
-      this.initialLoading = false;
+    }).finally(() => {
+      this.initialLoadingOrga = false;
     });
     }
   }
@@ -189,6 +171,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
     } else if (this.isCurrentlyFiltered) {
       this.refreshOrgaOfferings(0, this.ITEMS_PER_PAGE);
       this.isCurrentlyFiltered = false;
+      this.selectedStatusFilter= Object.keys(this.friendlyStatusNames)[0];
     }
   }
 
@@ -201,41 +184,61 @@ export class ExploreComponent implements OnInit, OnDestroy {
   }
 
   releaseOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.releaseServiceOffering(id).then(result => {
       this.refreshOfferings();
+      }).finally(() => {
+      this.waitingForResponse = false;
     });
   }
 
   revokeOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.revokeServiceOffering(id).then(result => {
       this.refreshOfferings();
+    }).finally(() => {
+      this.waitingForResponse = false;
     });
   }
 
   inDraftOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.inDraftServiceOffering(id).then(result => {
       this.refreshOfferings();
+    }).finally(() => {
+      this.waitingForResponse = false;
     });
   }
   
   deleteOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.deleteServiceOffering(id).then(result => {
       this.refreshOfferings();
+    }).finally(() => {
+      this.waitingForResponse = false;
     });
   }
 
   purgeOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.purgeServiceOffering(id).then(result => {
       this.refreshOfferings();
+    }).finally(() => {
+      this.waitingForResponse = false;
     });
   }
 
   regenerateOffering(id: string) {
+    this.waitingForResponse = true;
     this.serviceOfferingApiService.regenerateServiceOffering(id).then(result => {
       this.serviceOfferingApiService.fetchServiceOfferingDetails(result["id"]).then(result => {
         this.selectedOfferingDetails = result;
         this.refreshOfferings();
+      }).finally(() => {
+        this.waitingForResponse = false;
       });
+    }).catch(_ => {
+      this.waitingForResponse = false;
     });
   }
 

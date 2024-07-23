@@ -14,9 +14,12 @@
   limitations under the License.
 -->
 
-<div *ngIf="this.activeOrgaOfferingPage.value.content.length > 0 || applyStatusFilter">
+<div *ngIf="this.activeOrgRoleService.isActiveAsRepresentative()">
 
-  <h1>Service Angebote meiner Organisation</h1>
+  <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
+    <h1>Service Angebote meiner Organisation</h1>
+  </div>
+  
 
   <div style="padding:10px">
     <c-form-check [inline]="true" switch sizing="xl">
@@ -29,6 +32,20 @@
         {{friendlyStatusNames[option]}}
       </option>
     </select>
+  </div>
+
+  <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
+    <h2 *ngIf="initialLoadingOrga">Service Angebote meiner Organisation werden geladen...</h2>
+    <h2
+      *ngIf="!initialLoadingOrga && this.activeOrgaOfferingPage.value.content.length === 0 && !applyStatusFilter">
+      Es konnten keine Service Angebote für meine Organisation gefunden werden.</h2>
+  </div>
+
+  <app-merlot-spinner *ngIf="initialLoadingOrga">
+  </app-merlot-spinner>
+
+  <div class="d-flex flex-row docs-highlight mb-2 justify-content-center" *ngIf="this.activeOrgaOfferingPage.value.content.length === 0 && applyStatusFilter && !initialLoadingOrga">
+    <h2 class="filter-message">Keine Angebote mit diesem Status gefunden.</h2>
   </div>
 
   <m-grid>
@@ -78,9 +95,23 @@
 
 </div>
 
+<mat-divider *ngIf="this.activeOrgaOfferingPage.value.content.length > 0 || applyStatusFilter"></mat-divider>
 
-<div *ngIf="this.activePublicOfferingPage.value.content.length > 0">
-  <h1>Öffentliche Service Angebote</h1>
+<div>
+
+  <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
+    <h1>Öffentliche Service Angebote</h1>
+  </div>
+
+  <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
+    <h2 *ngIf="initialLoadingPublic">Öffentliche Service Angebote werden geladen...</h2>
+    <h2
+      *ngIf="!initialLoadingPublic && this.activePublicOfferingPage.value.content.length === 0">
+      Es konnten keine öffentlichen Service Angebote gefunden werden.</h2>
+  </div>
+  
+  <app-merlot-spinner *ngIf="initialLoadingPublic">
+  </app-merlot-spinner>
 
   <m-grid>
     <m-card *ngFor="let offering of this.activePublicOfferingPage.value.content"
@@ -123,12 +154,6 @@
 
 </div>
 
-<h1 *ngIf="initialLoading">Service Angebote werden geladen...</h1>
-
-<h1
-  *ngIf="!initialLoading && this.activeOrgaOfferingPage.value.content.length === 0 && this.activePublicOfferingPage.value.content.length === 0">
-  Es konnten keine Service Angebote gefunden werden.</h1>
-
 <c-modal #modalViewDetails id="modalViewDetails" size="xl" alignment="center"
   (visibleChange)="handleEventDetailsModal($event)">
   <ng-container *ngIf="selectedOfferingDetails !== null">
@@ -162,24 +187,28 @@
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowInDraftButton(selectedOfferingPublic, selectedOfferingDetails)"
       (click)="inDraftOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
+      [disabled]="waitingForResponse"
       >
         Entwurf 
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowReleaseButton(selectedOfferingPublic, selectedOfferingDetails)"
       (click)="releaseOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
+      [disabled]="waitingForResponse"
       >
         Veröffentlichen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowRevokeButton(selectedOfferingPublic, selectedOfferingDetails)"
       (click)="revokeOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
+      [disabled]="waitingForResponse"
       >
         Widerrufen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowDeleteButton(selectedOfferingPublic, selectedOfferingDetails)"
       (click)="deleteOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
+      [disabled]="waitingForResponse"
       >
         Löschen
       </button>
@@ -187,12 +216,14 @@
       [cModalToggle]="modalViewDetails.id"
       *ngIf="shouldShowPurgeButton(selectedOfferingPublic, selectedOfferingDetails)"
       (click)="purgeOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
+      [disabled]="waitingForResponse"
       >
         Endgültig löschen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowRegenerateButton(selectedOfferingPublic, selectedOfferingDetails)"
       (click)="regenerateOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
+      [disabled]="waitingForResponse"
       >
         Angebot neu erstellen
       </button>
@@ -202,8 +233,9 @@
       (click)="bookServiceOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))">
         Buchen
       </button>
+      <app-merlot-spinner *ngIf="waitingForResponse"></app-merlot-spinner>
     </c-modal-footer>
   </ng-container>
 </c-modal>
 
-<app-contractview [contractDetails]="contractTemplate" [availableConnectors]="orgaConnectors"></app-contractview>
+<app-contractview [contractDetails]="contractTemplate"></app-contractview>

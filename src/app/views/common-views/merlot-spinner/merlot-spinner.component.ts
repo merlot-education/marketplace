@@ -14,30 +14,13 @@
  *  limitations under the License.
  */
 
+import { Component } from '@angular/core';
 
-@import "../../../../../node_modules/@merlot-education/m-basic-ui/src/scss/variables_light";
+@Component({
+  selector: 'app-merlot-spinner',
+  templateUrl: './merlot-spinner.component.html',
+  styleUrls: ['./merlot-spinner.component.scss']
+})
+export class MerlotSpinnerComponent {
 
-.flex-container {
-    display: flex;
-    justify-content: left;
-    align-items: left;
-  }
-
-.flex-item-grow {
-    flex-grow: 1;
-    margin: 10px;
-  }
-
-.background-merlot-blue {
-  background-color: $merlot-blue;
-}
-
-.warning-symbol {
-  display: block;
-  margin: auto; 
-  color: $merlot-red;
-}
-
-.filter-message {
-  color: $gray-700;
 }

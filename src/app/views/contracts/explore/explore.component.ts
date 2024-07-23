@@ -37,7 +37,7 @@ export class ExploreComponent implements OnInit {
 
   readonly ITEMS_PER_PAGE = 9;
 
-  activePage: BehaviorSubject<IPageContracts> = new BehaviorSubject({
+  protected emptyPage: IPageContracts = {
     content: [],
     empty: false,
     first: false,
@@ -59,11 +59,11 @@ export class ExploreComponent implements OnInit {
     size: 0,
     totalElements: 0,
     totalPages: 0
-  });
+  }
+
+  protected activePage: BehaviorSubject<IPageContracts> = new BehaviorSubject(this.emptyPage);
   
   protected contractTemplate: IContract = undefined;
-
-  protected orgaConnectors: ConnectorData[] = [];
 
   protected initialLoading: boolean = true;
 
@@ -86,7 +86,6 @@ export class ExploreComponent implements OnInit {
 
   ngOnInit(): void {
     this.activeOrgRoleService.activeOrganizationRole.subscribe(value => {
-      this.orgaConnectors = value.orgaData.metadata.connectors
       this.refreshContracts(0, this.ITEMS_PER_PAGE);
     }); 
   }
@@ -112,6 +111,8 @@ export class ExploreComponent implements OnInit {
   }
 
   protected refreshContracts(page: number, size: number) {
+    this.initialLoading = true;
+    this.activePage.next(this.emptyPage);
     this.contractApiService.getOrgaContracts(page, size, 
       this.activeOrgRoleService.getActiveOrgaId(), 
       this.applyStatusFilter ? this.selectedStatusFilter : undefined).then(result => {
