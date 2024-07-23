@@ -70,14 +70,14 @@
           {{ asGxServiceOfferingCs(vc.credentialSubject)['gx:description'] }}
         </li>
 
-        <li class="list-group-item" style="border: none">
+        <li class="list-group-item" style="border: none" *ngIf="asGxServiceOfferingCs(vc.credentialSubject)['gx:dataProtectionRegime']">
           <strong>Datenschutzsregelung:</strong><br />
           <ul *ngFor="let regime of asGxServiceOfferingCs(vc.credentialSubject)['gx:dataProtectionRegime']">
             <li>
               {{ regime }}
             </li>
           </ul>
-        </li> <!-- TODO check why this is not properly saved... -->
+        </li>
 
         <li class="list-group-item" style="border: none">
           <strong>Police:</strong><br />

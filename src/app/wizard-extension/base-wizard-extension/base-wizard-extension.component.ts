@@ -199,7 +199,7 @@ export class BaseWizardExtensionComponent {
 
     // create more inputs for each prefill field after the first one
     if (Object.keys(prefillFields).includes(parentKey)) {
-      for (let i = formArray.input.minCount; i < prefillFields[parentKey].length; i++) {
+      for (let i = Math.max(1, formArray.input.minCount); i < prefillFields[parentKey].length; i++) {
         formArray.addInput();
       }
     }
@@ -211,6 +211,7 @@ export class BaseWizardExtensionComponent {
     let i = 0;
     for (let control of formArray.inputs.controls) {
       if (Object.keys(prefillFields).includes(parentKey)) {
+        console.log("patching with", prefillFields[parentKey][i])
         control.patchValue(this.unpackValueFromField(prefillFields[parentKey][i]));
       }
       if (this.disabledFields.includes(parentKey)) {
