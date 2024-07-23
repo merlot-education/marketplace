@@ -26,6 +26,7 @@ import { saveAs } from 'file-saver';
 import { StatusMessageComponent } from '../status-message/status-message.component';
 import { getMerlotDataDeliveryServiceOfferingCsFromServiceOfferingSd, getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, getServiceOfferingIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 import { environment } from 'src/environments/environment';
+import { MerlotProgressComponent } from '../merlot-progress/merlot-progress.component';
 
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -38,16 +39,22 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 export class ContractviewComponent {
 
   @Input() contractDetails: IContract = undefined;
-  @Input() availableConnectors : ConnectorData[] = [];
   @Output() buttonClickCallback: EventEmitter<any> = new EventEmitter();
 
   @ViewChild('contractStatusMessage') private contractStatusMessage: StatusMessageComponent;
   @ViewChild('edcStatusMessage') private edcStatusMessage: StatusMessageComponent;
+  @ViewChild('edcTransferBar') private edcTransferBar: MerlotProgressComponent;
   @ViewChild('contractPdfDownloadMessage') private contractPdfDownloadMessage: StatusMessageComponent;
 
   protected saveButtonDisabled: boolean = false;
+  protected transferBarVisible: boolean = false;
+  protected waitingForResponse: boolean = false;
 
+  private EDC_NEGOTIATION_STATES: string[] = ["INITIAL", "REQUESTING", "REQUESTED", "AGREEING", "AGREED", "VERIFYING", "VERIFIED", "FINALIZING", "FINALIZED"]
+  private EDC_TRANSFER_STATES: string[] = ["INITIAL", "PROVISIONING", "PROVISIONED", "REQUESTING", "REQUESTED", "STARTING", "STARTED", "COMPLETED"]
   protected getServiceOfferingIdFromServiceOfferingSd = getServiceOfferingIdFromServiceOfferingSd;
+
+  protected availableConnectors : ConnectorData[] = [];
 
   protected environment = environment;
 
@@ -56,11 +63,13 @@ export class ContractviewComponent {
     private activeOrgRoleService: ActiveOrganizationRoleService,
     protected serviceOfferingApiService: ServiceofferingApiService,
     protected organizationsApiService: OrganizationsApiService) {
+      this.availableConnectors = activeOrgRoleService.activeOrganizationRole.value.orgaData?.metadata?.connectors;
   }
 
   protected handleButtonClick(targetFunction: (contractApiService: ContractApiService, contractDetails: IContract) => Promise<IContract>, contractDetails: IContract) {
     console.log("sent", contractDetails);
     this.saveButtonDisabled = true;
+    this.waitingForResponse = true;
     this.contractStatusMessage.hideAllMessages();
 
     targetFunction(this.contractApiService, contractDetails).then(result => {
@@ -79,6 +88,7 @@ export class ContractviewComponent {
       })
       .finally(() => {
         this.saveButtonDisabled = false;
+        this.waitingForResponse = false;
       });
   }
 
@@ -127,6 +137,7 @@ export class ContractviewComponent {
   }  
   protected initiateDataTransfer(contractDetails: IContract) {
     this.saveButtonDisabled = true;
+    this.transferBarVisible = true;
     this.edcStatusMessage.showInfoMessage("Starte EDC Verhandlung...");
     console.log("Initiate transfer");
     this.contractApiService.initiateEdcNegotiation(contractDetails.details.id).then(async (negotiationId: IEdcIdResponse) => {
@@ -137,15 +148,21 @@ export class ContractviewComponent {
           state: '',
           contractAgreementId: ''
         }
-        while (negotiationState.state !== "FINALIZED") {
+
+        this.edcTransferBar.setBarTextPercentPrefix("EDC-Verhandlung: ");
+        while (negotiationState.state !== this.EDC_NEGOTIATION_STATES.at(-1)) {
           negotiationState = await this.contractApiService.getEdcNegotiationStatus(contractDetails.details.id, negotiationId.id);
           this.edcStatusMessage.showInfoMessage("EDC Verhandlung gestartet. Aktueller Status: " + negotiationState.state);
           console.log(negotiationState);
+          let negotiationProgressPercent = Math.round(((this.EDC_NEGOTIATION_STATES.indexOf(negotiationState.state) + 1) / this.EDC_NEGOTIATION_STATES.length) * 100  / 2);
+          this.edcTransferBar.setProgress(negotiationProgressPercent);
           await sleep(1000);
         }
         this.edcStatusMessage.showInfoMessage("EDC Verhandlung abgeschlossen. Starte EDC Datentransfer...");
+        this.edcTransferBar.setProgress(50);
       } catch (e) {
         this.edcStatusMessage.showErrorMessage("Verhandlungsfehler: " + e.message);
+        this.edcTransferBar.setFail("Verhandlungsfehler!");
         this.saveButtonDisabled = false;
       }
 
@@ -156,19 +173,27 @@ export class ContractviewComponent {
             id: '',
             state: ''
           }
-          while (transferState.state !== "COMPLETED" && transferState.state !== "TERMINATED") {
+
+          this.edcTransferBar.setBarTextPercentPrefix("EDC-Transfer: ");
+          while (transferState.state !== this.EDC_TRANSFER_STATES.at(-1) && transferState.state !== "TERMINATED") {
             transferState = await this.contractApiService.getEdcTransferStatus(contractDetails.details.id, transferId.id);
             this.edcStatusMessage.showInfoMessage("EDC Datentransfer gestartet. Aktueller Status: " + transferState.state);
             console.log(transferState);
+            let transferProgressPercent = 50 +  Math.round(((this.EDC_TRANSFER_STATES.indexOf(transferState.state) + 1) / this.EDC_TRANSFER_STATES.length) * 100  / 2);
+            this.edcTransferBar.setProgress(transferProgressPercent);
             await sleep(1000);
           }
-          if (transferState.state === "COMPLETED") {
+          if (transferState.state === this.EDC_TRANSFER_STATES.at(-1)) {
+            this.edcTransferBar.setProgress(100);
+            this.edcTransferBar.setSuccess("Erfolgreicher Transfer!");
             this.edcStatusMessage.showSuccessMessage("", 5000);
           }
           if (transferState.state === "TERMINATED") {
+            this.edcTransferBar.setFail("Transferfehler!");
             this.edcStatusMessage.showErrorMessage("", 5000);
           }
         } catch (e) {
+          this.edcTransferBar.setFail("Transferfehler!");
           this.edcStatusMessage.showErrorMessage("Transferfehler: " + e.message);
         }
         
@@ -186,6 +211,7 @@ export class ContractviewComponent {
   protected handleEventContractModal(isVisible: boolean) {
     if (!isVisible) {
       this.saveButtonDisabled = false;
+      this.transferBarVisible = false;
       this.contractStatusMessage.hideAllMessages();
       this.edcStatusMessage.hideAllMessages();
       this.contractPdfDownloadMessage.hideAllMessages();

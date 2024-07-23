@@ -101,9 +101,8 @@ import { CardComponent } from '@merlot-education/m-basic-ui';
     PopoverModule,
     TableModule,
     DocsComponentsModule,
-
-    CardComponent,
-  ],
+    CardComponent
+],
   declarations: [MerlotComponent],
 })
 export class AboutModule {}

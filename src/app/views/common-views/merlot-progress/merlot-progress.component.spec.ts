@@ -14,30 +14,26 @@
  *  limitations under the License.
  */
 
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-@import "../../../../../node_modules/@merlot-education/m-basic-ui/src/scss/variables_light";
+import { MerlotProgressComponent } from './merlot-progress.component';
 
-.flex-container {
-    display: flex;
-    justify-content: left;
-    align-items: left;
-  }
+describe('MerlotProgressComponent', () => {
+  let component: MerlotProgressComponent;
+  let fixture: ComponentFixture<MerlotProgressComponent>;
 
-.flex-item-grow {
-    flex-grow: 1;
-    margin: 10px;
-  }
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ MerlotProgressComponent ]
+    })
+    .compileComponents();
 
-.background-merlot-blue {
-  background-color: $merlot-blue;
-}
+    fixture = TestBed.createComponent(MerlotProgressComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-.warning-symbol {
-  display: block;
-  margin: auto; 
-  color: $merlot-red;
-}
-
-.filter-message {
-  color: $gray-700;
-}
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

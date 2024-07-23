@@ -80,6 +80,7 @@ import {
   GridComponent,
   PaginatorComponent,
 } from '@merlot-education/m-basic-ui';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [ExploreComponent, EditComponent],
@@ -121,7 +122,8 @@ import {
     CardComponent,
     GridComponent,
     WizardExtensionModule,
-    NgxJsonViewerModule
+    NgxJsonViewerModule,
+    MatDividerModule
   ],
 })
 export class ServiceofferingsModule {}

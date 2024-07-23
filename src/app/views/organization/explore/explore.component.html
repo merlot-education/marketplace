@@ -14,6 +14,13 @@
   limitations under the License.
 -->
 
+<div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
+  <h1 *ngIf="initialLoading">Organisationen werden geladen...</h1>
+  <h1 *ngIf="!initialLoading && this.activeOrganizationsPage.value.content.length === 0">Es konnten keine Organisationen gefunden werden.
+  </h1>
+</div>
+<app-merlot-spinner *ngIf="initialLoading"></app-merlot-spinner>
+
 <c-row *ngIf="activeOrgRoleService.isActiveAsFedAdmin()">
   <c-col>
     <button
