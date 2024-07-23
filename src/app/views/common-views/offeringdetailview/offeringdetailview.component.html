@@ -67,6 +67,37 @@
           {{ asGxServiceOfferingCs(vc.credentialSubject)['gx:description'] }}
         </li>
 
+        <li class="list-group-item" style="border: none">
+          <strong>Datenschutzsregelung:</strong><br />
+          <ul *ngFor="let regime of asGxServiceOfferingCs(vc.credentialSubject)['gx:dataProtectionRegime']">
+            <li>
+              {{ regime }}
+            </li>
+          </ul>
+        </li> <!-- TODO check why this is not properly saved... -->
+
+        <li class="list-group-item" style="border: none">
+          <strong>Police:</strong><br />
+          <ul *ngFor="let policy of asGxServiceOfferingCs(vc.credentialSubject)['gx:policy']">
+            <li>
+              {{ policy }}
+            </li>
+          </ul>
+        </li>
+
+        <li class="list-group-item" style="border: none">
+          <strong>Datenexportmethode:</strong><br />
+          <ul *ngFor="let dae of asGxServiceOfferingCs(vc.credentialSubject)['gx:dataAccountExport']">
+            <li>
+              Format: {{ dae["gx:formatType"] }}
+              <br/>
+              Zugriffstyp: {{ dae["gx:accessType"] }}
+              <br/>
+              Anfragetyp: {{ dae["gx:requestType"] }}
+            </li>
+          </ul>
+        </li>
+
         <li class="list-group-item" style="border: none"  *ngIf="showVariableFields">
           <strong>Serviceangebotspezifische Geschäftsbedingungen:</strong><br />
           <ul *ngFor="let tnc of asGxServiceOfferingCs(vc.credentialSubject)['gx:termsAndConditions']">
