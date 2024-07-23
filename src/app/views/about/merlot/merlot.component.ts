@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   templateUrl: './merlot.component.html',
