@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IBasicOffering, IServiceOffering, IPageBasicOfferings } from '../serviceofferings-data'
 import { ServiceofferingApiService } from '../../../services/serviceoffering-api.service'
 import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
@@ -23,7 +23,6 @@ import { ActiveOrganizationRoleService } from 'src/app/services/active-organizat
 import { serviceFileNameDict } from '../serviceofferings-data';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { IContract } from '../../contracts/contracts-data';
-import { ConnectorData } from '../../organization/organization-data';
 import { SdDownloadService } from 'src/app/services/sd-download.service';
 import { getServiceOfferingIdFromServiceOfferingSd, getServiceOfferingNameFromServiceOfferingSd, getServiceOfferingProviderIdFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 import { Router } from '@angular/router';
@@ -44,30 +43,6 @@ export class ExploreComponent implements OnInit, OnDestroy {
   protected getServiceOfferingIdFromServiceOfferingSd = getServiceOfferingIdFromServiceOfferingSd;
   protected getServiceOfferingNameFromServiceOfferingSd = getServiceOfferingNameFromServiceOfferingSd;
   protected waitingForResponse: boolean = false;
-
-  protected activePublicOfferingPage: BehaviorSubject<IPageBasicOfferings> = new BehaviorSubject({
-    content: [],
-    empty: false,
-    first: false,
-    last: false,
-    number: 0,
-    numberOfElements: 0,
-    pageable: {
-      offset: 0,
-      pageNumber: 0,
-      pageSize: 0,
-      paged: false,
-      sort: {
-        empty: false,
-        sorted: false,
-        unsorted: false
-      },
-      unpaged: false
-    },
-    size: 0,
-    totalElements: 0,
-    totalPages: 0
-  });
 
   private emptyPage: IPageBasicOfferings = {
     content: [],
@@ -92,6 +67,8 @@ export class ExploreComponent implements OnInit, OnDestroy {
     totalElements: 0,
     totalPages: 0
   };
+
+  protected activePublicOfferingPage: BehaviorSubject<IPageBasicOfferings> = new BehaviorSubject(this.emptyPage);
 
   protected activeOrgaOfferingPage: BehaviorSubject<IPageBasicOfferings> = new BehaviorSubject(this.emptyPage);
 

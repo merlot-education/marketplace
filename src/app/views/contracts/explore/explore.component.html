@@ -18,26 +18,30 @@
   [link]="environment.ktc_link_contract_booking">
 </app-ktc-link>
 
+<div style="padding:10px">
+  <c-form-check [inline]="true" switch sizing="xl">
+    <input cFormCheckInput id="filterCheck" type="checkbox" [(ngModel)]="applyStatusFilter"
+      (change)="filterByStatus(undefined, applyStatusFilter, selectedStatusFilter)" />
+    <label cFormCheckLabel for="filterCheck">Zeige nur Verträge mit Status: </label>
+  </c-form-check> <br />
+  <select class="form-select" (change)="filterByStatus($event.target, applyStatusFilter, selectedStatusFilter)">
+    <option *ngFor="let option of contractApiService.getAvailableStatusNames()" [value]="option">
+      {{contractApiService.resolveFriendlyStatusName(option)}}</option>
+  </select>
+</div>
+
+<div class="d-flex flex-row docs-highlight mb-2 justify-content-center" *ngIf="this.activePage.value.content.length === 0 && applyStatusFilter && !initialLoading">
+  <h2 class="filter-message">Keine Verträge mit diesem Status gefunden.</h2>
+</div>
+
 <div class="d-flex flex-row docs-highlight mb-2 justify-content-center">
   <h1 *ngIf="initialLoading">Verträge werden geladen...</h1>
-  <h1 *ngIf="!initialLoading && this.activePage.value.content.length === 0">Es konnten keine Verträge gefunden werden.
+  <h1 *ngIf="!initialLoading && this.activePage.value.content.length === 0 && !applyStatusFilter">Es konnten keine Verträge gefunden werden.
   </h1>
 </div>
 <app-merlot-spinner *ngIf="initialLoading"></app-merlot-spinner>
 
 <div *ngIf="this.activePage.value.content.length !== 0 || applyStatusFilter">
-
-  <div style="padding:10px">
-    <c-form-check [inline]="true" switch sizing="xl">
-      <input cFormCheckInput id="filterCheck" type="checkbox" [(ngModel)]="applyStatusFilter"
-        (change)="filterByStatus(undefined, applyStatusFilter, selectedStatusFilter)" />
-      <label cFormCheckLabel for="filterCheck">Zeige nur Verträge mit Status: </label>
-    </c-form-check> <br />
-    <select class="form-select" (change)="filterByStatus($event.target, applyStatusFilter, selectedStatusFilter)">
-      <option *ngFor="let option of contractApiService.getAvailableStatusNames()" [value]="option">
-        {{contractApiService.resolveFriendlyStatusName(option)}}</option>
-    </select>
-  </div>
 
   <m-grid>
     <m-card *ngFor="let contract of activePage.value.content" [blueHeader]="isActiveProvider(contract)" 

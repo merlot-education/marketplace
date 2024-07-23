@@ -45,7 +45,7 @@
     </select>
   </div>
 
-  <div class="d-flex flex-row docs-highlight mb-2 justify-content-center" *ngIf="this.activeOrgaOfferingPage.value.content.length === 0 && applyStatusFilter">
+  <div class="d-flex flex-row docs-highlight mb-2 justify-content-center" *ngIf="this.activeOrgaOfferingPage.value.content.length === 0 && applyStatusFilter && !initialLoading">
     <h2 class="filter-message">Keine Angebote mit diesem Status gefunden.</h2>
   </div>
 
