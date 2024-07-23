@@ -187,24 +187,28 @@
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowInDraftButton(selectedOfferingPublic, selectedOfferingDetails)"
       (click)="inDraftOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
+      [disabled]="waitingForResponse"
       >
         Entwurf 
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowReleaseButton(selectedOfferingPublic, selectedOfferingDetails)"
       (click)="releaseOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
+      [disabled]="waitingForResponse"
       >
         Veröffentlichen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowRevokeButton(selectedOfferingPublic, selectedOfferingDetails)"
       (click)="revokeOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
+      [disabled]="waitingForResponse"
       >
         Widerrufen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowDeleteButton(selectedOfferingPublic, selectedOfferingDetails)"
       (click)="deleteOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
+      [disabled]="waitingForResponse"
       >
         Löschen
       </button>
@@ -212,12 +216,14 @@
       [cModalToggle]="modalViewDetails.id"
       *ngIf="shouldShowPurgeButton(selectedOfferingPublic, selectedOfferingDetails)"
       (click)="purgeOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
+      [disabled]="waitingForResponse"
       >
         Endgültig löschen
       </button>
       <button type="button" class="btn btn-primary flex-item-grow" 
       *ngIf="shouldShowRegenerateButton(selectedOfferingPublic, selectedOfferingDetails)"
       (click)="regenerateOffering(getServiceOfferingIdFromServiceOfferingSd(selectedOfferingDetails.selfDescription))"
+      [disabled]="waitingForResponse"
       >
         Angebot neu erstellen
       </button>
