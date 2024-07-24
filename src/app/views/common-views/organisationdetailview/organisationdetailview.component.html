@@ -58,13 +58,22 @@
                 <li class="list-group-item" style="border: none">
                     <strong>Registrierungsnummer(n) der Organisation:</strong><br />
                     <div *ngIf="asLegalRegistrationNumberCs(vc.credentialSubject)['gx:EORI']">
-                        EORI: {{ asLegalRegistrationNumberCs(vc.credentialSubject)['gx:EORI'] }}
+                        EORI: 
+                        {{ 
+                            asLegalRegistrationNumberCs(vc.credentialSubject)['gx:EORI'] 
+                        }}
                     </div>
                     <div *ngIf="asLegalRegistrationNumberCs(vc.credentialSubject)['gx:vatID']">
-                        VAT ID: {{ asLegalRegistrationNumberCs(vc.credentialSubject)['gx:vatID'] }}
+                        VAT ID: 
+                        {{ 
+                            asLegalRegistrationNumberCs(vc.credentialSubject)['gx:vatID'] 
+                        }}
                     </div>
                     <div *ngIf="asLegalRegistrationNumberCs(vc.credentialSubject)['gx:leiCode']">
-                        LEI Code: {{ asLegalRegistrationNumberCs(vc.credentialSubject)['gx:leiCode'] }}
+                        LEI Code: 
+                        {{ 
+                            asLegalRegistrationNumberCs(vc.credentialSubject)['gx:leiCode'] 
+                        }}
                     </div>
                 </li>
             </ul>
