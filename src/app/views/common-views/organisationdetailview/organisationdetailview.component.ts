@@ -34,7 +34,4 @@ export class OrganisationdetailviewComponent {
   protected isMerlotLegalParticipantCs = isMerlotLegalParticipantCs;
   protected asMerlotLegalParticipantCs = asMerlotLegalParticipantCs;
 
-  constructor() {
-  }
-
 }
