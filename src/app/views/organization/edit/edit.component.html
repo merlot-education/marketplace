@@ -25,13 +25,14 @@
       </m-card>
     </div>
 
-    <div [hidden]="jsonViewHidden"><button id="json-download-button" cButton color="primary"
-        style="margin-bottom: 10px;" (click)="sdDownloadService.downloadParticipantSd(selectedOrganization.id)">
-        Selbstbeschreibung herunterladen
-      </button>
-      <button id="orga-edit-button" cButton color="primary" style="margin-bottom: 10px; margin-left: 10px;"
+    <div [hidden]="jsonViewHidden">
+      <button id="orga-edit-button" cButton color="primary" style="margin-bottom: 10px;"
         (click)="toggleJsonView()">
         Organisation bearbeiten
+      </button>
+      <button id="json-download-button" cButton color="primary"
+        style="margin-bottom: 10px; margin-left: 10px;" (click)="sdDownloadService.downloadParticipantSd(selectedOrganization.id)">
+        Selbstbeschreibung herunterladen
       </button>
       <m-card title="Selbstbeschreibung der Organisation">
         <ngx-json-viewer [json]="selectedOrganization.selfDescription" *ngIf="selectedOrganization"></ngx-json-viewer>

@@ -149,15 +149,10 @@
             Details
           </button>
           <button type="button" class="btn btn-primary flex-item-grow" 
-          style="margin-right: 10px;"
           *ngIf="canEditOrganization(organization)"
           (click)="editOrganization(organization)"
           >
             Bearbeiten 
-          </button>
-          <button id="json-download-button" type="button" class="btn btn-secondary flex-item-grow me-1" 
-          (click)="sdDownloadService.downloadParticipantSd(organization.id)">
-            SD
           </button>
         </div>
       </div>
