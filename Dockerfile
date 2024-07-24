@@ -22,7 +22,7 @@ WORKDIR /app
 
 COPY . .
 RUN --mount=type=secret,id=GIT_AUTH_TOKEN env NPM_CONFIG_TOKEN=$(cat /run/secrets/GIT_AUTH_TOKEN) sh -c 'npm ci'
-RUN npm run ng -- build --configuration $ENVIRONMENT
+RUN npm run ng -- build --configuration "$ENVIRONMENT"
 
 FROM nginx:stable-alpine
 COPY --from=build /app/dist/marketplace /usr/share/nginx/html

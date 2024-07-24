@@ -17,7 +17,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IContract, IDataDeliveryContract, IIonosS3ProviderTransferProvisioning } from '../../../../contracts/contracts-data';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
-import { getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd } from 'src/app/utils/credential-tools';
+import { isContractInDraft, isContractSignedConsumer, isDataDeliveryContract } from "src/app/utils/contract-utils";
 
 @Component({
   selector: 'app-provider-contract-config',
@@ -27,6 +27,9 @@ import { getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd } from 'src/a
 export class ProviderContractConfigComponent implements OnInit {
   protected asDataDeliveryContract(val): IDataDeliveryContract { return val };
   protected asIonosProviderTransferProvisioning(val): IIonosS3ProviderTransferProvisioning { return val };
+  protected isDataDeliveryContract = isDataDeliveryContract;
+  protected isContractInDraft = isContractInDraft;
+  protected isContractSignedConsumer = isContractSignedConsumer;
 
   @Input() contractDetails: IContract = undefined;
   @Input() availableConnectors : ConnectorData[] = [];
@@ -59,32 +62,12 @@ export class ProviderContractConfigComponent implements OnInit {
     } 
   }
 
-  protected isContractInDraft(contractDetails: IContract): boolean {
-    return contractDetails.details.state === 'IN_DRAFT';
-  }
-
-  protected isContractSignedConsumer(contractDetails: IContract): boolean {
-    return contractDetails.details.state === 'SIGNED_CONSUMER';
-  }
-
-  protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails?.offering?.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
-  }
-
   protected isIonosProviderTransferProvisioning(contractDetails: IContract): boolean {
     return this.asDataDeliveryContract(contractDetails).provisioning.providerTransferProvisioning?.dataAddressType === "IonosS3Source";
   }
 
-  protected hasContractAttachments(contractDetails: IContract): boolean {
-    return contractDetails.negotiation.attachments.length > 0;
-  }
-
   protected getSelectedProviderConnectorId(): string {
     return this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning?.selectedConnectorId;
-  }
-
-  protected getSelectedConsumerConnectorId(): string {
-    return this.asDataDeliveryContract(this.contractDetails).provisioning.consumerTransferProvisioning?.selectedConnectorId;
   }
 
   protected isConnectorIdValid(connectorId: string): boolean {

@@ -17,7 +17,8 @@
 import { Component, Input } from '@angular/core';
 import { IContract, IDataDeliveryContract, IIonosS3ConsumerTransferProvisioning } from '../../../../contracts/contracts-data';
 import { ConnectorData } from 'src/app/views/organization/organization-data';
-import { getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd } from 'src/app/utils/credential-tools';
+import { hasContractAttachments, isContractInDraft, isDataDeliveryContract } from "../../../../../utils/contract-utils";
+
 
 @Component({
   selector: 'app-consumer-contract-config',
@@ -28,6 +29,9 @@ export class ConsumerContractConfigComponent {
   protected asDataDeliveryContract(val): IDataDeliveryContract { return val };
 
   protected asIonosConsumerTransferProvisioning(val): IIonosS3ConsumerTransferProvisioning { return val };
+  protected isContractInDraft = isContractInDraft;
+  protected isDataDeliveryContract = isDataDeliveryContract;
+  protected hasContractAttachments = hasContractAttachments;
 
   @Input() contractDetails: IContract = undefined;
   @Input() availableConnectors : ConnectorData[] = [];
@@ -60,28 +64,8 @@ export class ConsumerContractConfigComponent {
     } 
   }
 
-  protected isContractInDraft(contractDetails: IContract): boolean {
-    return contractDetails.details.state === 'IN_DRAFT';
-  }
-
-  protected isContractSignedConsumer(contractDetails: IContract): boolean {
-    return contractDetails.details.state === 'SIGNED_CONSUMER';
-  }
-
-  protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails?.offering?.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
-  }
-
   protected isIonosConsumerTransferProvisioning(contractDetails: IContract): boolean {
     return this.asDataDeliveryContract(contractDetails).provisioning.consumerTransferProvisioning?.dataAddressType === "IonosS3Dest";
-  }
-
-  protected hasContractAttachments(contractDetails: IContract): boolean {
-    return contractDetails.negotiation.attachments.length > 0;
-  }
-  
-  protected getSelectedProviderConnectorId(): string {
-    return this.asDataDeliveryContract(this.contractDetails).provisioning.providerTransferProvisioning?.selectedConnectorId;
   }
 
   protected getSelectedConsumerConnectorId(): string {

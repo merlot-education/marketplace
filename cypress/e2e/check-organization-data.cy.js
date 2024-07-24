@@ -27,7 +27,7 @@ it('testuser can log in, check organization and assigned person data, edit organ
     
     loginAsUser(testuserName, testuserOrga)
 
-    cy.contains("Meine Verträge"); // todo maybe find a better way to make sure the navbar is loaded
+    cy.contains("Meine Verträge");
 
     // make sure there is "Organisationsverwaltung" and click on it
     cy.contains('Organisationsverwaltung').click({force: true});

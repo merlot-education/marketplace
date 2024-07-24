@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { IOrganizationData } from "../organization-data";
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
@@ -29,7 +29,7 @@ import { takeWhile } from 'rxjs';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent implements OnInit, AfterViewInit {
+export class EditComponent implements AfterViewInit {
 
   protected selectedOrganization: IOrganizationData = undefined;
   protected jsonViewHidden: boolean = true;
@@ -55,9 +55,6 @@ export class EditComponent implements OnInit, AfterViewInit {
       this.authService.refreshActiveRoleOrgaData();
       this.refreshSelectedOrganization(getParticipantIdFromParticipantSd(this.selectedOrganization.selfDescription))
     });
-  }
-
-  ngOnInit(): void {
   }
 
   toggleJsonView() {

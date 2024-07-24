@@ -14,18 +14,12 @@
  *  limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   templateUrl: './merlot.component.html',
   styleUrls: ['./merlot.component.scss']
 })
-export class MerlotComponent implements OnInit {
-
-  constructor() {
-  }
-
-  ngOnInit(): void {
-  }
+export class MerlotComponent {
 
 }

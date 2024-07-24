@@ -36,12 +36,3 @@ export const environment = {
   ktc_link_data_transfer: 'https://ktc.merlot-education.eu/for_companies/data-transfer/', 
   merlot_song_url: 'https://merlot-storage-test.s3-eu-central-1.ionoscloud.com/MERLOT-Bildung_neu_definiert.mp3'
 };
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.

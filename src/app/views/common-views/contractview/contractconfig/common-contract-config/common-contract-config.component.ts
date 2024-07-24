@@ -23,7 +23,9 @@ import { ConnectorData } from 'src/app/views/organization/organization-data';
 import { IOfferingRuntime } from '../../../../serviceofferings/serviceofferings-data';
 import { saveAs } from 'file-saver';
 import { StatusMessageComponent } from '../../../status-message/status-message.component';
-import { asMerlotCoopContractServiceOfferingCs, asMerlotDataDeliveryServiceOfferingCs, asMerlotSaasServiceOfferingCs, asMerlotServiceOfferingCs, getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, isMerlotCoopContractServiceOfferingCs, isMerlotDataDeliveryServiceOfferingCs, isMerlotSaasServiceOfferingCs, isMerlotServiceOfferingCs } from 'src/app/utils/credential-tools';
+import { asMerlotCoopContractServiceOfferingCs, asMerlotDataDeliveryServiceOfferingCs, asMerlotSaasServiceOfferingCs, asMerlotServiceOfferingCs, isMerlotCoopContractServiceOfferingCs, isMerlotDataDeliveryServiceOfferingCs, isMerlotSaasServiceOfferingCs, isMerlotServiceOfferingCs } from 'src/app/utils/credential-tools';
+import { isContractInDraft, isDataDeliveryContract, isSaasContract } from "src/app/utils/contract-utils";
+
 
 @Component({
   selector: 'app-common-contract-config',
@@ -41,6 +43,9 @@ export class CommonContractConfigComponent {
   protected asMerlotDataDeliveryServiceOfferingCs = asMerlotDataDeliveryServiceOfferingCs;
   protected isMerlotCoopContractServiceOfferingCs = isMerlotCoopContractServiceOfferingCs;
   protected asMerlotCoopContractServiceOfferingCs = asMerlotCoopContractServiceOfferingCs;
+  protected isContractInDraft = isContractInDraft;
+  protected isSaasContract = isSaasContract;
+  protected isDataDeliveryContract = isDataDeliveryContract;
 
   @Input() contractDetails: IContract = undefined;
   @Input() availableConnectors : ConnectorData[] = [];
@@ -66,59 +71,25 @@ export class CommonContractConfigComponent {
     return this.activeOrgRoleService.getActiveOrgaId() == this.contractDetails.details.consumerId;
   }
 
-
-  protected isContractInDraft(contractDetails: IContract): boolean {
-    return contractDetails.details.state === 'IN_DRAFT';
-  }
-
-  protected isContractReleased(contractDetails: IContract): boolean {
-    return contractDetails.details.state === 'RELEASED';
-  }
-
-  protected isContractSignedConsumer(contractDetails: IContract): boolean {
-    return contractDetails.details.state === 'SIGNED_CONSUMER';
-  }
-
-  protected isContractDeleted(contractDetails: IContract): boolean {
-    return contractDetails.details.state === 'DELETED';
-  }
-
-  protected isContractArchived(contractDetails: IContract): boolean {
-    return contractDetails.details.state === 'ARCHIVED';
-  }
-
   protected shouldShowAttachments(contractDetails: IContract): boolean {
-    return this.userIsActiveProvider() && this.isContractInDraft(contractDetails) || (contractDetails.negotiation.attachments.length > 0);
+    return this.userIsActiveProvider() && isContractInDraft(contractDetails) || (contractDetails.negotiation.attachments.length > 0);
   }
 
   protected canAddAttachments(contractDetails: IContract): boolean {
-    return this.userIsActiveProvider() && this.isContractInDraft(contractDetails) && (contractDetails.negotiation.attachments.length <= 10);
+    return this.userIsActiveProvider() && isContractInDraft(contractDetails) && (contractDetails.negotiation.attachments.length <= 10);
   }
 
   protected shouldShowAttachmentAsLink(contractDetails: IContract): boolean {
-    return this.userIsActiveConsumer() || !this.isContractInDraft(contractDetails);
+    return this.userIsActiveConsumer() || !isContractInDraft(contractDetails);
   }
 
   protected shouldShowAttachmentAsTextbox(contractDetails: IContract): boolean {
-    return this.userIsActiveProvider() && this.isContractInDraft(contractDetails);
+    return this.userIsActiveProvider() && isContractInDraft(contractDetails);
   }
 
   protected isRuntimeUnlimited(runtime: IOfferingRuntime): boolean {
     return runtime['merlot:runtimeCount'] === 0 || runtime['merlot:runtimeMeasurement'] === 'unlimited'
   }
-
-  protected isSaasContract(contractDetails: IContract): boolean {
-    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails?.offering?.selfDescription) === 'merlot:MerlotSaasServiceOffering';
-  }
-
-  protected isDataDeliveryContract(contractDetails: IContract): boolean {
-    return getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd(contractDetails?.offering?.selfDescription) === 'merlot:MerlotDataDeliveryServiceOffering';
-  }
-
-  protected hasContractAttachments(contractDetails: IContract): boolean {
-    return contractDetails.negotiation.attachments.length > 0;
-  }
-
   
   protected addAttachment(event: Event) {
 

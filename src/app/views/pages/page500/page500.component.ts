@@ -23,6 +23,4 @@ import { Component } from '@angular/core';
 })
 export class Page500Component {
 
-  constructor() { }
-
 }

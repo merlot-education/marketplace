@@ -16,12 +16,10 @@
 
 import { Component, OnInit } from '@angular/core';
 import { IContract, IContractBasic, IPageContracts } from '../contracts-data';
-import { OrganizationsApiService } from 'src/app/services/organizations-api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveOrganizationRoleService } from 'src/app/services/active-organization-role.service';
 import { ContractApiService } from 'src/app/services/contract-api.service';
 import { BehaviorSubject } from 'rxjs';
-import { ConnectorData } from '../../organization/organization-data';
 import { ServiceofferingApiService } from 'src/app/services/serviceoffering-api.service';
 import { getMerlotSpecificServiceOfferingTypeFromServiceOfferingSd, getServiceOfferingIdFromServiceOfferingSd, getServiceOfferingNameFromServiceOfferingSd } from 'src/app/utils/credential-tools';
 import { environment } from 'src/environments/environment';
