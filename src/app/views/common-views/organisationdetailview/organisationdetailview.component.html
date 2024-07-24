@@ -24,53 +24,31 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item" style="border: none">
                     <strong>ID der Organisation:</strong> <br />
-                    {{ 
-                    asLegalParticipantCs(vc.credentialSubject).id 
-                    }}
+                    {{ asLegalParticipantCs(vc.credentialSubject).id }}
                   </li>
                 <li class="list-group-item" style="border: none">
                     <strong>Name der Organisation:</strong><br />
-                    {{
-                    asLegalParticipantCs(vc.credentialSubject)['gx:name']
-                    }}
+                    {{ asLegalParticipantCs(vc.credentialSubject)['gx:name'] }}
                 </li>
                 <li class="list-group-item" style="border: none" *ngIf="asLegalParticipantCs(vc.credentialSubject)['gx:description']">
                     <strong>Beschreibung:</strong><br />
-                    {{ 
-                    asLegalParticipantCs(vc.credentialSubject)['gx:description'] 
-                    }}
+                    {{ asLegalParticipantCs(vc.credentialSubject)['gx:description'] }}
                   </li>
                 <li class="list-group-item" style="border: none">
                     <strong>Rechtsgültige Adresse:</strong><br />
-                    {{
-                    asLegalParticipantCs(vc.credentialSubject)['gx:legalAddress']['vcard:street-address']
-                    }} <br />
-                    {{
-                    asLegalParticipantCs(vc.credentialSubject)['gx:legalAddress']['vcard:postal-code']
-                    }} {{
-                    asLegalParticipantCs(vc.credentialSubject)['gx:legalAddress']['vcard:locality']
-                    }} <br />
-                    {{
-                    asLegalParticipantCs(vc.credentialSubject)['gx:legalAddress']['gx:countryCode']
-                    }} {{
-                    asLegalParticipantCs(vc.credentialSubject)['gx:legalAddress']['gx:countrySubdivisionCode']
-                    }}
+                    {{ asLegalParticipantCs(vc.credentialSubject)['gx:legalAddress']['vcard:street-address'] }} <br />
+                    {{ asLegalParticipantCs(vc.credentialSubject)['gx:legalAddress']['vcard:postal-code'] }} 
+                    {{ asLegalParticipantCs(vc.credentialSubject)['gx:legalAddress']['vcard:locality'] }} <br />
+                    {{ asLegalParticipantCs(vc.credentialSubject)['gx:legalAddress']['gx:countryCode'] }} 
+                    {{ asLegalParticipantCs(vc.credentialSubject)['gx:legalAddress']['gx:countrySubdivisionCode'] }}
                 </li>
                 <li class="list-group-item" style="border: none">
                     <strong>Adresse des Hauptsitzes:</strong><br />
-                    {{
-                    asLegalParticipantCs(vc.credentialSubject)['gx:headquarterAddress']['vcard:street-address']
-                    }} <br />
-                    {{
-                    asLegalParticipantCs(vc.credentialSubject)['gx:headquarterAddress']['vcard:postal-code']
-                    }} {{
-                    asLegalParticipantCs(vc.credentialSubject)['gx:headquarterAddress']['vcard:locality']
-                    }} <br />
-                    {{
-                    asLegalParticipantCs(vc.credentialSubject)['gx:headquarterAddress']['gx:countryCode']
-                    }} {{
-                    asLegalParticipantCs(vc.credentialSubject)['gx:headquarterAddress']['gx:countrySubdivisionCode']
-                    }}
+                    {{ asLegalParticipantCs(vc.credentialSubject)['gx:headquarterAddress']['vcard:street-address'] }} <br />
+                    {{ asLegalParticipantCs(vc.credentialSubject)['gx:headquarterAddress']['vcard:postal-code'] }} 
+                    {{ asLegalParticipantCs(vc.credentialSubject)['gx:headquarterAddress']['vcard:locality'] }} <br />
+                    {{ asLegalParticipantCs(vc.credentialSubject)['gx:headquarterAddress']['gx:countryCode'] }} 
+                    {{ asLegalParticipantCs(vc.credentialSubject)['gx:headquarterAddress']['gx:countrySubdivisionCode'] }}
                 </li>
             </ul>
         </div>
@@ -96,23 +74,16 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item" style="border: none">
                     <strong>Rechtlicher Name der Organisation:</strong><br />
-                    {{
-                    asMerlotLegalParticipantCs(vc.credentialSubject)['merlot:legalName']
-                    }}
+                    {{ asMerlotLegalParticipantCs(vc.credentialSubject)['merlot:legalName'] }}
                 </li>
                 <li class="list-group-item" style="border: none">
                     <strong>Rechtsform der Organisation:</strong><br />
-                    {{
-                    asMerlotLegalParticipantCs(vc.credentialSubject)['merlot:legalForm']
-                    }}
+                    {{ asMerlotLegalParticipantCs(vc.credentialSubject)['merlot:legalForm'] }}
                 </li>
                 <li class="list-group-item" style="border: none">
                     <strong>Geschäftsbedingungen der Organisation:</strong><br />
-                    {{
-                    asMerlotLegalParticipantCs(vc.credentialSubject)['merlot:termsAndConditions']['merlot:URL']
-                    }} (Hash: {{
-                        asMerlotLegalParticipantCs(vc.credentialSubject)['merlot:termsAndConditions']['merlot:hash']
-                        }})
+                    {{ asMerlotLegalParticipantCs(vc.credentialSubject)['merlot:termsAndConditions']['merlot:URL'] }} 
+                    (Hash: {{ asMerlotLegalParticipantCs(vc.credentialSubject)['merlot:termsAndConditions']['merlot:hash'] }})
                 </li>
             </ul>
         </div>
@@ -121,9 +92,7 @@
 
         <li class="list-group-item" style="border: none">
             <strong>Selbstbeschreibung unterschrieben von:</strong><br />
-            {{
-            organisationData.metadata.signedBy ? organisationData.metadata.signedBy : "Unbekannt"
-            }}
+            {{ organisationData.metadata.signedBy ? organisationData.metadata.signedBy : "Unbekannt" }}
         </li>
     </ul>
 </ng-container>
