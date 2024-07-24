@@ -56,7 +56,7 @@
         <div *ngIf="isLegalRegistrationNumberCs(vc.credentialSubject)">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item" style="border: none">
-                    <strong>Registrierungsnummer:</strong><br />
+                    <strong>Registrierungsnummer(n) der Organisation:</strong><br />
                     <div *ngIf="asLegalRegistrationNumberCs(vc.credentialSubject)['gx:EORI']">
                         EORI: {{ asLegalRegistrationNumberCs(vc.credentialSubject)['gx:EORI'] }}
                     </div>
@@ -73,7 +73,7 @@
         <div *ngIf="isMerlotLegalParticipantCs(vc.credentialSubject)">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item" style="border: none">
-                    <strong>Rechtlicher Name der Organisation:</strong><br />
+                    <strong>Rechtlich eingetragener Name der Organisation:</strong><br />
                     {{ asMerlotLegalParticipantCs(vc.credentialSubject)['merlot:legalName'] }}
                 </li>
                 <li class="list-group-item" style="border: none">
