@@ -144,16 +144,15 @@
     <div>
       <div class="d-flex flex-row docs-highlight mb-2 justify-content-end">
         <div class="p-2 docs-highlight">
+          <button type="button" class="btn btn-primary flex-item-grow" [cModalToggle]="modalViewDetails.id" 
+          style="margin-right: 10px;" (click)="requestDetails(organization.id)">
+            Details
+          </button>
           <button type="button" class="btn btn-primary flex-item-grow" 
-          style="margin-right: 10px;"
           *ngIf="canEditOrganization(organization)"
           (click)="editOrganization(organization)"
           >
             Bearbeiten 
-          </button>
-          <button id="json-download-button" type="button" class="btn btn-secondary flex-item-grow me-1" 
-          (click)="sdDownloadService.downloadParticipantSd(organization.id)">
-            SD
           </button>
         </div>
       </div>
@@ -180,6 +179,40 @@
     </div>
   </m-card>
 </m-grid>
+
+<c-modal #modalViewDetails id="modalViewDetails" size="xl" alignment="center"
+  (visibleChange)="handleEventDetailsModal($event)">
+  <ng-container *ngIf="selectedOrganisationDetails !== null">
+    <c-modal-header>
+      <h5 cModalTitle>Details zur Organisation "{{ getOrganizationName(selectedOrganisationDetails.selfDescription) }}"</h5>
+    </c-modal-header>
+    <c-modal-body>
+      <div [hidden]="!jsonViewHidden"><button id="json-view-button" cButton color="primary" style="margin-bottom: 10px;"
+          (click)="toggleJsonView()">
+          Selbstbeschreibung der Organisation einsehen
+        </button>
+        <app-organisationdetailview [organisationData]="selectedOrganisationDetails"></app-organisationdetailview>
+      </div>
+
+      <div [hidden]="jsonViewHidden">
+        <button id="offering-edit-button" cButton color="primary" style="margin-bottom: 10px;"
+          (click)="toggleJsonView()">
+          Organisation ansehen
+        </button>
+        <button id="json-download-button" cButton color="primary"
+          style="margin-bottom: 10px; margin-left: 10px;" (click)="sdDownloadService.downloadParticipantSd(getParticipantIdFromParticipantSd(selectedOrganisationDetails.selfDescription))">
+          Selbstbeschreibung herunterladen
+        </button>
+        <m-card title="Selbstbeschreibung der Organisation">
+          <ngx-json-viewer [json]="selectedOrganisationDetails.selfDescription"></ngx-json-viewer>
+        </m-card>
+      </div>
+    </c-modal-body>
+    <c-modal-footer>
+      <button cButton color="secondary" [cModalToggle]="modalViewDetails.id">Schließen</button>
+    </c-modal-footer>
+  </ng-container>
+</c-modal>
 
 <m-paginator [currentPage]="activeOrganizationsPage"
   (pageChangeEvent)="refreshOrganizations($event, ITEMS_PER_PAGE)"></m-paginator>

@@ -57,7 +57,7 @@ export class EditComponent implements AfterViewInit {
     });
   }
 
-  toogleJsonView() {
+  toggleJsonView() {
     this.jsonViewHidden = !this.jsonViewHidden;
   }
 

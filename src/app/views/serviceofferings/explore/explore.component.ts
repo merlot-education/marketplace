@@ -124,6 +124,10 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   protected handleEventDetailsModal(modalVisible: boolean) {
     this.showingModal = modalVisible;
+
+    if (!modalVisible) {
+      this.hideJsonView();
+    }
   }
 
   protected handleEventContractModal(modalVisible: boolean) {
@@ -290,8 +294,12 @@ export class ExploreComponent implements OnInit, OnDestroy {
     return this.activeOrgRoleService.isLoggedIn.value && (getServiceOfferingProviderIdFromServiceOfferingSd(offering.selfDescription) !== this.activeOrgRoleService.getActiveOrgaId())
   }
 
-  toogleJsonView() {
+  toggleJsonView() {
     this.jsonViewHidden = !this.jsonViewHidden;
+  }
+
+  hideJsonView() {
+    this.jsonViewHidden = true;
   }
 
   protected editOffering(offering: IBasicOffering) {

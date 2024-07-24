@@ -44,6 +44,7 @@ import {
   TabsModule,
   TooltipModule,
   UtilitiesModule,
+  ModalModule,
 } from '@coreui/angular';
 
 import { IconModule } from '@coreui/icons-angular';
@@ -93,7 +94,8 @@ import { WizardExtensionModule } from 'src/app/wizard-extension/wizard-extension
     GridComponent,
     PaginatorComponent,
     WizardExtensionModule,
-    NgxJsonViewerModule
+    NgxJsonViewerModule,
+    ModalModule
   ],
   declarations: [ExploreComponent, EditComponent, ImportComponent],
 })

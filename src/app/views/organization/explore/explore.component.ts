@@ -72,6 +72,10 @@ export class ExploreComponent implements OnInit {
   protected getParticipantIdFromParticipantSd = getParticipantIdFromParticipantSd;
   protected initialLoading: boolean = true;
 
+  protected jsonViewHidden: boolean = true;
+  selectedOrganisationDetails: IOrganizationData = null;
+  private showingModal: boolean = false;
+
   constructor(
     private organizationsApiService: OrganizationsApiService,
     protected authService: AuthService,
@@ -165,5 +169,28 @@ export class ExploreComponent implements OnInit {
 
   protected getConnectorBucketsString(cd: ConnectorData) {
     return cd.ionosS3ExtensionConfig.buckets.map(b => b.name).join(", ");
+  }
+
+  protected handleEventDetailsModal(modalVisible: boolean) {
+    this.showingModal = modalVisible;
+
+    if (!modalVisible) {
+      this.hideJsonView();
+    }
+  }
+
+  protected async requestDetails(id: string) {
+    this.selectedOrganisationDetails = null;
+    await this.organizationsApiService.getOrgaById(id).then(result => {
+      this.selectedOrganisationDetails = result;
+    });
+  }
+
+  toggleJsonView() {
+    this.jsonViewHidden = !this.jsonViewHidden;
+  }
+
+  hideJsonView() {
+    this.jsonViewHidden = true;
   }
 }
