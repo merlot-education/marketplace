@@ -173,6 +173,10 @@ export class ExploreComponent implements OnInit {
 
   protected handleEventDetailsModal(modalVisible: boolean) {
     this.showingModal = modalVisible;
+
+    if (!modalVisible) {
+      this.hideJsonView();
+    }
   }
 
   protected async requestDetails(id: string) {

@@ -125,6 +125,10 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   protected handleEventDetailsModal(modalVisible: boolean) {
     this.showingModal = modalVisible;
+
+    if (!modalVisible) {
+      this.hideJsonView();
+    }
   }
 
   protected handleEventContractModal(modalVisible: boolean) {
