@@ -32,7 +32,7 @@ it('open organizations overview', {
 
     // make sure some organisations are there
     cy.contains('AWSi');
-    cy.contains('imc AG');
+    cy.contains('IMC AG');
 
     // look at card headers
     cy.get('c-card-header').then((headers) => {

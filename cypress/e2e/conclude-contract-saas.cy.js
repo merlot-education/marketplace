@@ -144,7 +144,7 @@ it('conclude saas contract', {
 
             // sign the contract by clicking on the button Kostenpflichtig bestellen and close the contract draft
             cy.contains("Kostenpflichtig bestellen").click({ force: true });
-            cy.wait(500);
+            cy.get('c-modal-body', { timeout: 10000 }).should("include.text", "Vertragskonfiguration gespeichert.");
             cy.contains("Schließen").click({ force: true });
 
             // the just edited contract draft for the SaaS offering should now have the status Vom Kunden unterschrieben
