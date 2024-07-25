@@ -51,5 +51,6 @@ Thumbs.db
 
 cypress/videos
 cypress/screenshots
+cypress/downloads
 
 .nyc_output
